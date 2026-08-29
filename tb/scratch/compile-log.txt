@@ -1,0 +1,282 @@
+== tb/scratch/claude_cell_fsm.v 
+  iverilog: FAIL
+    tb/scratch/claude_cell_fsm.v:61: error: 'ingress_ready' is not a valid l-value for a procedural assignment.
+    tb/scratch/claude_cell_fsm.v:13:      : 'ingress_ready' is declared here as a wire.
+    tb/scratch/claude_cell_fsm.v:62: error: 'egress_valid' is not a valid l-value for a procedural assignment.
+    tb/scratch/claude_cell_fsm.v:17:      : 'egress_valid' is declared here as a wire.
+    tb/scratch/claude_cell_fsm.v:66: error: 'ingress_ready' is not a valid l-value for a procedural assignment.
+    tb/scratch/claude_cell_fsm.v:13:      : 'ingress_ready' is declared here as a wire.
+    tb/scratch/claude_cell_fsm.v:67: error: 'egress_valid' is not a valid l-value for a procedural assignment.
+    tb/scratch/claude_cell_fsm.v:17:      : 'egress_valid' is declared here as a wire.
+    tb/scratch/claude_cell_fsm.v:70: error: 'ingress_ready' is not a valid l-value for a procedural assignment.
+    tb/scratch/claude_cell_fsm.v:13:      : 'ingress_ready' is declared here as a wire.
+    tb/scratch/claude_cell_fsm.v:131: error: 'egress_valid' is not a valid l-value for a procedural assignment.
+    tb/scratch/claude_cell_fsm.v:17:      : 'egress_valid' is declared here as a wire.
+    tb/scratch/claude_cell_fsm.v:135: error: 'egress_data' is not a valid l-value for a procedural assignment.
+    tb/scratch/claude_cell_fsm.v:16:      : 'egress_data' is declared here as a wire.
+    tb/scratch/claude_cell_fsm.v:136: error: 'egress_data' is not a valid l-value for a procedural assignment.
+    tb/scratch/claude_cell_fsm.v:16:      : 'egress_data' is declared here as a wire.
+    tb/scratch/claude_cell_fsm.v:137: error: 'egress_data' is not a valid l-value for a procedural assignment.
+    tb/scratch/claude_cell_fsm.v:16:      : 'egress_data' is declared here as a wire.
+    tb/scratch/claude_cell_fsm.v:141: error: 'egress_valid' is not a valid l-value for a procedural assignment.
+    tb/scratch/claude_cell_fsm.v:17:      : 'egress_valid' is declared here as a wire.
+    10 error(s) during elaboration.
+  verilator:
+    %Warning-DECLFILENAME: tb/scratch/claude_cell_fsm.v:2:8: Filename 'claude_cell_fsm' does not match MODULE name: 'cell_fsm'
+    %Warning-SELRANGE: tb/scratch/claude_cell_fsm.v:79:36: Selection index out of range: 31:16 outside 28:0
+    %Warning-WIDTHTRUNC: tb/scratch/claude_cell_fsm.v:135:31: Operator ASSIGNDLY expects 32 bits on the Assign RHS, but Assign RHS's REPLICATE generates 37 bits.
+    %Warning-WIDTHEXPAND: tb/scratch/claude_cell_fsm.v:136:31: Operator ASSIGNDLY expects 32 bits on the Assign RHS, but Assign RHS's REPLICATE generates 29 bits.
+    %Warning-WIDTHEXPAND: tb/scratch/claude_cell_fsm.v:137:34: Operator ASSIGNDLY expects 32 bits on the Assign RHS, but Assign RHS's REPLICATE generates 29 bits.
+    %Error-PROCASSWIRE: tb/scratch/claude_cell_fsm.v:61:7: Procedural assignment to wire, perhaps intended var (IEEE 1800-2023 6.5): 'ingress_ready'
+    %Error-PROCASSWIRE: tb/scratch/claude_cell_fsm.v:62:7: Procedural assignment to wire, perhaps intended var (IEEE 1800-2023 6.5): 'egress_valid'
+    %Error-PROCASSWIRE: tb/scratch/claude_cell_fsm.v:66:11: Procedural assignment to wire, perhaps intended var (IEEE 1800-2023 6.5): 'ingress_ready'
+    %Error-PROCASSWIRE: tb/scratch/claude_cell_fsm.v:67:11: Procedural assignment to wire, perhaps intended var (IEEE 1800-2023 6.5): 'egress_valid'
+    %Error-PROCASSWIRE: tb/scratch/claude_cell_fsm.v:70:13: Procedural assignment to wire, perhaps intended var (IEEE 1800-2023 6.5): 'ingress_ready'
+    %Error-PROCASSWIRE: tb/scratch/claude_cell_fsm.v:131:11: Procedural assignment to wire, perhaps intended var (IEEE 1800-2023 6.5): 'egress_valid'
+    %Error-PROCASSWIRE: tb/scratch/claude_cell_fsm.v:135:19: Procedural assignment to wire, perhaps intended var (IEEE 1800-2023 6.5): 'egress_data'
+    %Error-PROCASSWIRE: tb/scratch/claude_cell_fsm.v:136:19: Procedural assignment to wire, perhaps intended var (IEEE 1800-2023 6.5): 'egress_data'
+    %Error-PROCASSWIRE: tb/scratch/claude_cell_fsm.v:137:22: Procedural assignment to wire, perhaps intended var (IEEE 1800-2023 6.5): 'egress_data'
+    %Error-PROCASSWIRE: tb/scratch/claude_cell_fsm.v:141:13: Procedural assignment to wire, perhaps intended var (IEEE 1800-2023 6.5): 'egress_valid'
+    %Warning-UNUSEDPARAM: tb/scratch/claude_cell_fsm.v:5:13: Parameter is not used: 'MEM_DEPTH'
+    %Warning-UNUSEDSIGNAL: tb/scratch/claude_cell_fsm.v:25:17: Signal is not used: 'hebbian_dout'
+    %Warning-UNUSEDPARAM: tb/scratch/claude_cell_fsm.v:31:14: Parameter is not used: 'OPCODE_WIDTH'
+    %Error: Exiting due to 10 error(s), 8 warning(s)
+== tb/scratch/claude_hebbian_edge_update.v 
+  iverilog: PASS
+  verilator:
+    %Warning-DECLFILENAME: tb/scratch/claude_hebbian_edge_update.v:2:8: Filename 'claude_hebbian_edge_update' does not match MODULE name: 'hebbian_edge_update'
+    %Warning-WIDTHEXPAND: tb/scratch/claude_hebbian_edge_update.v:57:21: Operator ADD expects 32 bits on the LHS, but LHS's VARREF 'w_r1' generates 16 bits.
+    %Warning-UNUSEDPARAM: tb/scratch/claude_hebbian_edge_update.v:3:13: Parameter is not used: 'LR_WIDTH'
+    %Warning-UNUSEDSIGNAL: tb/scratch/claude_hebbian_edge_update.v:24:14: Signal is not used: 'pre_r1'
+    %Warning-UNUSEDSIGNAL: tb/scratch/claude_hebbian_edge_update.v:24:22: Signal is not used: 'post_r1'
+    %Warning-UNUSEDSIGNAL: tb/scratch/claude_hebbian_edge_update.v:27:14: Bits of signal are not used: 'sum'[14:0]
+    %Error: Exiting due to 6 warning(s)
+== tb/scratch/claude_link_arbiter.v 
+  iverilog: FAIL
+    tb/scratch/claude_link_arbiter.v:12: error: Ports cannot be unpacked arrays. Try enabling SystemVerilog support.
+    1 error(s) during elaboration.
+  verilator:
+    %Warning-DECLFILENAME: tb/scratch/claude_link_arbiter.v:2:8: Filename 'claude_link_arbiter' does not match MODULE name: 'link_arbiter'
+    %Warning-UNUSEDPARAM: tb/scratch/claude_link_arbiter.v:5:13: Parameter is not used: 'FIFO_DEPTH'
+    %Warning-UNUSEDSIGNAL: tb/scratch/claude_link_arbiter.v:7:9: Signal is not used: 'clk'
+    %Warning-UNUSEDSIGNAL: tb/scratch/claude_link_arbiter.v:7:14: Signal is not used: 'rst_n'
+    %Warning-UNUSEDSIGNAL: tb/scratch/claude_link_arbiter.v:21:20: Signal is not driven, nor used: 'priority'
+    %Warning-UNUSEDSIGNAL: tb/scratch/claude_link_arbiter.v:23:23: Signal is not driven, nor used: 'mux_data'
+    %Error: Exiting due to 6 warning(s)
+== tb/scratch/claude_tick_scheduler.v 
+  iverilog: FAIL
+    tb/scratch/claude_tick_scheduler.v:34: syntax error
+    tb/scratch/claude_tick_scheduler.v:37: syntax error
+    tb/scratch/claude_tick_scheduler.v:37: error: Malformed statement
+    tb/scratch/claude_tick_scheduler.v:34: error: Incomprehensible for loop.
+  verilator:
+    %Error: tb/scratch/claude_tick_scheduler.v:34:14: syntax error, unexpected IDENTIFIER, expecting '='
+    %Error: tb/scratch/claude_tick_scheduler.v:34:30: syntax error, unexpected ';'
+    %Error: tb/scratch/claude_tick_scheduler.v:34:41: syntax error, unexpected ')', expecting ';'
+    %Error: Exiting due to 3 error(s)
+== tb/scratch/glm_qs_cell_core.v 
+  iverilog: FAIL
+    tb/scratch/glm_qs_cell_core.v:69: error: Unable to bind wire/reg/memory `st' in `qs_cell_core'
+    tb/scratch/glm_qs_cell_core.v:113:      : A symbol with that name was declared here. Check for declaration after use.
+    tb/scratch/glm_qs_cell_core.v:69: error: Unable to bind wire/reg/memory `S_IDLE' in `qs_cell_core'
+    tb/scratch/glm_qs_cell_core.v:109:      : A symbol with that name was declared here. Check for declaration after use.
+    tb/scratch/glm_qs_cell_core.v:69: error: Unable to elaborate r-value: (((in_v)&&(imine))&&((st)==(S_IDLE)))&&(!(hl_strobe))
+    3 error(s) during elaboration.
+  verilator:
+    %Warning-DECLFILENAME: tb/scratch/glm_qs_cell_core.v:2:8: Filename 'glm_qs_cell_core' does not match MODULE name: 'qs_cell_core'
+    %Warning-UNUSEDSIGNAL: tb/scratch/glm_qs_cell_core.v:25:42: Bits of signal are not used: 'eram_dout'[80:9]
+    %Warning-UNUSEDSIGNAL: tb/scratch/glm_qs_cell_core.v:28:33: Signal is not used: 'he_ro'
+    %Warning-UNUSEDSIGNAL: tb/scratch/glm_qs_cell_core.v:30:33: Signal is not used: 'he_sat'
+    %Warning-UNUSEDSIGNAL: tb/scratch/glm_qs_cell_core.v:41:33: Signal is not used: 'tick_evt'
+    %Warning-UNUSEDSIGNAL: tb/scratch/glm_qs_cell_core.v:60:22: Signal is not used: 'ttl_drop_sticky'
+    %Error: Exiting due to 6 warning(s)
+== tb/scratch/glm_qs_cos.v 
+  iverilog: PASS
+  verilator:
+    %Warning-DECLFILENAME: tb/scratch/glm_qs_cos.v:2:8: Filename 'glm_qs_cos' does not match MODULE name: 'qs_cos'
+    %Warning-UNUSEDSIGNAL: tb/scratch/glm_qs_cos.v:35:36: Bits of signal are not used: 't1'[47:32]
+    %Error: Exiting due to 2 warning(s)
+== tb/scratch/glm_qs_dial.v 
+  iverilog: PASS
+  verilator:
+    %Warning-DECLFILENAME: tb/scratch/glm_qs_dial.v:4:8: Filename 'glm_qs_dial' does not match MODULE name: 'qs_dial'
+    %Error: Exiting due to 1 warning(s)
+== tb/scratch/glm_qs_fabric.v 
+  iverilog: FAIL
+    tb/scratch/glm_qs_fabric.v:88: error: Unknown module type: qs_tickgen
+    tb/scratch/glm_qs_fabric.v:46: error: Unknown module type: qs_cell
+    tb/scratch/glm_qs_fabric.v:46: error: Unknown module type: qs_cell
+    tb/scratch/glm_qs_fabric.v:46: error: Unknown module type: qs_cell
+    tb/scratch/glm_qs_fabric.v:46: error: Unknown module type: qs_cell
+    tb/scratch/glm_qs_fabric.v:46: error: Unknown module type: qs_cell
+    tb/scratch/glm_qs_fabric.v:46: error: Unknown module type: qs_cell
+    tb/scratch/glm_qs_fabric.v:46: error: Unknown module type: qs_cell
+    tb/scratch/glm_qs_fabric.v:46: error: Unknown module type: qs_cell
+    tb/scratch/glm_qs_fabric.v:46: error: Unknown module type: qs_cell
+    tb/scratch/glm_qs_fabric.v:46: error: Unknown module type: qs_cell
+    tb/scratch/glm_qs_fabric.v:46: error: Unknown module type: qs_cell
+    tb/scratch/glm_qs_fabric.v:46: error: Unknown module type: qs_cell
+    tb/scratch/glm_qs_fabric.v:46: error: Unknown module type: qs_cell
+    tb/scratch/glm_qs_fabric.v:46: error: Unknown module type: qs_cell
+    tb/scratch/glm_qs_fabric.v:46: error: Unknown module type: qs_cell
+    tb/scratch/glm_qs_fabric.v:46: error: Unknown module type: qs_cell
+    18 error(s) during elaboration.
+    *** These modules were missing:
+            qs_cell referenced 16 times.
+            qs_tickgen referenced 1 times.
+    ***
+  verilator:
+    %Warning-DECLFILENAME: tb/scratch/glm_qs_fabric.v:2:8: Filename 'glm_qs_fabric' does not match MODULE name: 'qs_fabric'
+    %Error: tb/scratch/glm_qs_fabric.v:41:13: Cannot find file containing module: 'qs_cell'
+    %Error: tb/scratch/glm_qs_fabric.v:41:13: This may be because there's no search path specified with -I<dir>.
+    %Error: tb/scratch/glm_qs_fabric.v:88:5: Cannot find file containing module: 'qs_tickgen'
+    %Error: Exiting due to 3 error(s), 1 warning(s)
+== tb/scratch/glm_qs_hebb_edge.v 
+  iverilog: PASS
+  verilator:
+    %Warning-DECLFILENAME: tb/scratch/glm_qs_hebb_edge.v:2:8: Filename 'glm_qs_hebb_edge' does not match MODULE name: 'qs_hebb_edge'
+    %Warning-UNOPTFLAT: tb/scratch/glm_qs_hebb_edge.v:42:20: Signal unoptimizable: Circular combinational logic: 'qs_hebb_edge.t'
+    %Error: Exiting due to 2 warning(s)
+== tb/scratch/glm_qs_ln.v 
+  iverilog: PASS
+  verilator:
+    %Warning-DECLFILENAME: tb/scratch/glm_qs_ln.v:2:8: Filename 'glm_qs_ln' does not match MODULE name: 'qs_ln'
+    %Warning-WIDTHTRUNC: tb/scratch/glm_qs_ln.v:18:19: Operator ASSIGN expects 24 bits on the Assign RHS, but Assign RHS's MULS generates 32 bits.
+    %Warning-UNUSEDSIGNAL: tb/scratch/glm_qs_ln.v:42:16: Bits of signal are not used: 'f_r'[7:0]
+    %Warning-UNUSEDSIGNAL: tb/scratch/glm_qs_ln.v:63:17: Bits of signal are not used: 'prod'[3:0]
+    %Error: Exiting due to 4 warning(s)
+== tb/scratch/glm_qs_mathtail.v 
+  iverilog: PASS
+  verilator:
+    %Warning-DECLFILENAME: tb/scratch/glm_qs_mathtail.v:2:8: Filename 'glm_qs_mathtail' does not match MODULE name: 'qs_mathtail'
+    %Warning-WIDTHTRUNC: tb/scratch/glm_qs_mathtail.v:67:26: Bit extraction of var[47:0] requires 6 bit index, not 7 bits.
+    %Warning-WIDTHTRUNC: tb/scratch/glm_qs_mathtail.v:70:26: Bit extraction of var[47:0] requires 6 bit index, not 7 bits.
+    %Warning-UNUSEDSIGNAL: tb/scratch/glm_qs_mathtail.v:21:19: Bits of signal are not used: 'drem'[48]
+    %Warning-UNUSEDSIGNAL: tb/scratch/glm_qs_mathtail.v:23:19: Bits of signal are not used: 'rrem'[47:46]
+    %Warning-UNUSEDSIGNAL: tb/scratch/glm_qs_mathtail.v:34:20: Bits of signal are not used: 'rdsh'[47:2]
+    %Error: Exiting due to 6 warning(s)
+== tb/scratch/glm_qs_tickgen.v 
+  iverilog: PASS
+  verilator:
+    %Warning-DECLFILENAME: tb/scratch/glm_qs_tickgen.v:3:8: Filename 'glm_qs_tickgen' does not match MODULE name: 'qs_tickgen'
+    %Error: Exiting due to 1 warning(s)
+== tb/scratch/glm_tb_qs_dial.v (testbench example, excluded from tally)
+== tb/scratch/opencode_q_cell_core.v 
+  iverilog: PASS
+  verilator:
+    %Warning-DECLFILENAME: tb/scratch/opencode_q_cell_core.v:3:8: Filename 'opencode_q_cell_core' does not match MODULE name: 'q_cell_core'
+    %Warning-WIDTHEXPAND: tb/scratch/opencode_q_cell_core.v:296:42: Operator ADD expects 32 bits on the LHS, but LHS's VARREF 'act' generates 16 bits.
+    %Warning-WIDTHEXPAND: tb/scratch/opencode_q_cell_core.v:402:38: Operator SUB expects 32 bits on the LHS, but LHS's VARREF 'act' generates 16 bits.
+    %Warning-WIDTHEXPAND: tb/scratch/opencode_q_cell_core.v:402:45: Operator SHIFTRS expects 32 bits on the LHS, but LHS's VARREF 'act' generates 16 bits.
+    %Warning-UNUSEDSIGNAL: tb/scratch/opencode_q_cell_core.v:47:33: Signal is not used: 'hb_ready'
+    %Warning-UNUSEDSIGNAL: tb/scratch/opencode_q_cell_core.v:60:33: Signal is not used: 'cs_busy'
+    %Warning-UNUSEDSIGNAL: tb/scratch/opencode_q_cell_core.v:83:33: Signal is not used: 's_phase'
+    %Warning-UNUSEDPARAM: tb/scratch/opencode_q_cell_core.v:100:22: Parameter is not used: 'ST_FIREW'
+    %Warning-UNUSEDSIGNAL: tb/scratch/opencode_q_cell_core.v:103:22: Signal is not used: 'lr_op'
+    %Warning-UNUSEDSIGNAL: tb/scratch/opencode_q_cell_core.v:105:22: Bits of signal are not used: 'lr_a0'[15:4]
+    %Warning-UNUSEDSIGNAL: tb/scratch/opencode_q_cell_core.v:105:36: Signal is not used: 'lr_a2'
+    %Error: Exiting due to 11 warning(s)
+== tb/scratch/opencode_q_cosine_stream.v tb/scratch/opencode_q_isqrt16.v tb/scratch/opencode_q_divu.v
+  iverilog: PASS
+  verilator:
+    %Warning-DECLFILENAME: tb/scratch/opencode_q_cosine_stream.v:6:8: Filename 'opencode_q_cosine_stream' does not match MODULE name: 'q_cosine_stream'
+    %Warning-DECLFILENAME: tb/scratch/opencode_q_isqrt16.v:3:8: Filename 'opencode_q_isqrt16' does not match MODULE name: 'q_isqrt16'
+    %Warning-DECLFILENAME: tb/scratch/opencode_q_divu.v:3:8: Filename 'opencode_q_divu' does not match MODULE name: 'q_divu'
+    %Warning-WIDTHTRUNC: tb/scratch/opencode_q_divu.v:46:24: Operator ASSIGNDLY expects 6 bits on the Assign RHS, but Assign RHS's SUB generates 32 bits.
+    %Warning-WIDTHEXPAND: tb/scratch/opencode_q_isqrt16.v:16:29: Operator OR expects 17 bits on the LHS, but LHS's VARREF 'root' generates 16 bits.
+    %Warning-WIDTHTRUNC: tb/scratch/opencode_q_cosine_stream.v:48:21: Operator ASSIGNW expects 32 bits on the Assign RHS, but Assign RHS's SHIFTR generates 40 bits.
+    %Warning-WIDTHTRUNC: tb/scratch/opencode_q_cosine_stream.v:49:21: Operator ASSIGNW expects 32 bits on the Assign RHS, but Assign RHS's SHIFTR generates 40 bits.
+    %Warning-WIDTHEXPAND: tb/scratch/opencode_q_cosine_stream.v:109:32: Operator ADD expects 40 bits on the RHS, but RHS's VARREF 'xy' generates 32 bits.
+    %Warning-WIDTHEXPAND: tb/scratch/opencode_q_cosine_stream.v:110:32: Operator ADD expects 40 bits on the RHS, but RHS's VARREF 'xx' generates 32 bits.
+    %Warning-WIDTHEXPAND: tb/scratch/opencode_q_cosine_stream.v:111:32: Operator ADD expects 40 bits on the RHS, but RHS's VARREF 'yy' generates 32 bits.
+    %Warning-WIDTHEXPAND: tb/scratch/opencode_q_cosine_stream.v:113:43: Operator ADD expects 40 bits on the RHS, but RHS's VARREF 'xy' generates 32 bits.
+    %Warning-UNUSEDSIGNAL: tb/scratch/opencode_q_cosine_stream.v:55:17: Signal is not used: 'sq_busy'
+    %Warning-UNUSEDSIGNAL: tb/scratch/opencode_q_cosine_stream.v:55:35: Signal is not used: 'dv_busy'
+    %Warning-UNUSEDSIGNAL: tb/scratch/opencode_q_cosine_stream.v:57:20: Bits of signal are not used: 'dv_quot'[55:16]
+    %Warning-UNUSEDSIGNAL: tb/scratch/opencode_q_divu.v:21:20: Bits of signal are not used: 'rem'[32]
+    %Warning-UNUSEDSIGNAL: tb/scratch/opencode_q_divu.v:22:20: Bits of signal are not used: 'quot'[55]
+    %Error: Exiting due to 16 warning(s)
+== tb/scratch/opencode_q_dialfile.v 
+  iverilog: PASS
+  verilator:
+    %Warning-DECLFILENAME: tb/scratch/opencode_q_dialfile.v:3:8: Filename 'opencode_q_dialfile' does not match MODULE name: 'q_dialfile'
+    %Error: Exiting due to 1 warning(s)
+== tb/scratch/opencode_q_divu.v 
+  iverilog: PASS
+  verilator:
+    %Warning-DECLFILENAME: tb/scratch/opencode_q_divu.v:3:8: Filename 'opencode_q_divu' does not match MODULE name: 'q_divu'
+    %Warning-UNUSEDSIGNAL: tb/scratch/opencode_q_divu.v:21:20: Bits of signal are not used: 'rem'[32]
+    %Warning-UNUSEDSIGNAL: tb/scratch/opencode_q_divu.v:22:20: Bits of signal are not used: 'quot'[62]
+    %Error: Exiting due to 3 warning(s)
+== tb/scratch/opencode_q_flit_pipe.v 
+  iverilog: PASS
+  verilator:
+    %Warning-DECLFILENAME: tb/scratch/opencode_q_flit_pipe.v:3:8: Filename 'opencode_q_flit_pipe' does not match MODULE name: 'q_flit_pipe'
+    %Error: Exiting due to 1 warning(s)
+== tb/scratch/opencode_q_hebbian_edge.v 
+  iverilog: PASS
+  verilator:
+    %Warning-DECLFILENAME: tb/scratch/opencode_q_hebbian_edge.v:8:8: Filename 'opencode_q_hebbian_edge' does not match MODULE name: 'q_hebbian_edge'
+    %Warning-WIDTHEXPAND: tb/scratch/opencode_q_hebbian_edge.v:55:27: Operator ASSIGNW expects 32 bits on the Assign RHS, but Assign RHS's SEL generates 16 bits.
+    %Warning-WIDTHEXPAND: tb/scratch/opencode_q_hebbian_edge.v:56:27: Operator ASSIGNW expects 32 bits on the Assign RHS, but Assign RHS's SEL generates 16 bits.
+    %Warning-WIDTHEXPAND: tb/scratch/opencode_q_hebbian_edge.v:57:51: Operator SUB expects 34 bits on the LHS, but LHS's REPLICATE generates 17 bits.
+    %Warning-WIDTHEXPAND: tb/scratch/opencode_q_hebbian_edge.v:58:51: Operator ADD expects 34 bits on the LHS, but LHS's REPLICATE generates 17 bits.
+    %Warning-WIDTHEXPAND: tb/scratch/opencode_q_hebbian_edge.v:59:51: Operator SUB expects 34 bits on the LHS, but LHS's REPLICATE generates 17 bits.
+    %Warning-WIDTHEXPAND: tb/scratch/opencode_q_hebbian_edge.v:60:51: Operator ADD expects 34 bits on the LHS, but LHS's REPLICATE generates 17 bits.
+    %Warning-UNUSEDSIGNAL: tb/scratch/opencode_q_hebbian_edge.v:36:22: Bits of signal are not used: 'dfm'[47,30:0]
+    %Warning-UNUSEDSIGNAL: tb/scratch/opencode_q_hebbian_edge.v:36:27: Bits of signal are not used: 'dsm'[47,30:0]
+    %Error: Exiting due to 9 warning(s)
+== tb/scratch/opencode_q_isqrt16.v 
+  iverilog: PASS
+  verilator:
+    %Warning-DECLFILENAME: tb/scratch/opencode_q_isqrt16.v:3:8: Filename 'opencode_q_isqrt16' does not match MODULE name: 'q_isqrt16'
+    %Warning-WIDTHEXPAND: tb/scratch/opencode_q_isqrt16.v:16:29: Operator OR expects 17 bits on the LHS, but LHS's VARREF 'root' generates 16 bits.
+    %Error: Exiting due to 2 warning(s)
+== tb/scratch/opencode_q_link_ringport.v 
+  iverilog: PASS
+  verilator:
+    %Warning-DECLFILENAME: tb/scratch/opencode_q_link_ringport.v:5:8: Filename 'opencode_q_link_ringport' does not match MODULE name: 'q_link_ringport'
+    %Warning-UNUSEDSIGNAL: tb/scratch/opencode_q_link_ringport.v:11:31: Signal is not used: 'clk'
+    %Warning-UNUSEDSIGNAL: tb/scratch/opencode_q_link_ringport.v:12:31: Signal is not used: 'rst_n'
+    %Error: Exiting due to 3 warning(s)
+== tb/scratch/opencode_q_tick_sched.v 
+  iverilog: PASS
+  verilator:
+    %Warning-DECLFILENAME: tb/scratch/opencode_q_tick_sched.v:3:8: Filename 'opencode_q_tick_sched' does not match MODULE name: 'q_tick_sched'
+    %Error: Exiting due to 1 warning(s)
+== tb/scratch/seed_hebbian_edge_update.v 
+  iverilog: PASS
+  verilator:
+    %Warning-DECLFILENAME: tb/scratch/seed_hebbian_edge_update.v:3:8: Filename 'seed_hebbian_edge_update' does not match MODULE name: 'hebbian_edge_update'
+    %Warning-CASEX: tb/scratch/seed_hebbian_edge_update.v:37:9: Suggest casez (with ?'s) in place of casex (with X's)
+    %Error: Exiting due to 2 warning(s)
+== tb/scratch/seed_quilt_cell.v 
+  iverilog: FAIL
+    tb/scratch/seed_quilt_cell.v:1: error: Variable declaration in unnamed block requires SystemVerilog.
+    tb/scratch/seed_quilt_cell.v:1: error: Variable declaration in unnamed block requires SystemVerilog.
+  verilator:
+    %Warning-DECLFILENAME: tb/scratch/seed_quilt_cell.v:3:8: Filename 'seed_quilt_cell' does not match MODULE name: 'quilt_cell'
+    %Error: tb/scratch/seed_quilt_cell.v:50:62: Slice selection '[3:0]' has reversed range order versus data type's '[0:7]'
+    %Warning-WIDTHTRUNC: tb/scratch/seed_quilt_cell.v:56:32: Bit extraction of array[7:0] requires 3 bit index, not 8 bits.
+    %Warning-WIDTHTRUNC: tb/scratch/seed_quilt_cell.v:57:32: Bit extraction of array[7:0] requires 3 bit index, not 8 bits.
+    %Warning-WIDTHTRUNC: tb/scratch/seed_quilt_cell.v:57:50: Bit extraction of array[7:0] requires 3 bit index, not 8 bits.
+    %Error: tb/scratch/seed_quilt_cell.v:70:13: Cannot find file containing module: 'hebbian_edge_update'
+    %Error: tb/scratch/seed_quilt_cell.v:70:13: This may be because there's no search path specified with -I<dir>.
+    %Error: Exiting due to 3 error(s), 4 warning(s)
+== tb/scratch/seed_quilt_fabric.v 
+  iverilog: FAIL
+    tb/scratch/seed_quilt_fabric.v:15: syntax error
+    tb/scratch/seed_quilt_fabric.v:15: error: Invalid module instantiation
+  verilator:
+    %Error-UNSUPPORTED: tb/scratch/seed_quilt_fabric.v:15:41: Unsupported: Verilog 2001-config reserved word not implemented: 'cell'
+    %Error: tb/scratch/seed_quilt_fabric.v:15:46: syntax error, unexpected '(', expecting IDENTIFIER or randomize
+    %Error: Exiting due to 2 error(s)
+== tb/scratch/seed_quilt_cell.v + seed_hebbian_edge_update.v (dependency retry)
+  iverilog: tb/scratch/seed_quilt_cell.v:1: error: Variable declaration in unnamed block requires SystemVerilog.
+  iverilog: tb/scratch/seed_quilt_cell.v:1: error: Variable declaration in unnamed block requires SystemVerilog.
+  %Error: tb/scratch/seed_quilt_cell.v:50:62: Slice selection '[3:0]' has reversed range order versus data type's '[0:7]'
+  %Warning-WIDTHTRUNC: tb/scratch/seed_quilt_cell.v:56:32: Bit extraction of array[7:0] requires 3 bit index, not 8 bits.
+  %Warning-WIDTHTRUNC: tb/scratch/seed_quilt_cell.v:57:32: Bit extraction of array[7:0] requires 3 bit index, not 8 bits.
+  %Warning-WIDTHTRUNC: tb/scratch/seed_quilt_cell.v:57:50: Bit extraction of array[7:0] requires 3 bit index, not 8 bits.
+  %Warning-SELRANGE: tb/scratch/seed_quilt_cell.v:73:35: Selection index out of range: 129:114 outside 127:0
+  %Error: Exiting due to 1 error(s), 6 warning(s)
