@@ -240,7 +240,6 @@ module q_cell_core #(
             cell_id   <= {AIDW{1'b0}};
             act       <= {PW{1'b0}};
             refr      <= {PW{1'b0}};
-            tick_pend <= 1'b0;
             eidx      <= {(EIW+1){1'b0}};
             wacc      <= {(PW+1){1'b0}};
             viewdat   <= {PW{1'b0}};
@@ -297,7 +296,7 @@ module q_cell_core #(
                       hb_sel   <= {EDGES_N{1'b0}};
                       state    <= ST_TICK;
                   end else begin
-                      ci_ready <= 1'b1;
+                      ci_ready <= !(s_tick || tick_pend);  // Q2fix: never offer ready with a tick pending (or being set) -- a one-cycle hole here lets an upstream pipe pop a flit the dispatching FSM ignores (silent drop, found by formal cell_core.tick/fabric.conservation)
                       hb_sel   <= {EDGES_N{1'b0}};
                       if (ci_valid && ci_ready) begin
 
@@ -359,7 +358,7 @@ module q_cell_core #(
               ST_EFFT: begin
                   if (eidx == EDGES_N) begin
                       // unknown source: dropped (link before effect)
-                      ci_ready <= 1'b1;
+                      ci_ready <= !(s_tick || tick_pend);  // Q2fix: never offer ready with a tick pending (or being set) -- a one-cycle hole here lets an upstream pipe pop a flit the dispatching FSM ignores (silent drop, found by formal cell_core.tick/fabric.conservation)
                       state    <= ST_IDLE;
                   end else if (ev[eidx[EIW-1:0]] && (etab[eidx[EIW-1:0]] == lr_src)) begin
                       hb_sel <= 1'b1 << eidx[EIW-1:0];
@@ -389,7 +388,7 @@ module q_cell_core #(
                   // readout done: integrate with the post-update weight
                   if (hb_done) begin
                       act      <= sclip16(eff_sum);
-                      ci_ready <= 1'b1;
+                      ci_ready <= !(s_tick || tick_pend);  // Q2fix: never offer ready with a tick pending (or being set) -- a one-cycle hole here lets an upstream pipe pop a flit the dispatching FSM ignores (silent drop, found by formal cell_core.tick/fabric.conservation)
                       state    <= ST_IDLE;
                   end
               end
@@ -465,7 +464,7 @@ module q_cell_core #(
                   lo_dat   <= viewdat;
                   if (lo_valid && lo_ready) begin
                       lo_valid <= 1'b0;
-                      ci_ready <= 1'b1;
+                      ci_ready <= !(s_tick || tick_pend);  // Q2fix: never offer ready with a tick pending (or being set) -- a one-cycle hole here lets an upstream pipe pop a flit the dispatching FSM ignores (silent drop, found by formal cell_core.tick/fabric.conservation)
                       state    <= ST_IDLE;
                   end
               end
@@ -504,7 +503,7 @@ module q_cell_core #(
                   end else begin
                       if (refr != {PW{1'b0}})
                           refr <= refr - 1'b1;
-                      ci_ready <= 1'b1;
+                      ci_ready <= !(s_tick || tick_pend);  // Q2fix: never offer ready with a tick pending (or being set) -- a one-cycle hole here lets an upstream pipe pop a flit the dispatching FSM ignores (silent drop, found by formal cell_core.tick/fabric.conservation)
                       state    <= ST_IDLE;
                   end
               end
@@ -514,7 +513,7 @@ module q_cell_core #(
                   if (eidx == EDGES_N) begin
                       act      <= {PW{1'b0}};
                       refr     <= d_refr;
-                      ci_ready <= 1'b1;
+                      ci_ready <= !(s_tick || tick_pend);  // Q2fix: never offer ready with a tick pending (or being set) -- a one-cycle hole here lets an upstream pipe pop a flit the dispatching FSM ignores (silent drop, found by formal cell_core.tick/fabric.conservation)
                       state    <= ST_IDLE;
                   end else if (ev[eidx[EIW-1:0]]) begin
                       lx_op    <= OP_EFF;
