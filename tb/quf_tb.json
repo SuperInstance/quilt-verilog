@@ -1,0 +1,29 @@
+{
+  "header": {
+    "quf.version": "quf.py 1.0",
+    "cell_count": 2,
+    "edge_count": 3,
+    "route_count": 3,
+    "edge.k": 8,
+    "tick_period": 64,
+    "quant.dials": "Q1.15",
+    "quant.edges": "Q1.15",
+    "quant.routing": "u8",
+    "align": 32
+  },
+  "dials": [
+    [2048, 128, 6, 12, 5, 20480, 4, 11469, 20, 0, 48, 0, 0, 0, 0, 0],
+    [2048, 128, 6, 12, 5, 24576, 4, 11469, 20, 1, 64, 0, 0, 0, 0, 0]
+  ],
+  "edges": [
+    {"src": 0, "dst": 1, "mode": 0, "slot": 0, "base": 4660,  "wh": 0, "age": 0,    "buckets": [0, 0, 0, 0, 0, 0, 0, 0]},
+    {"src": 0, "dst": 2, "mode": 1, "slot": 1, "base": 64,    "wh": 7, "age": 1000, "buckets": [0, 0, 0, 0, 0, 0, 0, 0]},
+    {"src": 1, "dst": 0, "mode": 0, "slot": 0, "base": 512,   "wh": 3, "age": 5,    "buckets": [0, 0, 0, 0, 0, 0, 0, 0]}
+  ],
+  "routing": [
+    {"dst": 1, "via": 1},
+    {"dst": 2, "via": 2},
+    {"dst": 15, "via": 15}
+  ],
+  "ticksched": {"tpw": 6, "phases": [0, 3]}
+}
