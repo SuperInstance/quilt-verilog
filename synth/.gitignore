@@ -1,0 +1,5 @@
+# regenerable artifacts (rebuild via the .ice40 scripts / sweep.sh)
+*.json
+*.asc
+yosys_*.log
+attrib.log
