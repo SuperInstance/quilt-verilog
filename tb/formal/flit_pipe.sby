@@ -1,0 +1,15 @@
+[options]
+mode prove
+depth 15
+
+[engines]
+smtbmc boolector
+
+[script]
+read -formal -D FORMAL q_flit_pipe.v
+read -formal f_flit_pipe.v   # DUT first: hierarchical refs (dut.b_v) must not become implicit wires
+prep -top f_flit_pipe
+
+[files]
+tb/formal/f_flit_pipe.v
+rtl/q_flit_pipe.v
