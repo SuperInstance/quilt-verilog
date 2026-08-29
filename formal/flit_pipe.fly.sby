@@ -1,0 +1,15 @@
+[options]
+mode bmc
+depth 40
+
+[engines]
+smtbmc boolector
+
+[script]
+read -formal q_flit_pipe.v
+read -formal f_flit_pipe_fly.v
+prep -top f_flit_pipe_fly
+
+[files]
+rtl/q_flit_pipe.v
+formal/f_flit_pipe_fly.v
