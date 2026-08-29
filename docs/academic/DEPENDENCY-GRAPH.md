@@ -4,7 +4,7 @@
 **Docs audited:** `docs/FOUNDATION.md` (the cell, judgment pseudometrics, ledger, distribution algebra) and `docs/SEMANTIC-TOWER.md` (compiler stack, snap contract, maintenance-zoom). Cross-doc anchors checked: `SYNTHESIS.md` (I1/I2/Q2/Q3), `QUF-SPEC.md`, `ABSTRACTION-MATH.md`, `README.md` (Laws 1–5), `BACK-DECK-APP.md`.
 **Bar:** foundation-to-foundation, every abstraction linked, no leaps.
 
-**Gap declared up front (G1):** `docs/academic/quilt-calculus.md` is **absent** — the concurrent lane has not landed it. This audit covers the two committed formal docs above and notes the integration point. See §6.
+**Re-sweep (G1 closure, same day):** `docs/academic/quilt-calculus.md` landed (commit `0e0e851`) after this audit's tree snapshot was taken; this document now extends the audit to it — **§2.4** (full statement inventory, 18 D + 7 A + 11 T + 2 P + 3 C), **§4** (re-sweep findings: 5 benign forward refs, 4 term-drift notes, 0 content leaps), **§7** (cross-doc reconciliation: cell tuple, snap transaction naming, envelopes parameter dictionary). **G1 is closed** — see §6. Note the timeline: the calculus commit (11:51) *predates* this audit's commit (11:56); the two lanes ran concurrently on divergent trees, which is why B9 and CALC-T10(b) independently discovered the same snap-transaction defect (convergent finding, §7.2).
 
 ---
 
@@ -105,7 +105,66 @@ Severity classes:
 | S-T8 | Corollary: tower read top-down (zoom = inverse of compilation) | §6 | S-D10, S-D4 | yes | INFORMAL (I3) — marked, no formal claim |
 | S-K1 | Substrate capability table | §7 | S-D3, F-D4 (latency class), SYN-Q2 | yes | OK (knowledge table, not theorem) |
 
-### 2.3 External anchors (cited, not defined in the audited docs)
+### 2.3 quilt-calculus.md (`CALC`) — re-sweep inventory (G1)
+
+The calculus is **self-contained by declaration** ("no other quilt document is a prerequisite for any proof") but deliberately co-indexed with the informal stack: every statement below is annotated with the informal concept it upgrades. Numbering collision warning (drift note DR3, §4): the calculus renumbers — its D2 is the pseudometric (F-D2.0), so judgment shifts D2→D3 and ledger D3→D4 relative to FOUNDATION. All citations here are doc-prefixed.
+
+| ID | Concept | Where | Depends on | Earlier? | Status / informal counterpart |
+|---|---|---|---|---|---|
+| CALC-A1 | Balance **as axiom, not theorem** | §3 | D4 (declared FWD CF1) | declared | status change vs F-D3 cond. (i) — same content, honest epistemic lift: conservation theorems now explicitly conditional |
+| CALC-A2 | Single-writer ownership | §3 | D4 (CF1) | declared | = F-D3.2 |
+| CALC-A3 | Per-cell serialization | §3 | D1 (CF1) | declared | = F0.3/F0.4 |
+| CALC-A4 | Nonce idempotence | §3 | D4 (CF1) | declared | = F-D3 cond. (iii) |
+| CALC-A5 | Bounded operation | §3 | — | — | absorbs SYN I1 as run-level assumption |
+| CALC-A6 | Tick deadline | §3 | — | — | absorbs SYN Q2 (non-starvable tick) |
+| CALC-A7 | View seriality | §3 | — | — | extracts F-D4's seriality clause as axiom |
+| CALC-D1 | Cell `(S, J, L, τ, δ)` | §4 | D3, D4, D7, D9, D18 | FWD (CF2) | **tuple identical to F-D1 — verified, §7.1** |
+| CALC-D2 | Pseudometric | §4 | — | — | = F-D2.0, promoted to own number |
+| CALC-D18 | Canonical encoding (QUF) | §4 | D3 (ε judgment) | yes | = F-D6 |
+| CALC-D3 | Judgment `J=(A,r)`, `V(x)` | §5 | D2 | yes | = F-D2 (formula identical) |
+| CALC-T3(a) | Dial monotonicity | §5 | D3 | yes | = F-P2.2 |
+| CALC-T3(b) | Alias quotient | §5 | D2 | yes | F-D2.0 alias prose made a theorem |
+| CALC-T3(c) | Tolerance additivity (triangle) | §5 | D2, D3 | yes | **new** — the mechanism B8's ε-sum and F-P2.4's composition rest on |
+| CALC-T3(d) | `d_log` multiplicative metric | §5 | D2 | yes | = F-P2.4 |
+| CALC-D4 | Postings/transactions/ledgers | §6 | A1, A2, A4, D6 | FWD (CF3) | = F-D3 + explicit induced `bal` map |
+| CALC-D5 | Cuts, crossing, in-flight | §6 | A2, D4 | yes | = F-D3.1 + crossing semantics (Φ = K_𝒞) |
+| CALC-D6 | Runs, events, commit boundaries | §6 | A3, A4 | yes | F0.3/F0.4 formalized |
+| CALC-T1 | Cut conservation (interior) | §6 | A1–A4, D5, D6 | yes | = F-T1, own proof (prefix induction; B1 uses well-founded order — equivalent for finite runs) |
+| CALC-T2 (+.1/.2) | In-flight identity, no-fabrication, partition meter | §6 | D5, D6, A4; A1 for observability | yes | B1(c) made a standalone identity; T2.1 = F-T8 |
+| CALC-D9 | Quilts, wiring, CELLS | §7 | D1, D4 | yes | = F-DC1 (traced-monoidal scope deferred in both) |
+| CALC-D10 | Mirror | §7 | D4 | yes | = F-D5.1 |
+| CALC-T4 | Mirror convergence | §7 | A2, A4, D10 | yes | = F-T3/B3 — same set-sum induction + semilattice remark; op-CRDT citation added |
+| CALC-D11 | Placement/stripe | §7 | D9 | yes | = F-D5.2 (same honest provision on routes) |
+| CALC-D12 | Composite, consolidation κ=π_E | §7 | A2, D4 | yes | = F-D5.3 (E⊔I = B4's 𝒜_int/𝒜_C) |
+| CALC-T5(a–d) | Consolidation lemma + nest laws | §7 | D4, D12, T4 | yes | = F-T5/F-T6/B4 — projection algebra vs boundary-ledger rule; same lemma, monad scope identical (balance-map level in both) |
+| CALC-D13 | Embedding, thinness | §7 | D3 | yes | = F-D5.4 (discrete metric, r=0) |
+| CALC-D14 | Interface agreement | §7 | A1 | yes | = F-D5.5 post-B5 conclusion, **but postings still not exhibited — B5's `T_link` remains the witness** (note N2, §4) |
+| CALC-D7 | (F,L)-bounded view, relay chains | §8 | A7 | yes | = F-D4 (i)–(iii); chain refresh discipline = E2's designed-in refresh |
+| CALC-T6 (+cor) | Freshness composition `F₁ + ΣLᵢ` | §8 | D7, A5–A7 | yes | = ELEGANCE E2 — **formulas verified identical** (§7.3); new as a theorem (F-D4 was single-view) |
+| CALC-D8 | Session illusion | §8 | D7 | yes | = F-D4 parameter |
+| CALC-T7 | Illusion rendering (monotone commits) | §8 | D8, A5–A7 | yes | = F-T2/B2 ordering algebra + linearizability/bounded-staleness anchors |
+| CALC-D15 | Snap pair, deadband judge, `T_snap` | §9 | D3, D16 | FWD (CF4) | = S-D5 (WITHIN/SNAP verdicts identical); carries the four-legged form (§7.2) |
+| CALC-T8 | Squared-form equivalence | §9 | D15 | yes | = S-T2 |
+| CALC-T9 | Deadband invariant `≤Δ` / mid-tick `≤Δ+ρ` | §9 | D15, T8 | yes | the invariant under B8(3)/B10(1); ρ ↔ d_max·T (§7.3 dictionary) |
+| CALC-T10(a) | Authority conservation `Φ=1` | §9 | T1, A2, D15 | yes | = B9 invariant 2 |
+| CALC-T10(b) | **Four-legged balance emendation** | §9 | A1, D15 | yes | = B9 — same defect, same repair, independent discovery; account-name drift → §7.2 |
+| CALC-T10(c) | Linear snap-debt bound `D(N) ≤ (Δ+ρ)(1+⌊Nρ/Δ⌋)` | §9 | T9, D15 | yes | **new**; consistent with E5's invariants |
+| CALC-T10(d) | Reality-wins, silence-freedom | §9 | T2.1, T9, A4 | yes | soundness wrap; closing sentence re-imports the max-form — DR2, §4 |
+| CALC-D16 | Measurement basis, covering, Pythagorean | §10 | — | — | = S-D6/S-D7 |
+| CALC-T11(a) | Covering radius `b√n/2` | §10 | D16 | yes | = S-T3/B7 (same proof shape: rounding + cell center) |
+| CALC-T11(b) | Exactness of integer chains | §10 | — | yes | = B6 restricted to `{+,−,×,cmp}` (B6 also covers shifts/saturate — compatible, B6 broader) |
+| CALC-T11(c) | Verdict uniqueness across substrates | §10 | T8, T11(b), D15 | yes | B6's theorem clause made explicit |
+| CALC-T11(d) | Honest fixed-point fallback | §10 | T3(c) | yes | = B8's ε_env composition |
+| CALC-D17 | Rendering chain | §11 | D9 | yes | = S-D10 chain |
+| CALC-P1 | Zoom localization ("no fourth place") | §11 | D17 | yes | S-T7 as a formal induction |
+| CALC-P2 | Language below the horizon | §12 | D18, D1/D3, D2, T11(b) | yes | = S-T1/B6 (Σεⱼ, =0 pure-integer case) |
+| CALC-C1 | Freshness–partition dichotomy | §13 | T1, T2, T2.2, T6, T7 | yes | F-P1 sharpened (dichotomy + Lyapunov candidate `I(t)`) — OPEN, same owner |
+| CALC-C2 | Judgment-drift bound | §13 | T3(b) | yes | = F-P2 — OPEN |
+| CALC-C3 | Lossless compaction | §13 | D4, T4 remark | yes | = F-P3 (provenance-of-exclusions) — OPEN |
+
+**Defined-before-use verdict (mechanical check):** every D#/T#/axiom reference inside a proof resolves to a statement defined earlier in document order, with five exceptions — all benign one-way forward references (CF1–CF5, §4), none circular, all of the same reading-order-convenience class as F1. **Content leaps in quilt-calculus.md: 0.** Balance is not smuggled (A1 declares it); the three unprovable claims are honestly filed as C1–C3.
+
+### 2.4 External anchors (cited, not defined in the audited docs)
 
 | Anchor | Cited by | Status |
 |---|---|---|
@@ -180,6 +239,23 @@ graph TD
         TAB["S-K1 Substrate table"]
     end
 
+    subgraph CALC["quilt-calculus.md (re-sweep)"]
+        CA["CALC-A1..A7 axioms<br/>(balance = axiom)"]
+        CD1c["CALC-D1 cell (≡F-D1)"]
+        CD3c["CALC-D3 judgment (≡F-D2)"]
+        CD4c["CALC-D4 ledger (≡F-D3)"]
+        CT12["CALC-T1/T2 conservation +<br/>in-flight identity (≡B1)"]
+        CT3c["CALC-T3 judgment structure<br/>(+ additivity — new)"]
+        CT4c["CALC-T4 mirror conv. (≡B3)"]
+        CT5c["CALC-T5 nest laws (≡B4)"]
+        CT67["CALC-T6/T7 freshness comp.<br/>+ illusion (≡E2/B2)"]
+        CD15c["CALC-D15 snap pair (≡S-D5)"]
+        CT10["CALC-T10 snap soundness<br/>(≡B9; T10(c) new)"]
+        CT11["CALC-T11 covering +<br/>float-free (≡B6/B7/B8)"]
+        CP2c["CALC-P2 below-horizon (≡B6)"]
+        CC["CALC-C1..C3 conjectures<br/>(= F-P1..P3, sharpened)"]
+    end
+
     subgraph EXT["External anchors"]
         LAWS["README Laws 1-5"]
         SYNI2["SYNTHESIS I1/I2/Q2/Q3"]
@@ -247,6 +323,31 @@ graph TD
     L0c --> OPC --> L2m --> L3b
     L3b --> MZ
 
+    %% calculus upgrade edges (re-sweep)
+    CA --> CD1c
+    D1 --> CD1c
+    D2 --> CD3c
+    D3 --> CD4c
+    CD4c --> CT12
+    T1 --> CT12
+    D2 --> CT3c
+    D3 --> CT4c
+    T3 --> CT4c
+    NST --> CT5c
+    T5 --> CT5c
+    D4 --> CT67
+    T2 --> CT67
+    SP --> CD15c
+    SNCT --> CT10
+    CD15c --> CT10
+    MB --> CT11
+    BI --> CT11
+    FFL --> CT11
+    LHL --> CP2c
+    FFL --> CP2c
+    CT12 --> CC
+    CT67 --> CC
+
     classDef leap fill:#fdd,stroke:#c00,stroke-width:2px;
     classDef fwd fill:#ffd,stroke:#a80;
     classDef ok fill:#dfd,stroke:#080;
@@ -255,6 +356,8 @@ graph TD
     class D1,NST fwd;
     class D2,D3,D4,MIR,STR,EMB,AGR,D6,L0c,MZ ok;
     class P1,P2,P3 open;
+    class CD1c,CD3c,CD4c,CT12,CT3c,CT4c,CT5c,CT67,CD15c,CT10,CT11,CP2c,CC calc;
+    classDef calc fill:#ddf,stroke:#46b,stroke-width:2px;
 ```
 
 ---
@@ -286,6 +389,32 @@ graph TD
 | F4 | "§1.3 explains why none is needed" — the argument lives in the D3 consensus paragraph; stale cross-ref | cosmetic |
 | F5 | SYNTHESIS Q3 assertion `W/2 − 1 ≤ Ŵ ≤ 2W + 1` vs. proven envelope `[W, 2W)`: the ±1 is integer slack, the /2 is fourfold looseness; assertion can be tightened to `W − 1 ≤ Ŵ ≤ 2W + 1` without touching RTL | ELEGANCE E4 |
 
+### Re-sweep findings — quilt-calculus.md (G1 closure)
+
+**Content leaps found: 0.** Every proof term resolves (mechanical scan of all D/T/A/P/C references against definition positions); balance is an honest axiom (A1), and the three unprovable claims are filed as conjectures C1–C3 rather than smuggled lemmas.
+
+**Benign forward references in the calculus (CF series)** — all one-way, non-circular, same class as F1 (reading-order convenience):
+
+| # | Forward ref | Where | Disposition |
+|---|---|---|---|
+| CF1 | §3 axioms cite D1/D4 (accounts, cells) | §3 preamble | declared in prose ("assumes a fixed universe of accounts (D4) and cells (D1)"); axioms are constraints *on* those objects, not consumers of their internals |
+| CF2 | D1 (cell) cites D3, D4, D7, D9 | §4 | tuple assembly over objects defined next — dependency direction is one-way (same resolution as F1/BRIDGES §7) |
+| CF3 | D4 (ledger) cites D6 (application events) | §6 | D6 makes precise what D4's `log` records; one-way |
+| CF4 | D15 (snap pair) cites D16 (measurement basis) | §9→§10 | one-line basis condition; D16 depends on nothing in §9 |
+| CF5 | D2 cites T3(d) ("see T3(d)") | §4→§5 | annotation pointer only; T3(d) is proved where stated |
+
+**Term drift register (DR series)** — same name or same object, different formalization/wording across docs; all reconciled in §7, none a leap:
+
+| # | Drift | Docs | Disposition |
+|---|---|---|---|
+| DR1 | Snap fourth-posting account name: `T:ground-truth` vs `T:debt-issued`; authority accounts `authority-on-x` vs `auth` | BRIDGES B9 + ELEGANCE E5 vs CALC D15/T10(b) | same transaction (postings, signs, magnitudes, nonce identical) — dictionary + canonical names declared §7.2 |
+| DR2 | CALC T10(d) closing sentence re-imports "never exceeds max(Δ, sensor error)" — the exact form B10 corrected and envelopes sharpened | CALC §9 vs BRIDGES B10 / envelopes §4.3 | *implied* by CALC's own T9 (|g−s| ≤ Δ at boundaries, and Δ ≤ max(Δ, ε_s)) so not false — but stale; recommendation for calculus lane: cite T9's Δ directly. Envelopes' final form: displayed = Δ exactly, true = Δ+2ε |
+| DR3 | Numbering collision: judgment is F-D2 but CALC-D3; ledger is F-D3 but CALC-D4 (calculus promotes pseudometric to its own D2) | FOUNDATION vs calculus | citations must be doc-prefixed (this audit uses CALC-); noted at §2.3 head |
+| DR4 | S annotation: "finite, byte-addressable" vs "serializable (see D18)" | F-D1 vs CALC-D1 | refinement, compatible: D18's `dec∘enc = id_S` with finite binary codes forces every state to be finitely encodable — D18 *is* byte-addressability made mathematical |
+| N2 | CALC-D14 restates the agree-handshake as "balanced transaction, each side posts consent" without exhibiting postings — the pre-B5 form of L3 | CALC §7 vs BRIDGES B5 | compatible: B5's exhibited `T_link` + link≡shared-nonce definition is the witness; calculus lane should cite B5 |
+
+**Cosmetic:** the calculus abstract's statement registry says "13 proofs"; the document contains 27 ∎-terminated proof arguments (multi-part theorems counted per part). Undercount, no content impact — noted for the calculus lane's next pass.
+
 ### Explicitly informal / open / conditional (recorded, not leaps)
 
 - I1: Backend theorem (marked informal; asterisk → P1).
@@ -298,10 +427,10 @@ graph TD
 
 ## 5. Dependency-closure verdict (Casey's bar)
 
-- **Every definition and theorem in both docs now has its dependencies defined earlier or explicitly marked** (FWD / INFORMAL / OPEN / COND). The two doc-order forward references (F1, F2) are benign and resolved in BRIDGES §7.
+- **Every definition and theorem in the two original docs has its dependencies defined earlier or explicitly marked** (FWD / INFORMAL / OPEN / COND). The two doc-order forward references (F1, F2) are benign and resolved in BRIDGES §7.
 - **All 10 content leaps are fixed in `BRIDGES.md` with real derivations** (B1–B10), not prose gestures.
 - **No undefined term remains in a proof.** The only cited-but-unformalized objects are: Laws 1–5 (defined in README — pointer added), SYNTHESIS I1/I2/Q2/Q3 (defined and enforced in SYNTHESIS; machine-proof pending and honestly flagged there), QUF-SPEC, ABSTRACTION-MATH, and the ai-writings papers (external companions, cited by name).
-- **One explicit gap (G1):** `docs/academic/quilt-calculus.md` is absent. When it lands, the audit should re-run §2.2 against it (it is expected to add calculus-level derivations on top of D1–D5 and the snap contract; its absence means the "no leaps" verdict covers the two committed formal docs only).
+- **G1 closed (re-sweep):** `quilt-calculus.md` is audited (§2.3). **0 content leaps**; 5 benign forward refs (CF1–CF5); 5 drift notes (DR1–DR4, N2) all reconciled in §7 — none affects any proof's validity. The calculus independently re-derives or upgrades B1–B10's content (B9 and CALC-T10(b) even converge on the same four-legged snap repair from independent trees) and adds three genuinely new closures: CALC-T3(c) tolerance additivity, CALC-T6 k-chain freshness composition, CALC-T10(c) linear snap-debt bound. The "no leaps" verdict now covers **all three committed formal docs**.
 
 ---
 
@@ -309,8 +438,57 @@ graph TD
 
 | ID | Gap | Owner | Status |
 |---|---|---|---|
-| G1 | `docs/academic/quilt-calculus.md` not committed (concurrent lane) | calculus lane | open — audit re-run required on landing |
+| G1 | `docs/academic/quilt-calculus.md` not committed (concurrent lane) | calculus lane | **closed 2026-08-29 (audit-resweep):** landed as `0e0e851`; audited in §2.3 — 0 leaps, CF1–CF5 + DR1–DR4/N2 reconciled in §7 |
 | G2 | SYNTHESIS I1/I2/Q2/Q3 premises simulation-enforced; sby machine-proofs (AMATH checklist #3/#4) pending | formal lane | open — honest, tracked in AMATH |
 | G3 | Invariant M's provenance KV keys (§4.3) specified, not built | semantic-tower lane | open — M conditional until QUF keys ship |
 
-*Rigor-auditor lane, 2026-08-29. Companions: `BRIDGES.md` (the 10 fixes), `ELEGANCE.md` (the five shortest forms).*
+---
+
+## 7. Cross-doc reconciliation (re-sweep)
+
+### 7.1 The cell tuple — verified match, no drift
+
+| Organ | FOUNDATION F-D1 | Calculus CALC-D1 | Verdict |
+|---|---|---|---|
+| `S` | finite, byte-addressable (dials+edges+accounts+schedule) | set of states, serializable (D18) | match — DR4: D18 formalizes byte-addressability (see §4 table) |
+| `J` | `J : X → {ACCEPT, REJECT, AMBIGUOUS} × note` (D2) | same signature (D3) | match |
+| `L` | append-only log of balanced transactions | same + induced balance map explicit (D4) | match (refinement) |
+| `τ` | `τ : S → ℕ` | `τ : S → ℕ` | match |
+| `δ` | `δ ⊆ (E × S) → S`, alphabet E | identical | match |
+
+The five-opcode mapping table is reproduced verbatim in intent (qm_bind→dials⊂S, qm_link→D9 wiring, qm_effect→δ+L, qm_view→J+S bounded-freshness, qm_tick→τ then δ). **The tuple unifies; only the *numbering of the supporting definitions* shifts (DR3).**
+
+### 7.2 The snap transaction — B9 ≡ CALC-T10(b); canonical names declared
+
+Both lanes independently found the informal `T_snap` unbalanced (`Σ = |g−s| ≠ 0`) and independently produced the **same four-legged repair** (authority swap ⊕ drift booking, one nonce, both ledgers):
+
+| Posting | BRIDGES B9 (+ ELEGANCE E5) | Calculus T10(b) | Canonical (declared here) |
+|---|---|---|---|
+| 1 | `(G:authority-on-x, −1)` | `(G:auth, −1)` | `G:auth` |
+| 2 | `(T:authority-on-x, +1)` | `(T:auth, +1)` | `T:auth` |
+| 3 | `(G:snap-debt, +\|g−s\|)` | `(G:snap-debt, +\|g−s\|)` | `G:snap-debt` |
+| 4 | `(T:ground-truth, −\|g−s\|)` | `(T:debt-issued, −\|g−s\|)` | **`T:debt-issued`** |
+
+**Canonical names = the calculus's** (`G:auth`, `T:auth`, `G:snap-debt`, `T:debt-issued`), on the grounds that the monograph is now the top of the formal stack and its names are the semantically precise pair (debt issued ↔ debt booked; `debt-issued = −snap-debt`, forever). B9/E5's `authority-on-x`/`ground-truth` are recorded as presentation synonyms — same accounts, same signs, same magnitudes, same nonce; **neither doc requires rewriting** (the arithmetic is identical in both: `−1+1+|g−s|−|g−s| = 0`), but future citations use the canonical column. B9's invariant `bal(G:snap-debt) = −bal(T:·)` holds under either naming. The interpretive glosses differ mildly (B9: "reality's tally of corrections"; CALC: "debit the expense, credit the contra") — both describe the same mirror-image account; the calculus's accrual reading is canonical.
+
+### 7.3 Snap-loop error bounds — one loop, three parameterizations (envelopes cross-check)
+
+`error-envelopes.md` §4.3 references "the snap debt books whatever happened" — **the same snap transaction** as T10(b)/B9 — but never exhibits its postings; its claims are posting-shape-independent *except* that they presuppose a balanced booking exists (the informal three-legged form would violate A1, making "books whatever happened" unbookable). The four-legged form is the unique balanced witness (B9's "no third option" argument). **Same transaction, consistent: envelopes implicitly depends on the emendation it never states.**
+
+The three docs bound the same loop's divergence by triangle-inequality sums at different abstraction levels — a dictionary, not a conflict:
+
+| Doc | Bound | Error terms modeled | Abstraction |
+|---|---|---|---|
+| CALC T9 | boundaries `\|g−s\| ≤ Δ`; mid-tick `≤ Δ+ρ` | drift ρ only (g, s *are* the lattice values) | dynamic, displayed units |
+| BRIDGES B10 | sampled `\|g−s\| ≤ Δ + d_max·T`; from reality `≤ ε_s + Δ + d_max·T`; post-snap `≤ ε` (B8: ε_b+ε_sens+ε_env) | sensor error + drift | union of both |
+| envelopes T4 §4.3 | displayed `≤ Δ`; true `≤ Δ+2ε`, post-snap `2ε`; verdict fuzzy band `(Δ−2ε, Δ+2ε]` | quantization ε per side (ŝ, ĝ vs true s, g), no drift | static, true units |
+
+Correspondences verified: `ρ` ↔ `d_max·T` (per-tick divergence, both sides moving); envelopes' `2ε` ↔ two sides' covering radius (CALC-D16/B7); B8's ε_sens covers both sides' sensing. Two orthogonal refinements, both recorded: (i) envelopes' **verdict fuzzy band** (inside `(Δ−2ε, Δ+2ε]` the verdict may flip) is about *true-distance ambiguity* — compatible with CALC-T11(c) *substrate* uniqueness, which is bit-exactness given identical integer inputs: the flip, where it occurs, is identical on every substrate; (ii) envelopes' Schmitt reading ("no action until exceed, snap on exceed") is exactly CALC-D15/T9's discipline. **DR2** (§4) records the one wording casualty: CALC-T10(d)'s closing max-form sentence, implied by its own T9 but superseded by the displayed=Δ / true=Δ+2ε split.
+
+### 7.4 Freshness composition — CALC-T6 ≡ ELEGANCE E2
+
+CALC-T6 corollary: composite `(F₁ + Σᵢ₌₂ᵏ Lᵢ, L_k)` for a k-relay chain; ELEGANCE E2: `age ≤ F_source + Σ hops L`, with the explicit caveat that a stale-caching intermediate loses the cancellation (bound becomes ΣFᵢ+ΣLᵢ). CALC-D7 builds E2's caveat away *by hypothesis* ("while servicing any query, each Cᵢ obtains its value by viewing C_{i−1}" — fresh sub-query per query, sub-query inside the servicing window). **Identical law under the same discipline; E2 states the failure mode, CALC-D7 states the contract that prevents it.** Indexing note: CALC's link 1 is the origin-side link (F₁ = source staleness), L_k the observer-side hop — matching E2's F_source + hops.
+
+---
+
+*Rigor-auditor lane, 2026-08-29; re-sweep (audit-resweep) same day closes G1. Companions: `BRIDGES.md` (the 10 fixes + §9 re-sweep addendum), `ELEGANCE.md` (the five shortest forms), `error-envelopes.md` (snap-loop bounds reconciled §7.3).*

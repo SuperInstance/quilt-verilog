@@ -1,7 +1,7 @@
 # BRIDGES — the leaps, fixed with real derivations
 
 **Lane:** rigor-auditor (Flash) · **Date:** 2026-08-29
-**Purpose:** every leap flagged in `DEPENDENCY-GRAPH.md` (L1–L10) is closed here with a *derivation* — no prose gestures. Each bridge states the leap, gives the missing algebra in full, and states the resulting theorem in its final, quotable form. Section 7 resolves the benign forward references (F1–F4). Section 8 is the explicit-gap register.
+**Purpose:** every leap flagged in `DEPENDENCY-GRAPH.md` (L1–L10) is closed here with a *derivation* — no prose gestures. Each bridge states the leap, gives the missing algebra in full, and states the resulting theorem in its final, quotable form. Section 7 resolves the benign forward references (F1–F4). Section 8 is the explicit-gap register. **Section 9 (re-sweep, same day) closes G1**: the landed quilt-calculus.md is checked against B1–B10 and reconciled.
 
 ---
 
@@ -294,8 +294,18 @@ Let ε_s be the twin's sensor error (`|x − s| ≤ ε_s`), ε_g the game's mode
 
 | ID | Gap | Why not fixed here |
 |---|---|---|
-| G1 | `docs/academic/quilt-calculus.md` absent (concurrent lane) | calculus lane's deliverable; audit re-run on landing |
+| G1 | `docs/academic/quilt-calculus.md` absent (concurrent lane) | **CLOSED 2026-08-29 (audit-resweep):** the calculus landed (`0e0e851`) and was audited — `DEPENDENCY-GRAPH.md` §2.3/§7. **No bridge B1–B10 was provisional pending it**: each is a self-contained derivation. The re-sweep found the calculus independently re-derives B1–B10's content (see §9) with **zero content leaps** of its own; the one substantive reconciliation (B9 ↔ CALC-T10(b) account naming) is recorded in §9 |
 | G2 | SYNTHESIS I1/I2/Q2/Q3 premises: simulation-enforced, sby machine-proofs pending (AMATH #3/#4) | formal lane's deliverable; honestly flagged in SYNTHESIS/AMATH |
 | G3 | Invariant M's provenance KV keys specified-not-built | tower §8 states it; M is conditional until keys ship |
 
-*Rigor-auditor lane, 2026-08-29. The ten derivations above are the complete closure of L1–L10; nothing here weakens a claim — every short form in ELEGANCE.md is one of these derivations, compressed.*
+---
+
+## 9. Re-sweep addendum (G1 closure): BRIDGES ↔ quilt-calculus.md
+
+The calculus monograph (`docs/academic/quilt-calculus.md`, commit `0e0e851` — landed 5 minutes *before* this document's commit, on a divergent tree) was audited by the re-sweep lane; full inventory in `DEPENDENCY-GRAPH.md` §2.3, reconciliation in its §7. What matters *here*:
+
+- **Every bridge survives contact.** CALC-T1/T2 ≡ B1 (prefix induction vs well-founded order — equivalent on finite runs); CALC-T4 ≡ B3; CALC-T5 ≡ B4 (projection algebra; monad scope identically balance-map-level); CALC-T7 ≡ B2 (+ linearizability/staleness anchors); CALC-T11(a) ≡ B7; CALC-T11(b)/(c) ⊆ B6 (B6 broader: shifts + saturate); CALC-T11(d) ≡ B8's ε_env clause; CALC-P2 ≡ B6's theorem. No bridge required revision; none was provisional.
+- **B9 and CALC-T10(b) converge independently on the same critical find**: the informal `T_snap` sums to `|g−s| ≠ 0`; both emend it to the same four postings under one nonce. Two lanes, one tree divergence, identical repair — the strongest evidence the fix is forced, not chosen. Account names differ (B9: `authority-on-x`, `ground-truth`; CALC: `auth`, `debt-issued`); **canonical names are the calculus's** (`G:auth`, `T:auth`, `G:snap-debt`, `T:debt-issued`) — B9/E5's names remain readable synonyms; see DEPENDENCY-GRAPH §7.2 for the full dictionary.
+- **One wording note for the calculus lane (DR2):** CALC-T10(d)'s closing sentence re-imports "never exceeds max(Δ, sensor error)" — the form B10 corrected. It is *implied* by the calculus's own T9 (|g−s| ≤ Δ at boundaries, Δ ≤ max) so it is not false, but the quotable form is B10's sum / envelopes' displayed=Δ, true=Δ+2ε split; recommend citing T9 directly. The calculus also adds three closures B1–B10 did not carry: T3(c) tolerance additivity, T6 k-chain freshness composition (≡ ELEGANCE E2 under D7's refresh discipline), T10(c) linear snap-debt bound `D(N) ≤ (Δ+ρ)(1+⌊Nρ/Δ⌋) ~ ρN`.
+
+*Rigor-auditor lane, 2026-08-29. The ten derivations above are the complete closure of L1–L10; nothing here weakens a claim — every short form in ELEGANCE.md is one of these derivations, compressed. §9 closes G1: the calculus is in the books, and the books balance.*
