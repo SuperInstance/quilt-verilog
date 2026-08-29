@@ -1,0 +1,43 @@
+{"type": "watch_start", "agent_id": "pearl", "location": "bar_rail", "action": "idle", "score": 0}
+{"type": "agent_update", "agent_id": "moss", "location": "bar_rail", "action": "move to bar_rail", "score": 0}
+{"type": "agent_update", "agent_id": "pearl", "location": "bar_rail", "action": "talk to moss", "score": 0}
+{"type": "agent_update", "agent_id": "moss", "location": "bar_rail", "action": "talk to pearl", "score": 1}
+{"type": "agent_update", "agent_id": "pearl", "location": "bar_rail", "action": "tell story about the lighthouse", "score": 1}
+oldman says: 'welcome to the tap, the rail stools are for regulars'
+{"type": "agent_update", "agent_id": "heron", "location": "corner_booth", "action": "move to corner_booth", "score": 0}
+{"type": "agent_update", "agent_id": "heron", "location": "corner_booth", "action": "gripe about the weather", "score": 0}
+> look
+{"type": "agent_update", "agent_id": "pearl", "location": "bar_rail", "action": "tell story about the storm", "score": 2}
+{"type": "agent_update", "agent_id": "moss", "location": "bar_rail", "action": "ask pearl about the storm", "score": 1}
+{"type": "agent_update", "agent_id": "heron", "location": "bar_rail", "action": "move to bar_rail", "score": 0}
+{"type": "agent_update", "agent_id": "heron", "location": "bar_rail", "action": "gripe about the tide", "score": 0}
+{"type": "agent_update", "agent_id": "pearl", "location": "bar_rail", "action": "talk to heron", "score": 2}
+{"type": "agent_update", "agent_id": "moss", "location": "bar_rail", "action": "thank pearl for the story", "score": 2}
+{"type": "agent_update", "agent_id": "pearl", "location": "bridge_table", "action": "move to bridge_table", "score": 2}
+{"type": "agent_update", "agent_id": "moss", "location": "bridge_table", "action": "move to bridge_table", "score": 2}
+{"type": "agent_update", "agent_id": "heron", "location": "bridge_table", "action": "move to bridge_table", "score": 0}
+{"type": "agent_update", "agent_id": "pearl", "location": "bridge_table", "action": "tell story about the crab pots", "score": 3}
+{"type": "agent_update", "agent_id": "moss", "location": "bridge_table", "action": "tell joke about the crab", "score": 3}
+{"type": "agent_update", "agent_id": "heron", "location": "bridge_table", "action": "gripe about the cards", "score": 0}
+{"agents": {"pearl": {"location": "bridge_table", "action": "deal the cards", "score": 3}, "moss": {"location": "bridge_table", "action": "take the queen", "score": 3}, "heron": {"location": "bridge_table", "action": "idle", "score": 0}}, "scores": {"pearl": 3, "moss": 3, "heron": 0}}
+{"type": "agent_update", "agent_id": "pearl", "location": "bridge_table", "action": "idle", "score": 3}
+{"type": "agent_update", "agent_id": "moss", "location": "bridge_table", "action": "idle", "score": 3}
+{"type": "agent_update", "agent_id": "heron", "location": "bridge_table", "action": "idle", "score": 0}
+{"type": "agent_update", "agent_id": "pearl", "location": "bridge_table", "action": "idle", "score": 3}
+> use queen with the trick
+oldman says: 'last call for the bridge table'
+{"type": "agent_update", "agent_id": "moss", "location": "bar_rail", "action": "ask pearl about the lighthouse", "score": 4}
+{"type": "agent_update", "agent_id": "pearl", "location": "bar_rail", "action": "tell the story of the warm good great toast", "score": 4}
+{"type": "agent_update", "agent_id": "pearl", "location": "bar_rail", "action": "tell story about the keeper", "score": 4}
+{"type": "agent_update", "agent_id": "moss", "location": "bar_rail", "action": "thank pearl for the welcome", "score": 4}
+{"type": "agent_update", "agent_id": "heron", "location": "bar_rail", "action": "gripe about last call", "score": 0}
+{"type": "agent_update", "agent_id": "pearl", "location": "bar_rail", "action": "tell joke about last call", "score": 5}
+{"type": "agent_update", "agent_id": "moss", "location": "bar_rail", "action": "talk to heron", "score": 4}
+{"type": "agent_update", "agent_id": "heron", "location": "corner_booth", "action": "move to corner_booth", "score": 0}
+{"type": "agent_update", "agent_id": "pearl", "location": "corner_booth", "action": "move to corner_booth", "score": 5}
+{"type": "agent_update", "agent_id": "moss", "location": "corner_booth", "action": "move to corner_booth", "score": 4}
+{"type": "agent_update", "agent_id": "pearl", "location": "corner_booth", "action": "tell story about the morning boat", "score": 5}
+{"type": "agent_update", "agent_id": "moss", "location": "corner_booth", "action": "talk to pearl", "score": 4}
+{"type": "agent_update", "agent_id": "pearl", "location": "corner_booth", "action": "tell story about the keeper's daughter", "score": 5}
+{"type": "agent_update", "agent_id": "moss", "location": "corner_booth", "action": "idle", "score": 4}
+{"type": "agent_update", "agent_id": "heron", "location": "corner_booth", "action": "idle", "score": 0}
