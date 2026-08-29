@@ -69,8 +69,10 @@ module q_cell #(
     wire [2:0]         hb_cmd;
     wire [EDGES_N-1:0] hb_sel;
     wire [PW-1:0]      hb_base;
+    wire [3:0]         hb_gcl;
     wire [PW-1:0]      hb_w;
     wire               hb_done;
+    wire [PW-1:0]      w_ftrace;
 
     wire               df_wr;
     wire [3:0]         df_addr;
@@ -86,6 +88,11 @@ module q_cell #(
     wire [PW-1:0]        d_hl;
     wire [4:0]           d_p0e;
     wire                 d_mode;
+
+    // v2 feature dial fan-in
+    wire [3:0]           d_kle, d_qdw, d_qleak;
+    wire [PW-1:0]        d_floor;
+    wire                 d_rqen;
 
     // Reserved dial fan-outs (steal 2 map completeness): readable fabric
     // state via view(2), consumed by post-v1 engines. Suppressed from
@@ -103,11 +110,12 @@ module q_cell #(
     wire [AIDW-1:0]      w_cid;
     wire signed [PW-1:0] w_act;
     wire [AIDW-1:0]      w_lddst;
+    wire                 w_antic;    // v2: RQH anticipation (status tap)
     /* verilator lint_on UNUSEDSIGNAL */
 
     q_cell_core #(
         .OPW(OPW), .AIDW(AIDW), .PW(PW),
-        .EDGES_N(EDGES_N), .EIW(EIW)
+        .EDGES_N(EDGES_N), .EIW(EIW), .K(K)
     ) u_core (
         .clk(clk), .rst_n(rst_n),
         .ci_op(ci_op), .ci_valid(ci_valid), .ci_ready(ci_ready_w),
@@ -120,12 +128,16 @@ module q_cell #(
         .lx_dst(lx_dst), .lx_src(lx_src),
         .lx_a0(lx_a0), .lx_a1(lx_a1), .lx_a2(lx_a2), .lx_dat(lx_dat),
         .hb_cmd(hb_cmd), .hb_sel(hb_sel), .hb_base(hb_base),
+        .hb_gcl(hb_gcl),
         .hb_w(hb_w), .hb_done(hb_done),
         .df_wr(df_wr), .df_addr(df_addr), .df_wdata(df_wdata),
         .df_rd(df_rd), .df_rdata(df_rdata), .df_rstb(df_rstb),
         .d_ka(d_ka), .d_thresh(d_thresh), .d_refr(d_refr),
+        .d_kle(d_kle), .d_floor(d_floor),
+        .d_qdw(d_qdw), .d_qleak(d_qleak), .d_rqen(d_rqen),
         .s_tick(s_tick),
-        .bound(w_bound), .cell_id(w_cid), .act(w_act)
+        .bound(w_bound), .cell_id(w_cid), .act(w_act),
+        .o_ftrace(w_ftrace), .o_antic(w_antic)
     );
 
     q_dialfile #(.DW(PW), .ND(16), .AW(4)) u_df (
@@ -135,7 +147,10 @@ module q_cell #(
         .o_eta_f(d_eta_f), .o_eta_s(d_eta_s),
         .o_kf(d_kf), .o_ks(d_ks), .o_ka(d_ka),
         .o_thresh(d_thresh), .o_refr(d_refr), .o_cosmin(d_cosmin),
-        .o_p0e(d_p0e), .o_mode(d_mode), .o_hl(d_hl)
+        .o_p0e(d_p0e), .o_mode(d_mode), .o_hl(d_hl),
+        .i_probe(w_ftrace),
+        .o_kle(d_kle), .o_floor(d_floor),
+        .o_qdw(d_qdw), .o_qleak(d_qleak), .o_rqen(d_rqen)
     );
 
     // ------------------------------------------------ edge engines --
@@ -150,7 +165,7 @@ module q_cell #(
                 .clk(clk), .rst_n(rst_n),
                 .i_sel(hb_sel[g]), .i_cmd(hb_cmd),
                 .i_mode(d_mode), .i_base(hb_base),
-                .i_hl(d_hl), .i_p0e(d_p0e),
+                .i_hl(d_hl), .i_p0e(d_p0e), .i_gclass(hb_gcl),
                 .o_done(done_vec[g]), .o_w(w_flat[g*PW +: PW]),
                 .o_ovf(ovf_vec[g])
             );

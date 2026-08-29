@@ -17,7 +17,14 @@
 // one fresh cofire (K=8,B=8) reads 2^8=256; hyperbolic W reads W*256 (sat).
 // o_w = saturate(base + engine_readout). Integer state throughout: the
 // state is never fixed-point, so it never drifts (zeroclaw §2.1 rule 6).
-// Commands (i_sel && i_cmd): 001=train, 010=tick, 011=read, 100=set-base.
+// Commands (i_sel && i_cmd): 001=train, 010=tick, 011=read, 100=set-base,
+//   101=graded train (v2 echo gate): ladder mode lands the cofire in
+//   bucket clamp(i_gclass, K-1) instead of bucket 0 -- an event born
+//   g trace half-lives old, the same object the staircase bound covers;
+//   hyperbola mode is identical to 001 (the gate is binary in MODE=1).
+//   cmd 001 keeps its exact v1 semantics: the graded path is a NEW
+//   engine command, not a rewiring of the old one, so existing cores/TBs
+//   that never issue 101 (or leave i_gclass unconnected) are bit-exact.
 module q_hebb_edge #(
     parameter PW   = 16,
     parameter K    = 8,   // ladder buckets
@@ -32,6 +39,7 @@ module q_hebb_edge #(
     input  wire [PW-1:0] i_base,
     input  wire [PW-1:0] i_hl,
     input  wire [4:0]    i_p0e,
+    input  wire [3:0]    i_gclass,   // v2: graded-train bucket (cmd 101 only)
     output reg           o_done,
     output reg  [PW-1:0] o_w,
     output reg           o_ovf    // sticky: train-time saturation
@@ -67,6 +75,10 @@ module q_hebb_edge #(
 
     // hyperbolic interval: P0 >> 2*msb(W), floored at 1
     wire [3:0]  wmsb  = msb16(wh);
+
+    // graded-train placement: clamp class to K-1 (bucket index width safe)
+    localparam [3:0] K4 = K;
+    wire [3:0]  gcl   = (i_gclass >= K4) ? (K4 - 4'd1) : i_gclass;
     wire [4:0]  shl2  = {1'b0, wmsb} + {1'b0, wmsb};
     wire [31:0] p0    = 32'd1 << i_p0e;
     wire [31:0] ivr   = p0 >> shl2;
@@ -135,6 +147,28 @@ module q_hebb_edge #(
                         else
                             c[0] <= c[0] + 1'b1;
                     end else begin
+                        if (wh == {PW{1'b1}})
+                            o_ovf <= 1'b1;
+                        else
+                            wh <= wh + 1'b1;
+                    end
+                    o_done <= 1'b1;
+                  end
+                  3'b101: begin // graded train (v2 echo gate, opencode §4.2)
+                    if (!i_mode) begin
+                        if (gcl >= K4) begin
+                            if (c[K-1] == {B{1'b1}})
+                                o_ovf <= 1'b1;
+                            else
+                                c[K-1] <= c[K-1] + 1'b1;
+                        end else begin
+                            if (c[gcl[IIW-1:0]] == {B{1'b1}})
+                                o_ovf <= 1'b1;
+                            else
+                                c[gcl[IIW-1:0]] <= c[gcl[IIW-1:0]] + 1'b1;
+                        end
+                    end else begin
+                        // hyperbola: no fractional buckets; binary gate only
                         if (wh == {PW{1'b1}})
                             o_ovf <= 1'b1;
                         else

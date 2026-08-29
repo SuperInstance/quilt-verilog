@@ -23,12 +23,25 @@
 //   tick  : decay sweep over all valid edges, act leak (>>>ka), fire test
 //           (act >= thresh && refr==0): fanout effects (dat=act) to all
 //           valid edge peers, act:=0, refr:=d_refr.
+//
+// v2 features (INNOVATION-JUDGEMENT §5 fold-ins 1+2, shipped as a pair):
+//   echo gate: q_echo_trace-style fire trace (q_echo_gate) gates effect
+//     training -- a delivered effect trains only inside a causal window
+//     after this cell's own fire, landing in ladder bucket 15-msb(F)
+//     (engine cmd 101). Gate CLOSED: skip the train, read + integrate act
+//     as usual (the gate prices learning, not activation). FLOOR=0 dial
+//     = gate disabled = bit-exact v1 (cmd 101 with class 0 == cmd 001).
+//   RQH residue bank: q_rqh_bank (corrected deposit, error-envelopes.md
+//     T3c) banks the graded placement's dyadic residue per edge; its
+//     credit is added to the weight at readback (act integration and
+//     view wsum). RQEN=0 = credit 0 = bit-exact v1.
 module q_cell_core #(
     parameter OPW     = 3,
     parameter AIDW    = 4,
     parameter PW      = 16,
     parameter EDGES_N = 4,
-    parameter EIW     = 2
+    parameter EIW     = 2,
+    parameter K       = 8    // ladder buckets (matches edge engines/bank)
 )(
     input  wire                 clk,
     input  wire                 rst_n,
@@ -69,6 +82,7 @@ module q_cell_core #(
     output reg  [2:0]           hb_cmd,
     output reg  [EDGES_N-1:0]   hb_sel,
     output reg  [PW-1:0]        hb_base,
+    output reg  [3:0]           hb_gcl,   // v2: graded class (engine cmd 101)
     input  wire [PW-1:0]        hb_w,
     input  wire                 hb_done,
 
@@ -85,13 +99,22 @@ module q_cell_core #(
     input  wire signed [PW-1:0] d_thresh,
     input  wire [PW-1:0]        d_refr,
 
+    // v2 feature dial fan-in
+    input  wire [3:0]           d_kle,    // dial 11: echo-trace leak shift
+    input  wire [PW-1:0]        d_floor,  // dial 12: gate floor (0 = v1)
+    input  wire [3:0]           d_qdw,    // dial 14[3:0]: RQH quanta/credit
+    input  wire [3:0]           d_qleak,  // dial 15[3:0]: RQH leak shift
+    input  wire                 d_rqen,   // dial 14[15]: RQH master enable
+
     // scheduler
     input  wire                 s_tick,
 
     // status
     output reg                  bound,
     output reg  [AIDW-1:0]      cell_id,
-    output reg  signed [PW-1:0] act
+    output reg  signed [PW-1:0] act,
+    output wire [PW-1:0]        o_ftrace, // v2: echo trace (dial-13 probe)
+    output wire                 o_antic  // v2: RQH anticipation strobe
 );
     localparam [OPW-1:0] OP_BIND = 3'd0, OP_LINK = 3'd1, OP_EFF  = 3'd2,
                          OP_VIEW = 3'd3, OP_TICK = 3'd4, OP_ACK  = 3'd5,
@@ -120,6 +143,38 @@ module q_cell_core #(
     reg [AIDW-1:0] etab [0:EDGES_N-1];
     reg            ev   [0:EDGES_N-1];
 
+    // ------------------------------- v2: echo gate + RQH bank ----------
+    // fire trace: refill on fire (pulse entering ST_FIRE), leak once per
+    // tick service (ST_TLEAK, the same place act leaks -- fire wins the
+    // same-cycle ordering by construction: the pulse lands one cycle
+    // after the leak strobe of the firing tick).
+    reg           eg_fire;
+    wire          eg_tick  = (state == ST_TLEAK);
+    wire          eg_live;
+    wire [3:0]    eg_gclass;
+
+    q_echo_gate #(.PW(PW)) u_eg (
+        .clk(clk), .rst_n(rst_n),
+        .i_fire(eg_fire), .i_tick(eg_tick),
+        .i_kle(d_kle), .i_floor(d_floor),
+        .o_f(o_ftrace), .o_live(eg_live), .o_gclass(eg_gclass)
+    );
+
+    // residue bank: deposits on graded trains (hb_cmd==101), deadband
+    // leak in the tick sweep (hb_cmd==010), credit muxed by hb_sel
+    wire          rq_train = (hb_cmd == 3'b101);
+    wire          rq_tick  = (hb_cmd == 3'b010);
+    wire [PW-1:0] rq_credit;
+
+    q_rqh_bank #(.RW(16), .K(K), .PW(PW),
+                 .EDGES_N(EDGES_N), .EIW(EIW)) u_rq (
+        .clk(clk), .rst_n(rst_n),
+        .i_train(rq_train), .i_tick(rq_tick),
+        .i_sel(hb_sel), .i_gclass(hb_gcl),
+        .i_qdw(d_qdw), .i_qleak(d_qleak), .i_en(d_rqen),
+        .o_credit(rq_credit), .o_antic(o_antic)
+    );
+
     function [PW-1:0] sclip16;  // saturate to Q1.15 full scale, never wrap
         input signed [35:0] v;
         begin
@@ -133,8 +188,12 @@ module q_cell_core #(
     endfunction
 
     // effect integration: act += sat((unsigned w * signed dat) >>> 15)
+    // v2: the RQH credit folds into the weight first (saturating, never
+    // wrap); d_rqen=0 forces credit 0, making this bit-exact v1
+    wire [PW:0]   w_rq  = {1'b0, hb_w} + {1'b0, rq_credit};
+    wire [PW-1:0] hb_wq = w_rq[PW] ? {PW{1'b1}} : w_rq[PW-1:0];
     wire signed [35:0] act_e  = {{20{act[PW-1]}}, act};
-    wire signed [32:0] prod   = $signed({1'b0, hb_w}) * $signed(lr_dat);
+    wire signed [32:0] prod   = $signed({1'b0, hb_wq}) * $signed(lr_dat);
     wire signed [35:0] prod_e = {{3{prod[32]}}, prod};
     wire signed [35:0] eff_sum = act_e + (prod_e >>> 15);
     // tick leak: act = act - (act >>> ka)
@@ -171,6 +230,8 @@ module q_cell_core #(
             hb_cmd    <= 3'b000;
             hb_sel    <= {EDGES_N{1'b0}};
             hb_base   <= {PW{1'b0}};
+            hb_gcl    <= 4'd0;
+            eg_fire   <= 1'b0;
             df_wr     <= 1'b0;
             df_addr   <= 4'd0;
             df_wdata  <= {PW{1'b0}};
@@ -201,6 +262,7 @@ module q_cell_core #(
             df_wr    <= 1'b0;
             df_rd    <= 1'b0;
             hb_cmd   <= 3'b000;
+            eg_fire  <= 1'b0;
             lo_valid <= 1'b0;
             lx_valid <= 1'b0;
 
@@ -300,9 +362,19 @@ module q_cell_core #(
                       ci_ready <= 1'b1;
                       state    <= ST_IDLE;
                   end else if (ev[eidx[EIW-1:0]] && (etab[eidx[EIW-1:0]] == lr_src)) begin
-                      hb_sel   <= 1'b1 << eidx[EIW-1:0];
-                      hb_cmd   <= 3'b001;        // cofire train
-                      state    <= ST_EFFR;
+                      hb_sel <= 1'b1 << eidx[EIW-1:0];
+                      // v2 echo gate: a cofire counts only if this cell
+                      // fired recently (loop closure before potentiation).
+                      // FLOOR=0 disables: live always, class 0, and cmd 101
+                      // degenerates to the exact v1 cmd-001 train.
+                      if (eg_live) begin
+                          hb_cmd <= 3'b101;          // graded cofire train
+                          hb_gcl <= eg_gclass;       // bucket 15 - msb(F)
+                          state  <= ST_EFFR;
+                      end else begin
+                          hb_cmd <= 3'b011;          // gate closed: skip the
+                          state  <= ST_EFFI;         // train, read + integrate
+                      end                             // act as usual (ungated)
                   end else begin
                       eidx <= eidx + 1'b1;
                   end
@@ -368,7 +440,7 @@ module q_cell_core #(
               end
               ST_VACW: begin
                   if (hb_done) begin
-                      wacc <= wacc + {1'b0, hb_w};
+                      wacc <= wacc + {1'b0, hb_w} + {1'b0, rq_credit};
                       eidx <= eidx + 1'b1;
                       state <= ST_VACC;
                   end
@@ -425,9 +497,10 @@ module q_cell_core #(
               ST_TLEAK: begin
                   act <= sclip16(leak_sum);
                   if ((act >= d_thresh) && (refr == {PW{1'b0}})) begin
-                      afire <= act;
-                      eidx  <= {(EIW+1){1'b0}};
-                      state <= ST_FIRE;
+                      afire   <= act;
+                      eidx    <= {(EIW+1){1'b0}};
+                      eg_fire <= 1'b1;            // v2: refill the echo trace
+                      state   <= ST_FIRE;
                   end else begin
                       if (refr != {PW{1'b0}})
                           refr <= refr - 1'b1;
