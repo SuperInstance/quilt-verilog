@@ -41,7 +41,13 @@ module q_cell_core #(
     parameter PW      = 16,
     parameter EDGES_N = 4,
     parameter EIW     = 2,
-    parameter K       = 8    // ladder buckets (matches edge engines/bank)
+    parameter K       = 8,   // ladder buckets (matches edge engines/bank)
+    parameter PIPE_EFF = 1   // v2.1 retime: pipeline the effect-integration
+                             // cone (RQH credit add -> 16x16 multiply ->
+                             // saturating accumulate) into three registered
+                             // stages. 0 = original single-cycle cone
+                             // (differential-TB reference). Output values
+                             // are bit-exact; each effect op costs +2 clk.
 )(
     input  wire                 clk,
     input  wire                 rst_n,
@@ -126,7 +132,8 @@ module q_cell_core #(
                      ST_VIEW = 5'd9,  ST_VACC = 5'd10, ST_VACW = 5'd11,
                      ST_VRD  = 5'd12, ST_RESP = 5'd13, ST_TICK = 5'd14,
                      ST_TSW  = 5'd15, ST_TSWW = 5'd16, ST_TLEAK = 5'd17,
-                     ST_FIRE = 5'd18, ST_EFFI = 5'd19;
+                     ST_FIRE = 5'd18, ST_EFFI = 5'd19,
+                     ST_EFFP = 5'd20, ST_EFFM = 5'd21;
 
     reg [4:0]        state;
     reg              tick_pend;
@@ -139,6 +146,8 @@ module q_cell_core #(
     reg [PW:0]       wacc;
     reg [PW-1:0]     refr;
     reg [PW-1:0]     afire;
+    reg [PW-1:0]     eff_w;          // pipe stage 1: sat(w + rq_credit)
+    reg signed [32:0] eff_p;        // pipe stage 2: eff_w * lr_dat
 
     reg [AIDW-1:0] etab [0:EDGES_N-1];
     reg            ev   [0:EDGES_N-1];
@@ -196,6 +205,12 @@ module q_cell_core #(
     wire signed [32:0] prod   = $signed({1'b0, hb_wq}) * $signed(lr_dat);
     wire signed [35:0] prod_e = {{3{prod[32]}}, prod};
     wire signed [35:0] eff_sum = act_e + (prod_e >>> 15);
+    // PIPE_EFF stage-2 product: registered eff_w times the (stable) effect
+    // dat -- the 16x16 multiplier gets its own register-to-register stage
+    wire signed [32:0] prod_p = $signed({1'b0, eff_w}) * $signed(lr_dat);
+    wire signed [35:0] eff_pe = {{3{eff_p[32]}}, eff_p};   // signed-extend
+                                // (a concat is unsigned by rule; the
+                                // >>> below needs this named signed wire)
     // tick leak: act = act - (act >>> ka)
     wire signed [35:0] leak_sum = act_e - (act_e >>> d_ka);
 
@@ -250,6 +265,8 @@ module q_cell_core #(
             lr_a1     <= {PW{1'b0}};
             lr_a2     <= {PW{1'b0}};
             lr_dat    <= {PW{1'b0}};
+            eff_w     <= {PW{1'b0}};
+            eff_p     <= 33'sd0;
             for (i = 0; i < EDGES_N; i = i + 1) begin
                 etab[i] <= {AIDW{1'b0}};
                 ev[i]   <= 1'b0;
@@ -372,7 +389,8 @@ module q_cell_core #(
                           state  <= ST_EFFR;
                       end else begin
                           hb_cmd <= 3'b011;          // gate closed: skip the
-                          state  <= ST_EFFI;         // train, read + integrate
+                          state  <= (PIPE_EFF != 0) ? ST_EFFP : ST_EFFI;
+                                                      // train, read + integrate
                       end                             // act as usual (ungated)
                   end else begin
                       eidx <= eidx + 1'b1;
@@ -381,13 +399,32 @@ module q_cell_core #(
               ST_EFFR: begin
                   if (hb_done) begin
                       hb_cmd <= 3'b011;          // weight readback
-                      state  <= ST_EFFI;
+                      state  <= (PIPE_EFF != 0) ? ST_EFFP : ST_EFFI;
                   end
               end
-              ST_EFFI: begin
-                  // readout done: integrate with the post-update weight
+              // PIPE_EFF stage 1: readback done -- register the credited
+              // weight sat(w + rq_credit); cuts the credit-add + readout-mux
+              // cone out of the multiplier path (SYNTHESIS-FPGA round 3)
+              ST_EFFP: begin
                   if (hb_done) begin
-                      act      <= sclip16(eff_sum);
+                      eff_w <= hb_wq;
+                      state <= ST_EFFM;
+                  end
+              end
+              // PIPE_EFF stage 2: the 16x16 multiply against the (stable)
+              // lr_dat, registered on its own stage
+              ST_EFFM: begin
+                  eff_p <= prod_p;
+                  state <= ST_EFFI;
+              end
+              ST_EFFI: begin
+                  // readout done: integrate with the post-update weight.
+                  // PIPE_EFF: hb_done pulsed in ST_EFFP (consumed by the
+                  // eff_w capture); the pipelined tail completes now.
+                  if ((PIPE_EFF != 0) || hb_done) begin
+                      act      <= sclip16((PIPE_EFF != 0)
+                                  ? (act_e + (eff_pe >>> 15))
+                                  : eff_sum);
                       ci_ready <= !(s_tick || tick_pend);  // Q2fix: never offer ready with a tick pending (or being set) -- a one-cycle hole here lets an upstream pipe pop a flit the dispatching FSM ignores (silent drop, found by formal cell_core.tick/fabric.conservation)
                       state    <= ST_IDLE;
                   end

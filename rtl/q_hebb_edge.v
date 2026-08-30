@@ -99,7 +99,18 @@ module q_hebb_edge #(
     wire [AW-1:0] addw = {{(AW-B){1'b0}}, c[ridx[IIW-1:0]]} << rsh;
 
     // readout value of the active engine (saturating top PW bits / W*256)
-    wire [PW-1:0] lad  = (|acc[AW-1:PW]) ? {PW{1'b1}} : acc[PW-1:0];
+    // (round-3 fix: K=4/B=4-class configs have AW = K+B+1 < PW -- the
+    // saturate-and-take-top-PW collapse must widen instead of truncate;
+    // iverilog rejects the old acc[AW-1:PW] part select outright there)
+    wire [PW-1:0] lad;
+    generate
+        if (AW > PW) begin : g_lad_sat
+            wire sat = |acc[AW-1:PW];
+            assign lad = sat ? {PW{1'b1}} : acc[PW-1:0];
+        end else begin : g_lad_wide
+            assign lad = {{(PW-AW){1'b0}}, acc};
+        end
+    endgenerate
     wire [PW-1:0] whs  = (wh > 16'd255) ? 16'hFFFF : {wh[7:0], 8'h00};
     wire [PW-1:0] eng  = i_mode ? whs : lad;
     wire [PW:0]   wfin = {1'b0, base} + {1'b0, eng};
@@ -110,14 +121,8 @@ module q_hebb_edge #(
             o_done  <= 1'b0;
             o_w     <= {PW{1'b0}};
             o_ovf   <= 1'b0;
-            c[0]    <= {B{1'b0}};
-            c[1]    <= {B{1'b0}};
-            c[2]    <= {B{1'b0}};
-            c[3]    <= {B{1'b0}};
-            c[4]    <= {B{1'b0}};
-            c[5]    <= {B{1'b0}};
-            c[6]    <= {B{1'b0}};
-            c[7]    <= {B{1'b0}};
+            for (j = 0; j < K; j = j + 1)
+                c[j] <= {B{1'b0}};
             hl_cnt  <= {PW{1'b0}};
             wh      <= {PW{1'b0}};
             age     <= {AGEW{1'b0}};

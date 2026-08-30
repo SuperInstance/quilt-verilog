@@ -216,3 +216,144 @@ spec'd in docs/FPGA-BOOT.md §4.
 array — 695 LUT4 per edge, linear in EDGES_N, 54% of the design; timing
 is dominated instead by the in-core tick-service learning chain
 (echo gate → RQH deposit → activation integrate), 27.72 MHz on HX8K.
+
+---
+
+# Round 3 (2026-08-29, same day, evening): break the wall, build the boot
+
+Three pushes on the post-117b649 tree: pipeline the learning chain, scale
+the fabric across the device ladder, and build the boot lane's first RTL.
+Toolchain unchanged (oss-cad-suite: yosys 0.47+22, nextpnr-ice40,
+nextpnr-ecp5). All numbers below re-measured on this tree.
+
+## 8. PIPE_EFF: the learning-chain retime (F3 executed)
+
+**Where the cut landed, and why not in q_hebb_edge.** §5's critical path
+was `eg_tick FF → q_echo_gate leak/live → q_rqh_bank deposit arithmetic →
+q_cell_core.v:193 carry chain (w_rq = hb_w + rq_credit) → 16x16 multiply
+→ saturating act accumulate → act FF`. Every stage of that cone lives in
+q_cell_core and sits *after* the engine's registered outputs (the engines
+are behind hb_cmd/hb_done handshakes and never appeared on any critical
+path — §5 already said so). A registered stage inside q_hebb_edge or a
+q_hebb_edge_pipe wrapper would add flip-flops without shortening a single
+reported path. The honest cut is in the core, and that is where it went:
+
+- `q_cell_core` gains parameter `PIPE_EFF` (default 1) and two states:
+  - **ST_EFFP**: on readback `hb_done`, register `eff_w <= hb_wq` — the
+    RQH credit add (`sat(w + credit)`, the deposit-cone carry chain) gets
+    its own register-to-register stage;
+  - **ST_EFFM**: register `eff_p <= eff_w * lr_dat` — the 16x16 multiply
+    alone on one stage;
+  - **ST_EFFI**: `act <= sclip(act + (eff_p >>> 15))` — the saturating
+    accumulate closes.
+  `PIPE_EFF=0` keeps the original single-cycle cone bit-for-bit (the
+  differential reference). Cost: +2 clk per effect op (ops stay bounded;
+  ticks still serviced at IDLE boundaries — Q2 untouched), +151 LUT4
+  (5,800 → 5,951), 2 pipeline registers.
+
+**Semantics proof (tb/tb_hebb_pipe.v).** Differential TB: one shared
+stimulus session (300 ops: binds, links, effects, views, mid-session dial
+rewrites, ticks every 3 ops) drives TWO q_cell_core instances —
+PIPE_EFF=0 (original cone) and PIPE_EFF=1 (retime) — each with its own
+dialfile and engine array, v2 pair FULLY DIALED ON (FLOOR=0x0100, RQEN=1,
+QDW=4, QLEAK=3) so the retimed cone is the exercised one. PASS: the
+ordered stream of every output flit (224 lo + 18 lx) and `act`/`o_ftrace`
+are bit-exact at every checkpoint. The retime is value-preserving; only
+cycle counts move (+2 per effect).
+
+**Measured result (k4b4a8e1, HX8K-CT256, `synth/pnr_r3.log`):**
+
+| metric | round 2 | round 3 (PIPE_EFF=1) |
+|---|---|---|
+| LUT4 (yosys) | 5,800 | 5,951 |
+| ICESTORM_LC | 7,400 (96%) | 7,528 (98%) |
+| **fmax post-route** | **27.72 MHz** | **40.44 MHz (+46%)** |
+| critical path | core learning chain (36.08 ns) | engine hyperbola interval (`wh → msb → ival → age compare → age FF`) |
+
+The wall moved exactly where §5 predicted it would: with the core
+integration cone cut into three stages, the new limiter is the engine's
+own hyperbola decay compare — the F2 cost center, now the timing center
+too. 12 MHz target passes with 3.4x slack.
+
+**Bug found and fixed on the way (rtl/q_hebb_edge.v).** At K=4/B=4 (the
+formal-proof params) the module did not simulate: `acc[AW-1:PW]` is an
+out-of-order part select when AW=9 < PW=16, and the reset list touched
+`c[4..7]` beyond a 4-deep bucket array. Synthesis tolerated both; strict
+simulators (iverilog) reject the elaboration. Fixed with a generate split
+(`g_lad_sat`/`g_lad_wide`) and a K-parameterized reset loop. K=8 behavior
+is unchanged (all default-param TBs unchanged-PASS).
+
+## 9. Scale: NCELL across the device ladder (k4b4a8e1, PIPE_EFF=1)
+
+`synth/scale.sh` + `synth/rebuild_scale_tsv.py` → `synth/scale.tsv`.
+12 MHz closure target throughout.
+
+- **iCE40 UP5K (sg48):** logic fits 1 cell (3,958/5,280 LC = 74%) but the
+  fabric's 157 port bits need 163% of sg48's 96 IO — every NCELL fails
+  IO placement before logic. UP5K is **pin-bound, not LUT-bound** for this
+  fabric-as-wired; the serialized host port (F4) is the unlock. 2 cells
+  (7,528 LC) also exceeds the 5,280 LC budget — so even pin-fixed, UP5K
+  is a 1-cell device at honest engine params.
+- **ECP5 LFE5U-12F:** 2 cells = 5,886 COMB (49% of the physical 12,144
+  LUTs), 4 cells = 11,554 (95%) — **4 cells close timing on a real 12F**
+  at ~63 MHz. 6 cells (17,245) exceeds the physical 12F even though
+  nextpnr places it (the 12F is a binned 25F die; nextpnr reports against
+  24,288 — see the util12f column).
+- **ECP5 LFE5U-25F (the boat chip):** 8 cells = 18,299 LUT4 → 22,791/
+  24,288 COMB (94%), fmax 63.7 MHz — **8 cells close timing with 6%
+  area slack**; 12 cells (~34,080) is 140% and fails placement. Per-cell
+  marginal cost at k4b4a8e1: ~2,830 LUT4 / ~2,850 COMB (linear, no
+  shared-resource cliff — consistent with round 2's HX8K measurement).
+  Bonus the ECP5 lane picks up for free: the PIPE_EFF effect multiplier
+  maps to 4 MULT18X18D DSP blocks (2 per cell) on every config — on
+  ECP5 the retime also *removes* LUT-fabric multiply pressure.
+  (25F shares the 12F die, so 25F n2 is the 12F n2 row: 5,886 COMB,
+  66.2 MHz.)
+
+Max cells closing 12 MHz at k4b4a8e1, per device: **UP5K: 1 (IO-gated),
+HX8K: 2, LFE5U-12F: 4, LFE5U-25F: 8.** fmax headroom everywhere is
+40-66 MHz — 12 MHz is conservative by 3-5x on every closing config.
+
+## 10. Boot: rtl/quf_boot.v (docs/FPGA-BOOT.md §2, built)
+
+The boot FSM is RTL now: POR → HOLD → LOAD → LATCH → RELEASE → RUN with
+sticky HOLD_ERR, wrapping the proven q_uf_loader:
+
+- **byte-stream ingress** `i_bval/i_byte/o_brdy/i_eod` with a local-only
+  ready and a 1-word skid (the loader's 1-in-3 backpressure never forms a
+  ready chain); align-padding residue after `o_done` is accepted and
+  discarded (the same end-of-stream rule quf_tb always had);
+- **header validation** is the loader's (codes 1-9); the FSM adds
+  **E_TRUNC=10**: `i_eod` before done parks sticky in HOLD_ERR;
+- **fail-static-to-v1-defaults**: the fabric reset (`o_rst_n`) is held
+  forever on any error — the fabric is never booted into a half-image;
+  the dialfile is POR-reset-only (not o_rst_n) precisely so boot writes
+  stick while cores are frozen AND a POR retry re-defaults;
+- **dial-port mutual exclusion with qm_bind by construction**: the boot
+  port strobes only in LOAD/LATCH (cores provably cannot emit a bind in
+  reset), the qm port only in RUN — disjoint FSM states, no arbitration;
+- **epoch latch**: `o_tpw` latches ONCE at LATCH from the loader's ticks
+  section and is frozen for the run (latch-once-at-release; Q2's deadline
+  semantics stay defined against a stable epoch); `o_epoch` pulses at
+  release.
+
+**tb/tb_quf_boot.v — 4 acceptance cases, all PASS (iverilog):**
+1. warm-start: 576-byte golden QUF boots; dial row byte-exact
+   (dial5=0x5000, hl=0x30), tpw=6 latched, fabric released exactly in
+   RUN, qm port live after release (write+readback), a qm write DURING
+   LOAD refused;
+2. corrupt magic → err 1 → sticky HOLD_ERR, fabric held, dialfile at POR
+   defaults (0x6000), no boot_ok/epoch, qm port dead;
+3. mid-file truncation + eod → E_TRUNC → HOLD_ERR, fabric never
+   released, qm dead;
+4. post-release transport noise (bytes + eod) changes nothing: RUN
+   holds, tpw frozen, dials unmoved.
+
+Both new TBs and the retimed core are verilator -Wall lint-clean
+(style-suppressed); authoritative simulation is iverilog -g2005 — this
+oss-cad-suite's verilator (5.029-devel) shows --timing scheduling
+artifacts on TB-side pulse sampling (RTL unchanged, trace-enabled builds
+pass), so the lane runs verilator as lint and iverilog as sim.
+
+**Suite: 17/17 PASS** (`tb/run_suite.sh`, new) — 14 core/envelope TBs +
+quf_tb + tb_hebb_pipe + tb_quf_boot, on the retimed tree.

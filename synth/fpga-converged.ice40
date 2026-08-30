@@ -7,9 +7,13 @@
 # scheduler). No stubs: the same rtl/ the 14 TBs and 4 proofs exercise.
 #
 # Result on iCE40HX8K-CT256 (synth/wall numbers in docs/SYNTHESIS-FPGA.md):
-#   yosys:  5800 LUT4 / 2336 FF / 856 SB_CARRY
-#   nextpnr: 7400/7680 LC (96%), 157/256 IO, fmax 27.72 MHz @ 12 MHz target
-#   icepack: fabric2_k4b4a8e1.bin (135100 bytes)
+#   round 2: 5800 LUT4 / 7400 LC (96%) / fmax 27.72 MHz
+#   round 3 (PIPE_EFF=1 retime, q_cell_core ST_EFFP/ST_EFFM pipeline):
+#     yosys:   5951 LUT4 / ~2340 FF / SB_CARRY (stat_fabric2_k4b4a8e1.txt)
+#     nextpnr: 7528/7680 LC (98%), 157/256 IO, fmax 40.44 MHz @ 12 MHz target
+#     critical path now the engine hyperbola interval compare (was the
+#     core echo-gate -> RQH deposit -> act-integrate chain). See
+#     docs/SYNTHESIS-FPGA.md round 3, section 8.
 #
 # Usage:
 #   yosys -s synth/fpga-converged.ice40

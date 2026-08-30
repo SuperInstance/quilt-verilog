@@ -3,3 +3,9 @@
 *.asc
 yosys_*.log
 attrib.log
+*.bin
+pnr_*.log
+report_*.json
+yosys_r3.log
+stat_*.txt
+sweep.tsv
