@@ -50,5 +50,9 @@ if bash tools/run_quf_tb.sh > /tmp/quf_out 2>&1 && grep -q PASS /tmp/quf_out; th
 else
   echo "FAIL  tb_quf_loader"; tail -5 /tmp/quf_out; fail=1
 fi
+# pin-fix lane: serialized fabric front-end differential TB (needs the
+# same golden container hex the QUF lane just built; regen if missing)
+[ -f tb/run/quf_tb_input.hex ] || bash tools/run_quf_tb.sh > /tmp/quf_out2 2>&1 || true
+t tb/tb_serfabric.v       tb_serfabric "rtl/q_uf_loader.v rtl/quf_boot.v rtl/q_tick_sched_rt.v rtl/q_boot_gate.v rtl/q_serfabric_top.v"
 
 exit $fail

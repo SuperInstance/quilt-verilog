@@ -23,7 +23,9 @@ module tb_cell_core;
     integer errors = 0, guard;
 
     q_cell #(.EDGES_N(4)) dut (
-        .clk(clk), .rst_n(rst_n), .i_myid(4'd1), .s_tick(s_tick),
+        .clk(clk), .rst_n(rst_n),
+        .i_por_n(rst_n), .i_bdf_wr(1'b0), .i_bdf_addr(4'd0),
+        .i_bdf_wdata(16'd0), .i_myid(4'd1), .s_tick(s_tick),
         .o_ovf(ovf),
         .ri_valid(ri_valid), .ri_ready(ri_ready),
         .ri_op(ri_op), .ri_src(ri_src), .ri_dst(ri_dst),

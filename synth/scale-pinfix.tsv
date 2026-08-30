@@ -1,0 +1,7 @@
+family	device	front_end	NCELL	LUT4	FF	LC_used	LC_cap	SB_IO_used	SB_IO_cap	util%	fmax_MHz	closes_12MHz
+ice40	up5k	serf	1	3220	1477	4231	5280	37	96	80.1%	15.9741849899292	PASS
+ice40	up5k	serq	1	4773	2176	-	-	37/96	-	-	-	PNR_FAIL
+ice40	up5k	serf	2	6073	2611	-	-	37/96	-	-	-	PNR_FAIL
+ice40	hx8k	serf	1	3220	1477	4231	7680	37	256	55.1%	43.123897552490234	PASS
+ice40	hx8k	serq	1	4773	2176	6327	7680	37	256	82.4%	31.065549850463867	PASS
+ice40	hx8k	serf	2	6073	2611	-	-	37/256	-	-	-	PNR_FAIL

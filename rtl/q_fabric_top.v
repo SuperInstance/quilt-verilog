@@ -69,6 +69,8 @@ module q_fabric_top #(
                     .OPW(OPW), .AIDW(AIDW), .PW(PW), .EDGES_N(EDGES_N)
                 ) u_cell (
                     .clk(clk), .rst_n(rst_n),
+                    .i_por_n(rst_n), .i_bdf_wr(1'b0), .i_bdf_addr(4'd0),
+                    .i_bdf_wdata(16'd0),
                     .i_myid(g[AIDW-1:0]), .s_tick(tick), .o_ovf(ovf_cells[g]),
                     .ri_valid(pv[NB-1]), .ri_ready(pr[NB-1]),
                     .ri_op(pop[(NB-1)*OPW +: OPW]),
@@ -88,6 +90,8 @@ module q_fabric_top #(
                     .OPW(OPW), .AIDW(AIDW), .PW(PW), .EDGES_N(EDGES_N)
                 ) u_cell (
                     .clk(clk), .rst_n(rst_n),
+                    .i_por_n(rst_n), .i_bdf_wr(1'b0), .i_bdf_addr(4'd0),
+                    .i_bdf_wdata(16'd0),
                     .i_myid(g[AIDW-1:0]), .s_tick(tick), .o_ovf(ovf_cells[g]),
                     .ri_valid(pv[g-1]), .ri_ready(pr[g-1]),
                     .ri_op(pop[(g-1)*OPW +: OPW]),

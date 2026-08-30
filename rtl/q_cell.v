@@ -21,6 +21,17 @@ module q_cell #(
 )(
     input  wire               clk,
     input  wire               rst_n,
+    // boot dial port (pin-fix lane, rtl/q_serfabric_top.v): the dialfile
+    // rides the POR domain (i_por_n), NOT the fabric reset, so quf_boot's
+    // writes land while the core is FSM-frozen (docs/FPGA-BOOT.md §2
+    // reset topology). i_bdf_wr is strobed only in the boot FSM's
+    // LOAD/LATCH states, where the core provably cannot emit df_wr
+    // (exclusion by construction, not arbitration). Existing users tie
+    // i_por_n to the same rst_n and i_bdf_wr to 0: bit-exact v1 behavior.
+    input  wire               i_por_n,
+    input  wire               i_bdf_wr,
+    input  wire [3:0]         i_bdf_addr,
+    input  wire [15:0]        i_bdf_wdata,
     input  wire [AIDW-1:0]    i_myid,
     input  wire               s_tick,
     output wire               o_ovf,
@@ -140,9 +151,14 @@ module q_cell #(
         .o_ftrace(w_ftrace), .o_antic(w_antic)
     );
 
+    // dialfile write mux: core (qm_bind) vs boot port; windows disjoint
+    wire        df_wr_g    = df_wr | i_bdf_wr;
+    wire [3:0]  df_addr_g  = i_bdf_wr ? i_bdf_addr  : df_addr;
+    wire [15:0] df_wdata_g = i_bdf_wr ? i_bdf_wdata : df_wdata;
+
     q_dialfile #(.DW(PW), .ND(16), .AW(4)) u_df (
-        .clk(clk), .rst_n(rst_n),
-        .i_wr(df_wr), .i_addr(df_addr), .i_wdata(df_wdata),
+        .clk(clk), .rst_n(i_por_n),
+        .i_wr(df_wr_g), .i_addr(df_addr_g), .i_wdata(df_wdata_g),
         .i_rd(df_rd), .o_rdata(df_rdata), .o_rstb(df_rstb),
         .o_eta_f(d_eta_f), .o_eta_s(d_eta_s),
         .o_kf(d_kf), .o_ks(d_ks), .o_ka(d_ka),
