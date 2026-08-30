@@ -509,7 +509,17 @@ module q_cell_core #(
                   if (lo_valid && lo_ready) begin
                       lo_valid <= 1'b0;
                       ci_ready <= !(s_tick || tick_pend);  // Q2fix: never offer ready with a tick pending (or being set) -- a one-cycle hole here lets an upstream pipe pop a flit the dispatching FSM ignores (silent drop, found by formal cell_core.tick/fabric.conservation)
-                      state    <= ST_IDLE;
+                      // wedge fix (silicon lane, 2026-08-30, found by
+                      // sim/vlt/tb_scale_vlt.cpp + tb/tb_wedge_repro.v on
+                      // iverilog AND verilator): ST_RESP used to fall back
+                      // to ST_IDLE unconditionally, so ONE non-bind flit
+                      // delivered to an unbound cell (e.g. a peer's link
+                      // ACK/NAK when linking before the peer is bound)
+                      // kicked it out of ST_UNB forever -- every later
+                      // bind executed as a dial write AND ACKED SUCCESS
+                      // (silent misconfig; cell_id never set, views NAK
+                      // forever). Return to ST_UNB while uncommissioned.
+                      state    <= bound ? ST_IDLE : ST_UNB;
                   end
               end
 

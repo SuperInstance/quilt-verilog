@@ -103,3 +103,8 @@ clean:
 	rm -rf formal/cell_core.fair formal/cell_core.tick formal/flit_pipe.fly \
 	       formal/fabric.conservation formal/echo_gate.dyadic \
 	       tb/formal/flit_pipe tb/run /tmp/quf_out*
+
+## v1-consumer — QUF-FORGETTING-V1 §4-independence test: build the independent
+## consumer, run the pass/reject matrix + latency bench over the checked-in corpus.
+v1-consumer:
+	cd hostile-consumer/v1_consumer && cargo build --release && ./run_matrix.sh

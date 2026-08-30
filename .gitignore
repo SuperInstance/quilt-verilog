@@ -1,9 +1,10 @@
-obj_dir/
-__pycache__/
-tb/scratch/
-sim/tools/__pycache__/
 # regenerable build/run artifacts (iteration 1, 2026-08-29)
-tb/run/
-tb/formal/*/
-tools/edgebench/chipmatrix_runs/gpt2-onnx/
+__pycache__/
 examples/*/out/
+obj_dir/
+sim/tools/__pycache__/
+sim/vlt/obj_*
+tb/formal/*/
+tb/run/
+tb/scratch/
+tools/edgebench/chipmatrix_runs/gpt2-onnx/

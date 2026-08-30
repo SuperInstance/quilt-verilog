@@ -123,6 +123,22 @@ static uint64_t last_activity = 0;
 // cycle trace ring (debugging the ledger): last 64 cycles of events
 static char tring[64][160]; static int ti = 0; static bool traced = false;
 
+// pipe-level push/pop witnesses (u_pipe exposes push/pop publicly)
+#define RP2(g, f) root->q_fabric_top__DOT__nodes__BRA__##g##__KET____DOT__u_pipe__DOT__##f
+static int ring_pushes(void) {
+    return RP2(0,push)+RP2(1,push)+RP2(2,push)+RP2(3,push)+RP2(4,push)
+         + RP2(5,push)+RP2(6,push)+RP2(7,push)+RP2(8,push)+RP2(9,push)
+         + RP2(10,push)+RP2(11,push)+RP2(12,push)+RP2(13,push)
+         + RP2(14,push)+RP2(15,push);
+}
+static int ring_pops(void) {
+    return RP2(0,pop)+RP2(1,pop)+RP2(2,pop)+RP2(3,pop)+RP2(4,pop)
+         + RP2(5,pop)+RP2(6,pop)+RP2(7,pop)+RP2(8,pop)+RP2(9,pop)
+         + RP2(10,pop)+RP2(11,pop)+RP2(12,pop)+RP2(13,pop)
+         + RP2(14,pop)+RP2(15,pop);
+}
+static uint64_t rp_c = 0, ro_c = 0;   // cumulative ring pushes/pops
+
 // full fabric state dump: core FSM/bound/id + buffer occupancy + the
 // flit (dst) sitting at every ring slice head
 #define RP(g, f) root->q_fabric_top__DOT__nodes__BRA__##g##__KET____DOT__u_pipe__DOT__##f
@@ -264,12 +280,34 @@ static void step() {
     }
     if (root->q_fabric_top__DOT__tick) { c_ticks++; act = true; }
     if (act) last_activity = cyc;
+    rp_c += ring_pushes(); ro_c += ring_pops();
 
     top->clk = 1; top->eval();              // posedge commit
     cyc++;
-    sprintf(tring[(ti + 63) & 63] + strlen(tring[(ti + 63) & 63]),
-            " @%llu occ=%d net=%lld", (unsigned long long)cyc, occ_all(),
-            (long long)(c_inj + c_emit - c_accept - c_drain));
+    {
+        int ring = 0, inb = 0, egb = 0;
+        ring += RING_PIPE_A(0)+RING_PIPE_B(0); ring += RING_PIPE_A(1)+RING_PIPE_B(1);
+        ring += RING_PIPE_A(2)+RING_PIPE_B(2); ring += RING_PIPE_A(3)+RING_PIPE_B(3);
+        ring += RING_PIPE_A(4)+RING_PIPE_B(4); ring += RING_PIPE_A(5)+RING_PIPE_B(5);
+        ring += RING_PIPE_A(6)+RING_PIPE_B(6); ring += RING_PIPE_A(7)+RING_PIPE_B(7);
+        ring += RING_PIPE_A(8)+RING_PIPE_B(8); ring += RING_PIPE_A(9)+RING_PIPE_B(9);
+        ring += RING_PIPE_A(10)+RING_PIPE_B(10); ring += RING_PIPE_A(11)+RING_PIPE_B(11);
+        ring += RING_PIPE_A(12)+RING_PIPE_B(12); ring += RING_PIPE_A(13)+RING_PIPE_B(13);
+        ring += RING_PIPE_A(14)+RING_PIPE_B(14); ring += RING_PIPE_A(15)+RING_PIPE_B(15);
+        for (int g = 0; g < NCELL; g++) {
+            inb += cell[g]->u_inbuf__DOT__a_v + cell[g]->u_inbuf__DOT__b_v;
+            egb += cell[g]->u_egbuf__DOT__a_v + cell[g]->u_egbuf__DOT__b_v;
+        }
+        sprintf(tring[(ti + 63) & 63] + strlen(tring[(ti + 63) & 63]),
+                " @%llu occ=%d(r%d i%d e%d) net=%lld rpp=%lld pp=[%d%d%d%d%d%d%d%d%d%d%d%d%d%d%d%d]",
+                (unsigned long long)cyc, ring+inb+egb, ring, inb, egb,
+                (long long)(c_inj + c_emit - c_accept - c_drain),
+                (long long)(rp_c - ro_c),
+                RP2(0,push),RP2(1,push),RP2(2,push),RP2(3,push),
+                RP2(4,push),RP2(5,push),RP2(6,push),RP2(7,push),
+                RP2(8,push),RP2(9,push),RP2(10,push),RP2(11,push),
+                RP2(12,push),RP2(13,push),RP2(14,push),RP2(15,push));
+    }
 }
 
 static void run(uint64_t n) {
@@ -291,8 +329,9 @@ static void xfer_noack(uint8_t op, uint8_t src, uint8_t dst,
     while (c_inj == inj_b) {
         step();
         if (cyc - t0 > timeout) {
-            printf("FAIL XFER_TIMEOUT @cyc=%llu op=%d dst=%x\n",
-                   (unsigned long long)cyc, op, dst);
+            printf("FAIL XFER_TIMEOUT @cyc=%llu op=%d dst=%x "
+                   "(bench timeout=%llu -- NOT a hardware period)\n",
+                   (unsigned long long)cyc, op, dst, (unsigned long long)timeout);
             errors++;
             break;
         }
@@ -322,8 +361,9 @@ static uint16_t xfer(uint8_t op, uint8_t src, uint8_t dst,
     }
     return out_dat;
 TO:
-    printf("FAIL XFER_TIMEOUT @cyc=%llu op=%d dst=%x\n",
-           (unsigned long long)cyc, op, dst);
+    printf("FAIL XFER_TIMEOUT @cyc=%llu op=%d dst=%x "
+           "(bench timeout=%llu -- NOT a hardware period)\n",
+           (unsigned long long)cyc, op, dst, (unsigned long long)timeout);
     errors++;
     want_inject = false; top->i_val = 0; in_pend = false;
     return 0xFFFF;
@@ -563,6 +603,14 @@ int main(int argc, char** argv) {
             if ((cyc & 0xFF) == 0) check_periodic();
         }
         want_inject = false; top->i_val = 0; in_pend = false;
+        if (occ_all()) {                       // deadlock liveness guard:
+            printf("FAIL P4 LIVENESS rep=%d: occ=%d at hash time -- fabric "
+                   "deadlocked, state is degenerate; hash NOT taken "
+                   "(comparing hashes of corpses proves nothing)\n",
+                   rep, occ_all());
+            errors++;
+            continue;
+        }
         uint64_t h = state_hash();
         if (rep == 0) h1 = h; else if (rep == 1) h2 = h; else h3 = h;
     }

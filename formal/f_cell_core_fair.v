@@ -175,7 +175,22 @@ module f_cell_core_fair(input clk, input rst_n);
 
     // I1: gap between consecutive ci_ready pulses, split by tick interference
     reg [7:0] f_gap = 0;    // cycles ci_ready has been low
-    reg       f_gtick = 0;  // a tick strobed during this low period
+    reg       f_gtick = 0;  // a tick interfered with this low period
+    // Finding 3 (depth-130 re-run, devil nudge 2026-08-29): s_tick during
+    // the gap is NOT the only interference. A strobe that arrived while
+    // ci_ready was still high latches tick_pend, and the Q2 interlock
+    // services that tick inside the NEXT gap before re-asserting ready.
+    // The trace showed view(1)+deferred-tick = 65 cycles misclassified as
+    // a "pure op" gap. Interference is therefore ALSO witnessed by the
+    // DUT itself servicing a tick during the gap -- detected through
+    // PORT-VISIBLE signals (the tick sweep's engine command 010, and the
+    // fire fanout), NOT hierarchical refs (yosys silently leaves
+    // dut.state unresolved, which cost one 37-minute re-run to learn).
+    // Any tick service that can push a gap past MAX_OP_CYCLES necessarily
+    // sweeps >=1 valid edge (cmd 010); a zero-edge service adds only 2
+    // cycles, inside the pure-op bound.
+    wire f_ticksvc = (hb_cmd == 3'b010)                 // tick decay sweep
+                   || (lx_valid && (lx_op == OP_EFF));  // fire fanout
     always @(posedge clk) begin
         if (!rst_n) begin
             f_gap <= 0; f_gtick <= 0;
@@ -183,7 +198,7 @@ module f_cell_core_fair(input clk, input rst_n);
             f_gap <= 0; f_gtick <= 0;
         end else begin
             f_gap <= f_gap + 1'b1;
-            if (s_tick) f_gtick <= 1'b1;
+            if (s_tick || f_ticksvc) f_gtick <= 1'b1;
         end
     end
 

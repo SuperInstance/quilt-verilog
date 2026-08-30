@@ -132,6 +132,207 @@ Rules:
 - The reference writer pads the whole file to `align`, so the byte stream
   is always an integral number of 16-bit words (what the RTL loader eats).
 
+## 5a. Invalid files (hostile-input semantics)
+
+What a reader MUST do when the file lies about itself. Every rule is
+reject-or-skip with a machine-readable reason code, extending the E1–E6
+family of `QUF-FORGETTING-V1.md` §4.2 (E1–E6 remain reserved for epoch/
+custody failures; E7+ below are container-level failures). "Reject" means
+fail the whole file before any state is restored — partial-restore on an
+invalid file is forbidden (a hostile file must never get half its payload
+written into a fabric). Findings cited as F# are from
+`HOSTILE-CONSUMER-REPORT.md` (d3dfa08). Compatibility law: **none of these
+rules may change behavior on any valid file** — every rule fires only on
+bytes a conformant writer never emits (R5's one nuance and R10's
+loosening are called out below).
+
+**Check order** (readers report the first failure in this sequence):
+(1) header scalars — R1, R2, R8's `edge.k` range; (2) structural walk
+bounds — R3/R4 as the KV/table walk proceeds, framing before per-entry
+field validation; (3) per-section fields — R5, R6, R7, R9; (4) padding —
+R11; (5) KV value lengths — R12. R18 (value types) fires when the walk
+first meets the bad type, inside phase 2.
+
+### Rules
+
+1. **R1 — Magic and version gate (F1).** `magic != 'QUF\0'` → reject,
+   `E7`. `version != 1` → reject, `E8` (§8 rule 6 already mandates this;
+   the code makes it machine-checkable). This restates §3 as an explicit
+   reject-with-code; F1 itself was an ecosystem finding, not an open
+   spec defect (the referee-side magic gate is separate from this
+   document).
+2. **R2 — Endian word is profile-wide (F10).** `endian != 1` → reject,
+   `E9`. §9 error 4 already binds the RTL profile; this rule promotes it
+   to the full profile so two legal consumers cannot disagree. Endian is
+   detected, never negotiated (§7).
+3. **R3 — Truncation of framing (F6).** If the byte stream ends before
+   the 16-byte fixed header, before the KV walk reaches the
+   `section_count` word, before the table walk completes its
+   `section_count` entries, or before any section's `offset+size` →
+   reject, `E10`. §5's "must not extend past end of file" covered
+   payloads only; this rule closes the framing regions. (Count-driven
+   overruns of the same regions belong to R4, not R3.)
+4. **R4 — Counts that lie (F7).** `kv_count` or `section_count` whose
+   entries walk past end of file, or any `name_len` that does → reject,
+   `E11`. The section table must additionally end at or before the
+   smallest section-payload offset and at or before EOF — a table that
+   runs into payload space is lying about its count, `E11`. Bounded
+   readers may pre-check `kv_count ≤ (file_size−16)/9` (min KV pair:
+   4+0+4+1) and `section_count ≤ file_size/24` (min entry: 4+0+4+8+8)
+   before walking (§9 error 3 is the RTL shadow of this).
+5. **R5 — u64 high words and the 4 GiB ceiling (F4).** Any nonzero high
+   u32 word of a section `offset` or `size` → reject, `E12`; likewise
+   `offset+size ≥ 2^32` (sum overflow with clean high words, e.g.
+   `offset=0xFFFF0000, size=0x20000`). §9's limit (error 7) is promoted
+   to format law on the authority of DOCTRINE item 3 — one file loads
+   identically into sim, soft core, and FPGA; a >4 GiB file cannot.
+   Base §2/§5 never bounded the u64s (that dispute *is* F4); this rule
+   resolves it. No known artifact approaches the bound.
+6. **R6 — Payload must not overlap the front matter (F11).** Every
+   section `offset` must be ≥ end of the section table (before alignment
+   padding). A payload pointing into the header/KV/table → reject,
+   `E13`. §5 forbade section-vs-section overlap only; this closes the
+   point-`dials`-at-offset-32 attack (offset 32 is `align`-clean, so R9
+   cannot catch it — R6 is the load-bearing rule).
+7. **R7 — Known-section size formulas, zero-length (F9).** A known v1
+   section's `size` must equal its §6 formula given the header counts
+   (`dials`: `cell_count×32`, `edges`: `edge_count×(12+K)`, `routing`:
+   `route_count×2`, `ticks`: `4+4×cell_count`). Size 0 is legal only
+   when the corresponding count is 0. Violation → reject, `E14`. When a
+   count KV is absent (§4 permits omission), the known sections must
+   agree with each other on the derived count (`dials`↔`ticks` on
+   `cell_count`, etc.); disagreement → `E14`.
+8. **R8 — Present counts are assertions (F5); `edge.k` range.** A
+   present-and-wrong `cell_count`/`edge_count`/`route_count` → reject,
+   `E14` (one failure class with R7: declared size/count ≠ payload).
+   Writers MAY omit counts (derivation, §4); once present, they are
+   assertions, not hints. `edge.k` outside 1..16 → reject, `E8`.
+9. **R9 — Alignment and file length (F3).** File length not a multiple
+   of `align`, or any section `offset` not a multiple of `align` →
+   reject, `E15`. §5 said only what the reference writer does; this
+   makes unpadded EOF a detectable lie (576→575 truncation now dies
+   with `E15`, not luck).
+10. **R10 — Names are bytes, not text (F8).** KV and section names are
+    length-counted opaque bytes. A reader MUST NOT reject on invalid
+    UTF-8 content (skip size is fully determinate from `name_len`);
+    name comparison is byte equality. This is the sole *loosening* rule:
+    it can only widen acceptance relative to base §4/§5.
+11. **R11 — Padding is zero, everywhere — §8 rule 5 REPEALED (F2).**
+    Every padding byte (between table and first section, between
+    sections, after the last section to EOF) MUST be 0x00. A nonzero
+    byte in any padding run → reject, `E16`. This resolves the §5-vs-§8.5
+    contradiction explicitly: **§5's zero-padding law wins; §8 rule 5
+    ("bytes after the last section … are ignored") is repealed by name**
+    and replaced by this rule. Rationale: "ignored" trailing bytes are an
+    unauthenticated side channel — a file may not carry bytes the format
+    disclaims. No version bump: repealing a tolerance is not a change to
+    the meaning or encoding of any section/KV or the fixed header
+    (§8 rule 6). Consequential note: QUF-FORGETTING-V1 §2.4 cites the
+    ignore-rule as one rationale for rejecting the whole-file seal; that
+    citation is superseded — §2.4's conclusion still stands on its other
+    grounds (padding mutability, canonicalization cost).
+12. **R12 — Unbounded KV value lengths (F12).** A KV string `len` or
+    array `count` whose value would extend past end of file, or overflow
+    any size arithmetic → reject, `E17`. Skip-size derivability (§8
+    rule 1) presumes the length is honest; R12 makes dishonesty fatal.
+13. **R18 — Unskippable value types (base §8 rule 2, given a code).**
+    An undefined KV value type id, or an array element type that is not
+    fixed-size → reject, `E18` (RTL error 6 already binds the loader
+    profile; this is the container-level twin).
+
+Pre-existing §5 verification failures (duplicate section names,
+non-ascending offsets, section-vs-section overlap) retain their §5
+status; assigning them codes is out of scope for this F1–F12 amendment.
+
+### Reason-code table
+
+| code | failure                                     | action            |
+|------|---------------------------------------------|-------------------|
+| E7   | bad magic (R1)                              | reject file       |
+| E8   | bad version; bad scalar range — `edge.k` (R1, R8) | reject file |
+| E9   | bad endian word (R2)                        | reject file       |
+| E10  | truncation of framing/payload (R3)          | reject file       |
+| E11  | lying count or name_len; table into payload (R4) | reject file |
+| E12  | nonzero u64 high word; sum ≥ 2^32 (R5)      | reject file       |
+| E13  | payload overlaps front matter (R6)          | reject file       |
+| E14  | declared size/count ≠ payload (R7, R8)      | reject file       |
+| E15  | misaligned offset / unpadded EOF (R9)       | reject file       |
+| E16  | nonzero padding byte (R11)                  | reject file       |
+| E17  | KV value length overrun (R12)               | reject file       |
+| E18  | unknown value type / bad array elem type (R18) | reject file    |
+
+RTL loader mapping: E7→1, E8(bad version)→2, E8(`edge.k` range)→9,
+E9→4, E10/E11/E13→3, E12(high word)→7, E12(sum overflow)→3, E18→6
+(§9 codes unchanged; no new hardware). E14–E17 are full-spec-profile
+(`tools/quf.py`) obligations only — the v1 RTL loader derives counts
+and never checks padding; closing that gap is future RTL work, booked,
+not claimed here.
+
+### Regression list — mutants that must flip to rejected-with-code
+
+From `hostile-consumer/fuzz.py` (seed `tb/run/quf_tb_input.quf`), these
+were determinate-by-luck and now MUST be rejected with the stated code
+(on-disk names are decimal; `4294967295` = `0xFFFFFFFF`):
+
+- `truncate-8`, `truncate-16`, `truncate-100`, `truncate-300`,
+  `truncate-543` (cuts last section) → E10 (R3/R4 fire before R9 per
+  check order)
+- `truncate-575` (unpadded EOF) → E15
+- `kvcount-lie-11` → E18 (the fake 11th pair's value type is undefined
+  before any bound is crossed on this seed)
+- `section-count-5` → E11 (table runs into payload space, R4's second
+  clause); `section-count-1000`, `section-count-4294967295` → E11
+- `endian-zero`, `endian-two`, `version-nonce-ff` (byte 9 is inside the
+  endian word — the fuzz case name is wrong, the mutation is an endian
+  corruption) → E9
+- `zero-size-dials`, `zero-size-edges`, `zero-size-routing`,
+  `zero-size-ticks` → E14 (formula check fires before R11's padding
+  check per order)
+- `bad-magic` → E7; `version-nibble-hi`, `version-nibble-lo` → E8
+- `edgek-0`, `edgek-17`, `edgek-4294967295` → E8
+- `kv-vtype-13`, `kv-vtype-99`, `kv-array-of-strings` → E18
+- (not yet generated, required:) padding byte flip after last section →
+  E16; section-0 `offset` → 32 (F11) → E13; KV string len =
+  0xFFFFFFFF (F12) → E17; `cell_count`=3 with 2-cell dials (F5) → E14.
+
+### Compatibility
+
+R1–R9 and R11–R18 fire only on bytes a §4/§5-conformant writer never
+emits: zero padding, aligned offsets, honest counts, u32-sized sections,
+multiple-of-`align` EOF are writer invariants already — so consumers
+predating §5a accept a strict superset of §5a-valid files for those
+rules. Two honest exceptions: **R5** narrows the never-exercised,
+profile-disputed u64 allowance (base §2/§5 never bounded it — that
+dispute was F4 itself); **R10** loosens (invalid-UTF-8 names become
+tolerated, not rejectable). Golden vector §11 (sha256 `5b2a236b…`)
+parses clean under §5a.
+
+### Out of scope, noted (hash observability)
+
+The silicon lane booked an UNADJUDICATED hash-observability failure
+(0eb231b: distinct seeds, identical state hash). §5a itself needs no
+state hashing — it seals nothing. But if QUF-FORGETTING-V1 epoch
+verification is ever routed through fabric-side state hashing (the §5
+KHASH organ proposal), that failure becomes a **dependency of the
+verify-then-skip rule** (FORGETTING §4: an unverifiable seal must fail
+closed E3 — a hash that collides across distinct states silently
+downgrades fail-closed to fail-confused). Flagged, not fixed here.
+
+### Provenance
+
+Drafted against d3dfa08 (F1–F12); codes extend the E1–E6 family of
+a83c5be §4.2. Coder passes: `claude -p` (Sonnet — 11 findings: R8 code
+self-contradiction, E8→9 mapping split, R3/R4 code overlap, superset
+overclaim, R5 DOCTRINE grounding + sum-overflow mapping, no-version-bump
+justification + §2.4 staleness flag, R7 absent-count rule, E14–E17 RTL
+gap honesty, F1 framing, KV-region wording, §5 pre-existing failures
+scope) and `opencode run --auto` (10 findings: E18 missing +
+`kvcount-lie-11` first-failure correction, `section-count-5` bound fix,
+check-order clause, `version-nonce-ff` endian-byte catch, R12 wording,
+compat softening, mapping nits, decimal mutant names, min-entry sizes).
+All folded. Gatekeeper: DeepInfra wide model, bullshit-test only —
+verdict: PENDING.
+
 ## 6. Sections (v1)
 
 ### 6.1 `dials` — per-cell dial register file image
@@ -193,7 +394,9 @@ the header is the semantic period `2^tpw`.
    un-skippable; readers must fail loudly, not guess.
 3. **Unknown section names: skip** via the section table.
 4. **Unknown section kinds: skip** the payload.
-5. Bytes after the last section (within the final padding) are ignored.
+5. **[Repealed by §5a R11]** Bytes after the last section (within the
+   final padding) are ignored — superseded: nonzero bytes after the last
+   section are now a rejection (reason code E16).
 6. New sections and new KV keys may be added without bumping `version`.
    Changing the meaning or encoding of an existing section/KV, or the
    fixed header, bumps `version` — readers reject other versions.
