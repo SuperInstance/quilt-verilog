@@ -3,12 +3,20 @@
 //
 // Claim: even with the ringport clone fix (rtl/q_link_ringport.v, transit =
 // ri_valid && !hit) and a host ack-window, a quiesced (injection-stopped)
-// fabric can hold flits that NEVER drain: circular wait between full cell
+// fabric could hold flits that NEVER drain: circular wait between full cell
 // inbufs / full egbufs / full ring. Ledger stays intact (net == occ) -- no
 // flit is duplicated or lost, the fabric simply stops moving. Recovery is
 // reset-only (proved by P3 of tb_scale_vlt).
 //
-// Program (NCELL=15, fire-proof dials -- cells cannot fire):
+// RESOLVED (F3 escape-lane fix, 2026-08-30): inject_ok = !ri_valid || hit
+// (a hit never claims ro, so injection escapes a parked delivery). On the
+// fixed RTL this repro drains to occ=0 in 21 cycles, bit-identical on
+// re-run; exit 1 now means F3 REGRESSION. (Note: the dials here are NOT
+// fire-proof despite an early comment claiming so -- thresh 0x7FFF still
+// fires on saturated effects; the pre-fix wedge was exactly a cell stuck
+// in ST_FIRE. Fires are rare, not impossible.)
+//
+// Program (NCELL=15):
 //   P0  bind/dial/link all cells (same as scale bench)
 //   P1  windowed mixed traffic (<=12 views in flight, 10% effects) for
 //       QV_REPRO_CYCLES cycles (default 50000, env knob)

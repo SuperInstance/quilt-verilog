@@ -111,8 +111,9 @@ sim-scale:
 	bash sim/vlt/run_scale.sh
 
 ## sim-quiesce-repro -- F3 saturation-deadlock MINIMAL REPRO (deterministic,
-## ~15 s incl. build): 120k windowed cycles wedge, 100k drain clean.
-## Exit 1 = wedge reproduced (booked result, SILICON-EXPERIMENTS §3/§3.1).
+## ~15 s incl. build): 120k windowed cycles; drains occ=0 in 21 cycles on
+## fixed RTL (F3 escape lane, SILICON-EXPERIMENTS §3.2).
+## Exit 0 = drained (expected); exit 1 = F3 REGRESSION.
 sim-quiesce-repro:
 	bash sim/vlt/run_quiesce_repro.sh
 

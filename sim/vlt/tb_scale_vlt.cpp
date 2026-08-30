@@ -296,7 +296,7 @@ static void step() {
                    "li_v=%d li_rdy=%d\n",
                 root->q_fabric_top__DOT__nodes__BRA__15__KET____DOT__connio__DOT__u_io__DOT__u_rp__DOT__ri_valid ? 1:0,
                 root->q_fabric_top__DOT__nodes__BRA__15__KET____DOT__connio__DOT__u_io__DOT__u_rp__DOT__hit ? 1:0,
-                root->q_fabric_top__DOT__nodes__BRA__15__KET____DOT__connio__DOT__u_io__DOT__u_rp__DOT__consumed ? 1:0,
+                (root->q_fabric_top__DOT__nodes__BRA__15__KET____DOT__connio__DOT__u_io__DOT__u_rp__DOT__hit && root->q_fabric_top__DOT__nodes__BRA__15__KET____DOT__connio__DOT__u_io__DOT__u_rp__DOT__ld_ready) ? 1:0,
                 root->q_fabric_top__DOT__nodes__BRA__15__KET____DOT__connio__DOT__u_io__DOT__u_rp__DOT__transit ? 1:0,
                 root->q_fabric_top__DOT__nodes__BRA__15__KET____DOT__connio__DOT__u_io__DOT__u_rp__DOT__inject_ok ? 1:0,
                 root->q_fabric_top__DOT__nodes__BRA__15__KET____DOT__connio__DOT__u_io__DOT__u_rp__DOT__li_valid ? 1:0,
@@ -308,7 +308,7 @@ static void step() {
                     printf("  cell%d_rp: ri_v=%d hit=%d cons=%d trans=%d "
                            "inj_ok=%d li_v=%d\n", g,
                         c->u_rp__DOT__ri_valid?1:0, c->u_rp__DOT__hit?1:0,
-                        c->u_rp__DOT__consumed?1:0, c->u_rp__DOT__transit?1:0,
+                        (c->u_rp__DOT__hit && c->u_rp__DOT__ld_ready)?1:0, c->u_rp__DOT__transit?1:0,
                         c->u_rp__DOT__inject_ok?1:0, c->li_valid_w?1:0);
             }
         }
@@ -671,13 +671,17 @@ int main(int argc, char** argv) {
                (unsigned long long)(p1_freeze - 34537));
     printf("P1 acklat_trips=%llu (view latency >8192 cyc events)\n",
            (unsigned long long)acklat_trips);
-    quiesce(1000000, true);                  // expect the wedge; verify ledger
+    // F3 fixed (escape lane, 2026-08-30): the quiesce after P1 must now
+    // DRAIN -- a wedge here is a regression and fails the bench (was
+    // expect_deadlock=true when F3 was booked architectural).
+    quiesce();
 
     // ---------------- P2: max-rate effect storm (fire-prone) ---------
     // Re-dial every cell fire-prone (thresh 0x0800, refr 2), then storm
-    // with 100% effects, UNBOUNDED. Expect the freeze: fire fanout is
-    // fabric-internal traffic no host window can throttle; the ring
-    // deadlocks. Measure when and with what stuck.
+    // with 100% effects, UNBOUNDED. With the F3 escape lane this is the
+    // hardest exercise of the fix (fire fanout is fabric-internal
+    // traffic no host window can throttle; measured 15,600 fires, no
+    // freeze). A freeze here is an F3 regression: reported loudly.
     printf("P2 STORM: re-dial fire-prone, 200k cycles unbounded, 100%% "
            "effects\n");
     do_reset(16);                            // clear P1's wedge first

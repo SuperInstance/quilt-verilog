@@ -75,6 +75,12 @@ fabric below is 15 cells — no iCE40 device in the drawer holds it
 
 ## 2. SCALE SIM — a million cycles on the largest legal fabric
 
+(Numbers below are the PRE-F3-fix run, kept as the wedged-state
+evidence; the post-fix re-run (§3.2) shows 497,608 P1 injections, clean
+quiesce, same 0-violation ledger, total 1,852,899 cycles — the ~1M-cycle
+difference is the quiesce no longer burning its wait budget on a dead
+fabric.)
+
 Largest legal = what the parameters admit: AIDW=4 caps ids at 0..15 and
 EXTID=0xF owns one, so **NCELL=15**; EIW=2 (q_cell default, not exposed
 by the top) caps **EDGES_N=4**; engines at q_cell defaults **K=8, B=8,
@@ -104,7 +110,7 @@ injected flits; host windows ≤12 outstanding views):
   cycles and exactly zero at every clean quiesce — it held through every
   phase INCLUDING the wedged states of §3 F3.
 
-## 3. STRESS FINDINGS — two RTL bugs (fixed), one architectural limit
+## 3. STRESS FINDINGS — three RTL/fabric bugs, all fixed (F3: §3.2)
 
 **F1 commissioning wedge (RTL, FIXED — q_cell_core ST_RESP).** Any
 non-bind flit delivered to an unbound cell (e.g. a link ACK from a peer
@@ -128,18 +134,17 @@ fabric was manufacturing flits. Fix: `transit = ri_valid && !hit` (hold
 at the slice head, per the unit-TB contract "stalls ring, no ro
 progress"). Suite 19/19.
 
-**F3 saturation deadlock (ARCHITECTURAL, NOT FIXED — the honest wall).**
+**F3 saturation deadlock (ARCHITECTURAL → FIXED 2026-08-30, §3.2).**
 No end-to-end flow control. Mixed traffic with effects — whose fire
 fanout is fabric-internal traffic no host window can throttle —
-eventually wedges the ring in a cyclic wait (egbuf→ring→inbuf→core→
-egbuf across cells). Measured: P1's drain left 11 flits permanently
-stuck (occ=11, ledger intact, QUIESCE-DEADLOCK line in scale-run.log);
-view latency exceeded 8192 cycles 10 times (ACKLAT-TRIP lines) before
-that; earlier fire-prone configurations froze mid-run at occ=23-26.
-Conservation survives; liveness does not. Fix direction: admission
-control / credits on inject (design work, deliberately not patched in
-this lane — the referee's no-blind-fixes rule applies to architecture
-too).
+eventually wedged the ring in a cyclic wait (egbuf→ring→inbuf→core→
+egbuf across cells). Measured on the pre-fix RTL: P1's drain left 11
+flits permanently stuck (occ=11, ledger intact, QUIESCE-DEADLOCK line
+in the pre-fix scale-run.log); view latency exceeded 8192 cycles 10
+times (ACKLAT-TRIP lines) before that; earlier fire-prone
+configurations froze mid-run at occ=23-26. Conservation survived;
+liveness did not. Fixed by the ringport escape lane (§3.2) — this
+block preserves the pre-fix record.
 
 **Reset mid-pipeline (PASS).** 15 flits held in pipes (egress drain
 gated off), rst_n asserted 16 cycles under load: post-release residue
@@ -211,6 +216,77 @@ backlog.
 fire" comment was wrong in fact (fires are rare, not impossible — 55
 measured in P1; F3's wedge is a fire wedge). Corrected in the rescue
 commit.
+
+## 3.2 F3 fix — ringport injection escape lane (2026-08-30, this lane)
+
+**Mechanism (chosen from the §3.1 booked directions by measured cost).**
+The three booked candidates: (1) credits on inject, (2) admission
+control, (3) the escape lane / inbuf-pop variants. Credits need
+per-destination counters and a protocol at every node (the doc's own
+"design work" pricing); popping the inbuf during ST_FIRE just moves the
+full condition into a core-internal skid of unbounded-filling depth and
+does not close the loop. The escape lane is one line of combinational
+logic in ONE module: `inject_ok = !ri_valid || hit` (was `!ri_valid ||
+consumed`). Rationale: a hit flit NEVER claims the ring output (its
+exit is ld/delivery), so the old gate blocked injection behind a parked
+delivery for no structural reason — the blocked hit simply waits in the
+upstream slice (ri_ready=0, no clone: the F2 clone was transit claiming
+ro; an accepted injection pops its own li, so push/pop stays paired).
+This severs exactly the measured single-cell cycle: ST_FIRE can now
+inject past its own parked delivery, completes, reasserts ci_ready,
+drains the inbuf, and the parked hit delivers. Overtaking is limited to
+a node's injections passing flits addressed to that node; ring order
+among transit flits is unchanged (no delivered-order contract existed
+between a node's outflow and its own inflow — ops are independent and
+ack-correlated by a2).
+
+**Verified (all re-measured this lane, fixed RTL):**
+- minimal repro `make sim-quiesce-repro` (seed 0xC0FFEE): pre-fix on
+  HEAD f7027c4 re-confirmed freshly — cell 13 state=18 (ST_FIRE),
+  in=11 eg=11, occ=14 frozen through 500k cycles, ledger intact,
+  exit 1. Post-fix: **drains to occ=0 in 21 cycles**, exit 0, output
+  bit-identical across two re-runs. Unit guard added: tb_link_ringport
+  cases 8-9 (escape + no-clone + delivery-after-overtake); suite 19/19.
+- `make sim-scale` (1M-cycle P1 + P2 storm + P3 reset + P4 hash):
+  **errors=0, 0 conservation violations** (ledger exactly zero at the
+  now-completing P1 quiesce, which is a HARD bench error on wedge —
+  upgraded from the booked expect-deadlock canary). No QUIESCE-DEADLOCK
+  line. Two runs identical modulo wall-clock lines. New committed
+  evidence: sim/vlt/scale-run.log (post-fix; supersedes the pre-fix
+  counters quoted in §2 — inj 497,608 vs 58,080 per P1, see below).
+- P2 fire storm (100% effects, unbounded, fire-prone dials): pre-fix
+  froze-or-fire-starved (46 fires); post-fix **15,600 fires, 200k
+  cycles, no freeze** — the storm is now the heaviest exercise of the
+  escape path, not a liveness death.
+- P4 determinism: stream hashes unchanged vs the pre-fix run
+  (A=A'=2126a3c74072d7ff, B=2b25401359ce0215) — consistent: the P4
+  window never wedged pre-fix, and the escape path changes ordering
+  only where a delivery was parked, so P4's clean-trajectory stream is
+  untouched (also a useful cross-check that the fix does not perturb
+  non-wedged traffic).
+
+**Throughput side-effect (measured, not designed for):** P1
+mixed-traffic throughput rose 58,080 → 497,608 injections/M-cycles
+(8.6x) — the pre-fix fabric spent most of P1 half-wedged (acks stuck
+behind parked hits throttled every host window; ACKLAT-TRIPs 10 → 48
+absolute, but per-injection trip rate fell ~172 to ~96 per M injected).
+Liveness, not throughput, was the fix's contract; the throughput number
+is a measured consequence.
+
+**Cost (measured at synthesis; PnR/fmax NOT re-run):** canonical NCELL=2
+flow (`yosys -s synth/fpga-converged.ice40`), pre-fix committed stat vs
+fresh post-fix run: SB_LUT4 5997 → 5992 (−5), SB_CARRY 898 → 878 (−20),
+FF 2434 → 2434 (±0). The fix is slightly CHEAPER than the broken logic
+(`inject_ok` lost a term). Timing estimate (not measured): no new arc;
+the ld_ready → li_ready arc is removed — neutral-to-better fmax
+expected. Labeled: LUT/FF = measured at yosys-stat level; fmax =
+estimate.
+
+**Not claimed:** end-to-end guaranteed drain under an adversarial host
+that never drains EXTID (the io port's ld can still park — that is the
+external contract, documented in q_io_port); a formal ringport
+liveness proof (still backlog, §3.1 formal-coverage note — the unit
+cover + scale storm are the guards today).
 
 ## 4. Incident note
 

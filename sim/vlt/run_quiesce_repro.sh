@@ -1,11 +1,13 @@
 #!/bin/bash
 # run_quiesce_repro.sh -- build + run the F3 saturation-deadlock MINIMAL
 # REPRO (sim/vlt/tb_quiesce_repro.cpp). Deterministic (seed 0xC0FFEE):
-# 120k windowed mixed-traffic cycles wedge the fabric (ledger-intact
-# circular wait, cell ST_FIRE + blocked own-delivery at its ringport);
-# 100k cycles drain clean. Exit 1 = wedge reproduced (the expected,
-# booked result -- SILICON-EXPERIMENTS.md §3 F3 / §3.1); exit 0 = drained
-# (would mean F3 got fixed; update the docs).
+# 120k windowed mixed-traffic cycles; on the pre-fix RTL this wedged the
+# fabric (ledger-intact circular wait, cell ST_FIRE + blocked own-delivery
+# at its ringport) -- occ=14 stuck through 500k cycles. FIXED by the F3
+# escape lane (rtl/q_link_ringport.v: inject_ok = !ri_valid || hit):
+# drains to occ=0 in 21 cycles, bit-identical across re-runs. Exit 0 =
+# drained (the expected result on fixed RTL); exit 1 = F3 REGRESSION
+# (SILICON-EXPERIMENTS.md §3 F3 / §3.1).
 set -u
 cd "$(dirname "$0")/../.."
 OSSCAD_DEFAULT=/home/eileen/tools/oss-cad-suite/bin
