@@ -19,7 +19,7 @@ the one the repo's history built. The intended path:
 2. **[docs/THE-TICK.md](THE-TICK.md)** — one tick traced through the RTL, numbers left to right. If you read only one doc after the README, read this one.
 3. **[docs/FOUNDATION.md](FOUNDATION.md)** — the cell axioms the tick walk rests on.
 4. **[docs/QUF-SPEC.md](QUF-SPEC.md)** — how quilt state becomes a file that boots.
-5. **[docs/VERIFICATION.md](VERIFICATION.md)** — how claims above are proven; then `docs/academic/THE-BREAKDOWN.md` for the dossier (gaps and failures first-class).
+5. **[docs/VERIFICATION.md](VERIFICATION.md)** — how claims above are proven; then `docs/academic/THE-BREAKDOWN.md` for the dossier (gaps and failures first-class). For the number-by-number depth: `docs/FORMAL-PROOFS.md` (the six proofs) and `docs/SYNTHESIS-RESULTS.md` (the measured tables).
 6. **[docs/BACKEND-NOTES.md](BACKEND-NOTES.md)** — what an adversarial first user found; the honest weakness list.
 
 Then branch by appetite: theory → the `docs/academic/` spine
@@ -68,6 +68,8 @@ the full shelf; this is the tour.
 | file | one line |
 |---|---|
 | [docs/VERIFICATION.md](VERIFICATION.md) | The complete verification guide: every lane's command, expected pass counts, measured timings, and the honest not-covered list. |
+| [docs/FORMAL-PROOFS.md](FORMAL-PROOFS.md) | The depth pass on the six sby proofs: invariant in plain math, what it rules out, engine/strategy, measured wall times, and the E1–E4 assumption ledger. |
+| [docs/SYNTHESIS-RESULTS.md](SYNTHESIS-RESULTS.md) | The consolidated measured synthesis table: devices, LCs, IO, fmax vs target, bitstream size — every row dated and provenance-tracked (incl. the post-place-vs-route corrections). |
 | [formal/README.md](../formal/README.md) | The proof suite's contract: every .sby, its invariant, verdict, runtime, environment assumptions (E1–E4), and the RTL defects the proofs forced. |
 | [sim/README.md](../sim/README.md) | The behavioral lane: Python prototypes over the same QUF, tap-fabric bridge, and how to run it. |
 | [tools/gc-verifies/README.md](../tools/gc-verifies/README.md) | GC-METAL lane: the five GENERAL-CALCULUS §8 benches, their check counts and bounds, and the regression guard. |
