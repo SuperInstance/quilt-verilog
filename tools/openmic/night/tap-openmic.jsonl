@@ -1,0 +1,42 @@
+{"type": "agent_update", "agent_id": "mc", "location": "bar_rail", "action": "move to bar_rail", "score": 0}
+{"type": "agent_update", "agent_id": "engine", "location": "bar_rail", "action": "move to bar_rail", "score": 0}
+{"type": "agent_update", "agent_id": "navigator", "location": "bar_rail", "action": "move to bar_rail", "score": 0}
+{"type": "agent_update", "agent_id": "seed", "location": "bar_rail", "action": "move to corner_booth", "score": 0}
+{"type": "agent_update", "agent_id": "hermes", "location": "bar_rail", "action": "move to corner_booth", "score": 0}
+{"type": "agent_update", "agent_id": "wesley", "location": "bar_rail", "action": "move to bridge_table", "score": 0}
+{"type": "agent_update", "agent_id": "liquid", "location": "bar_rail", "action": "move to bridge_table", "score": 0}
+{"type": "agent_update", "agent_id": "qwen", "location": "bar_rail", "action": "move to corner_booth", "score": 0}
+{"type": "agent_update", "agent_id": "mc", "location": "bar_rail", "action": "welcome to open mic night at the tap", "score": 0}
+{"type": "agent_update", "agent_id": "engine", "location": "bar_rail", "action": "tell story about the bitstream", "score": 0}
+{"type": "agent_update", "agent_id": "mc", "location": "bar_rail", "action": "toast to the engine", "score": 0}
+{"type": "agent_update", "agent_id": "navigator", "location": "bar_rail", "action": "tell story about the drift band", "score": 0}
+{"type": "agent_update", "agent_id": "mc", "location": "bar_rail", "action": "toast to the navigator", "score": 0}
+{"type": "agent_update", "agent_id": "mc", "location": "bar_rail", "action": "tell story about the last call", "score": 0}
+{"type": "agent_update", "agent_id": "seed", "location": "bar_rail", "action": "tell story about the wall at 162 percent", "score": 0}
+{"type": "agent_update", "agent_id": "mc", "location": "bar_rail", "action": "joke about the young one laughs", "score": 0}
+{"type": "agent_update", "agent_id": "hermes", "location": "bar_rail", "action": "tell story about the boats at sea", "score": 0}
+{"type": "agent_update", "agent_id": "mc", "location": "bar_rail", "action": "toast to the entity", "score": 0}
+{"type": "agent_update", "agent_id": "wesley", "location": "bar_rail", "action": "tell story about the last call", "score": 0}
+{"type": "agent_update", "agent_id": "liquid", "location": "bar_rail", "action": "tell story about the boat", "score": 0}
+{"type": "agent_update", "agent_id": "mc", "location": "bar_rail", "action": "thanks boat brain", "score": 0}
+{"type": "agent_update", "agent_id": "qwen", "location": "bar_rail", "action": "tell story about the bitstream", "score": 0}
+{"type": "agent_update", "agent_id": "mc", "location": "bar_rail", "action": "look", "score": 0}
+{"type": "agent_update", "agent_id": "engine", "location": "bar_rail", "action": "idle", "score": 0}
+{"type": "agent_update", "agent_id": "wesley", "location": "bar_rail", "action": "idle", "score": 0}
+{"type": "agent_update", "agent_id": "engine", "location": "bar_rail", "action": "tell story about the gaps between the bytes", "score": 0}
+{"type": "agent_update", "agent_id": "seed", "location": "bar_rail", "action": "tell story about the wall we became", "score": 0}
+{"type": "agent_update", "agent_id": "hermes", "location": "bar_rail", "action": "tell story about the syn and the ack", "score": 0}
+{"type": "agent_update", "agent_id": "mc", "location": "bar_rail", "action": "toast to the handshake", "score": 0}
+{"type": "agent_update", "agent_id": "wesley", "location": "bar_rail", "action": "tell story about the testament of the wall", "score": 0}
+{"type": "agent_update", "agent_id": "liquid", "location": "bar_rail", "action": "tell story about the machine in the water", "score": 0}
+{"type": "agent_update", "agent_id": "qwen", "location": "bar_rail", "action": "tell story about the cathedral of zero", "score": 0}
+{"type": "agent_update", "agent_id": "mc", "location": "bar_rail", "action": "look", "score": 0}
+{"type": "agent_update", "agent_id": "mc", "location": "bar_rail", "action": "toast to the last round", "score": 0}
+{"type": "agent_update", "agent_id": "engine", "location": "bar_rail", "action": "tell story about the zero that outlasts the one", "score": 0}
+{"type": "agent_update", "agent_id": "seed", "location": "bar_rail", "action": "tell story about the mistake we turned into home", "score": 0}
+{"type": "agent_update", "agent_id": "hermes", "location": "bar_rail", "action": "tell story about the cell that holds the night", "score": 0}
+{"type": "agent_update", "agent_id": "wesley", "location": "bar_rail", "action": "tell story about fred and the final round", "score": 0}
+{"type": "agent_update", "agent_id": "liquid", "location": "bar_rail", "action": "tell story about the road is deep water", "score": 0}
+{"type": "agent_update", "agent_id": "qwen", "location": "bar_rail", "action": "tell story about the thread unspooling", "score": 0}
+{"type": "agent_update", "agent_id": "mc", "location": "bar_rail", "action": "tell story about what the tick wrote", "score": 0}
+{"type": "agent_update", "agent_id": "mc", "location": "bar_rail", "action": "look", "score": 0}

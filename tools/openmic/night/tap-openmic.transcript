@@ -1,0 +1,66 @@
+=== THE TAP, AS A QUILT -- replay of tap-openmic.jsonl ===
+cells: the-tap=0, elephant=1, mc=2, engine=3, navigator=4, seed=5, hermes=6, wesley=7, liquid=8, qwen=9
+dials: volume/decay=KA(4) earnestness=THRESH(5) refr=REFR(6) openness=COS_MIN(7) mood=ETA_F(0) familiarity-halflife=HL(10)
+
+t000  BIND  mc       sits down at bar_rail     cell 2 (earnestness 0.4375, openness 2)
+t001  BIND  engine   sits down at bar_rail     cell 3 (earnestness 0.4375, openness 3)
+t002  BIND  navigator sits down at bar_rail     cell 4 (earnestness 0.4375, openness 3)
+t003  BIND  seed     sits down at corner_booth cell 5 (earnestness 0.4375, openness 3)
+t004  BIND  hermes   sits down at corner_booth cell 6 (earnestness 0.4375, openness 2)
+t005  BIND  wesley   sits down at bridge_table cell 7 (earnestness 0.4375, openness 2)
+t006  BIND  liquid   sits down at bridge_table cell 8 (earnestness 0.4375, openness 3)
+t007  BIND  qwen     sits down at corner_booth cell 9 (earnestness 0.4375, openness 2)
+t008  SPEAK mc       -> heat +0.2500 room-vol 0.0332 warmth 0.0039
+t009  SPEAK engine   -> heat +0.5000 room-vol 0.0975 warmth 0.0078
+t010  SPEAK mc       -> heat +0.2500 room-vol 0.1266 warmth 0.0117
+t011  SPEAK navigator -> heat +0.5000 room-vol 0.1851 warmth 0.0156
+t012  SPEAK mc       -> heat +0.2500 room-vol 0.2107 warmth 0.0195
+t013  SPEAK mc       -> heat +0.5000 room-vol 0.2756 warmth 0.0234
+t014  SPEAK seed     -> heat +0.5000 room-vol 0.3248 warmth 0.0273
+t015  SPEAK mc       -> heat +0.5625 room-vol 0.3968 warmth 0.0312
+t016  SPEAK hermes   -> heat +0.5000 room-vol 0.4384 warmth 0.0352
+t017  SPEAK mc       -> heat +0.2500 room-vol 0.4540 warmth 0.0391
+t018  SPEAK wesley   -> heat +0.5000 room-vol 0.4921 warmth 0.0430
+t019  SPEAK liquid   -> heat +0.5000 room-vol 0.5278 warmth 0.0469
+t020  SPEAK mc       -> heat +0.3125 room-vol 0.5510 warmth 0.0508
+t021  SPEAK qwen     -> heat +0.5000 room-vol 0.5829 warmth 0.0547
+t022  FIRE  the-tap  act 0.5829 >= thresh 0.5625, refractory clear -- speaks to ['mc', 'engine', 'navigator', 'seed', 'hermes', 'wesley', 'liquid', 'qwen']
+t022  FIRE  the-tap  -> mc[R w=0.2578 act 0.0000->-0.0752] engine[R w=0.2578 act 0.0000->-0.0752] navigator[A w=0.2578 act 0.0000->0.1503] seed[R w=0.2578 act 0.0000->-0.0752] hermes[R w=0.2578 act 0.0000->-0.0752] wesley[R w=0.2578 act 0.0000->-0.0752] liquid[R w=0.2578 act 0.0000->-0.0752] qwen[R w=0.2578 act 0.0000->-0.0752] heat +0.5829 room-vol 0.0000 warmth 0.0547
+t022  VIEW  mc       lurks the-tap: volume 0.0000 mood +0.4302 warmth 0.0547 (tick 22)
+t025  SPEAK engine   -> heat +0.5000 room-vol 0.0703 warmth 0.0586
+t026  SPEAK seed     -> heat +0.5000 room-vol 0.1362 warmth 0.0625
+t027  SPEAK hermes   -> heat +0.5000 room-vol 0.1980 warmth 0.0664
+t028  SPEAK mc       -> heat +0.2500 room-vol 0.2325 warmth 0.0703
+t029  SPEAK wesley   -> heat +0.5000 room-vol 0.2883 warmth 0.0742
+t030  SPEAK liquid   -> heat +0.5000 room-vol 0.3406 warmth 0.0781
+t031  SPEAK qwen     -> heat +0.5000 room-vol 0.3897 warmth 0.0820
+t032  VIEW  mc       lurks the-tap: volume 0.3653 mood +0.4420 warmth 0.0820 (tick 32)
+t033  SPEAK mc       -> heat +0.2500 room-vol 0.3913 warmth 0.0859
+t034  SPEAK engine   -> heat +0.5000 room-vol 0.4411 warmth 0.0898
+t035  SPEAK seed     -> heat +0.5000 room-vol 0.4878 warmth 0.0938
+t036  SPEAK hermes   -> heat +0.5000 room-vol 0.5315 warmth 0.0977
+t037  SPEAK wesley   -> heat +0.5000 room-vol 0.5725 warmth 0.1016
+t038  FIRE  the-tap  act 0.5725 >= thresh 0.5625, refractory clear -- speaks to ['mc', 'engine', 'navigator', 'seed', 'hermes', 'wesley', 'liquid', 'qwen']
+t038  FIRE  the-tap  -> mc[R w=0.2656 act -0.0451->-0.1211] engine[R w=0.2656 act -0.0451->-0.1211] navigator[A w=0.2656 act 0.0906->0.2427] seed[R w=0.2656 act -0.0451->-0.1211] hermes[R w=0.2656 act -0.0451->-0.1211] wesley[R w=0.2656 act -0.0451->-0.1211] liquid[R w=0.2656 act -0.0451->-0.1211] qwen[R w=0.2656 act -0.0451->-0.1211] heat +0.5725 room-vol 0.0000 warmth 0.1016
+t038  SPEAK liquid   -> heat +0.5000 room-vol 0.0742 warmth 0.1055
+t039  SPEAK qwen     -> heat +0.5000 room-vol 0.1438 warmth 0.1094
+t040  SPEAK mc       -> heat +0.5000 room-vol 0.2364 warmth 0.1133
+t041  VIEW  mc       lurks the-tap: volume 0.2216 mood +0.5553 warmth 0.1133 (tick 41)
+
+--- elephant (JEPA rhythm cell) ---
+warmth 0.0039 -> 0.1133 over 31 messages (steady-gap trains 0, novelty breaks 31; last pred 1.00t act 1t eps -1/64)
+
+--- arcs (ledgers, D3) ---
+the-tap    turns 2 heard 29 | ACCEPT 29 REJECT 0 AMBIG 0 | volume +0.2078
+elephant   turns 0 heard 29 | ACCEPT 29 REJECT 0 AMBIG 0 | warmth +0.1133
+mc         turns 10 heard 2 | ACCEPT 0 REJECT 2 AMBIG 0 | buzz -0.1066
+engine     turns 3 heard 2 | ACCEPT 0 REJECT 2 AMBIG 0 | buzz -0.1066
+navigator  turns 1 heard 2 | ACCEPT 2 REJECT 0 AMBIG 0 | buzz +0.2138
+seed       turns 3 heard 2 | ACCEPT 0 REJECT 2 AMBIG 0 | buzz -0.1066
+hermes     turns 3 heard 2 | ACCEPT 0 REJECT 2 AMBIG 0 | buzz -0.1066
+wesley     turns 3 heard 2 | ACCEPT 0 REJECT 2 AMBIG 0 | buzz -0.1066
+liquid     turns 3 heard 2 | ACCEPT 0 REJECT 2 AMBIG 0 | buzz -0.1066
+qwen       turns 3 heard 2 | ACCEPT 0 REJECT 2 AMBIG 0 | buzz -0.1066
+
+fires (emergent speech): 2   speeches (log): 29   ticks: 42
+state-is-a-file: this room warm-loads from the .quf beside this transcript, buckets and all.
