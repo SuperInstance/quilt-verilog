@@ -95,7 +95,12 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--outdir", default=os.path.join(_HERE, "night"))
     args = ap.parse_args()
-    os.makedirs(args.outdir, exist_ok=True)
+    try:
+        os.makedirs(args.outdir, exist_ok=True)
+    except OSError as ex:
+        print("record_night.py: error: cannot create outdir %r: %s"
+              % (args.outdir, ex), file=sys.stderr)
+        return 1
 
     log_path = os.path.join(args.outdir, "tap-openmic.jsonl")
     with open(log_path, "w") as f:

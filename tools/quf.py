@@ -101,7 +101,12 @@ def unpack_value(buf, off, vt):
 
     if vt == T_STR:
         (n,) = struct.unpack("<I", take(4))
-        return take(n).decode("utf-8"), off
+        raw = take(n)
+        try:
+            return raw.decode("utf-8"), off
+        except UnicodeDecodeError as ex:
+            raise QufError("bad UTF-8 in string value at %d: %s"
+                           % (off - n, ex))
     if vt == T_ARR:
         (et,) = struct.unpack("<I", take(4))
         (n,) = struct.unpack("<I", take(4))
@@ -146,8 +151,11 @@ def _infer_extra(v):
         return T_STR, v
     if isinstance(v, list):
         for e in v:
-            if isinstance(v, bool) or not isinstance(v, int):
+            if isinstance(e, bool) or not isinstance(e, int):
                 raise QufError("extra header arrays must be u32 arrays")
+            if not (0 <= e < 2 ** 32):
+                raise QufError("extra header array element out of u32 "
+                               "range")
         return T_ARR, (T_U32, list(v))
     raise QufError("unsupported extra header type %s "
                    "(doctrine: no floats in fleet state)" % type(v).__name__)
@@ -219,7 +227,14 @@ def _pack_ticks(ticks, cell_count):
 
 def build(doc):
     """Build canonical QUF bytes from a JSON-shaped dict."""
-    hdr = dict(doc.get("header", {}))
+    if not isinstance(doc, dict):
+        raise QufError("QUF document must be a JSON object, got %s"
+                       % type(doc).__name__)
+    hdr = doc.get("header", {})
+    if not isinstance(hdr, dict):
+        raise QufError("header must be a JSON object, got %s"
+                       % type(hdr).__name__)
+    hdr = dict(hdr)
     dials = doc.get("dials")
     edges = doc.get("edges", [])
     routing = doc.get("routing", [])
@@ -239,8 +254,8 @@ def build(doc):
         hdr["tick_period"] = 2 ** int(ticks["tpw"])
 
     align = hdr.setdefault("align", DEFAULT_ALIGN)
-    if align < 8 or (align & (align - 1)) != 0:
-        raise QufError("align must be a power of two >= 8")
+    if align < 8 or align > (1 << 20) or (align & (align - 1)) != 0:
+        raise QufError("align must be a power of two in [8, 2**20]")
 
     # -- KV pairs in canonical order, then sorted extras
     kvs = []
@@ -301,6 +316,12 @@ def table_chunk(name, off, size):
 
 # ------------------------------------------------------------------- read --
 
+def _need_at_least(buf, off, n, what):
+    if off + n > len(buf):
+        raise QufError("%s truncated: need %d bytes at %d, have %d"
+                       % (what, n, off, len(buf)))
+
+
 def read(buf, path=""):
     where = path or "buffer"
 
@@ -308,6 +329,13 @@ def read(buf, path=""):
         if off + n > len(buf):
             raise QufError("%s: truncated (need %d bytes at %d)"
                            % (where, n, off))
+
+    def name_at(off, n, what):
+        try:
+            return buf[off:off + n].decode("utf-8")
+        except UnicodeDecodeError:
+            raise QufError("%s: bad UTF-8 in %s name at %d"
+                           % (where, what, off))
 
     need(16, 0)
     if buf[:4] != MAGIC:
@@ -326,7 +354,7 @@ def read(buf, path=""):
         (nl,) = struct.unpack_from("<I", buf, off)
         off += 4
         need(nl, off)
-        key = buf[off:off + nl].decode("utf-8")
+        key = name_at(off, nl, "KV")
         off += nl
         need(4, off)
         (vt,) = struct.unpack_from("<I", buf, off)
@@ -343,7 +371,7 @@ def read(buf, path=""):
         (nl,) = struct.unpack_from("<I", buf, off)
         off += 4
         need(nl, off)
-        name = buf[off:off + nl].decode("utf-8")
+        name = name_at(off, nl, "section")
         off += nl
         need(20, off)
         kind, soff, ssize = struct.unpack_from("<IQQ", buf, off)
@@ -366,13 +394,24 @@ def read(buf, path=""):
 
 
 def rebuild(parsed):
-    """Re-emit canonical bytes from a parsed container (order preserved)."""
+    """Re-emit canonical bytes from a parsed container (order preserved).
+    Guarded: a hostile `align` (0 / huge) fails loud instead of building
+    a gigabyte of padding (fuzz-found: align=0 was ZeroDivisionError,
+    align=2**31 a ~4 GiB allocation attempt)."""
     kv_bytes = bytearray()
     for key, vt, v in parsed["kv"]:
         kb = key.encode("utf-8")
-        kv_bytes += u32(len(kb)) + kb + u32(vt) + pack_value(vt, v)
+        try:
+            kv_bytes += u32(len(kb)) + kb + u32(vt) + pack_value(vt, v)
+        except (QufError, AttributeError, TypeError, struct.error) as ex:
+            raise QufError("rebuild: KV %r (type %s) is not encodable: %s"
+                           % (key, TYPE_NAMES.get(vt, vt), ex))
     hdr = {k: v for k, _, v in parsed["kv"]}
-    align = int(hdr.get("align", DEFAULT_ALIGN))
+    align = hdr.get("align", DEFAULT_ALIGN)
+    if not isinstance(align, int) or align < 8 or align > (1 << 20) \
+            or (align & (align - 1)) != 0:
+        raise QufError("rebuild: align %r is not a power of two in "
+                       "[8, 2**20]" % (align,))
     secs = [(name, data) for name, _, data in parsed["sections"]]
 
     table_len = 4 + sum(4 + len(n.encode()) + 20 for n, _ in secs)
@@ -437,6 +476,34 @@ def verify_bytes(buf, path=""):
     ec = hdr.get("edge_count")
     rc = hdr.get("route_count")
     k = hdr.get("edge.k", DEFAULT_EDGE_K)
+    for nm, v in (("cell_count", cc), ("edge_count", ec),
+                  ("route_count", rc)):
+        if v is not None and (not isinstance(v, int) or isinstance(v, bool)):
+            issues.append("%s KV must be u32, got %r" % (nm, v))
+            if nm == "cell_count":
+                cc = None
+            elif nm == "edge_count":
+                ec = None
+            else:
+                rc = None
+    if not isinstance(k, int) or isinstance(k, bool) or not (1 <= k <= 16):
+        issues.append("edge.k %r outside 1..16" % (k,))
+        k = DEFAULT_EDGE_K      # neutralize: downstream size math must not
+        ec = None               # crash on a poisoned type (fuzz-found)
+    seen_names = {}
+    for name, kind, soff, ssize in parsed["table"]:
+        seen_names[name] = seen_names.get(name, 0) + 1
+        if len(name.encode("utf-8")) > 255:
+            issues.append("section name longer than 255 B (spec §7; "
+                          "hardware loaders reject it)")
+    for name, cnt in seen_names.items():
+        if cnt > 1:
+            issues.append("duplicate section name %r (%d entries; "
+                          "readers disagree on which one counts)" % (name, cnt))
+    for key, vt, v in parsed["kv"]:
+        if len(key.encode("utf-8")) > 255:
+            issues.append("KV name longer than 255 B (spec §7; "
+                          "hardware loaders reject it)")
     if "dials" in payload and cc is not None:
         if len(payload["dials"]) != cc * NDIALS * 2:
             issues.append("dials size %d != cell_count*%d*2"
@@ -455,18 +522,59 @@ def verify_bytes(buf, path=""):
                           % len(payload["ticks"]))
     if ("dials" in payload or "ticks" in payload) and cc is None:
         issues.append("cell_count KV required when dials/ticks present")
+    if "ticks" in payload and cc:
+        tpw = struct.unpack_from("<I", payload["ticks"], 0)[0]
+        tp = hdr.get("tick_period")
+        # tpw >= 32 can never equal a u32 tick_period; never materialize
+        # 1<<tpw for a corrupt tpw (int->str digit-bomb, fuzz-found)
+        if tp is not None and (tpw >= 32 or tp != (1 << tpw)):
+            issues.append("tick_period %d != 2**tpw (tpw=0x%x)"
+                          % (tp, tpw))
+    # integrity anchor: quf.sha256 (optional, §12.1) covers the section
+    # CONTENT tuples in table order: name|size|data (offsets excluded --
+    # placement is not content; adding KVs later shifts offsets legally)
+    dig = parsed["header"].get("quf.sha256")
+    if dig is not None:
+        m = hashlib.sha256()
+        for name, kind, soff, ssize in parsed["table"]:
+            m.update(name.encode("utf-8"))
+            m.update(struct.pack("<Q", ssize))
+            m.update(bytes(buf[soff:soff + ssize]))
+        if m.hexdigest() != dig:
+            issues.append("quf.sha256 mismatch: payload content "
+                          "corrupted after write")
+    # decode-ability: structural sizes check out but a decoder pass must
+    # also survive (fuzz-found: mismatched dials/ticks lengths crashed
+    # decode with raw struct.error)
+    try:
+        decode_sections(parsed)
+    except Exception as ex:
+        issues.append("sections not decodable: %s: %s"
+                      % (type(ex).__name__, ex))
     return issues
 
 
 # ------------------------------------------------------------------- dump --
 
 def decode_sections(parsed):
+    """Decode known sections. Every unpack is bounds-checked: a container
+    whose declared sizes disagree with its header fails with QufError,
+    never a raw struct.error (fuzz-found)."""
     hdr = parsed["header"]
     out = {}
     p = parsed["payload"]
     cc = hdr.get("cell_count", 0)
+    if not isinstance(cc, int) or isinstance(cc, bool):
+        raise QufError("cell_count %r is not a u32 -- cannot decode"
+                       % (cc,))
     k = hdr.get("edge.k", DEFAULT_EDGE_K)
+    if not isinstance(k, int) or isinstance(k, bool) or not (1 <= k <= 16):
+        raise QufError("edge.k %r outside 1..16 -- cannot decode" % (k,))
     if "dials" in p:
+        if len(p["dials"]) < cc * NDIALS * 2:
+            raise QufError("dials payload %d B < cell_count*%d*2 (%d): "
+                           "header lies about cell_count"
+                           % (len(p["dials"]), NDIALS, cc * NDIALS * 2))
         rows = []
         for c in range(cc):
             rows.append(list(struct.unpack_from("<%dH" % NDIALS, p["dials"],
@@ -486,6 +594,10 @@ def decode_sections(parsed):
         out["routing"] = [dict(dst=d, via=v) for d, v in
                           struct.iter_unpack("<BB", p["routing"])]
     if "ticks" in p:
+        if len(p["ticks"]) < 4 + 4 * cc:
+            raise QufError("ticks payload %d B < 4+4*cell_count (%d): "
+                           "header lies about cell_count"
+                           % (len(p["ticks"]), 4 + 4 * cc))
         tpw = struct.unpack_from("<I", p["ticks"], 0)[0]
         phases = list(struct.unpack_from("<%dI" % cc, p["ticks"], 4)) \
             if cc else []
@@ -494,8 +606,32 @@ def decode_sections(parsed):
 
 
 def to_hexfile(data):
+    if len(data) > 0xFFFF:
+        raise QufError("hex TB format carries a 4-digit length; "
+                       "%d bytes will not fit (split the container)"
+                       % len(data))
     lines = ["%04X" % len(data)] + ["%02X" % b for b in data]
     return "\n".join(lines) + "\n"
+
+
+def add_digest(doc):
+    """Attach quf.sha256 to a doc (§12.1): sha256 over (name, size, data)
+    tuples in table order. Content-only (offsets excluded: placement is
+    not content, and adding the digest KV itself shifts offsets). The
+    golden vector predates digests and stays byte-exact (opt-in)."""
+    stripped = dict(doc)
+    stripped["header"] = {k: v for k, v in doc.get("header", {}).items()
+                          if k != "quf.sha256"}
+    base = build(stripped)
+    parsed = read(base)
+    m = hashlib.sha256()
+    for name, kind, soff, ssize in parsed["table"]:
+        m.update(name.encode("utf-8"))
+        m.update(struct.pack("<Q", ssize))
+        m.update(bytes(base[soff:soff + ssize]))
+    doc = json.loads(json.dumps(doc))   # deep copy, stdlib only
+    doc.setdefault("header", {})["quf.sha256"] = m.hexdigest()
+    return doc
 
 
 # --------------------------------------------------------------- selftest --
@@ -599,8 +735,13 @@ def selftest():
 # -------------------------------------------------------------------- CLI --
 
 def cmd_create(args):
-    with open(args.json) as f:
-        doc = json.load(f)
+    try:
+        with open(args.json) as f:
+            doc = json.load(f)
+    except ValueError as ex:
+        raise QufError("%s: not valid JSON: %s" % (args.json, ex))
+    if args.digest:
+        doc = add_digest(doc)
     data = build(doc)
     with open(args.out, "wb") as f:
         f.write(data)
@@ -658,6 +799,8 @@ def main(argv=None):
     p = sub.add_parser("create", help="build QUF from JSON")
     p.add_argument("json")
     p.add_argument("out")
+    p.add_argument("--digest", action="store_true",
+                   help="attach quf.sha256 content digest (verify enforces)")
     p.set_defaults(fn=cmd_create)
 
     p = sub.add_parser("info", help="header + section table")
@@ -681,7 +824,14 @@ def main(argv=None):
     p.set_defaults(fn=cmd_selftest)
 
     args = ap.parse_args(argv)
-    args.fn(args)
+    try:
+        args.fn(args)
+    except QufError as ex:
+        print("quf.py: error: %s" % ex, file=sys.stderr)
+        sys.exit(1)
+    except OSError as ex:
+        print("quf.py: error: %s" % ex, file=sys.stderr)
+        sys.exit(1)
 
 
 if __name__ == "__main__":

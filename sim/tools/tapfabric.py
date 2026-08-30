@@ -51,9 +51,13 @@ EDGES_N = 8           # edge slots per cell (q_cell_core EDGES_N, widened)
 D_ETA_F, D_ETA_S, D_KF, D_KS, D_KA, D_THRESH, D_REFR, D_COSMIN = range(8)
 D_P0E, D_MODE, D_HL, D_KLE, D_FLOOR, D_FTRACE, D_RQ, D_RQL = range(8, 16)
 
-# q_dialfile.v reset defaults (what a cold cell binds with).
+# q_dialfile.v reset defaults (what a cold cell binds with) -- kept in
+# raw-word parity with the RTL POR table (fuzz-found 2026-08-29: the
+# Python table had drifted: HL 48 vs RTL 64, KLE/RQ/RQL raw words 0 vs
+# RTL 2/8/8; the ladder half-life drift was load-bearing -- 1.33x decay
+# rate mismatch between bridge and silicon).
 DIAL_DEFAULTS = [0x0800, 0x0080, 6, 12, 5, 0x6000, 4, 0x2CCD,
-                 20, 0, 48, 0, 0, 0, 0, 0]
+                 20, 0, 64, 2, 0, 0, 0x0008, 0x0008]
 
 ROOM_ID, ELEPHANT_ID = 0, 1          # fixed cell ids
 ROOM_NAME, ELEPHANT_NAME = "the-tap", "elephant"
@@ -300,15 +304,20 @@ class Cell:
 
     def link(self, dst, base, mode=0):
         """qm_link: wire one hearer-owned edge; a full table evicts the
-        coldest stool (lowest readout -- the bridge policy of §8)."""
+        coldest stool (lowest readout -- the bridge policy of §8). The
+        replacement reuses the evicted slot number (fuzz-found: taking
+        len(edges) minted a DUPLICATE slot -- two live edges both claiming
+        slot 7, ambiguous in the QUF record)."""
         e = self.find_edge(dst)
         if e is not None:
             e.base = base
             return e
+        slot = len(self.edges)
         if len(self.edges) >= EDGES_N:
             coldest = min(self.edges, key=lambda x: x.readout())
             self.edges.remove(coldest)
-        e = Edge(self.cid, dst, len(self.edges), base, mode)
+            slot = coldest.slot               # reuse, never mint a dup
+        e = Edge(self.cid, dst, slot, base, mode)
         self.edges.append(e)
         return e
 
@@ -573,7 +582,9 @@ class Fabric:
     def export_quf(self, source=""):
         # tap.* extras are comma-separated string KVs (QUF-SPEC §8
         # extensibility; strings are the portable extra type -- quf.py's
-        # writer currently rejects array-valued extras).
+        # writer currently rejects array-valued extras). The digest KV
+        # pins section CONTENT (backend hardening: payload corruption
+        # was previously invisible to verify).
         names = ",".join(self.cells[c].name[:31] for c in self.order)
         doc = {
             "header": {
@@ -587,6 +598,9 @@ class Fabric:
                                      for c in self.order),
                 "tap.refr": ",".join(str(self.cells[c].refr & 0xFFFF)
                                      for c in self.order),
+                "tap.gap": "%d,%d,%d" % (-1 if self._gap["last"] is None
+                                          else self._gap["last"],
+                                          self._gap["ef"], self._gap["es"]),
             },
             "dials": [list(self.cells[c].dials) for c in self.order],
             "edges": [self.cells[c].edges[i].record()
@@ -596,22 +610,72 @@ class Fabric:
             "ticksched": {"tpw": TPW,
                           "phases": [(c * 3) & 0xFFFF for c in self.order]},
         }
-        return quf.build(doc)
+        return quf.build(quf.add_digest(doc))
 
     def import_quf(self, buf):
         """Warm start: restore dials, edges (ladder walk counts included),
-        routing, ticks and the tap.* KVs. The Python path is the full-state
-        path (QUF-SPEC §9); the RTL loader profile would re-train instead."""
+        act/refr and the tap.* KVs -- or refuse, LOUDLY and completely.
+
+        Fail-static discipline (the Python face of quf_boot's contract,
+        FPGA-BOOT §2): a container that disagrees with itself raises
+        QufError BEFORE any state is touched -- never a half-loaded room
+        (fuzz-found: zip() silently truncated short cellnames lists and
+        dropped patrons; edges named unloaded cells crashed with KeyError
+        or cross-wired silently). routing/ticksched are written on export
+        for the RTL boot path but are not fabric-model state (the bridge
+        derives routing from `order`); the gap EMAs ride tap.gap when
+        present, else re-seed (rhythm re-learns in one steady gap).
+        """
         parsed = quf.read(buf)
+        issues = quf.verify_bytes(buf, "warm-boot")
+        if issues:
+            raise quf.QufError("warm-boot refuses unclean container: %s"
+                               % "; ".join(issues))
         dec = quf.decode_sections(parsed)
         hdr = parsed["header"]
+        if "dials" not in dec:
+            raise quf.QufError("warm-boot requires a dials section "
+                               "(cell state file without dials is not "
+                               "cell state)")
+        cc = hdr.get("cell_count")
+        if not isinstance(cc, int) or cc < 2:
+            raise quf.QufError("warm-boot requires cell_count >= 2 "
+                               "(room + elephant), got %r" % (cc,))
         names = [n for n in hdr.get("tap.cellnames", "").split(",") if n]
-        acts = [int(x) for x in hdr.get("tap.act", "").split(",") if x]
-        refrs = [int(x) for x in hdr.get("tap.refr", "").split(",") if x]
+        acts = [int(x) & 0xFFFF for x in
+                (hdr.get("tap.act", "").split(",") if
+                 hdr.get("tap.act") else [])]
+        refrs = [int(x) & 0xFFFF for x in
+                 (hdr.get("tap.refr", "").split(",") if
+                  hdr.get("tap.refr") else [])]
+        if len(names) != cc:
+            raise quf.QufError("tap.cellnames carries %d names for "
+                               "cell_count %d -- refuse (no silent "
+                               "half-load)" % (len(names), cc))
+        if acts and len(acts) != cc:
+            raise quf.QufError("tap.act carries %d values for cell_count "
+                               "%d -- refuse" % (len(acts), cc))
+        if refrs and len(refrs) != cc:
+            raise quf.QufError("tap.refr carries %d values for cell_count "
+                               "%d -- refuse" % (len(refrs), cc))
+        for rec in dec.get("edges", []):
+            for fld in ("src", "dst"):
+                if not (0 <= rec[fld] < cc):
+                    raise quf.QufError("edge %s=%d outside cell range "
+                                       "0..%d -- refuse"
+                                       % (fld, rec[fld], cc - 1))
         f = Fabric.__new__(Fabric)
         f.cells, f.order, f.tick, f.transcript = {}, [], 0, []
         f.warmth_trace, f.speeches, f.fires, f.nonce = [], 0, 0, 0
         f._gap = {"last": None, "ef": 64, "es": 64}
+        gp = hdr.get("tap.gap", "")
+        if gp:
+            try:
+                last, ef, es = (int(x) for x in gp.split(","))
+                f._gap = {"last": None if last < 0 else last,
+                          "ef": ef & 0xFFFF, "es": es & 0xFFFF}
+            except ValueError:
+                pass                      # malformed provenance: re-seed
         f._room_heat_sum = 0
         for row, name in zip(dec["dials"], names):
             kind = ("room" if name == ROOM_NAME else
@@ -622,7 +686,11 @@ class Fabric:
                 c.judgment, _, _ = patron_taste(name)
             f.cells[c.cid] = c
             f.order.append(c.cid)
-        for rec in dec["edges"]:
+        if ROOM_ID not in f.cells or ELEPHANT_ID not in f.cells:
+            raise quf.QufError("warm-boot requires cells 0/1 to be the "
+                               "room and the elephant (got %s)"
+                               % [f.cells[c].name for c in f.order[:2]])
+        for rec in dec.get("edges", []):
             c = f.cells[rec["src"]]
             e = Edge(rec["src"], rec["dst"], rec["slot"], rec["base"],
                      rec["mode"])
@@ -864,10 +932,13 @@ def _apply(fab, ev):
 
 
 def replay(path):
-    """Replay a session log through the fabric: parse -> ops -> one tick."""
+    """Replay a session log through the fabric: parse -> ops -> one tick.
+    The file is opened with errors='replace' (fuzz-found: one bad byte
+    anywhere used to kill the whole replay with UnicodeDecodeError,
+    violating this module's own 'the parser never chokes' contract)."""
     fab = Fabric()
     state = {"watch": None}
-    with open(path) as f:
+    with open(path, errors="replace") as f:
         for raw in f:
             for ev in parse_line(raw, state):
                 _apply(fab, ev)

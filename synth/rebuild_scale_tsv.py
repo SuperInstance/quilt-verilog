@@ -9,12 +9,18 @@ die (the 12F is the same silicon binned down; nextpnr does not restrict
 it), so nextpnr reports /24288 for both. The honest physical 12F capacity
 is 12144 LUTs -- util12f% uses that denominator.
 """
-import re, glob, os, json
+import re, glob, os, json, sys
+
+# cwd-independent (fuzz-found: run from anywhere else the glob missed and
+# the script printed a header-only table with exit 0 -- a silent wrong
+# answer for a build-report tool)
+_ROOT = os.path.normpath(os.path.join(os.path.dirname(os.path.abspath(__file__))))
+_SYNTH = _ROOT
 
 rows = []
 seen = set()
-for ylog in sorted(glob.glob(f"synth/yosys_*_n*.log")):
-        m = re.match(r"synth/yosys_(\w+)_n(\d+)\.log", ylog)
+for ylog in sorted(glob.glob(os.path.join(_SYNTH, "yosys_*_n*.log"))):
+        m = re.match(r".*yosys_(\w+)_n(\d+)\.log$", ylog)
         if not m:
             continue
         dev, n = m.group(1), int(m.group(2))
@@ -37,7 +43,7 @@ for ylog in sorted(glob.glob(f"synth/yosys_*_n*.log")):
         if fam_ == "ice40":
             lut = int(lut.group(1)) if lut else 0
 
-        plog = f"synth/pnr_{tag}.log"
+        plog = os.path.join(_SYNTH, f"pnr_{tag}.log")
         packed = cap = fmax = "-"
         closes = "PNR_FAIL"
         failed = True
@@ -68,6 +74,10 @@ for ylog in sorted(glob.glob(f"synth/yosys_*_n*.log")):
         rows.append((fam_, dev, n, lut, ff, pk,
                      util, util12, fmax, closes))
 
+if not rows:
+    print("rebuild_scale_tsv.py: error: no synth/yosys_*_n*.log found under "
+          f"{_SYNTH} -- run synth/scale.sh first", file=sys.stderr)
+    sys.exit(1)
 print("family\tdevice\tNCELL\tLUT4\tFF\tpacked/cap\tutil%\tutil12f%\tfmax_MHz\tcloses_12MHz")
 for r in sorted(rows, key=lambda r: (r[0], r[1], r[2])):
     print("\t".join(map(str, r)))

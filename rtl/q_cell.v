@@ -191,13 +191,21 @@ module q_cell #(
     assign hb_done = |done_vec;
     assign o_ovf   = |ovf_vec;
 
-    // weight mux: selected slot's readout (hb_sel is held through readout)
+    // weight mux: selected slot's readout (hb_sel is held through readout).
+    // fuzz-fix (backend lane, 2026-08-29, differential-found): was an
+    // OR-tree over all engines -- valid only while unselected engines
+    // hold o_w==0, but o_w is a REGISTER that keeps its last readout
+    // forever, so after any engine was read once, every later view(1)
+    // wsum ORed the stale weights in (4x0x2100=0x8400 instead of 0x8200)
+    // and effect integration could OR stale bits into a fresh readback.
+    // One-hot select, not an OR mask.
     reg [PW-1:0] hb_w_mux;
     integer i;
     always @* begin
         hb_w_mux = {PW{1'b0}};
         for (i = 0; i < EDGES_N; i = i + 1)
-            hb_w_mux = hb_w_mux | w_flat[i*PW +: PW];
+            if (hb_sel[i])
+                hb_w_mux = w_flat[i*PW +: PW];
     end
     assign hb_w = hb_w_mux;
 

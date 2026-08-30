@@ -143,7 +143,12 @@ module q_cell_core #(
     reg [PW-1:0]     viewdat;
     reg              resp_nak;
     reg [EIW:0]      eidx;      // one bit wider: EDGES_N sentinel
-    reg [PW:0]       wacc;
+    // fuzz-fix (backend lane, 2026-08-29, differential-found): wacc was
+    // PW+1 bits -- EDGES_N readouts of up to 0xFFFF each sum past 2^(PW+1)
+    // (4 edges -> 0x3FFFC) and WRAPPED, so a saturating wsum read small
+    // (e.g. 0x20008 -> 0x0008). PW+EIW+1 holds the worst case plus guard;
+    // the saturation test takes the whole range above PW.
+    reg [PW+EIW:0]   wacc;
     reg [PW-1:0]     refr;
     reg [PW-1:0]     afire;
     reg [PW-1:0]     eff_w;          // pipe stage 1: sat(w + rq_credit)
@@ -256,7 +261,7 @@ module q_cell_core #(
             act       <= {PW{1'b0}};
             refr      <= {PW{1'b0}};
             eidx      <= {(EIW+1){1'b0}};
-            wacc      <= {(PW+1){1'b0}};
+            wacc      <= {(PW+EIW+1){1'b0}};
             viewdat   <= {PW{1'b0}};
             resp_nak  <= 1'b0;
             afire     <= {PW{1'b0}};
@@ -444,7 +449,7 @@ module q_cell_core #(
                             state   <= ST_RESP;
                         end
                         2'd1: begin
-                            wacc  <= {(PW+1){1'b0}};
+                            wacc  <= {(PW+EIW+1){1'b0}};
                             eidx  <= {(EIW+1){1'b0}};
                             state <= ST_VACC;
                         end
@@ -463,7 +468,8 @@ module q_cell_core #(
               end
               ST_VACC: begin
                   if (eidx == EDGES_N) begin
-                      viewdat  <= wacc[PW] ? {PW{1'b1}} : wacc[PW-1:0];
+                      viewdat  <= (|wacc[PW+EIW:PW]) ? {PW{1'b1}}
+                                                    : wacc[PW-1:0];
                       resp_nak <= 1'b0;
                       state    <= ST_RESP;
                   end else if (ev[eidx[EIW-1:0]]) begin
@@ -476,7 +482,8 @@ module q_cell_core #(
               end
               ST_VACW: begin
                   if (hb_done) begin
-                      wacc <= wacc + {1'b0, hb_w} + {1'b0, rq_credit};
+                      wacc <= wacc + {{EIW{1'b0}}, hb_w}
+                                    + {{EIW{1'b0}}, rq_credit};
                       eidx <= eidx + 1'b1;
                       state <= ST_VACC;
                   end

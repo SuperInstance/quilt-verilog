@@ -179,6 +179,31 @@ module q_uf_loader #(
     wire        qok   = qany && (posn == qmin);
     wire        qwait = qany && (posn < qmin);
 
+    // fuzz-fix (backend lane, 2026-08-29): table-end dispatch must see
+    // the entry registered in THIS cycle (sec_id/offtmp/sztmp) -- the
+    // committed have[] view is one NBA behind, so a single-section file
+    // took the !qany branch and booted WITHOUT loading its only section,
+    // and a truncated stream could reach done before its tail arrived
+    // (released half-image). Same view as q0..3/pstate, plus candidate.
+    wire        regv  = (sec_id != 3'd0) && (sztmp != 32'd0);
+    wire [1:0]  ridx  = sec_idx;
+    wire [31:0] qv0   = (regv && ridx == 2'd0) ? offtmp :
+                        (have[0] ? sec_off[0] : 32'hFFFFFFFF);
+    wire [31:0] qv1   = (regv && ridx == 2'd1) ? offtmp :
+                        (have[1] ? sec_off[1] : 32'hFFFFFFFF);
+    wire [31:0] qv2   = (regv && ridx == 2'd2) ? offtmp :
+                        (have[2] ? sec_off[2] : 32'hFFFFFFFF);
+    wire [31:0] qv3   = (regv && ridx == 2'd3) ? offtmp :
+                        (have[3] ? sec_off[3] : 32'hFFFFFFFF);
+    wire [31:0] qminX = mn32(mn32(qv0, qv1), mn32(qv2, qv3));
+    wire        qanyX = (qv0 != 32'hFFFFFFFF) || (qv1 != 32'hFFFFFFFF) ||
+                        (qv2 != 32'hFFFFFFFF) || (qv3 != 32'hFFFFFFFF);
+    wire [1:0]  widx  = (qminX == qv0) ? 2'd0 : (qminX == qv1) ? 2'd1 :
+                        (qminX == qv2) ? 2'd2 : 2'd3;
+    wire [4:0]  pstateX = (widx == 2'd0) ? S_DIALS : (widx == 2'd1) ? S_EDGES :
+                          (widx == 2'd2) ? S_ROUTE : S_TICKS;
+    wire [31:0] psizeX  = (regv && ridx == widx) ? sztmp : sec_sz[widx];
+
     // array element byte-size shift: 1/2/4/8 are powers of two
     wire [31:0] ash = (arrt == 4'd0 || arrt == 4'd1 || arrt == 4'd7) ? 32'd0 :
                       (arrt == 4'd2 || arrt == 4'd3)                 ? 32'd1 :
@@ -525,15 +550,47 @@ module q_uf_loader #(
                           end else begin
                               bc8 <= 3'd0;
                               if (sec_id != 3'd0) begin
+                              // fuzz-fix (backend lane, 2026-08-29): a
+                              // zero-size known section must be SKIPPED,
+                              // never entered -- enter_payload with
+                              // pleft==0 underflowed (0-1 = 2^32-1) and
+                              // the loader swallowed the rest of the file
+                              // as payload bytes (split-brain vs quf.py,
+                              // which treats an empty section as absent)
+                              if (sztmp != 32'd0) begin
                                   sec_off[sec_idx] <= offtmp;
                                   sec_sz[sec_idx]  <= sztmp;
                                   have[sec_idx]    <= 1'b1;
                               end
+                          end
                               sec_left <= sec_left - 32'd1;
-                              if (sec_left == 32'd1)
-                                  goto_data;
-                              else
-                                  state <= S_SECNL;
+                          if (sec_left == 32'd1) begin
+                              // fuzz-fix: registration-aware dispatch (see
+                              // qv0..3/qminX above). Mirrors goto_data +
+                              // enter_payload, but with THIS cycle's entry
+                              // in view; have[widx] clear wins the NBA
+                              // ordering when the winner IS the entry
+                              // being registered (consumed on entry).
+                              if (!qanyX) begin
+                                  state  <= S_DONE;
+                                  o_done <= 1'b1;
+                              end else if (qminX == posn) begin
+                                  state    <= pstateX;
+                                  pleft    <= psizeX;
+                                  have[widx] <= 1'b0;
+                                  dcell    <= 5'd0;
+                                  dword    <= 4'd0;
+                                  rbo      <= 6'd0;
+                                  rt_first <= 1'b1;
+                                  bc       <= 2'd0;
+                                  tphase   <= 1'b0;
+                              end else if (qminX > posn) begin
+                                  state <= S_DATA;
+                              end else begin
+                                  state <= S_ERRX; o_err <= E_LAYOUT;
+                              end
+                          end else
+                              state <= S_SECNL;
                           end
                       end else bc8 <= bc8 + 3'd1;
                   end
