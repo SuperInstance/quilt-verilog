@@ -1,11 +1,72 @@
 # 06 — THE CORRESPONDENCE
 
 *Letters of the Kaldfjord Circle, 1903–1905, from the trunk in the cannery
-loft. Arranged chronologically. The Circle's rule for letters was the same as
-its rule for memoirs: misadds are confessed, errata are printed, and nothing
-is torn out. The editors have emended only two slips of transcription, in
-square brackets, and stripped the fair-copy's duplicate headings; everything
-else is as found, seals and all.*
+loft. Arranged chronologically. Part I is the making of the memoirs: the
+critique of the first drafts, the corrections taken and refused, the
+priority dispute, the refutation, the refusal by the Academy. Part II is
+the closing. The Circle's rule for letters was the same as its rule for
+memoirs: misadds are confessed, errata are printed, and nothing is torn
+out. The editors have emended only slips of transcription, in square
+brackets, and stripped the fair-copy's duplicate headings; everything else
+is as found, seals and all. The second generation's letters (1923) are
+printed with the eighth paper.*
+
+---
+
+## PART I — THE MAKING (1903–1905)
+
+**Maren Skavlan to Halvard Grønn — Kaldfjord, 12 November 1903** *(on the
+first draft of the first memoir)*
+
+Mr. Grønn,
+
+I have read with interest your first draft of "On the Box and its Five
+Verbs," and while I commend your efforts, I must offer some critiques in
+the spirit of improving our shared understanding.
+
+Firstly, your gauge demands separation, stating that "distance-nought
+things are the same thing." Consider our fisherman's pink salmon and
+humpy: two names, one fish, distance nought, and yet not the same name. I
+propose striking separation; the zero-distance class is the fish's true
+name — "aliases are data."
+
+Secondly, you assert that your dial "is set at the making and needs no
+minding." A dial that cannot be turned is a painting, not an instrument.
+The dial is state; it will need minding; say so now.
+
+Thirdly, when several keys answer, your Box "may choose the nearest and
+return it." A weigher that guesses is a liar with a dial. Instead, print
+the set: WITHIN, AMBIGUOUS, WITHOUT. Never choose.
+
+Finally, I must demand an addition. Your draft closes accounts by "closed
+and struck." As I keep school registers, I know that a child who leaves is
+struck off; a fee that is closed carries a receipt. I demand the sixth
+verb — to close an account and leave a receipt; nothing torn out.
+
+I hope you will consider these thoughts as you refine your work.
+
+Sincerely,
+Maren Skavlan
+
+---
+
+**Nils Krøger to Halvard Grønn — Kaldfjord, 2 December 1903**
+
+Dear old Halvard,
+
+Received your memoir draft yesterday, poring over it while waiting for the
+inshore skiffs to tie up at the quay. I spotted one small but necessary
+tweak in §5: your label of the two-clause lemma as "obvious and not
+proved here" misses a critical truth.
+
+Seafaring men know well: the "obvious" bearing is always the one that
+slams you onto the skerry rocks. You yourself noted it hinges on the
+triangle rule twice — so write those two straightforward lines of proof,
+and slip in a rule with them: any claim marked "obvious" is a claim left
+entirely unexamined.
+
+Cheers,
+Nils Krøger
 
 ---
 
@@ -38,15 +99,109 @@ Halvard Grønn
 
 To Halvard Grønn:
 
-I send the tables from the memoir. The March column had a misadd — 4 carried
-as 9 — found at the third pass. Corrected in the margin. I trust your eye
-for such things. The induction is there, but I would have you proof-read it.
-Only you can see the steps as they are.
+I send the tables from the memoir. The March column had a misadd — 4
+carried as 9 — found at the third pass. Corrected in the margin. I trust
+your eye for such things. The induction is there, but I would have you
+proof-read it. Only you can see the steps as they are.
 
-The books are a mirror. The numbers speak. I write with care. Let me know if
-the logic holds. The balance must be exact. As always.
+The books are a mirror. The numbers speak. I write with care. Let me know
+if the logic holds. The balance must be exact. As always.
 
 Sigrun Undrum
+
+---
+
+**Johanne Fosse to Sigrun Undrum — Kaldfjord, 3 May 1904** *(the slip
+letter; the printed slip is kept with the drafts)*
+
+Dear Sigrun,
+
+I have read your draft §7, the snap entry. You quote your three legs —
+(G:authority, −1), (T:authority, +1), (G:correction, +|g−s|) — and call
+it "which plainly balances." It does not. Sum them: −1 + 1 + |g−s| =
+|g−s|. That is nought only when nothing needed correcting — that is, only
+when the entry is not posted at all. You have left the correction
+hanging, a lone debit without its contra.
+
+The repair is four-legged: add (T:correction-issued, −|g−s|). The
+correction is a paired accrual — debit the expense, credit the contra.
+Then, and only then, the ledger closes.
+
+Let me print the slip before the memoir. The slip prints first; the
+memoir learns. One dry line for you: "plainly" is the word clerks write
+where "I did not sum it" belongs.
+
+Yours,
+J. Fosse
+
+---
+
+**Sigrun Undrum to Johanne Fosse — Kaldfjord, 4 May 1904**
+
+Dear Johanne,
+
+I received your slip. The fault is mine. I set three legs as the trade's
+custom sets a correction and did not sum them.
+
+The four legs stand. Count me in on the countersign.
+
+From this day, the school's rule: misadds confessed the day found, slips
+printed before the memoir. Second pass looks at the author's own draft
+first.
+
+Arithmetic is a moral discipline.
+
+S. Undrum
+
+---
+
+**Asta Vik to Nils Krøger — Skarvholmen light, 27 September 1904** *(on
+the first draft of Memoir A)*
+
+Dear Nils,
+
+I have reviewed your first draft of "On Relayed Bearings." The passage I
+found most engaging is: "The illusion is perfect, and cadence has nothing
+to do with it." This line requires modification.
+
+The illusion is perfect *above* the cadence F + L, and only above it. Ask
+faster than F + L and the world's quickness shows through the seams; the
+log can distinguish below that cadence. Claim the illusion only above the
+cadence, and claim nothing below.
+
+The negative clause is the theorem's honesty; without it, the theorem is a
+boast — and a theorem that claims everything is a net that catches
+nothing.
+
+Best regards,
+A. Vik
+
+---
+
+**Nils Krøger to Asta Vik — Kaldfjord, 1 October 1904** *(on the first
+draft of Memoir B)*
+
+Dear Asta,
+
+Your draft of "On Relayed Judgments" arrived yesterday, and I spent a
+quiet fjord evening with it — the core insights are sharp as a coastal
+knife. Two notes, offered as taken.
+
+First, your annulus claim: "one play of the stages flips the whole ring at
+once." Not so — one play displaces along a single direction, flipping only
+a narrow strip, not the full shell; the mercy pertains to each question,
+not the whole ring. Keep the solid theorem underneath — every question in
+the ring can be flipped by some lawful play — strike the over-broad
+framing, and print the honesty note.
+
+Second, your lemma's budget: "perturb, take the triangle at the old gauge,
+perturb again — the day's budget is D_a + 2·D_m." Reroute the backward
+chain: perturb once, then take the full triangle at the new gauge. One η
+per step, not two — the budget is D_a + D_m. The dockside adage: never
+pay the same current twice.
+
+Yours,
+Nils Krøger
 
 ---
 
@@ -69,7 +224,7 @@ first and foremost yours, and I'll bring your original scrap to Thursday's
 meeting to pin to our Paper III draft.
 
 Yours,
-Nils Krøger, First Mate
+Nils Krøger
 
 ---
 
@@ -81,10 +236,10 @@ Regarding your claim of 5 October: the additivity is the triangle property;
 it has no author, and needs none. Apply the triangle rule twice and the sum
 appears; crediting a man for it is like crediting him for the tide.
 
-But the annulus — that inside the blurred ring the verdict is at the stages'
-mercy — is mine, dated 11 August, my notebook, witnessed by Marius. Keep
-your findings; they are valuable. Yours are the bearings and the standing
-world; mine are the ring and the routing.
+But the annulus — that inside the blurred ring the verdict is at the
+stages' mercy — is mine, dated 11 August, my notebook, witnessed by Marius.
+Keep your findings; they are valuable. Yours are the bearings and the
+standing world; mine are the ring and the routing.
 
 Not unkind, — A. Vik
 
@@ -131,6 +286,36 @@ hold it in as high regard as you hold yours.
 
 Yours,
 A. Vik
+
+---
+
+**Asta Vik to Marius Holt — Skarvholmen light, 20 January 1905** *(on the
+first draft of the bell-rope memoir)*
+
+Dear Marius,
+
+I have reviewed the first draft of your memoir. Two areas require
+refinement.
+
+First, you cite "the mass of margins within ρ·F" as if it applied
+universally. It does not. When the boundary mass is two-sided, the
+adversary must select a side for each key, and quoting the clean form
+overclaims by up to half. Carry the swept mass, and print the condition
+under which the clean form holds.
+
+Second, your adversary "moves the key itself across the boundary band." In
+the plane, a moved key crosses a lens of questions, not the band: the lens
+grows as the three-halves power against the band's first power, and the
+move delivers less than your claim — the theorem is unproven at its own
+bound as drafted. The repair: do not move the key. Redraft the gauge
+itself outward, every question-to-key distance growing by ρ a day. The
+three triangle cases want writing out (through a plain question, through
+a key, and past both), and Grønn will demand the appendix anyway.
+
+With these changes the memoir will hold what it claims.
+
+Yours sincerely,
+Asta Vik
 
 ---
 
@@ -221,6 +406,34 @@ Marius Holt
 
 ---
 
+**Maren Skavlan to Johanne Fosse — Kaldfjord, 19 July 1905** *(on the
+first draft of the ledger papers)*
+
+Johanne,
+
+I have read your first draft of the ledger papers. Two matters require
+attention.
+
+Firstly, §4's claim that the seal preserves the quarantine chain for any
+predicate the inspecting officer may later name cannot stand. You know as
+well as I do that the officer's predicate is chosen after the closing. The
+summary, fixed at closing, cannot have counted what was not yet named.
+Strike the claim, and write instead — as Sigrun wisely advised you — what
+does *not* survive, with the same pen.
+
+Secondly, the draft endorses my residue-bank conjecture on my say-so. I
+would prefer your endorsement to rest upon your arithmetic. Take the bank
+to the comptometer; if the credit can only add, ask what adding can close.
+If the answer is nothing, print that fact, and print my conjecture's death
+where the endorsement stood.
+
+Rectify these points and the draft shall be much improved.
+
+Yours,
+Maren
+
+---
+
 **Johanne Fosse to Maren Skavlan — Kaldfjord, 9 August 1905**
 
 Dear Maren,
@@ -273,6 +486,8 @@ Yours with admiration,
 Maren
 
 ---
+
+## PART II — THE CLOSING (1905)
 
 **Johanne Fosse to the Circle — Kaldfjord, 12 September 1905** *(to be
 pasted into every copy of the fifth memoir)*
@@ -399,7 +614,7 @@ Asta Vik
 ---
 
 **Sigrun Undrum to Maren Skavlan — Kaldfjord, 18 November 1905** *(the last
-letter in the trunk)*
+letter of 1905 in the trunk)*
 
 Maren,
 
@@ -417,8 +632,12 @@ S. Undrum
 
 ---
 
-*Thus the trunk. The editors count eighteen letters, one refuted conjecture,
-one erratum published by its own author, one refusal by an Academy
-overturned by a fishery, one priority dispute conducted by mutual surrender,
-and one question left open on the table for a winter that lasted a hundred
-and twenty years.*
+*Thus the trunk: twenty-six letters; a gauge corrected before it was
+printed; a lemma proved because a sailor distrusted the obvious; a slip
+printed before the memoir it corrected; an illusion clipped to its cadence
+and a ring to its strips; a bell-rope whose adversary was taught to move
+the gauge and not the fish; a seal stripped of a promise it could not keep;
+a conjecture endorsed, withdrawn, and killed by the same pen; a refusal
+overturned by herring; and a question left open on the table for a winter
+that lasted, as the eighth paper shows, eighteen years longer than anyone
+meant it to.*

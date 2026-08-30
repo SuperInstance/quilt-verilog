@@ -252,3 +252,14 @@ party yielding more than the other claimed.
 throughout — the very error Lemma B3 exists to prevent — caught by Krøger at
 the first reading and corrected throughout before the second. The lesson and
 the lemma are now printed on the same page, where they belong.*
+
+*Corrections from the first drafts, printed by order of the meeting of
+20 October 1904, that are larger than errata: Memoir A's draft claimed the
+standing-world illusion "perfect, and cadence has nothing to do with it" —
+Vik's letter of 27 September struck the second clause, and Theorem A2 now
+claims the illusion only above cadence F + L and nothing below. Memoir B's
+draft claimed "one play of the stages flips the whole ring at once" —
+Krøger's letter of 1 October struck it: one play flips a strip, not a
+shell, and the mercy is per question (the honesty note printed with
+Theorem B2). Both drafts are kept among the drafts, over-claims and all;
+the theorems above are what survived their authors' friends.*

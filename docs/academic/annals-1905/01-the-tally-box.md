@@ -193,3 +193,40 @@ that must guess. We have looked. Bring us one.
 *(Received by the Circle 18 February 1904; the section on the weigher annexed
 21 April 1904 at M. Skavlan's reading. Errata to this fair copy: none to date.
 — the minute-book)*
+
+## Appendix — what the first draft got wrong *(printed by order of the
+meeting, 21 April 1904; the draft itself is kept among the drafts, faults
+and all)*
+
+Four faults, all caught by letter before the fair copy was made, all kept
+on the record:
+
+1. **The draft demanded separation** (distance-nought things the same
+   thing). Skavlan's letter of 12 November 1903 killed it with the pink
+   salmon and the humpy — two names, one fish — and §4 above is rebuilt on
+   the ruin: the gauge without separation, the alias class as the fish's
+   true name, aliases as data.
+2. **The draft's dial was set once** ("at the making and needs no
+   minding"). Struck in the same letter: a dial that cannot be turned is a
+   painting. The dial is state (§1), and Memoirs III and IV are the annals
+   of its needing to be turned.
+3. **The draft's Box guessed** ("choose the nearest and return it"). A
+   weigher that guesses is a liar with a dial; the verdicts of §4 print
+   the set and never choose.
+4. **The draft had five verbs**, and closed accounts by "closed and
+   struck." The sixth verb — FORGET, the receipt always left — entered
+   the school's grammar by Skavlan's demand in the same letter, from her
+   school registers: a child who leaves is struck off; a fee that is
+   closed carries a receipt.
+
+And one debt the draft owed and this revision pays: the two-clause lemma
+was called "obvious and not proved here." Krøger's letter of 2 December
+1903 asked for the proof anyway — on the water, the obvious bearings are
+the ones that put you on the rocks — and §4 now gives it. The school's
+rule dates from that exchange: **a claim marked obvious is a claim marked
+unexamined.**
+
+*[Ed. margin: the four faults and their repairs are the corpus's own
+history in miniature — the pseudometric generalization (T3(b), "aliases
+are data"), tolerance-as-state, the tri-state verdict, and the sixth verb
+FORGET grounded in the 2026 fail-static discipline. — Ed.]*

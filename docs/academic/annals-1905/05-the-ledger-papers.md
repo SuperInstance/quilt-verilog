@@ -65,6 +65,14 @@ both tails empty). The answering clerk faces two identical closings and must
 give one answer; Q distinguishes the volumes; whichever answer he gives is
 wrong for one of them. No such clerk exists; no answer exists. ∎
 
+*[The reader of the drafts will notice that this section is a refutation of
+this memoir's own first draft, which claimed — and believed — that "the
+seal preserves the quarantine chain, for whatever predicate the inspecting
+officer may later name." Undrum's letter of 30 June ("write what does NOT
+survive with the same pen") and Skavlan's of 19 July ("strike the claim")
+forced the counterexample out; the draft is kept among the drafts, claim
+and all. — J.F.]*
+
 So the shelf of what survives is exactly the shelf of folds: balances, cut
 totals, the exposed face of a firm within a firm, counts, sums, maxima,
 minima, products of these. There is nothing else on the shelf. The engineering
@@ -147,7 +155,10 @@ shifted into the first rung, and in V₂ it sits in the noughtth. Different
 read-outs. The fold cannot have both. ∎
 
 Two entries. The smallest counterexample in these annals, and the one I am
-proudest of. **The replay is the only lossless compaction of the rungs**: the
+proudest of — and the sharpening of a weaker first draft, which resolved
+the rungs only against the balance fold (the volumes P₁ and P₂ of §4 as
+witnesses); the two-entry permutation kills every fold outright, and
+Krøger asked at the reading why the larger witness was ever wanted. **The replay is the only lossless compaction of the rungs**: the
 ordered stream itself, or nothing. This is not a preference of ours; it is a
 theorem. Posting more into the books does not help — it only lengthens the
 replay. [The one fold that lives inside the rungs is the plain count of
@@ -201,8 +212,10 @@ the reservoir's high end. Her conjecture, in her own words from her letter of
 20 April 1905 [printed whole in the correspondence — Ed.]: the bank "will,
 with patience, draw the read-out to the true law, closing the two-fold band."
 
-**It will not.** I write the refutation with more pleasure than I can
-decently say, because the conjecture *earned* it: refuting her forced out
+**It will not.** The first draft of this memoir endorsed her conjecture on
+her say-so; her own letter of 19 July handed it back to me: *endorse it on
+your arithmetic.* The arithmetic follows, and it is the refutation, which I
+write with more pleasure than I can decently say, because the conjecture *earned* it: refuting her forced out
 into the open the exact condition any bank must meet, and now we know it to
 the øre.
 

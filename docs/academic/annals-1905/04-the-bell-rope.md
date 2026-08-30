@@ -118,6 +118,21 @@ verdict turned, every one in error. The mass so swept is the mass of
 questions within ρF of losing an answer at the quiet frame: the swept mass
 φ(0, ρF). The rule errs by at least that. ∎
 
+**A remark on the adversary's mechanism (a repair of the first draft).**
+*The draft's adversary moved the key itself across the boundary band. On the
+plane this under-delivers: a key moved by β sweeps a lens of questions whose
+mass grows as the three-halves power of β against the band's own first
+power — the move cannot attain the theorem at its own bound. Vik's letter of
+20 January 1905 supplied the repair, adopted here: do not move the key;
+redraft the gauge itself outward, every question-to-key distance growing by
+ρ a day. The swept band is then attained exactly, and the legality wants
+only the three triangle cases written out (through a plain question,
+through a key, and past both), which the minute-book appendix carries at
+Grønn's insistence.* [Ed. margin: the corpus's own sketch first moved a
+key; the machine-held paper replaced the move with the outward metric
+perturbation and flagged the sketch's overclaim — the same fault, the same
+repair, the same insistence on the legality cases. — Ed.]
+
 **Corollary 1 (what the clean form says, and when it lies).** *If all the
 mass near the dial's edge is on the answered side — the audit-of-traffic
 case, and the usual one — the swept mass is simply the mass of margins within
@@ -242,6 +257,14 @@ the court's knowledge must lie — ρ·F inside the dial's edge, whatever the
 court spends — and it promises nothing whatever beyond that edge. A theorem
 that says *no*, with proof, is not a lesser theorem than one that says yes;
 the rope is honest, and holds what it holds.
+
+*Corrections from the first draft, larger than errata: the draft quoted the
+clean form (the mass of margins within ρF) unconditionally — Corollary 1
+above is the repair, and the repair was urged on the author by the same
+letter that fixed his adversary; and the draft's key-moving adversary is
+replaced by the gauge-redrafting construction, as the remark records. The
+draft is kept among the drafts; the Circle's rule that a theorem's honesty
+notes are part of the theorem dates from this memoir's revision.*
 
 *[The Videnskabs-Selskab refused this memoir on 9 June 1905 with the words
 "a theorem concerning our ignorance is not a theorem." The Circle records

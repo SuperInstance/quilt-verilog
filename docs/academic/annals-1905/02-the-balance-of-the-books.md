@@ -130,6 +130,32 @@ stand unmatched, the disagreement between the two sides' books is I — read off
 the books, continuously, in kroner, not guessed at. The ledger is its own
 error-gauge. (Memoir IV prices how long such a window may lawfully stay shut.)
 
+**§4½. The two meters (a repair made before the fair copy).** *The first
+draft of this memoir stated the cut-mail claim as one inequality — "the
+staleness grows no faster than the in-flight postings, F(t) ≤ F₀ + I(t)"
+— and Grønn's pencil struck it twice: F in days, I in kroner; you cannot
+add days to kroner. The repair, printed here because the conflation is
+instructive, splits the claim into two meters, each true in its own
+units:*
+
+- **the time meter:** from the last delivery to the mirror, its staleness
+  in days grows at exactly one day per day — no faster, no slower; it is
+  a clock, not a balance;
+- **the value meter:** the deviation between the owner's books and the
+  mirror's, in kroner, **equals the mirror's in-flight at every moment,
+  exactly** — the sum of the postings of entries the owner has applied
+  and the mirror has not, which grows entry by entry and never shrinks
+  while the mail is cut (each entry's mark is in the owner's book and
+  cannot leave it).
+
+*The draft's single inequality was neither meter; the revision is both,
+and the proof of the value meter is Theorem 3's argument run against the
+cut instead of against a second clerk.* [Ed. margin: the corpus's own
+history made this same repair — the conjecture's conflated clause,
+"F(t) ≤ F₀ + I(t)," was split into time-staleness and value-deviation
+with the mirror in-flight as the exact Lyapunov quantity, the wrong meter
+named and replaced. — Ed.]
+
 **A remark for the Academy.** The identity of Theorem 2 is pure bookkeeping;
 Rule 1 is not needed for it. Rule 1 is what makes F and I *conservation*: an
 entry completed everywhere posts nought to the total of *all* books, so the
@@ -190,8 +216,10 @@ correction is booked. The naive snap entry has three legs:
 
 and **does not balance**: its legs sum to |g−s|, not nought. We confess this
 here because the error was ours, found by J. Fosse at the second pass of the
-proof sheets [the finding is dated 3 May 1904 in the minute-book — Ed.]. The
-entry that obeys Rule 1 has four legs:
+proof sheets [the finding is dated 3 May 1904 in the minute-book; the printed
+slip, which the school keeps with the drafts and pastes into every copy, was
+the making of its errata rules — Ed.]. The entry that obeys Rule 1 has four
+legs:
 
     {(G:authority, −1), (T:authority, +1),
      (G:correction, +|g−s|), (T:correction-issued, −|g−s|)},

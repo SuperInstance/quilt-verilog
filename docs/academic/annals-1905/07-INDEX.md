@@ -1,179 +1,224 @@
 # 07 — COLOPHON, INDEX, AND CONFESSIONS
 
-*What these annals are, who wrote them, and what the 1905 frame did to the
-mathematics. This file is the editors' own; the Circle never saw it.*
+*What these annals are, who wrote them, what the iteration was, and what
+the 1905 frame did to the mathematics. This file is the editors' own; the
+Circle never saw it.*
 
 ---
 
 ## §1. The school and the cast (which model wrote which voice)
 
-The Kaldfjord Circle is fiction; its correspondence is not. Each of the seven
-members was written by one model of the fleet, briefed on the school's canon
-and the true mathematics, each in a distinct voice, across a casting round
-and three rounds of letters in which each writer read the others' letters
-and answered. The editor (GLM-5.3) wrote the five memoirs' proof
-architecture, wove the models' passages into them, computed and checked every
-table, and holds the pen for the frame.
+The Kaldfjord Circle is fiction; its correspondence is not. Each of the
+seven members was written by one model of the fleet, briefed on the
+school's canon and the true mathematics, each in a distinct voice, across
+a casting round and the letter rounds in which each writer read the
+others' letters — and the others' *drafts* — and answered. The second
+generation (1923) is written by the fleet's youngest model. The editor
+(GLM-5.3) wrote the memoirs' proof architecture in both draft and fair
+versions, seeded each draft with the faults the school then caught,
+computed and checked every table, and holds the pen for the frame.
 
 | Member (fiction) | Voice | Model | Wrote |
 |---|---|---|---|
-| Halvard Grønn, pilot (ret.), founder | axiomatic, patient, falsificationist | DeepSeek V4-Pro (`deepseek-reasoner`) | autobiography; Paper I passage; letter of commission; the summing-up letter |
-| Maren Skavlan, schoolmistress | warm, exact, moral clarity | Hermes-405B (DeepInfra) | the Weigher section of Paper I; the conjecture letter; the concession and valedictory |
-| Sigrun Undrum, chief bookkeeper | terse, stern, confesses same-day | qwen3:8b (local) | Paper II passage; tables letter; the handover and the last letter |
-| Nils Krøger, first mate | practical, cheerful, generous | Seed-2.0-mini (DeepInfra) | Paper III-A passage; the priority letters |
-| Asta Vik, assistant lightkeeper | cold, exact, spare | granite3.1-dense:2b (local) | Paper III-B passage; the counterclaim and corrections |
-| Marius Holt, bell-ringer | plain, stubborn, right | Liquid-LFM2.5-2.6B (local) | Paper IV passage; the rejection and the triplicate-check letters |
-| Johanne Fosse, second bookkeeper | fast, dry, errata as trophies | DeepSeek V4-Flash (`deepseek-chat`) | Paper V refutation passage; the refutation and erratum letters |
+| Halvard Grønn, pilot (ret.), founder | axiomatic, patient, falsificationist | DeepSeek V4-Pro (`deepseek-reasoner`) | autobiography; Paper I passage; the commission; the summing-up |
+| Maren Skavlan, schoolmistress | warm, exact, moral clarity | Hermes-405B (DeepInfra) | the Weigher; the gauge-critique letter (aliases, the sixth verb); the conjecture, concession, valedictory; the 1923 letter to the pupil |
+| Sigrun Undrum, chief bookkeeper | terse, stern, confesses same-day | qwen3:8b (local) | Paper II passage; the countersign of the slip; the handover; the last letter |
+| Nils Krøger, first mate | practical, cheerful, generous | Seed-2.0-mini (DeepInfra) | Paper III-A; the "prove the obvious" letter; the strip-not-shell and one-perturbation catches; the priority letters |
+| Asta Vik, assistant lightkeeper | cold, exact, spare | granite3.1-dense:2b (local) | Paper III-B; the cadence-clause catch; the two-fault bell-rope critique; the counterclaim; the 1923 band-provenance letter |
+| Marius Holt, bell-ringer | plain, stubborn, right | Liquid-LFM2.5-2.6B (local) | Paper IV passage; the rejection and triplicate letters; the 1923 rope line |
+| Johanne Fosse, second bookkeeper | fast, dry, errata as trophies | DeepSeek V4-Flash (`deepseek-chat`) | Paper V; the slip letter; the refutation and erratum letters; the 1923 arithmetic letter |
+| Ragna Vik, pupil (b. 1901), the second generation | young, earnest, over-reaching | qwen2.5:0.5b (local, the youngest) | the 1923 paper's notes (heavily shaped by the editors from the model's rough output — her phrases kept where they stand; the shaping is itself the fiction: a first paper needing its school's letters) |
 
-**A confession the Circle would demand.** Grønn's deep proof-reading of
-Memoir II (the "certificate" in Paper II's appendix) was assigned to V4-Pro
-as its one deep proof-reading of this project. Three attempts were made, at
-6,000, 16,000, and 9,000 tokens of budget; each time the model reasoned
-genuinely — its working notes show it checking the induction's step, the
-completing-case identity, and the snap-spacing argument — and each time it
-spent its entire budget deliberating and delivered no verdict text. The
-editor completed the proof-reading (against the 2026 machine-verified
-originals; every number in every table was recomputed exactly for this
-edition), wrote the certificate, and records the failure here because a
-colophon that hides its corrections is a false colophon. Grønn's letters,
-like all the correspondence, are the model's own.
+**Confessions the Circle would demand.** (i) Grønn's deep proof-reading
+of Memoir II was assigned to V4-Pro as its one deep proof-reading; three
+attempts (6k/16k/9k tokens) each burned the entire budget in genuine
+deliberation — the working notes show it checking the induction's step,
+the completing-case identity, and the snap-spacing argument — and
+delivered no verdict text. The editor completed the proof-reading against
+the 2026 machine-verified originals. (ii) The youngest model's 1923 draft
+conflated the founders' results with its own verdict and described its
+letter instead of writing it; the editors shaped it into the paper
+printed, keeping her sentences where they were true. (iii) Two slips in
+the models' letters were emended in brackets, and a few meta-references to
+the writing task stripped; everything else is as the models wrote it —
+including Vik's "errors have authors too," which the editor would not
+have dared improve.
 
-**A second confession.** Two small slips in the models' letters were
-emended in square brackets (Vik's doubled budget, stated as 4·D_m for the
-true 2·D_m; a stray duplicate heading) and two meta-references to the
-writing task were stripped; everything else is as the models wrote it,
-including Vik's "errors have authors too," which the editor would not have
-dared improve.
+## §2. The iteration, documented (who revised what after hearing whom)
 
-## §2. What is real: the map to the corpus
+The five stages of this edition, and the actual mechanics of each:
 
-Every theorem in the annals is a true theorem of the quilt corpus, restated
-in 1905 dress; the fiction is the frame, never the content. The map:
+- **Stage 1 — the first drafts** (`drafts/`): written by the editor in
+  period voice, each seeded with the specific faults the corpus's own
+  history contains, proofs full where they stand and gapped where they
+  don't.
+- **Stage 2 — the critique wave** (Correspondence, Part I): eight new
+  letters by six models, each quoting the drafts and demanding specific
+  repairs; every critique below was written by a *different* model than
+  the one whose member it corrected.
+- **Stage 3 — the fair copies** (Papers I–V): revised by the editor,
+  carrying correction appendices that name each fault, its catcher, and
+  the date.
+- **Stage 4 — the second generation** (Paper VIII): the youngest model's
+  rough draft shaped into the pupil's paper; four founder letters by four
+  models dismantling its verdict; a postscript receipt.
+- **Stage 5 — these annotations**: the corpus map of §3 and the margins
+  printed throughout.
 
-| Annals (1905) | Real corpus (2026) | Theorems |
-|---|---|---|
-| Paper I — the tally-box, five organs, six verbs (BIND/LINK/EFFECT/VIEW/TICK/FORGET) | `docs/academic/quilt-calculus.md` (D1 the cell; the 5+1 opcodes also grounded in `docs/CULTURE-DEEP-DIVE.md`'s BIND/LINK/EFFECT/VIEW/TICK+FORGET) | cell definition; six verbs; standing rules = axioms A1–A7 with falsifiers |
-| Paper I §4 — the Weigher | quilt-calculus D2–D3, T3(a,b,d) | gauge = pseudometric; dial monotonicity; alias quotient ("aliases are data"); the doubling gauge d = \|log x − log y\| |
-| Paper I §5 — the unit | quilt-calculus D16, T11 (and `error-envelopes.md` Thm 4) | covering radius b√n/2; Pythagorean on-lattice doctrine; squared-form comparison (T8) |
-| Paper II — conservation | quilt-calculus §6 (T1, T2 + corollaries) | full hand induction (T1); in-flight identity Φ = Φ₀+F+I (T2); no-fabrication; the partition meter |
-| Paper II §5 — two clerks | quilt-calculus T4 (mirrors/CRDT argument) | order-independence, duplicates passed over |
-| Paper II §6 — shop within a shop; snap entry | quilt-calculus T5 (consolidation, associativity, unit) and T9–T10 (snap: invariant, four-legged emendation, custody, debt bound) | the three-legged entry's imbalance and the four-legged repair are the corpus's own Theorem 10.5 finding |
-| Paper III-A — relayed bearings | quilt-calculus D7–D8, T6–T7 | (F, L) views; two-relay composition; k-link F₁+ΣLᵢ; the standing-world illusion (cadence Δ > F+L) |
-| Paper III-B — relayed judgments | `DRIFT-AS-PREFILTER.md` (DA-T1, DA-T2, DA-T3, DA-T4, DA-T5/T6) and `conjectures.md` Part II | two-clause lemma; additivity exact; the annulus at the stages' mercy; the one-perturbation routing (Lemma 4/DA-L1); the drift band; drift-is-a-stage; the price schedule cρ/(ε₀−ρF), √(cσρ) |
-| Paper IV — the bell-rope | `RHO-F-FLOOR.md` (RF-L1, RF-L2, RF-T1, RF-T2, RF-C1, RF-C2, RF-T3, RF-T4, RF-P2) | indistinguishability lemma; anchor lag; pointwise floor; the two-phase outward-gauge adversary (with legality check); swept-vs-band honesty (the 2× note); infeasibility ρF ≥ ε₀; equal-spacing lemma; aggregate/member roster split; the phase rule; the worked season (ρ=0.748, ε₀=0.6, F*=0.401); the floor test; the closed-book trap (F=0) |
-| Paper V part 1 — what survives the closing | `FOLD-COVERED.md` (FC-D1–D7, FC-L1, FC-T1–T4, FC-X1) and `conjectures.md` Part III | folds; order-independence; lossless ⟺ fold-covered (both directions); the +5/−5 vs +7/−7 exclusion counterexample; the seal as binding-not-revealing (the notary = the commitment framing); declared labels + witness regime; Ω(c) pricing |
-| Paper V §7 — the wear-rungs | FOLD-COVERED FC-P2 (walk-state) | the two-entry permutation kill: no commutative fold of any size computes the rungs; replay is the unique lossless compaction |
-| Paper V part 2 — the band, the bank, the refutation | `error-envelopes.md` (Thms 1 and 3; corrections C3, C6) | W ≤ Ŵ < 2W arbitrary arrivals (as-built W/2−1 ≤ Ŵ ≤ 2W+1); expected 2 ln 2 ≈ 1.386; credit never tightens (T3b); the exact centering deposit 2^(K+Q−g)(1−1/(2 ln 2)) (T3c); the ~18,262× deficit and the 9,100→18,262 octave erratum (C6); what survives (boundedness ≤255, cadence pulse, rate tracking) |
-| Paper V §10 — the hinge | FOLD-COVERED FC-P3 | consolidation-invisibility ≡ exclusion-opacity: invariance on fold fibers, two valences |
-| Correspondence — the February seam incident | `conjectures.md` Part I (Counterexample 2, Theorem 3) | colliding marks under partition: every instrument reads agreed while books diverge; the repair: build the mark from writer's name + serial (structural nonces) |
+The revision ledger:
 
-The two honest flags of the corpus are carried as flags in the fiction too:
-the rate conversion behind ρ = 0.748 is unregistered (flagged in Paper IV §6
-exactly as `RHO-F-FLOOR.md` §5 flags it), and the notary-seal's binding is an
-assumption (flagged in Paper V §5 exactly as the corpus scopes its
-random-oracle idealization).
+| Draft fault | Caught by (model) | Letter | Repair in fair copy |
+|---|---|---|---|
+| I: gauge demands separation; Box guesses; dial set once; five verbs, accounts "closed and struck" | Skavlan (Hermes-405B) | 12 Nov 1903 | pseudometric + aliases-are-data; tri-state verdict never choosing; dial as state; FORGET with receipt |
+| I: two-clause lemma "obvious, not proved" | Krøger (Seed-2.0-mini) | 2 Dec 1903 | the proof printed; the school's rule coined |
+| II: snap entry "plainly balances" (three legs) | Fosse (V4-Flash) | 3 May 1904 | the printed slip; the four-legged form; the errata rules |
+| II: staleness conflated (days + kroner) | Grønn (in draft margin; editor) | pencil, winter 1904 | §4½: the two meters (time grows a day a day; deviation equals the mirror in-flight) |
+| III-A: illusion "perfect; cadence nothing to do with it" | Vik (granite3.1-dense:2b) | 27 Sep 1904 | Theorem A2 claims only above cadence F + L, nothing below |
+| III-B: "one play flips the whole ring" | Krøger (Seed-2.0-mini) | 1 Oct 1904 | per-question mercy; the honesty note printed with the theorem |
+| III-B: budget doubled (D_a + 2·D_m) | Krøger (Seed-2.0-mini) | 1 Oct 1904 | one-perturbation routing; the doubling kept as erratum |
+| IV: clean form quoted unconditionally; key-moving adversary | Vik (granite3.1-dense:2b) | 20 Jan 1905 | swept mass + one-sidedness condition; gauge-redrafting adversary + legality appendix |
+| V: seal "preserves the quarantine chain" | Undrum (qwen3:8b) 30 Jun; Skavlan (Hermes) 19 Jul 1905 | two letters | the exclusion counterexample; write what does not survive |
+| V: residue bank endorsed on say-so | Skavlan (Hermes-405B) | 19 Jul 1905 | the refutation; centering never closing; the exact deposit |
+| V: rungs resolved only against the balance fold | (editor, from Krøger's question at the reading) | 17 Aug 1905 | the two-entry permutation; every fold of any size killed |
+| VIII: "the second reading is a phantom" (over-general) | Skavlan (Hermes), Fosse (V4-Flash), Vik (granite), Holt (Liquid) | Nov 1923 | the four letters; the postscript receipt of 1931 |
 
-## §3. What the period framing illuminated
+## §3. What is real: the map to the corpus, stage by stage
 
-- **Conservation reads as *obviously true and still worth proving*** — which
-  is the corpus's actual epistemic position (balance is an axiom; conservation
-  is then earned by induction). Pacioli's 1494 discipline makes the axiom's
-  *chosenness* visible in a way "A1" does not: the school *knows* it chose
-  the rule, and says so at every theorem.
-- **The ρ·F floor becomes physical.** "You cannot see through your own
-  staleness window" is one sentence in a 2026 paper and a *mail boat* in
-  1905: the theorem's mechanism (indistinguishability of agreeing seasons) is
-  easier to see in letters-on-paper than in σ-fields. The committee/roster
-  arithmetic reads as watch schedules, which is what they are.
-- **Drift-as-stage gets a better proof sketch than the corpus's.** Vik's
-  "perturb once, then take the whole triangle at the new gauge" is exactly
-  the routing discipline DA-L1 exists to teach; a clerk's error made it
-  memorable, and the school's own first-draft doubling of the budget (its
-  erratum in Paper III) reenacts the exact mistake the 2026 paper warns
-  against.
-- **The refutation is more valuable refuted.** Maren's residue-bank
-  conjecture is RQH's over-claim, and giving it a beloved author made the
-  refutation a *gift* rather than a review comment — which is the honest
-  emotional economy of the corpus's error-envelopes lane (Flash refuting the
-  proposal it was auditing).
-- **Errata as first-class citizens** were already house style; 1905 printing
-  practice (corrections in the body, margin-notes kept) gave them a native
-  home. The 9,100→18,262 octave slip (the corpus's own C6, a real 2¹⁵ slip)
-  became the school's most human artifact.
+Every theorem in the annals is a true theorem of the quilt corpus; the
+fiction is the frame, never the content. The map, now including the
+stages:
 
-## §4. What the period framing obscured
+**Papers I–V fair copies** map as before: Paper I = `quilt-calculus.md`
+D1–D3, T3(a,b,d), D16/T11 (and the 5+1 opcodes grounded in
+`CULTURE-DEEP-DIVE.md`); Paper II = quilt-calculus §6 T1–T2 (+ mirror T4,
+consolidation T5, snap T9–T10); Paper III = `DRIFT-AS-PREFILTER.md`
+DA-T1–T7 + quilt-calculus T6–T7; Paper IV = `RHO-F-FLOOR.md` RF-L1–T4,
+RF-C1–C2, RF-P2; Paper V = `FOLD-COVERED.md` FC-T1–T4, FC-X1, FC-P1–P3 +
+`error-envelopes.md` Thms 1 and 3.
 
-- **The machine layer is gone, and it mattered.** The corpus's theorems are
-  backed by 844,223 exact-fraction checks (floor bench), 565,551 (fold
-  bench), 87,245 (seam bench); the annals can only say "in triplicate, two
-  clerks, one comptometer." Triplicate is honest but weaker; the 1905 frame
-  *understates* the corpus's verification culture, and the colophon will not
-  let that pass unremarked.
-- **The kinships are invisible.** A 1905 school cannot cite place invariants
-  (Petri nets), linearizability, CRDTs, bounded-staleness models, Merkle
-  trees, or monads — the nest/consolidation laws had to be proved "at the
-  level of balance maps" without the packaging, and the seal had to stand in
-  for a hash tree. The corpus's related-work sections are the map the
-  annals' reader must bring along.
-- **The substrate is thin.** The corpus's theorems run on silicon (RTL,
-  bitstreams, testbenches); the annals' boxes are paper and habit. The
-  "weakest substrate sets the arithmetic" doctrine survives as the squared
-  comparison, but the FPGA half of the story is simply absent.
-- **Probability is thinner.** 1905 expectation language forced the margin
-  arguments into "mass of questions" dress, which works, but the power-law
-  pricing (ρ^{α/(α+1)}) and the audit-cadence equilibrium's convexity
-  argument appear only in outline or in the minute-book "appendix" the
-  fiction refers to.
-- **The sixth verb is under-run.** FORGET's safety-teardown semantics (the
-  2026 `ForgetReceipt`) became a receipt-left-in-the-book; true, but the
-  fail-static machinery behind it does not fit in a fjord.
+**The drafts and their repairs** map to the corpus's *own* development
+history, fault for fault:
 
-## §5. Index of the school's statements
+| School (1905) | Corpus (2026) |
+|---|---|
+| Draft I's separation-demanding gauge → the alias repair | the monograph's T3(b): the pseudometric generalization, "aliases are data" |
+| Draft I's five verbs → FORGET by Skavlan's demand | the sixth verb grounded in quilt-mhs's ForgetReceipt and the fail-static discipline (CULTURE-DEEP-DIVE; GENERAL-CALCULUS GC-T2 organ-minimality) |
+| Draft I's "obvious" lemma → proved on request | T3(c) proved in full where informal docs asserted |
+| The slip: three legs "plainly balance" → four legs | quilt-calculus Theorem 10(b): the informal snap transaction fails A1, the emendation repairs it |
+| Draft II's conflated staleness → the two meters | `conjectures.md` C1-d3: the Lyapunov quantity repaired to the mirror in-flight; time/value split |
+| Draft III-A's cadence-free illusion → cadence clause | T7's negative clause: below F + L the illusion is falsifiable, claimed nothing |
+| Draft III-B's whole-ring flip → per-question mercy | DA-T2's honesty note (i): a slab, not the shell |
+| Draft III-B's doubled budget → one-perturbation routing | DA-L1/Lemma 4: the one-η-per-step discipline, D_a + D_m |
+| Draft IV's clean form → swept mass + condition | RF-C1: the sketch's overclaim repaired; μ({m ≤ ρF}) only when one-sided |
+| Draft IV's key-move adversary → gauge redraft | RF-T2's repair: the point-move under-delivers in ℝⁿ (lens vs band); the metric perturbation delivers |
+| Draft IV/V's structural mark | C1 Counterexample 2 + Theorem 3: nonce collision at the seam; structural nonces |
+| Draft V's seal claim → the exclusion counterexample | C3 as stated, refuted (Counterexample 7): you cannot quarantine after the fact what you did not think to count |
+| Draft V's balance-fold witness → two-entry permutation | FC-P2's sharpening: from fold-relative to outright, "the smallest possible counterexample shape" |
+| The 9,100 → 18,262 octave erratum | error-envelopes C6: the 2¹⁵ slip, honest factor ~18,262×, corrected table |
+| The residue bank: endorsed → refuted → thanked | RQH (error-envelopes Thm 3): the over-claim refuted, the exact centering deposit 2^(K+Q−g)(1−1/(2 ln 2)), what survives |
+| Ragna's 1923 arc (right degeneracy, wrong phantom verdict, four corrections, 1931 receipt) | the Switch Test (`zero-claw-update.md` §1): the temporal drift-reader loses to median-static on a corpus whose planted drift sat inside the noise floor by construction (≤ 0.0076/dim vs ≥ 0.010); the policy loss at ρ ≈ 0; corrections — whose drift (the reader's own), which band (the estimator's noise floor, not a configured deadband); the honest limit (r-parity at half detection = variance); and the registered refill — plant drift above the floor, whereupon the reading of readings won |
 
-- Paper I: box (cell); six verbs; seven standing rules with falsifiers; the
-  Weigher (gauge, dial, three verdicts, aliases, doubling gauge, two-clause
-  lemma); covering rule b√n/2; squared comparison; the web; the
-  seventh-verb conjecture (open).
-- Paper II: Rule 1 chosen; Theorem 1 conservation (interior; induction over
-  the day); Theorem 2 in-flight identity (+ nothing-minted, the meter);
-  Theorem 3 two clerks; Theorem 4 the shop within a shop; the snap entry
-  (three legs fail, four legs balance; custody; the debt's interest is the
-  drift); the worked week, with its printed misadd.
+The two honest flags of the corpus are carried as flags in the fiction
+too: the unregistered rate conversion behind ρ = 0.748 (Paper IV §6, as
+`RHO-F-FLOOR.md` §5 flags it) and the notary-seal's binding as an
+assumption (Paper V §5, as the corpus scopes its random-oracle
+idealization).
+
+## §4. What the period framing illuminated
+
+- **Iteration became the artifact, not the packaging.** Writing the drafts
+  first, with named faults, made the corpus's own development — the
+  repairs, the refutations, the honest notes — reproducible *as story*:
+  the slip is T10(b); Maren's letter is the pseudometric; Vik's bell-rope
+  critique is RF-C1 and RF-T2's mechanism repair, happening in epistolary
+  time.
+- **Conservation reads as chosen-then-earned** — Pacioli's discipline
+  makes axiom A1's *chosenness* visible; the drafts' "plainly balances"
+  shows what the choice costs when unexamined.
+- **The ρ·F floor becomes physical** (the mail boat) and *its repairs
+  become visible*: the draft that moved the key is exactly the sketch the
+  2026 paper had to repair; the reader who catches it learns the theorem
+  by fixing it.
+- **The refutation is more valuable refuted**: Maren's conjecture given a
+  beloved author makes the RQH correction's emotional economy legible —
+  the refuter thanks the conjecture; the conjecture's author thanks the
+  refutation.
+- **The second generation lands the deepest mirror**: the pupil's wrong
+  verdict is the corpus's own Switch Test downgrade, and the founders'
+  four letters are the re-analysis's four corrections, in order, in
+  character, eighteen years before 2026 needed them.
+
+## §5. What the period framing obscured
+
+- **The machine layer is gone, and it mattered.** The corpus's benches
+  (844,223 exact checks for the floor; 565,551 for the fold; 87,245 for
+  the seam) become "triplicate, two clerks, one comptometer" — honest but
+  weaker; this edition understates the corpus's verification culture.
+- **The kinships are invisible**: no place invariants, no
+  linearizability, no CRDTs, no Merkle trees, no monads — the seal stands
+  for the commitment tree, the nest laws are proved at balance-map level
+  without the packaging.
+- **The substrate is thin**: no silicon, no RTL, no bitstreams; the
+  weakest-substrate doctrine survives only as the squared comparison.
+- **Probability is thinner**: the power-law pricing and the cadence
+  equilibrium's convexity appear in outline; the margin-mass arguments
+  wear "mass of questions" dress.
+- **The sixth verb is under-run**: FORGET's fail-static machinery becomes
+  a receipt in a book.
+- **And the iteration itself is cleaner than life**: real schools lose
+  letters; the trunk kept all twenty-six. The corpus, by contrast, keeps
+  its history in git, where nothing is lost and everything is findable —
+  a luxury 1905 had only in fiction.
+
+## §6. Index of the school's statements
+
+- Paper I: box (cell); six verbs; seven standing rules with falsifiers;
+  the Weigher (gauge, dial, three verdicts, aliases, doubling gauge,
+  two-clause lemma proved); covering rule b√n/2; squared comparison; the
+  web; the seventh-verb conjecture (open); the appendix of the draft's
+  four faults.
+- Paper II: Rule 1 chosen; Theorem 1 conservation (interior; full
+  induction); Theorem 2 in-flight identity (+ nothing-minted, the meter);
+  §4½ the two meters (the conflated draft repaired); Theorem 3 two
+  clerks; Theorem 4 the shop within a shop; the snap entry (the slip; the
+  four legs; custody; debt slope → ρ); the worked week with its printed
+  misadd; Grønn's certificate.
 - Paper III: (A) views and warrants; two relays; the k-link sum; the
-  standing-world illusion and its cadence limit. (B) stages; additivity
-  exact; the annulus at the stages' mercy (with the per-question honesty
-  note); the one-perturbation rule; the drift band, attained; drift is a
-  stage; the twins; the price of re-sighting (linear at fixed error,
-  square-root at the joint optimum).
-- Paper IV: letters, policies, error; the indistinguishability lemma; every
-  anchor is old; the pointwise floor; the two-season adversary with the
-  outward gauge (legality verified); swept mass against clean band (the 2×
-  honesty note); infeasibility beyond the wall; equal spacing; the roster
-  split; the phase rule; the worked season (with both flags); the test for
-  re-sighting claims; the closed-book trap; the refusal, and the fishery's
-  verdict.
-- Paper V: folds; order-independence; lossless ⟺ covered (the
-  characterization, both directions); the exclusion counterexample; the seal
-  (binding, not revealing); declared labels and witnesses; Ω(c) pricing;
-  the rungs admit no fold (two entries); the two-fold band (1.386
-  expected); the bank refuted (credit never negative; the exact deposit;
-  the 18,262 erratum and the erratum-to-the-erratum); the hinge — choose
-  your fold, choose what your boundary cannot see.
-- Correspondence: the priority dispute by mutual surrender; the conjecture
-  proposed, refuted, thanked; the refusal and the vindication; the February
-  seam and the built mark; the open question about the middle of the band.
+  standing-world illusion *with its cadence limit*; (B) stages;
+  additivity exact; the annulus with its per-question honesty note; the
+  one-perturbation rule; the drift band, attained; drift is a stage; the
+  twins; the price schedule (linear at fixed error, square-root at the
+  joint optimum); the drafts' over-claims corrected on the record.
+- Paper IV: letters, policies, error; indistinguishability; anchor lag;
+  pointwise floor; the two-season adversary *with the outward gauge and
+  its legality appendix*; swept mass and the one-sidedness condition;
+  infeasibility; equal spacing; the roster split; the phase rule; the
+  worked season (both flags); the floor test; the closed-book trap; the
+  refusal and the fishery's verdict; the draft's two faults repaired.
+- Paper V: folds; order-independence; lossless ⟺ fold-covered; the
+  exclusion counterexample (the draft's seal claim, killed); the seal
+  binding-not-revealing; declared labels and witnesses; Ω(c); the rungs
+  admit no fold (two entries; the sharpening from the draft's weaker
+  witness); the two-fold band (1.386 expected); the bank refuted
+  (centering never closing; the exact deposit; the 18,262 erratum and
+  the erratum-to-the-erratum); the hinge.
+- Paper VIII: the reading of readings; the degeneracy finding (right);
+  the phantom verdict (wrong); the four corrections; the receipt of 1931.
+- Correspondence: twenty-six letters; the critique wave; the slip; the
+  priority dispute by mutual surrender; the conjecture's life and death;
+  the seam incident; the vindication; the open question.
 
-## §6. What stands open, in 1905 and in 2026
+## §7. What stands open, in 1905, in 1923, and in 2026
 
-The school's open questions are the corpus's open questions: the
-seventh-verb conjecture (the six-verb hypothesis); the middle-of-the-band
-question (where should a fishery stand — the corpus's answer is the
-audit-cadence equilibrium, and it is a design choice, not a theorem); the
-weakest verdict-relevant drift budget (the corpus's OP-1, only gestured at
-in the annals); and the ε-frontier for declared folds. A winter that lasted
-a hundred and twenty years has not closed them; the trunk is sealed, the
-receipts are kept, and the books balance.
+The seventh-verb conjecture (the six-verb hypothesis); the middle-of-the-
+band question (the corpus's answer is a design choice, not a theorem); the
+weakest verdict-relevant drift budget (OP-1, only gestured at); the
+ε-frontier for declared folds; and, since 1923, the planted-above-the-
+floor trial — which the 1931 postscript says was run, and won. A winter
+that lasted eighteen years, and then a hundred more; the trunk is sealed,
+the receipts are kept, and the books balance.
 
 ---
 
-*annals: the school is fiction; the theorems are the fleet's. — the editors*
+*annals: the school is fiction; the drafts are the school's; the theorems
+are the fleet's; the iteration is the artifact. — the editors*
