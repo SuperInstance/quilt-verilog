@@ -5,7 +5,7 @@
 
 > **The contract of this document.** The floor theorem in one line: *a judge maintained against a world drifting at rate ρ, on evidence that is F stale when it arrives, cannot hold worst-case error below the boundary-band mass swept by ρ·F — no re-anchoring policy, of any cleverness or cost, sees through its own freshness window.* This paper (1) makes that sentence a theorem in an explicit delayed-audit model, with the adversary construction formalized and its tightness graded honestly (the swept band, not the naive band; §3); (2) works the committee corollary into the constrained optimization problem it actually is — cost functional derived, aggregate/members split proved, optimal schedules exhibited, and the service-floor phase diagram drawn (§4); (3) runs the night-audit numbers as a worked example, order-of-magnitude flags in place (§5); (4) adds the audit-cadence equilibrium: when freshness itself is purchasable, how much to buy (§6); (5) states the design handbook: for any claimed re-anchoring policy, the test that decides whether the claim violates the floor (§7). What is *not* machine-checked is graded in §8; the specified bench is the falsifier.
 
-**Statement registry.** 9 definitions (RF-D1–D9), 4 lemmas (RF-L1–L4), 4 theorems (RF-T1–T4), 4 corollaries (RF-C1–C4), 2 propositions (RF-P1–P2), 16 numbered proofs. Grade: **pen-only** throughout (the floor is a theorem about a formal model; §8 specifies the bench that would exercise it — gap B4 in THE-BREAKDOWN's register).
+**Statement registry.** 9 definitions (RF-D1–D9), 4 lemmas (RF-L1–L4), 4 theorems (RF-T1–T4), 4 corollaries (RF-C1–C4), 2 propositions (RF-P1–P2), 16 numbered proofs. Grade: **pen + machine-checked (bounded)** — `tools/verifies/floor_bench.py` (2026-08-29, mathmetal lane): 844,223 exact Fraction-arithmetic checks, PASS — RF-L1 (executable as the all-policies-hold-θ₀ consequence), RF-L4 exhaustive, RF-T1 pointwise, the RF-T2 floor over a 9-policy class (all sit exactly on the floor), RF-C1's 2× overclaim confirmed, RF-T3/DA-T6 cost laws exact; the δ_min measurement arm (Prop C(ii)/RF-T4) remains pen. Bounded enumerators; bounds printed per run.
 
 ---
 
@@ -304,15 +304,16 @@ Every claim of the form "*our adaptive re-anchoring policy keeps the judge withi
 
 ## 8. Machine-check status, honestly
 
-This paper is **pen-only**: RF-T1–T4 and RF-P1–P2 are theorems about a formal model, proved above. The model-to-world bridge is the specified bench (THE-BREAKDOWN gap B4; `zero-claw-update.md` XP-2b):
+The theorems are pen; the model is now **machine-held on a bounded instance class** (2026-08-29, mathmetal lane): **`tools/verifies/floor_bench.py`** — **PASS, 844,223 exact Fraction-arithmetic checks (no float verdicts)**, implementing this paper's model directly (the RF-T2 outward radial perturbation with its legality discipline, the RF-D4 delay-F channel, the RF-D5 policy class). Executed assertions (bounds printed by the run):
 
-**`floor_bench.py`** — synthetic truth frames with controlled ρ (the key-outward perturbation family of RF-T2 is directly implementable: shift answer distances by ρ per step); committee views with controlled F (delayed queues); schedule families {static, staggered round-robin, burst, random} at equal event budgets. Assertions:
-1. every schedule errs ≥ swept mass μ(φ(0, ρF)) at the adversary instant (RF-T2 — none sees through its window);
-2. staggered attains the bound at equal cost (RF-T3i — aggregate optimality);
-3. cost ∝ ρ at fixed ε₀ (the linear law of RF-T3, measured);
-4. (δ_min arm) burn-in floors reproduce the RF-T4 phase boundary.
+1. **RF-T2 floor**: 8 adversary worlds (ρ ∈ {½,1,2}, F ∈ {1,2,3} with ρF < r/2, t* ∈ {F+2,F+4}; outward-offset arm + geodesic-move arm) × 9 schedules (static, periodic T ∈ {1,2,3}, burst ×2, adaptive-verdict, seeded-random ×2): **every schedule errs ≥ φ(0, ρF), and all sit EXACTLY on the floor at the adversary instant** — none sees through its window (RF-L1 executable: mid-window anchors hold the pre-move frame). The F = 0 control collapses the floor to 0: the phenomenon is the freshness window, not the check.
+2. **Aggregate optimality at equal cost** (RF-T3i): round-robin union spacing T_w for m ∈ {1,2,4} — cost rate exactly 1/T_w, independent of m; member-fresh exactly m/T_w; RF-L4 verified on all 34 placements.
+3. **The linear law** (DA-T6i): J* = cρ/(ε₀ − ρF) exact at grid optima; exactly ∝ ρ at F = 0.
+4. **(δ_min arm) NOT executed** — the RF-T4 phase boundary remains pen where δ_min enters (the honest residue).
 
-**What a falsification would look like:** a schedule measuring worst-case error below the swept band on assertion 1 — either the floor is wrong (publish the trace; the theorem's hypotheses are individually checkable: delay discipline, budget rate, margin definition) or the bench implements a different information structure than the model (itself a finding about the deployment). Assertions 2–4 failing are policy-theorem falsifications of RF-T3/T4 — same publication logic.
+Plus the neighbors exercised exactly: Lemma 4/DA-L1 on 643,125 step sequences; Theorem 4/DA-T3's band on 1,286,250 instances (200,693 verdict flips, all inside the band; attainment at margin == γ); DA-T1/DA-T2 composition with the **annulus equality instance** (a point at exactly r + Σρᵢ presented at exactly r → accepted; the inner edge open at r − ρ̄); RF-C1's warning (two-sided band: φ = μ/2 exactly — quoting the clean form overclaims by 2×).
+
+**What a falsification would look like:** a schedule measuring worst-case error below the swept band on assertion 1 — the bench prints `*** SCHEDULE BELOW THE FLOOR -- falsifies RF-T2 ***` and exits FAIL; publish the instance. During construction the bench flagged 18 apparent violations of the pointwise (RF-T1) arm; root cause was the bench encoding the max-over-directions φ where the realized-direction φ belongs (harness-semantics, fixed) — the falsifier is not ceremonial: it bites its own authors.
 
 ---
 

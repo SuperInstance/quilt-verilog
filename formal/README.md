@@ -7,6 +7,7 @@ repo root:
     sby -f formal/cell_core.fair.sby
     sby -f formal/cell_core.tick.sby
     sby -f formal/fabric.conservation.sby
+    sby -f formal/echo_gate.dyadic.sby
 
 ## Results
 
@@ -15,7 +16,8 @@ repo root:
 | `flit_pipe.fly.sby` | FIFO safety C2/C3/C4 + value integrity V1 (no flit lost, duplicated, or reordered; counters bounded) | BMC 40 | **PASS** | 65 s |
 | `cell_core.fair.sby` | I1a op bound (gap ≤ 64, tick-free), I1b composite (gap ≤ 128, spaced ticks), I2 response ≤ 66 | BMC 80 | **PASS** | 15 m 19 s |
 | `cell_core.tick.sby` | Q2 under permanent ingress flood + arbitrary strobes: suppression Q2b, composite deadline Q2a1 ≤ 100, entry witness Q2a2 ≤ 66 | BMC 80 | **PASS** | 10 m 23 s |
-| `fabric.conservation.sby` | 2-cell ledger: A1/T1 mirror — emitted == booked + in-flight (+ in-service/external); serialization; no silent drops; fanout addressing | BMC 55 | **PASS** | 76 s |
+| `fabric.conservation.sby` | 2-cell ledger: A1/T1 mirror — emitted == booked + in-flight (+ in-service/external); serialization; no silent drops; fanout addressing. **Re-proven 2026-08-29 with `PIPE_EFF(1)` pinned** (the v2.1 effect-pipeline retime — the shipped bitstream's config; the prior committed artifacts predated the retime) | BMC 55 | **PASS** | 40 s |
+| `echo_gate.dyadic.sby` | echo gate (§2c mathmetal, 2026-08-29): the graded class brackets the trace into its dyadic octave `2^(PW-1) <= F << g < 2^PW` at every cycle (the staircase feeding the ladder's 2x envelope); PRIORITY fire-beats-leak; MONO no-resurrection; ZEROABSORB; DEAD gates training at F=0; DISABLED = FLOOR 0 = v1. Covers reached (companion cover run): g in [0,7] and >= 8 | BMC 25 | **PASS** | 2 s |
 
 Total sby runtime (final passing runs): ~28 min. All bounded-liveness claims
 are assert-within-N (shadow countdown) in BMC mode; unbounded liveness is not

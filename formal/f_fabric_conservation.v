@@ -45,6 +45,13 @@
 // the ledger counts commits, which decay and saturation do not create or
 // destroy, so A1 holds regardless; DROP/SER likewise. Shrunk parameters
 // for tractability, documented: EDGES_N=1, engine K=4/B=4/AGEW=8.
+// PIPE_EFF=1 pinned explicitly (2026-08-29, mathmetal lane): the v2.1
+// effect-pipeline retime -- the config the committed HX8K bitstream ships
+// -- registers the RQH-credit add, the 16x16 multiply, and the saturating
+// accumulate into three stages (each effect op +2 clk; DROP's structural
+// worst case moves ~4 -> ~6 cycles, still far under the 16-cycle bound).
+// The ledger identity is re-proven below on the retimed cone: conservation
+// is a property of commits, not of pipeline latency.
 module f_fabric_conservation(input clk, input rst_n);
     localparam OPW = 3, AIDW = 4, PW = 16, EDGES_N = 1, EIW = 1, K = 4;
     localparam [OPW-1:0] OP_BIND = 3'd0, OP_LINK = 3'd1, OP_EFF = 3'd2;
@@ -84,7 +91,8 @@ module f_fabric_conservation(input clk, input rst_n);
     wire s_tick;   // shared tick (both cells, as in q_fabric_top)
 
     q_cell_core #(.OPW(OPW), .AIDW(AIDW), .PW(PW),
-                  .EDGES_N(EDGES_N), .EIW(EIW), .K(K)) u_coreA (
+                  .EDGES_N(EDGES_N), .EIW(EIW), .K(K),
+                  .PIPE_EFF(1)) u_coreA (
         .clk(clk), .rst_n(rst_n),
         .ci_op(ciA_op), .ci_valid(ciA_valid), .ci_ready(ciA_ready),
         .ci_src(ciA_src), .ci_a0(ciA_a0), .ci_a1(ciA_a1), .ci_a2(ciA_a2),
@@ -139,7 +147,8 @@ module f_fabric_conservation(input clk, input rst_n);
     wire signed [PW-1:0] actB;
 
     q_cell_core #(.OPW(OPW), .AIDW(AIDW), .PW(PW),
-                  .EDGES_N(EDGES_N), .EIW(EIW), .K(K)) u_coreB (
+                  .EDGES_N(EDGES_N), .EIW(EIW), .K(K),
+                  .PIPE_EFF(1)) u_coreB (
         .clk(clk), .rst_n(rst_n),
         .ci_op(ciB_op), .ci_valid(ciB_valid), .ci_ready(ciB_ready),
         .ci_src(ciB_src), .ci_a0(ciB_a0), .ci_a1(ciB_a1), .ci_a2(ciB_a2),
