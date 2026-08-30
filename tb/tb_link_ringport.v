@@ -46,7 +46,8 @@ module tb_link_ringport;
         chk(ro_valid === 1'b0, "ro_idle_on_deliver");
         chk(ri_ready === 1'b1, "ri_ready_hit");
 
-        // 2: hit with backpressure -> stalls ring, no ro progress
+        // 2: hit with backpressure -> stalls ring (transit blocked; li
+        // idle here so ro stays quiet -- the F3 escape case is 8)
         ld_ready = 0;
         #1;
         chk(ri_ready === 1'b0, "backpressure_ri");
@@ -89,6 +90,30 @@ module tb_link_ringport;
         chk(ri_ready === 1'b0, "ro_bp_ri");
         chk(li_ready === 1'b0, "ro_bp_li");
         ro_ready = 1;
+
+        // 8 (F3 guard): hit parked by ingress backpressure must NOT block
+        // injection -- the old inject_ok=!ri_valid||consumed closed a
+        // single-cell wait cycle (ST_FIRE holds ci_ready=0 -> inbuf full ->
+        // ld_ready=0 -> inject_ok=0 -> fire flits held -> ST_FIRE never
+        // ends). A hit never claims ro, so li may proceed past it.
+        ri_dst = 4'd3; ri_dat = 16'h4444; ld_ready = 0;
+        #1;
+        chk(ld_valid === 1'b1, "f3_parked_hit_ld");
+        chk(ld_dat === 16'h4444, "f3_parked_hit_dat");
+        chk(ri_ready === 1'b0, "f3_parked_hit_held");
+        chk(li_ready === 1'b1, "f3_escape_li_ready");
+        chk(ro_valid === 1'b1, "f3_escape_ro_valid");
+        chk(ro_dat === 16'h2222, "f3_escape_ro_dat");
+        chk(ro_dst === 4'd1, "f3_escape_ro_dst");
+        chk(ro_dat !== 16'h4444, "f3_no_clone_on_escape");
+
+        // 9 (F3 guard): backpressure released -> the parked hit delivers
+        // (its one-and-only exit) and injection keeps flowing
+        ld_ready = 1;
+        #1;
+        chk(ld_valid === 1'b1 && ld_dat === 16'h4444, "f3_release_ld");
+        chk(ri_ready === 1'b1, "f3_release_ri");
+        chk(li_ready === 1'b1, "f3_release_li");
 
         if (errors == 0) $display("TB_LINK_RINGPORT PASS");
         else $display("TB_LINK_RINGPORT FAIL %0d", errors);

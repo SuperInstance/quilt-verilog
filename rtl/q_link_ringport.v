@@ -3,7 +3,9 @@
 // "skeletons compile clean, correct ready logic"). Registered slices
 // (q_flit_pipe) are inserted by fabric_top for timing; ports identical.
 // Single-ring liveness: transit never blocks unless downstream blocks;
-// delivery consumes the slot and frees a bubble for injection.
+// delivery consumes the slot and frees a bubble for injection. A hit
+// parked at ld (full ingress) does NOT block injection (F3 fix): a hit
+// never claims ro (its exit is ld), so li may use ro while the hit waits.
 module q_link_ringport #(
     parameter OPW  = 3,
     parameter AIDW = 4,
@@ -52,7 +54,27 @@ module q_link_ringport #(
     output wire [PW-1:0]      ld_dat
 );
     wire hit       = ri_valid && (ri_dst == i_myid);
-    wire consumed  = hit && ld_ready;
+    // F3 escape-lane fix (silicon lane, 2026-08-30, root-caused by
+    // sim/vlt/tb_quiesce_repro.cpp: saturation self-deadlock -- a cell in
+    // ST_FIRE holds ci_ready=0, its inbuf fills, a flit addressed to the
+    // cell parks at its OWN ringport (ld_ready=0), and the old
+    // `inject_ok = !ri_valid || consumed` then held the cell's fire flits
+    // out of the ring forever: its own blocked delivery gated its own
+    // injection -- a closed wait cycle inside ONE cell, no second cell
+    // required; everything behind the parked hit froze too (measured:
+    // occ=14 stuck through 500k cycles, ledger intact). Fix: a hit flit
+    // NEVER uses ro -- delivered hits exit via ld, and a blocked hit
+    // simply waits in the upstream slice (ri_ready=0, no clone: the F2
+    // clone was transit claiming ro while ri was held; injection popping
+    // its own li on acceptance keeps push/pop paired). So li may use ro
+    // whenever the input flit is a hit or absent; only a transit (a flit
+    // that must claim ro to move) blocks injection. Strictly simpler
+    // boolean than the old consumed form. Overtaking is limited to this
+    // node's injections passing flits addressed to this node; ring order
+    // among transit flits is unchanged (per-flow order preserved; the
+    // streams that reorder were never in a delivered-order contract --
+    // each op is independent and ack-correlated by a2).
+    wire inject_ok = !ri_valid || hit;
     // clone fix (silicon lane, 2026-08-30, found by sim/vlt/tb_scale_vlt.cpp
     // ENTRY-IDENTITY trap + per-pipe push/pop witnesses): `transit` used
     // to include hit-but-not-consumed flits, so a delivery blocked by a
@@ -65,7 +87,6 @@ module q_link_ringport #(
     // is HOLD: a blocked hit occupies the slice; pass-through is
     // non-hit only, so push and pop stay paired everywhere.
     wire transit   = ri_valid && !hit;
-    wire inject_ok = !ri_valid || consumed;
 
     assign ld_valid = hit;
     assign ld_op    = ri_op;
@@ -85,8 +106,8 @@ module q_link_ringport #(
     assign ro_a2    = transit ? ri_a2  : li_a2;
     assign ro_dat   = transit ? ri_dat : li_dat;
 
-    // consumed pops for delivery; pass-through pops when downstream takes
-    // it; a blocked hit holds its slice (ld_ready backpressure, unchanged)
+    // a hit pops via ld (delivered) or holds its upstream slice (blocked);
+    // pass-through pops when downstream takes it
     assign ri_ready = hit ? ld_ready : ro_ready;
     assign li_ready = inject_ok && ro_ready;
 
