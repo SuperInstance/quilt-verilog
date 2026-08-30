@@ -54,5 +54,6 @@ fi
 # same golden container hex the QUF lane just built; regen if missing)
 [ -f tb/run/quf_tb_input.hex ] || bash tools/run_quf_tb.sh > /tmp/quf_out2 2>&1 || true
 t tb/tb_serfabric.v       tb_serfabric "rtl/q_uf_loader.v rtl/quf_boot.v rtl/q_tick_sched_rt.v rtl/q_boot_gate.v rtl/q_serfabric_top.v"
+t tb/tb_wedge_repro.v     tb_wedge_repro    # silicon-lane regression guard: the commissioning wedge (SILICON-EXPERIMENTS F1) must stay dead
 
 exit $fail

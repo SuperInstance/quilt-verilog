@@ -1,0 +1,135 @@
+== tb_scale_vlt: NCELL=15 EDGES_N=4 (K=8 B=8 AGEW=24), TPW=8 default
+  setup cell 0 done @2243
+  setup cell 1 done @4470
+  setup cell 2 done @6704
+  setup cell 3 done @8931
+  setup cell 4 done @11164
+  setup cell 5 done @13391
+  setup cell 6 done @15618
+  setup cell 7 done @17845
+  setup cell 8 done @20076
+  setup cell 9 done @22303
+  setup cell 10 done @24530
+  setup cell 11 done @26757
+  setup cell 12 done @28988
+  setup cell 13 done @31215
+  setup cell 14 done @33448
+P0 setup: 34537 cycles, ledger OK
+ACKLAT-TRIP @cyc=42752: 9 outstanding, oldest 8215 cyc (mixed-traffic latency; see SILICON-EXPERIMENTS #3)
+ACKLAT-TRIP @cyc=65024: 5 outstanding, oldest 8198 cyc (mixed-traffic latency; see SILICON-EXPERIMENTS #3)
+ACKLAT-TRIP @cyc=87296: 5 outstanding, oldest 8326 cyc (mixed-traffic latency; see SILICON-EXPERIMENTS #3)
+ACKLAT-TRIP @cyc=144384: 3 outstanding, oldest 8204 cyc (mixed-traffic latency; see SILICON-EXPERIMENTS #3)
+ACKLAT-TRIP @cyc=159488: 4 outstanding, oldest 8364 cyc (mixed-traffic latency; see SILICON-EXPERIMENTS #3)
+P1 MAIN: 1000000 cycles in 11.388 s wall (0.09 Mcyc/s sim rate)
+P1 gen calls: eff=5814 view=52267
+P1 inj=58080 (eff=5814 view=52281 other=180) drain=52393 accept=58431 (eff=5866 view=52275 other=290) emit=52560 (ack=52505 fire=55) ticks=4042
+P1 CELL-OPS: 171621 in 11.388 s => 15070 cell-ops/sec (58431 accepts + 4042 tick-sweeps x15 + 52560 emissions)
+P1 acklat_trips=5 (view latency >8192 cyc events)
+QUIESCE-DEADLOCK @cyc=2034537: occ=11 pending=0 stuck (liveness death; ledger intact)
+P2 STORM: re-dial fire-prone, 200k cycles unbounded, 100% effects
+  setup cell 0 done @2036780
+  setup cell 1 done @2039007
+  setup cell 2 done @2041241
+  setup cell 3 done @2043468
+  setup cell 4 done @2045701
+  setup cell 5 done @2047928
+  setup cell 6 done @2050155
+  setup cell 7 done @2052382
+  setup cell 8 done @2054613
+  setup cell 9 done @2056840
+  setup cell 10 done @2059067
+  setup cell 11 done @2061294
+  setup cell 12 done @2063525
+  setup cell 13 done @2065752
+  setup cell 14 done @2067985
+P2 storm ran 200k cycles without freezing (fires=46)
+P2 cumulative fires=46 ovf_cell_cycles=0
+  setup cell 0 done @2272004
+  setup cell 1 done @2274231
+  setup cell 2 done @2276465
+  setup cell 3 done @2278692
+  setup cell 4 done @2280925
+  setup cell 5 done @2283152
+  setup cell 6 done @2285379
+  setup cell 7 done @2287606
+  setup cell 8 done @2289837
+  setup cell 9 done @2292064
+  setup cell 10 done @2294291
+  setup cell 11 done @2296518
+  setup cell 12 done @2298749
+  setup cell 13 done @2300976
+  setup cell 14 done @2303209
+P3 RESET-MID-PIPELINE: back up network, reset under load
+P3 occupancy at reset: 15 flits in pipes
+P3 post-reset residue after drain window: 0 (want 0), ledger OK
+  setup cell 0 done @2307005
+  setup cell 1 done @2309232
+  setup cell 2 done @2311459
+  setup cell 3 done @2313686
+  setup cell 4 done @2315913
+  setup cell 5 done @2318143
+  setup cell 6 done @2320370
+  setup cell 7 done @2322597
+  setup cell 8 done @2324824
+  setup cell 9 done @2327055
+  setup cell 10 done @2329282
+  setup cell 11 done @2331509
+  setup cell 12 done @2333736
+  setup cell 13 done @2335967
+  setup cell 14 done @2338194
+ACKLAT-TRIP @cyc=2347520: 10 outstanding, oldest 8253 cyc (mixed-traffic latency; see SILICON-EXPERIMENTS #3)
+P3 recovery pass: CLEAN (errors +0)
+  setup cell 0 done @2391531
+  setup cell 1 done @2393758
+  setup cell 2 done @2395992
+  setup cell 3 done @2398219
+  setup cell 4 done @2400452
+  setup cell 5 done @2402679
+  setup cell 6 done @2404906
+  setup cell 7 done @2407133
+  setup cell 8 done @2409364
+  setup cell 9 done @2411591
+  setup cell 10 done @2413818
+  setup cell 11 done @2416045
+  setup cell 12 done @2418276
+  setup cell 13 done @2420503
+  setup cell 14 done @2422736
+ACKLAT-TRIP @cyc=2432256: 10 outstanding, oldest 8431 cyc (mixed-traffic latency; see SILICON-EXPERIMENTS #3)
+P4 rep 0: stream hash 2126a3c74072d7ff (drained=49968 occ=0)
+  setup cell 0 done @2546068
+  setup cell 1 done @2548295
+  setup cell 2 done @2550529
+  setup cell 3 done @2552756
+  setup cell 4 done @2554989
+  setup cell 5 done @2557216
+  setup cell 6 done @2559443
+  setup cell 7 done @2561670
+  setup cell 8 done @2563901
+  setup cell 9 done @2566128
+  setup cell 10 done @2568355
+  setup cell 11 done @2570582
+  setup cell 12 done @2572813
+  setup cell 13 done @2575040
+  setup cell 14 done @2577273
+ACKLAT-TRIP @cyc=2586624: 9 outstanding, oldest 8262 cyc (mixed-traffic latency; see SILICON-EXPERIMENTS #3)
+ACKLAT-TRIP @cyc=2595072: 6 outstanding, oldest 8441 cyc (mixed-traffic latency; see SILICON-EXPERIMENTS #3)
+P4 rep 1: stream hash 2126a3c74072d7ff (drained=49968 occ=0)
+  setup cell 0 done @2700605
+  setup cell 1 done @2702832
+  setup cell 2 done @2705066
+  setup cell 3 done @2707293
+  setup cell 4 done @2709526
+  setup cell 5 done @2711753
+  setup cell 6 done @2713980
+  setup cell 7 done @2716207
+  setup cell 8 done @2718438
+  setup cell 9 done @2720665
+  setup cell 10 done @2722892
+  setup cell 11 done @2725119
+  setup cell 12 done @2727350
+  setup cell 13 done @2729577
+  setup cell 14 done @2731810
+ACKLAT-TRIP @cyc=2741248: 11 outstanding, oldest 8349 cyc (mixed-traffic latency; see SILICON-EXPERIMENTS #3)
+P4 rep 2: stream hash 2b25401359ce0215 (drained=49961 occ=0)
+P4 stream hashes: seedA=2126a3c74072d7ff seedA'=2126a3c74072d7ff seedB=2b25401359ce0215
+== total: 2852899 cycles, 32.8 s wall, errors=0, acklat_trips=10 => BENCH PASS

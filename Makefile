@@ -32,7 +32,7 @@ FORMAL_SBY := formal/cell_core.fair.sby formal/cell_core.tick.sby \
               formal/flit_pipe.fly.sby formal/fabric.conservation.sby \
               formal/echo_gate.dyadic.sby tb/formal/flit_pipe.sby
 
-.PHONY: all test sim formal formal-audit formal-audit-check synth pnr clean verify-all
+.PHONY: all test sim formal formal-audit formal-audit-check synth pnr synth-report sim-scale clean verify-all
 
 all: test sim formal synth pnr
 
@@ -97,6 +97,18 @@ pnr: synth
 	  --timing-allow-fail --pcf-allow-unconstrained \
 	  --asc synth/fabric2_k4b4a8e1.asc --report synth/report_k4b4a8e1.json
 	icepack synth/fabric2_k4b4a8e1.asc synth/fabric2_k4b4a8e1.bin
+
+## synth-report -- SILICON EXPERIMENT LANE (docs/SILICON-EXPERIMENTS.md):
+## fresh yosys+nextpnr on UP5K sg48 (canonical k4b4a8e1 fit-fail + the
+## serf front-end that closes, real fmax) -> synth/silicon.tsv. ~4 min.
+synth-report:
+	bash synth/silicon.sh
+
+## sim-scale -- verilator scale bench on the largest legal fabric
+## (NCELL=15, EDGES_N=4, K=8 B=8 AGEW=24): 1M-cycle mixed-traffic run +
+## storm + reset-mid-pipeline + determinism hash. ~2 min + build.
+sim-scale:
+	bash sim/vlt/run_scale.sh
 
 ## clean — remove generated proof dirs and TB run artifacts (keeps sources).
 clean:
