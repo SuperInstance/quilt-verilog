@@ -98,19 +98,28 @@ than the real system's behavior — e.g. E2's 12-cycle engine bound vs the
 real q_hebb_edge's 10). The conservation proof uses shrunk parameters
 (EDGES_N=1, K=4, B=4, AGEW=8), not the full fabric.
 
-## Lane 4 — `make synth`: iCE40 elaboration
+## Lane 4 — `make synth`: iCE40 flow (yosys → nextpnr → icepack)
 
 Run: `yosys -s synth/fpga-converged.ice40` — the PnR-converged k4b4a8e1
 config (the formal conservation proof's parameters) on the real
-`q_fabric_top`.
+`q_fabric_top`. Note: the script chains the FULL flow — yosys →
+nextpnr-ice40 (HX8K-CT256, 12 MHz target) → icepack — so `make synth`
+reproduces the bitstream too.
 
-**Result (2026-08-29, iteration 2): exit 0, ~20 s**, 6002 SB_LUT4, 898
-SB_CARRY, ~2430 FF-class cells, 157 port bits — consistent with the committed
-`synth/stat_fabric2_k4b4a8e1.txt`. `make synth` covers elaboration only;
-the full PnR + bitstream flow (nextpnr-ice40 → icepack, commands in README
-§4) was verified end-to-end in iteration 1: UP5K sg48 NCELL=1 → 4232/5280 LC
-(80.1%), fmax 17.36 MHz, PASS at the 12 MHz target. The committed bitstream
-`synth/fabric2_k4b4a8e1.bin` (HX8K, 40.44 MHz) is tracked in git.
+**Result (2026-08-29, iteration 2): exit 0, ~20 s yosys + full PnR +
+icepack.** 6,002 SB_LUT4, 898 SB_CARRY, ~2,430 FF-class cells, 157
+port bits on this tree (the committed
+`synth/stat_fabric2_k4b4a8e1.txt` records 5,951 LUT4 / 878 CARRY from the
+PIPE_EFF-retime commit; the tree has moved since — both are real
+measurements, of different trees). A fresh PnR in this run measured
+**fmax 44.43 MHz @ the 12 MHz target — PASS** (report_k4b4a8e1.json;
+iteration 1 and the audit pass measured 40.44 and 43.36 MHz on their
+trees — PnR seed variance; every run passes the 12 MHz constraint with
+margin). A fresh 135,100-byte `fabric2_k4b4a8e1.bin` was packed. Also
+verified in iteration 1: UP5K sg48 serf NCELL=1 → 4,232/5,280 LC
+(80.1%), 37/96 IO, fmax 16.78 MHz post-route (17.36 MHz is the
+post-placement estimate) — PASS at 12 MHz. The committed bitstream
+`synth/fabric2_k4b4a8e1.bin` is tracked.
 
 ## What is NOT covered — read this before relying on the quilt
 
@@ -136,5 +145,6 @@ the full PnR + bitstream flow (nextpnr-ice40 → icepack, commands in README
 
 | date | iteration | what ran | result |
 |---|---|---|---|
-| 2026-08-29 | 1 | suite + python + 6 proofs + PnR through UP5K | 18/18, 34/34, 6×PASS, 17.36 MHz fmax |
+| 2026-08-29 | 1 | suite + python + 6 proofs + PnR through UP5K | 18/18, 34/34, 6×PASS, 16.78 MHz post-route fmax (17.36 post-place) |
 | 2026-08-29 | 2 | `make test/sim/synth` + `make formal` (all six re-run) | 18/18, 34/34, 6×PASS, yosys exit 0 — one-command front door verified |
+| 2026-08-29 | audit (independent) | suite + python + 5×sby + full PnR both tops (UP5K serf, HX8K k4b4a8e1) + icepack; README/VERIFICATION numbers re-measured and corrected | 18/18, 34/34, 5×PASS (fly 82 s, cons 42 s, dyadic 3 s, tick 249 s, fair 605 s), 16.78 / 43.36 MHz post-route |

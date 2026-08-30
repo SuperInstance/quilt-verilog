@@ -95,9 +95,13 @@ icepack synth/fabric2_k4b4a8e1.asc synth/fabric2_k4b4a8e1.bin
 
 Parameter sweeps: `bash synth/sweep.sh` (W-knobs), `bash synth/scale.sh`
 (device ladder), `bash synth/pinfix.sh` (serialized front-end). The flow
-was re-verified end-to-end through PnR on 2026-08-29: serialized
-front-end, UP5K sg48, NCELL=1 → 4232/5280 LC (80.1%), 37/96 IO, fmax
-17.36 MHz, PASS at the 12 MHz target.
+was re-verified end-to-end through PnR twice on 2026-08-29 (iteration 2,
+then independently in the audit pass): serialized front-end, UP5K sg48,
+NCELL=1 → 4232/5280 LC (80.1%), 37/96 IO, fmax 16.78 MHz post-route
+(17.36 MHz is the post-placement estimate), PASS at the 12 MHz target.
+The converged HX8K build above was also taken through PnR + icepack on
+this tree by the audit pass: 6,002 LUT4 → 7,596/7,680 LC (98%), 157 IO,
+fmax 43.36 MHz post-route, 135,100-byte bitstream.
 
 ### Makefile — now real (2026-08-29, iteration 2)
 
@@ -118,14 +122,17 @@ lane proves and does not prove.
 | formal | `sby -f formal/cell_core.tick.sby` (BMC 80) | **PASS**, 284 s |
 | formal | `sby -f formal/cell_core.fair.sby` (BMC 80) | **PASS**, 607 s |
 | formal (k-induction) | `sby -f tb/formal/flit_pipe.sby` | **PASS** |
-| synth | yosys → nextpnr-ice40, serfabric NCELL=1, UP5K sg48 | 4232/5280 LC (80.1%), 37/96 IO, **fmax 17.36 MHz, PASS @ 12 MHz** |
+| synth | yosys → nextpnr-ice40, serfabric NCELL=1, UP5K sg48 | 4232/5280 LC (80.1%), 37/96 IO, **fmax 16.78 MHz post-route, PASS @ 12 MHz** (17.36 post-place) |
+| synth (audit re-run) | yosys → nextpnr-ice40 → icepack, k4b4a8e1 `q_fabric_top`, HX8K-CT256 | 6,002 LUT4, 7,596/7,680 LC (98%), 157 IO, **fmax 43.36 MHz post-route, PASS @ 12 MHz**, 135,100 B bitstream |
 | synth (committed tables) | `synth/scale.tsv`, `synth/scale-pinfix.tsv` | device ladder + pin-fix lane: up to 63.7 MHz (ECP5 12F, 8 cells), HX8K 40.44 MHz (PIPE_EFF retime) — prior-lane measurements, not re-run here |
 
 Notes: all formal runs use the working-tree `rtl/q_cell_core.v` (the two
 proof-forced fixes documented in `formal/README.md` are required for
 reproduction). The committed bitstream `synth/fabric2_k4b4a8e1.bin`
-(135,100 bytes, 40.44 MHz HX8K) is tracked in git; my re-run verified the
-flow through PnR, not a fresh bitstream. Per-run timing varies with
+(135,100 bytes, 40.44 MHz HX8K at its commit tree) is tracked in git; the
+audit pass re-ran the full HX8K flow through icepack on this tree — same
+135,100-byte size, 43.36 MHz post-route (the committed artifact records
+the PIPE_EFF-retime-era tree; both are real). Per-run timing varies with
 machine load (e.g. cell_core.tick: 284 s here vs 10 m 23 s in the
 original run; both PASS).
 
