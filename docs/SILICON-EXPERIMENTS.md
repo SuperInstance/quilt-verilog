@@ -154,6 +154,64 @@ the task's suggested QUF round-trip variant honestly: v1 has no RTL
 unload sink (q_serfabric_top header), so replay-hash is the equivalent
 at this scale.
 
+## 3.1 Rescue-lane amendment (2026-08-30, independent verification)
+
+A rescue lane re-verified the aborted WIP (`9300092`) from scratch,
+blind to this file's final version (which landed mid-verification as
+`07e04b9`). Results — independent confirmation plus three additions:
+
+**Verification (all re-measured).** Suite 19/19; tb_wedge_repro PASS;
+formal conservation + flit_pipe.fly PASS on the fixed RTL; full scale
+run reproduces the final bench bit-for-bit in the invariants that
+matter: 2,852,899 cycles, errors=0, acklat_trips=10, P0 ledger OK /
+SETUP_WSUM 0, P1 counters identical (inj=58,080 drain=52,393
+accept=58,431 emit=52,560 fires=55), P3 clean, P4 stream hashes
+A=A'=2126a3c74072d7ff ≠ B=2b25401359ce0215.
+
+**Causal decomposition of the XFER_TIMEOUT family (new measurement).**
+Four cells built from exact master/WIP sources by the rescue lane:
+
+| RTL | bench | result |
+|-----|-------|--------|
+| master | master (0eb231b run) | 6,940 errors; freeze cyc≈34.5k |
+| master | rescue | ENTRY-IDENTITY BREAK @cyc=34586; 6,284 errors; LEDGER FAIL @34816, occ=42, **all 16 ring slices presenting the same dst=a** — F2's clone captured at birth |
+| fixed | master | **0 XFER_TIMEOUT**; 5 residual errors (1 F3-quiesce + 4 old-P4 vacuity) |
+| fixed | rescue | errors=0, BENCH PASS |
+
+F2 (the clone) eliminates the entire XFER_TIMEOUT family (~6.9k of
+6,940); the bench hardening accounts for the remaining ~650. The
+aborted lane's interim "6,873 persists" was a property of the
+half-hardened bench, not of the fixed RTL.
+
+**F3 root cause sharpened: the cycle closes within ONE cell.** Minimal
+repro committed: `sim/vlt/tb_quiesce_repro.cpp` (`make
+sim-quiesce-repro`, deterministic seed 0xC0FFEE, ~15 s). 120k windowed
+mixed-traffic cycles → quiesce → **occ=14 frozen through 500k cycles**;
+100k cycles drains clean in 21 (the wedge forms in the 100k–120k window
+of this trajectory). Stuck anatomy: cell 13 `ST_FIRE`
+(rtl/q_cell_core.v, state 5'd18) holds `ci_ready=0` while emitting, so
+its inbuf fills; the flit addressed to cell 13 parks at the ring head
+of its OWN port (`ld_ready=0`); that blocked hit forces `inject_ok=0`,
+so the cell's own fire flits cannot enter the ring
+(rtl/q_link_ringport.v: `li_ready = inject_ok && ro_ready`); and the
+io-bound flits queued behind the parked delivery cannot overtake
+(single in-order ring, no escape lane). Self-deadlock — no second cell
+required, which makes the fix direction concrete: pop the inbuf during
+ST_FIRE, or give EXTID-bound flits an escape lane, or credit-gate fire
+fanout.
+
+**Formal coverage gap named.** `formal/fabric.conservation*` proves a
+2-cell `q_flit_pipe` path — it does not instantiate `q_link_ringport`,
+so F2's clone lived in the one fabric module formal never covered. Unit
+cover is `tb/tb_link_ringport.v` (sim only). A ringport conservation/
+liveness proof would have caught F2 pre-silicon; booked as formal
+backlog.
+
+**Comment correction.** The bench's "fire_prone=false: cells CANNOT
+fire" comment was wrong in fact (fires are rare, not impossible — 55
+measured in P1; F3's wedge is a fire wedge). Corrected in the rescue
+commit.
+
 ## 4. Incident note
 
 Mid-session, an adjudication lane snapshotted this lane's in-flight

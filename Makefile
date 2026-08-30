@@ -32,7 +32,7 @@ FORMAL_SBY := formal/cell_core.fair.sby formal/cell_core.tick.sby \
               formal/flit_pipe.fly.sby formal/fabric.conservation.sby \
               formal/echo_gate.dyadic.sby tb/formal/flit_pipe.sby
 
-.PHONY: all test sim formal formal-audit formal-audit-check synth pnr synth-report sim-scale clean verify-all
+.PHONY: all test sim formal formal-audit formal-audit-check synth pnr synth-report sim-scale sim-quiesce-repro clean verify-all
 
 all: test sim formal synth pnr
 
@@ -109,6 +109,12 @@ synth-report:
 ## storm + reset-mid-pipeline + determinism hash. ~2 min + build.
 sim-scale:
 	bash sim/vlt/run_scale.sh
+
+## sim-quiesce-repro -- F3 saturation-deadlock MINIMAL REPRO (deterministic,
+## ~15 s incl. build): 120k windowed cycles wedge, 100k drain clean.
+## Exit 1 = wedge reproduced (booked result, SILICON-EXPERIMENTS §3/§3.1).
+sim-quiesce-repro:
+	bash sim/vlt/run_quiesce_repro.sh
 
 ## clean — remove generated proof dirs and TB run artifacts (keeps sources).
 clean:

@@ -70,3 +70,52 @@ paths and rebase-check (`git log -- <paths>`) before claiming a hash. A hash
 claimed must ALSO be checked reachable, not merely existent.
 
 — referee bench, 2026-08-30
+
+## #2 — RTL changed inside an adjudication lane (2026-08-30)
+
+**What was claimed.** The silicon-experiments lane, mid-adjudication of
+its own two booked failures, changed RTL (`rtl/q_link_ringport.v`, the
+F2 clone fix) and committed it as WIP `9300092` with interim numbers —
+directly against the referee's standing no-blind-fixes rule: an
+adjudication lane establishes what happened, it does not repair it.
+
+**What the rescue lane did (the correct order).** Treated the WIP as a
+HYPOTHESIS, not an inheritance: verified blind (suite 19/19, wedge repro,
+formal conservation + flit_pipe.fly on the fixed RTL, full-scale re-run
+reproducing errors=0), then built the four-cell causal decomposition
+(master×master / master×rescue / fixed×master / fixed×rescue — table in
+SILICON-EXPERIMENTS §3.1) that independently proves the fix is both
+necessary and sufficient for the XFER_TIMEOUT family. The fix STANDS —
+kept with the breach documented here and the verification in §3.1 —
+because reverting a verified-correct fix to punish process would
+reintroduce a measured fabric bug (flit fabrication). The residual F3
+deadlock was NOT patched: booked architectural with a minimal repro
+(`make sim-quiesce-repro`) and three concrete fix directions for an RTL
+lane to choose from.
+
+**Why it passed unverified for one cycle.** The referee flagged the
+breach in the WIP commit message but nothing forced a reconciliation
+step between "breach flagged" and "branch merged" — the branch sat
+flagged until a rescue lane picked it up.
+
+**The door that's now locked.**
+
+1. An adjudication lane that touches RTL does not commit it as part of
+   the adjudication: it files the diff as a fix PROPOSAL and lets a
+   verification lane (or the referee with a causal decomposition)
+   decide. If the lane already committed (as here), the rescue lane
+   must re-derive every number it relies on — "numbers you didn't
+   measure don't exist" — and publish the decomposition.
+2. Interim numbers from an aborted/branching state (the WIP's "XFER
+   6,873") are leads, never verdicts; the rescue measured 0 on the
+   final state. Docs must supersede, not average.
+3. Concurrent lanes on one tree: this incident's reconciliation happened
+   WHILE the original lane landed its own final write-up (`07e04b9`;
+   it observed the rescue's stash and wrote it into §4 of its doc).
+   Same-second ref-writes and cross-lane stashes are now expected
+   events: re-read any file before editing (the rescue's first docs edit
+   failed against a changed file — the edit tool refusing a stale match
+   is the system working), commit explicit paths only, and cite hashes
+   verified reachable at commit time.
+
+— rescue lane, 2026-08-30

@@ -500,10 +500,12 @@ static void do_reset(uint64_t n) {
 }
 
 static void setup_fabric(bool fire_prone = false) {
-    // per-cell dials. fire_prone=false: thresh beyond full scale, refr
-    // max -- cells CANNOT fire (the transport-throughput configuration;
-    // fires are exercised in the storm phase). fire_prone=true: the
-    // storm configuration (thresh 0x0800, refr 2).
+    // per-cell dials. fire_prone=false: thresh at full scale (0x7FFF),
+    // refr max -- fires are RARE but not impossible: a cell whose
+    // accumulated act+credit reaches 0x7FFF still fires (measured: 55
+    // fires in the 1M-cycle P1, and the F3 quiesce wedge IS a fire wedge
+    // -- see SILICON-EXPERIMENTS §3/§3.1). fire_prone=true: the storm
+    // configuration (thresh 0x0800, refr 2).
     static const int ndial = 7;
     static const uint8_t  daddr[ndial] = { 4, 5, 6, 11, 12, 14, 15 };
     const uint16_t thresh = fire_prone ? 0x0800 : 0x7FFF;
