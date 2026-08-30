@@ -254,7 +254,11 @@ internal state — most plausibly via whitebox assertions inside
 read order) — then T1/A1 close by induction, and SER/DROP follow from
 L1+L2 plus the structural 16-cycle booking bound. Until then, **the
 honest statement of conservation is BMC-55**, and `docs/FORMAL-PROOFS.md`
-§2 remains its canonical description.
+§2 remains its canonical description. Update 2026-08-30: the L1/L2
+whitebox attempt itself was run and remains honestly open — see
+`formal/fabric.conservation.prove-l12.sby` and FORMAL-PROOFS §2's
+"L1/L2 strengthening attempt" (basecase PASS, induction still fails;
+new frontier: core-A emission provenance).
 
 **Why we publish the failure.** Per this repo's doctrine, failures are
 first-class: a bounded proof honestly labeled is worth more than an

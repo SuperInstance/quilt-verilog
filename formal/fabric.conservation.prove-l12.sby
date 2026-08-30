@@ -1,0 +1,48 @@
+# formal/fabric.conservation.prove-l12.sby -- prove-mode attempt with the
+# L1/L2 whitebox strengthening lemmas of docs/ACADEMIC-RIGOR.md §3.4
+# (asserted in formal/f_fabric_conservation_l12.v; rtl/ untouched).
+# Same model as fabric.conservation.prove.sby.
+#
+# The [script] section is part of the harness: this Yosys' Verilog
+# frontend implements neither hierarchical references nor bind, so the
+# whitebox peek wires (f_ws_* in the harness, undriven by the Verilog)
+# are connected to the real u_pipe/u_coreB signals here: flatten, rename
+# to fresh names, connect.
+[options]
+mode prove
+depth 55
+
+[engines]
+smtbmc boolector
+
+[script]
+read -formal q_flit_pipe.v
+read -formal q_echo_gate.v
+read -formal q_rqh_bank.v
+read -formal q_hebb_edge.v
+read -formal q_cell_core.v
+read -formal f_fabric_conservation_l12.v
+prep -top f_fabric_conservation
+flatten
+cd f_fabric_conservation
+rename u_pipe.a_v f_hi_av
+rename u_pipe.a_q f_hi_aq
+rename u_pipe.b_v f_hi_bv
+rename u_pipe.b_q f_hi_bq
+rename u_coreB.state f_hi_stB
+rename u_coreB.lr_src f_hi_lrB
+connect -set f_ws_av f_hi_av
+connect -set f_ws_aq f_hi_aq
+connect -set f_ws_bv f_hi_bv
+connect -set f_ws_bq f_hi_bq
+connect -set f_ws_stB f_hi_stB
+connect -set f_ws_lrB f_hi_lrB
+cd ..
+
+[files]
+rtl/q_flit_pipe.v
+rtl/q_echo_gate.v
+rtl/q_rqh_bank.v
+rtl/q_hebb_edge.v
+rtl/q_cell_core.v
+formal/f_fabric_conservation_l12.v

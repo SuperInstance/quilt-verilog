@@ -167,11 +167,17 @@ Runs (all `sby -f`, oss-cad-suite, boolector; probe harnesses committed here):
 - `formal/fabric.conservation.prove.sby` (full harness, prove, depth 55):
   basecase PASS; induction FAIL — engine descends 38→32 without closing (run killed;
   depth-8 probe confirms).
-- Depth-8 probe names the first non-inductive assertion: **line 293, DROP's
-  `f_icnt <= 16`**. Counterexample (`fabric.conservation.probe/engine_0/trace_induct.vcd`):
-  an arbitrary induction state with `f_acc != f_book`, `f_icnt = 16`, and core-B
-  internals unconstrained — no booking strobe is forced next cycle, because the
-  16-cycle bound depends on core/pipe internals invisible to the flat harness state.
+- Depth-8 probe names the first non-inductive assertion: line 293 —
+  **SER's `assert (f_ins <= 1)`** *(corrected 2026-08-30; originally and
+  wrongly recorded here as DROP's `f_icnt <= 16` — see the correction note
+  below; the description of the counterexample state was right, only the
+  line/property attribution was wrong)*. Counterexample
+  (`fabric.conservation.probe/engine_0/trace_induct.vcd`):
+  an arbitrary induction state with `f_ins = 2`, `f_acc = 170`, `f_book = 168`,
+  `f_icnt = 16`, `f_pocc = 0`, and core-B internals unconstrained — two
+  effects simultaneously in service (SER broken) with the DROP countdown at
+  its bound, a state unreachable from reset that k-induction cannot exclude
+  on boundary-visible state alone.
 - `formal/fabric.conservation.prove-t1.sby` (SER/DROP/bookA stripped, only T1 +
   A1 + pipe-capacity + FAN): still FAILS induction. This is the real finding: even
   the flagship ledger identity is not k-inductive on shadow counters alone. Two
@@ -194,6 +200,59 @@ T1/A1 close by induction and DROP/SER follow from L1+L2 plus the 16-cycle struct
 bound. Cross-repo: until then, quilt-deck should keep citing THIS document's BMC-55
 statement as the canonical conservation-invariant description rather than
 paraphrasing it.
+**Correction note (2026-08-30).** The second bullet above originally
+recorded the depth-8 probe's first failure as "line 293, DROP's
+`f_icnt <= 16`". That mislabeled the line. Three-way evidence
+(docs/ACADEMIC-RIGOR.md §3.3, re-run against the elaborated model):
+
+1. `formal/f_fabric_conservation.v` line 293 is `assert (f_ins <= 1);` —
+   **SER**. DROP is the *guarded* assert at line 295
+   (`if (f_acc != f_book) assert (f_icnt <= 16);`).
+2. The elaborated netlist (`fabric.conservation.probe/model/design.il`,
+   lines 8772–8789) contains exactly the assert cells `_v_290_82` (T1),
+   `_v_291_85`, `_v_293_87` (**SER**), `_v_295_90` (**DROP**), `_v_300_92`
+   (A1); the failed witness is `_v_293_87`, and its column range 9–28
+   matches the 20-character SER statement, not the indented DROP guard.
+3. The VCD counterexample's final state — `f_ins = 2`, `f_acc = 170`,
+   `f_book = 168`, `f_icnt = 16`, `f_pocc = 0` — shows SER actually
+   violated (two effects simultaneously in service), which is what an
+   unreachable-from-reset arbitrary induction state produces.
+
+The correction sharpens rather than weakens the finding: the first
+non-inductive assertion is a property of core-B internals the flat
+harness cannot see, which is precisely why L1/L2 whitebox visibility is
+the canonical path named above. The bullet above has been corrected in
+place; this note preserves the record of the mislabeling.
+
+### L1/L2 strengthening attempt (2026-08-30)
+
+Tried the canonical path named above: `formal/fabric.conservation.prove-l12.sby`
+with harness `formal/f_fabric_conservation_l12.v` — the identical model plus
+the L1/L2 lemmas of ACADEMIC-RIGOR §3.4 as whitebox assertions on `u_pipe`
+(resident flit content: `a_q`/`b_q` op/src/dst) and `u_coreB` (`state`,
+`lr_src`), including the one-op-FSM commit exclusivity (a booking strobe
+exists only inside the ST_EFFT→ST_EFFR→ST_EFFP→ST_EFFM→ST_EFFI chain;
+`f_ins != 0` pins core B in that chain). `rtl/` untouched: this Yosys
+implements neither hierarchical references nor `bind`, so the harness
+declares peek wires (`f_ws_*`) that the sby `[script]` connects to the real
+flattened signals (`flatten` + `rename` + `connect`) — the script is part
+of the harness.
+
+Result, honestly: **basecase PASS** (`Status: passed` at 0:00:37 — the
+lemmas hold from reset; a BMC-30 sanity pass also PASSED), **induction
+still FAILS** — run killed at the 15-minute budget with the engine
+descended k = 55→28 without closing (`EXIT=124`). The informative shift:
+a depth-8 probe on the strengthened model names a **new first failure —
+line 378, FAN's `assert (lxA_src == A_ID)`** — where the un-strengthened
+probe's first failure was SER at line 293. The frontier moved off SER/DROP
+and onto core A's emission provenance: `lxA_src` is driven by core-A
+internals (its identity/lx registers) invisible to the boundary harness —
+the same class of whitebox lemma as L1/L2, but for core A. Named for the
+next pass as **L3 (emission provenance at core A):** post-setup, whenever
+A drives `lx_valid`, `lx_src == A_ID` (its own identity register); not
+added here (out of this attempt's L1/L2 scope). The counterexample state
+at step 0: `f_emitA = 3`, `f_pocc = 2`, `f_acc = f_book = 32`, `f_ins = 0`,
+core B resting at ST_IDLE — the garbage lives in core A.
 
 ## 3. `formal/echo_gate.dyadic.sby` — the gate brackets every trace into its dyadic octave
 
