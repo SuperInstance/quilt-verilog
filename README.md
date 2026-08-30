@@ -63,6 +63,7 @@ missing, the targets fail with a pointed hint, not a bare
 `command not found`.
 
 ```sh
+make verify-all # prove it works: every tutorial (T1..T4) end to end
 make test      # RTL testbench suite (iverilog)          — 1-2 min
 make sim       # behavioral Python lane (unittest)       — seconds
 make formal    # all six SymbiYosys proofs               — ~14 min

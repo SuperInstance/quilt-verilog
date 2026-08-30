@@ -1,8 +1,21 @@
 # quilt-verilog — root Makefile (iteration 2, 2026-08-29)
-# One command per lane. PATH pinned to the stock oss-cad-suite location;
-# override with OSSCAD=... if yours lives elsewhere.
-OSSCAD ?= /home/eileen/tools/oss-cad-suite/bin
+# One command per lane. PATH resolution for oss-cad-suite:
+#   1. stock location (below), 2. `oss-cad-suite` on PATH, else a clear error
+#   naming the override variable.
+OSSCAD_DEFAULT := /home/eileen/tools/oss-cad-suite/bin
+ifeq ($(shell test -d /home/eileen/tools/oss-cad-suite/bin && echo y),y)
+OSSCAD := $(OSSCAD_DEFAULT)
+else ifneq ($(shell command -v oss-cad-suite 2>/dev/null),)
+OSSCAD := $(shell dirname "$(shell command -v oss-cad-suite)")
+else
+OSSCAD := $(OSSCAD_DEFAULT)
+endif
 export PATH := $(OSSCAD):$(PATH)
+
+NO_TOOLCHAIN := $(if $(shell test -d /home/eileen/tools/oss-cad-suite/bin && echo y),,$(if $(shell command -v oss-cad-suite 2>/dev/null),,1))
+ifneq ($(NO_TOOLCHAIN),)
+$(error oss-cad-suite not found: set OSSCAD=/path/to/oss-cad-suite/bin (make OSSCAD=... <target>))
+endif
 
 # Tool guard: fail with a hint, not a raw "command not found".
 # Usage inside a recipe: @$(call GUARD,iverilog)
@@ -19,7 +32,7 @@ FORMAL_SBY := formal/cell_core.fair.sby formal/cell_core.tick.sby \
               formal/flit_pipe.fly.sby formal/fabric.conservation.sby \
               formal/echo_gate.dyadic.sby tb/formal/flit_pipe.sby
 
-.PHONY: all test sim formal synth pnr clean
+.PHONY: all test sim formal synth pnr clean verify-all
 
 all: test sim formal synth pnr
 
@@ -41,6 +54,10 @@ formal:
 	  echo "== sby -f $$sby"; \
 	  sby -f $$sby || fail=1; \
 	done; exit $$fail
+
+## verify-all — run every tutorial (T1..T4) end to end.
+verify-all:
+	bash examples/verify.sh
 
 ## synth — yosys iCE40 elaboration of the PnR-converged top (k4b4a8e1).
 ## Elaboration ONLY (~20 s); the measured PnR/bitstream numbers come next:

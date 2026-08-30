@@ -1,0 +1,25 @@
+# CI: run the fast lanes (testbench + Python sim) on push/PR.
+# NOTE: `make formal` is deliberately NOT included — the six SymbiYosys
+# proofs (BMC + k-induction) take far longer than a CI budget allows.
+# Run them locally instead; see docs/ on the formal lane.
+name: ci
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  test-sim:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - name: install oss-cad-suite
+        run: |
+          curl -L https://github.com/YosysHQ/oss-cad-suite-build/releases/download/2024-09-06/oss-cad-suite-linux-x64-20240906.tgz -o ocs.tgz
+          tar xzf ocs.tgz
+          echo "$PWD/oss-cad-suite/bin" >> "$GITHUB_PATH"
+      - name: testbench suite
+        run: make test
+      - name: behavioral sim
+        run: make sim
