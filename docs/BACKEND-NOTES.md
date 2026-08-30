@@ -196,3 +196,49 @@ bash tools/backend/run_all.sh     # fuzz + boot fuzz + cosim + regress (~2 min)
 bash tb/run_suite.sh              # RTL suite, 18/18 PASS at commit
 python3 -m unittest sim.tools.test_tapfabric   # 34/34 with new defaults
 ```
+
+## MODEL-LEDGER — the multi-model backend (amplification round)
+
+Per Casey's amplification ("use many models for the backend, really"):
+the playtest was re-run as a genuinely multi-model exercise after the
+single-model pass. Every voice below answered for real; artifacts in
+`tools/backend/multimodel/runs/` (JSONL with model ids and usage);
+harness in `tools/backend/multimodel/`.
+
+| Model | Role | Contribution |
+|---|---|---|
+| DeepSeek V4-Flash (`deepseek-chat`) | adversarial case generation | 45 invented cases over 4 rounds (incl. a directed round seeded with the session's REAL bug classes, asked for relatives/hybrids): 0 residual crash/wrong-answer finds — the hardened quf.py held. Its NUL-in-argv case is unexecutable by OS design (execve refuses; logged, not a tool bug). It DID find 2 bugs in my fuzz *harness* along the way (malformed-case guards, region-map ordering) — the generator debugged its own executor. |
+| DeepSeek V4-Pro (`deepseek-reasoner`) | blind root-cause reader | Fed the three RTL mismatch evidence packs EXACTLY as first seen (no fix shown). **3/3 correct guilty side AND mechanism**: q_cell RTL + stale-o_w-OR-pollution; RTL + 17-bit wacc wrap; loader FSM + the same-edge NBA race on `have[]`. Independent confirmation of every RTL diagnosis before the fixes were shown. |
+| qwen3:8b (local ollama) | independent oracle (spec-only) | 5 spec-derivation cases: 1 agreement, **4 defensible disagreements** — all spec-ambiguity class (below). |
+| deepseek-r1:8b (local ollama) | independent oracle | 1 case before the runner window closed (32 s answer): **split with qwen3:8b** on the payload-integrity case — the two oracles defended opposite readings. |
+| Seed-2.0-mini (DeepInfra) | adversarial UX user | WROTE the abuse script itself (leading-dash/newline/CR filenames, control-char + 20k-key JSON, stdin pipes, dirs-as-inputs, flag soup; ~30 vectors); we ran it live with stderr unredacted: **0 tracebacks**, every abuse handled. |
+| GLM-5.3 (this session) | orchestration, integration, docs | Ran everything, wrote the harnesses, integrated the verdicts, this ledger. |
+
+**3-way findings (Python vs RTL vs oracle), the class the amplification
+asked for** — every one is a place where the spec underdetermines the
+tool and reasonable readers diverge:
+
+1. *Payload bit-flip, no digest.* qwen3:8b read `verify` as content
+   verification → FAIL; deepseek-r1:8b read it as structural → PASS;
+   the implementation (pre-fix) was PASS. Two defensible readings = the
+   spec never said which. Resolved this session by making both readings
+   representable: digest present → FAIL (content), absent → PASS
+   (structure). qwen3's reading is the one the format needed.
+2. *Trailing garbage after the last section.* Oracle: FAIL; tool+RTL:
+   PASS (GGUF-style tolerance; the loader discards residue by design,
+   and quf_boot's discard path is load-bearing for aligned writers).
+   Still an open spec sentence — worth writing "bytes past declared
+   content are don't-care" into QUF-SPEC §7.
+3. *align larger than the file.* Oracle: FAIL; tool: PASS (offsets
+   need alignment, not the file). Defensible either way; documented.
+4. *More buckets than edge.k.* Oracle: invalid; writer: silently
+   truncates to k (canonical form). The oracle's reading is arguably
+   better — a loud rejection would not hide user data; noted as a
+   weakness candidate (the coercion is at least deterministic and now
+   pinned by the fuzz bench's canonical-form property).
+
+**Availability honesty:** deepseek-r1:8b's runner slot was occupied by
+another consumer for most of the window (single 6 GB VRAM slot, 30/70
+CPU/GPU offload) — it got exactly one oracle question before the lane
+closed, and that answer is the one logged. No voice was faked; the
+absence is the finding.
