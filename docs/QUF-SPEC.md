@@ -330,8 +330,15 @@ scope) and `opencode run --auto` (10 findings: E18 missing +
 `kvcount-lie-11` first-failure correction, `section-count-5` bound fix,
 check-order clause, `version-nonce-ff` endian-byte catch, R12 wording,
 compat softening, mapping nits, decimal mutant names, min-entry sizes).
-All folded. Gatekeeper: DeepInfra wide model, bullshit-test only —
-verdict: PENDING.
+All folded. Gatekeeper (bullshit-test only): DeepInfra was the
+mandated lane but the account's user-set billing limit rejected the call
+(`inference prohibited` — booked, not retried against policy); fallback
+wide model GLM-5.3 via Z.ai, docs inlined, thinking disabled. Verbatim
+final line: **"VERDICT: PASS (no bullshit)"** — the pass independently
+re-derived the golden-vector byte layout (table end 379, ticks ends 556)
+and confirmed every regression entry fires under the stated check order,
+including the `section-count-5` → E11 and `kvcount-lie-11` → E18
+corrections.
 
 ## 6. Sections (v1)
 
