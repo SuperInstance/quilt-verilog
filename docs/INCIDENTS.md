@@ -48,4 +48,12 @@ the tapestry was lost — but see the tension: archive-by-rename protects
 *history*, not *build output*. Distinguishing the two is now part of the
 referee's bench-commit checklist.
 
+**Same-day second verse (adjudication commit itself).** The adjudication
+commit was made with `git add -A` on a multi-lane tree and swept in three
+other lanes' uncommitted work (mutant corpus, quf_epoch.py, wedge-repro TB,
+QUF-SPEC edits). Preserved and named in the amended commit message rather
+than lost — but the rule is now: **explicit paths, never `-A`, on a
+tree shared with live lanes.** Self-attestation and lazy staging are the
+same failure class: provenance claims made without looking.
+
 — adjudication lane, 2026-08-30
