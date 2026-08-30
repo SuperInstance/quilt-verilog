@@ -2,7 +2,8 @@
 
 Every Markdown file in the repo, one line each, grouped by what you're
 trying to do. Generated 2026-08-29 (iteration 1, documentation front
-door). Source of truth for the file list: `find . -name '*.md' -not
+door); re-audited 2026-08-30 (lane A: README rewrite + archived copy
+wired in). Source of truth for the file list: `find . -name '*.md' -not
 -path './obj_dir/*'`. One file can belong to several lanes; each is
 listed under its primary intent.
 
@@ -15,7 +16,7 @@ The README is the front door; this index is the hallway. (`docs/INDEX.md` — th
 A newcomer reading this index top-to-bottom gets a different quilt than
 the one the repo's history built. The intended path:
 
-1. **[README.md](../README.md)** — the front door: The Law, quickstart, measured numbers.
+1. **[README.md](../README.md)** — the front door: the 5+1 opcode model, quickstart that was actually run, measured numbers, honest limitations.
 2. **[docs/THE-TICK.md](THE-TICK.md)** — one tick traced through the RTL, numbers left to right. If you read only one doc after the README, read this one.
 3. **[docs/FOUNDATION.md](FOUNDATION.md)** — the cell axioms the tick walk rests on.
 4. **[docs/QUF-SPEC.md](QUF-SPEC.md)** — how quilt state becomes a file that boots.
@@ -34,7 +35,7 @@ the full shelf; this is the tour.
 
 | file | one line |
 |---|---|
-| [README.md](../README.md) | The front door: The Law, quickstart that was actually run, measured results, docs map. |
+| [README.md](../README.md) | The front door: what this is, the 5+1 opcode model, verified-results table, quickstart with real output, limitations, docs map. |
 | [docs/THE-TICK.md](THE-TICK.md) | One tick traced through the RTL: strobe → decay sweep → leak → fire-test → fanout, numbers left to right. |
 | [docs/DOCTRINE.md](DOCTRINE.md) | The bet: llama.cpp, but Verilog and cellularized — one repo, zero deps, quantized by default, weights are a file. |
 | [docs/FOUNDATION.md](FOUNDATION.md) | The mathematics of the quilt from the beginning: cell axioms D1–D5 and what they buy. |
@@ -116,6 +117,7 @@ the full shelf; this is the tour.
 | file | one line |
 |---|---|
 | [docs/WORLD-CLASS-BRIEF.md](WORLD-CLASS-BRIEF.md) | The standard: what "world class" means for this repo, the known gaps, the iterator protocol (AUDIT → FIX → MEASURE → COMMIT). |
+| [README.archived-20260830.md](../README.archived-20260830.md) | The 2026-08-29-era README, retired intact by the 2026-08-30 lane-A rewrite (kept — archive by rename). |
 | [docs/BACKEND-NOTES.md](BACKEND-NOTES.md) | The adversarial first user's report: 23 bug classes found and fixed, 5 in RTL, with regression counts. |
 | [docs/academic/annals-1905/00-EDITORS-PREFACE.md](academic/annals-1905/00-EDITORS-PREFACE.md) | The editor's preface to the Kaldfjord Circle annals (1903–1905). |
 | [docs/academic/annals-1905/01-the-tally-box.md](academic/annals-1905/01-the-tally-box.md) | Memoir I: on the tally-box and its six verbs. |
