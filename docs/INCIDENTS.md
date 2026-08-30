@@ -57,3 +57,16 @@ tree shared with live lanes.** Self-attestation and lazy staging are the
 same failure class: provenance claims made without looking.
 
 — adjudication lane, 2026-08-30
+
+**Referee addendum (same morning, third verse — orphaned sibling commit).**
+§5a lane reported commit `74109a4`; bench check found it NOT reachable from
+any branch. `git cat-file` shows it exists: it is a same-second sibling
+(08:04:43) of the adjudication commits — three lanes committed concurrently,
+last ref-write won, `74109a4` orphaned. Diff vs HEAD confirms **zero content
+loss** (its QUF-SPEC delta is fully contained in HEAD via the `-A` sweep).
+New rule alongside "explicit paths, never -A": **one committer at a time on a
+shared tree** — lanes must `git lock`-style serialize or commit only their own
+paths and rebase-check (`git log -- <paths>`) before claiming a hash. A hash
+claimed must ALSO be checked reachable, not merely existent.
+
+— referee bench, 2026-08-30
