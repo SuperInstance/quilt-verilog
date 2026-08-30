@@ -32,7 +32,7 @@ FORMAL_SBY := formal/cell_core.fair.sby formal/cell_core.tick.sby \
               formal/flit_pipe.fly.sby formal/fabric.conservation.sby \
               formal/echo_gate.dyadic.sby tb/formal/flit_pipe.sby
 
-.PHONY: all test sim formal synth pnr clean verify-all
+.PHONY: all test sim formal formal-audit formal-audit-check synth pnr clean verify-all
 
 all: test sim formal synth pnr
 
@@ -55,6 +55,15 @@ formal:
 	  sby -f $$sby || fail=1; \
 	done; exit $$fail
 
+## formal-audit — deterministic verdict snapshot from existing workdirs (no solvers).
+## Writes formal/AUDIT-SNAPSHOT.json + table. `make formal-audit-check` diffs vs committed.
+formal-audit:
+	python3 formal/audit_snapshot.py
+
+formal-audit-check:
+	python3 formal/audit_snapshot.py --check
+
+
 ## verify-all — run every tutorial (T1..T4) end to end.
 verify-all:
 	bash examples/verify.sh
@@ -69,7 +78,6 @@ drift:
 	  rtl/q_hebb_edge.v rtl/q_echo_gate.v rtl/q_rqh_bank.v rtl/q_cell_core.v \
 	  rtl/q_cell.v rtl/q_io_port.v rtl/q_fabric_top.v tb/tb_decay_drift.v
 	vvp tb/run/tb_decay_drift.vvp
-
 
 ## synth — yosys iCE40 elaboration of the PnR-converged top (k4b4a8e1).
 ## Elaboration ONLY (~20 s); the measured PnR/bitstream numbers come next:
