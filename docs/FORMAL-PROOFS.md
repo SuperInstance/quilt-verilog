@@ -157,6 +157,44 @@ originally 40 s).
 
 ---
 
+### Prove-mode attempt (2026-08-29, expert-nudge lane)
+
+Followed the honest-broker question: can conservation lift from BMC-55 to `mode prove`?
+Tried. It cannot — yet — and the induction failures are informative.
+
+Runs (all `sby -f`, oss-cad-suite, boolector; probe harnesses committed here):
+
+- `formal/fabric.conservation.prove.sby` (full harness, prove, depth 55):
+  basecase PASS; induction FAIL — engine descends 38→32 without closing (run killed;
+  depth-8 probe confirms).
+- Depth-8 probe names the first non-inductive assertion: **line 293, DROP's
+  `f_icnt <= 16`**. Counterexample (`fabric.conservation.probe/engine_0/trace_induct.vcd`):
+  an arbitrary induction state with `f_acc != f_book`, `f_icnt = 16`, and core-B
+  internals unconstrained — no booking strobe is forced next cycle, because the
+  16-cycle bound depends on core/pipe internals invisible to the flat harness state.
+- `formal/fabric.conservation.prove-t1.sby` (SER/DROP/bookA stripped, only T1 +
+  A1 + pipe-capacity + FAN): still FAILS induction. This is the real finding: even
+  the flagship ledger identity is not k-inductive on shadow counters alone. Two
+  missing strengthening lemmas, now named precisely:
+  - **L1 (pipe content):** every flit resident in or emitted by the pipe post-setup
+    has `op == OP_EFF`, `src == A_ID`, `dst == B_ID`. Without it, an induction state
+    may pop a non-EFF flit (`f_pop` decrements `f_pocc` without incrementing `f_acc`),
+    breaking T1; the shadow occupancy counter is only tied to real pipe contents
+    through history k-induction cannot see.
+  - **L2 (command provenance):** core B's `hb_cmd` strobes only occur as commits of
+    genuinely accepted effect ops. Without it, an arbitrary core-B state can mint a
+    booking strobe with no matching `f_effB`, incrementing `f_book` unbounded and
+    breaking A1.
+
+So the BMC-55 prose worst-case argument stays the honest statement for now. The
+canonical path to `mode prove` is: prove L1 and L2 as auxiliary invariants over the
+pipe/core state (likely needing visibility past the no-XMR harness boundary, e.g.
+whitebox assertions inside `q_flit_pipe`/`q_cell_core` under a FORMAL define), then
+T1/A1 close by induction and DROP/SER follow from L1+L2 plus the 16-cycle structural
+bound. Cross-repo: until then, quilt-deck should keep citing THIS document's BMC-55
+statement as the canonical conservation-invariant description rather than
+paraphrasing it.
+
 ## 3. `formal/echo_gate.dyadic.sby` — the gate brackets every trace into its dyadic octave
 
 **DUT**: `rtl/q_echo_gate.v` (PW=16). **Strategy**: BMC, depth 25 (>5 leak
