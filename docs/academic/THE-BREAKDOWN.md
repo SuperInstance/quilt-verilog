@@ -48,7 +48,7 @@ Bonus: this proof, on its first run, **found a real RTL defect** — a one-cycle
 
 **PROOF.**
 - (a) is the FSM structure itself: `ST_FIRE` uses pre-leak `act`, zeroes it, fans out; `ST_EFFR/ST_EFFI` integrate `act += sat(w·dat >> 15)` and book the cofire via `hb_cmd 101`; decay happens only in tick service (`ST_TLEAK`). The separation is enforced by construction and witnessed by the formal proofs of §1 (DROP: an accepted effect *must* book; SER: one commit at a time) and §12 (Q2: ticks cannot be starved, so decay cannot be deferred by traffic).
-- (c) is a *reduction*, not a new theorem: with `k(d) = F(d)/Fmax`, the class rule `g = 15 − msb(F)` gives `2^−g ∈ (k, 2k]` — the same aligned-phase overstatement staircase that error-envelopes.md Theorem 1 already bounds (§3 below). Stated with derivation in q_echo_gate.v:18–22; the TB checks the bracket bit-exactly.
+- (c) is a *reduction*, not a new theorem: with `k(d) = F(d)/Fmax`, the class rule `g = 15 − msb(F)` gives `2^−g ∈ (k, 2k]` — the same aligned-phase overstatement staircase that error-envelopes.md Theorem 1 already bounds (§3 below). Stated with derivation in q_echo_gate.v:18–22; the TB checks the bracket bit-exactly. *(Return-leg pin, RETURN.md R2: Fmax = 2^PW — with the literal refill value 2^PW − 1 the bracket's open lower edge fails by one quantum at F = Fmax; the exact integer form, and the form both the TB and `formal/echo_gate.dyadic.sby` prove, is the octave form 2^(PW−1) ≤ F ≪ g < 2^PW.)*
 
 **MACHINE CHECK.**
 - `tb/tb_q_echo_gate.v` — **PASS** (re-verified this session): reset; refill; leak recurrence for KLE ∈ {1,2,3}; real-arithmetic envelope; **dyadic class bracket** `2^−g ∈ (k, 2k]`; snap hysteresis; **fire-vs-leak priority**; **disabled mode**; dead-trace semantics.
@@ -406,7 +406,7 @@ python3 tools/verifies/c3_fold_bench.py   # expect RESULT: PASS — 565,551 chec
                                           #    ROM hiding advantage exactly 0, fiber entropy,
                                           #    Omega(c), Merkle witnesses; ~20 s)
 ```
-Deny by: any FAIL line (printed loudly with the instance). A schedule below the floor falsifies RF-T2; a silent structural-nonce join falsifies Theorem 3; a fiber pair answered after compaction falsifies FC-T1. The enumerators are bounded — their runs print the instance bounds; the general theorems remain pen (§6–§8 proofs). Remaining falsifier still on paper: §3's fuzz harness (gap B2).
+Deny by: any FAIL line (printed loudly with the instance). A schedule below the floor falsifies RF-T2; a silent structural-nonce join falsifies Theorem 3; a fiber pair answered after compaction falsifies FC-T1. The enumerators are bounded — their runs print the instance bounds; the general theorems remain pen (§6–§8 proofs). Remaining falsifier still on paper: §3's fuzz harness (gap B2). **The return leg is recorded in `docs/academic/RETURN.md`** — what the metal taught the math: two in-source amendments (RF-T2's inward-arm legality, §2(c)'s Fmax pin), six forced decisions, the FAILs and their lessons, and the changed-things ledger.
 
 ### A.8 The no-float scans
 ```
@@ -457,6 +457,6 @@ sed -n '32p;34p;564p' synth/pnr_k4b4a8e1.log                   # LC util / IO / 
 - **Open gaps: 7 + residues** (B1, B2, B6, B8, B9, B10, B12 open; B7 half-closed; B3/B4/B5 closed-bounded with residues; B11 closed via `7375afb` + the PIPE_EFF=1 re-proof), each with its exact closing artifact and a size estimate.
 - **Own goals on display, by design:** the 9,100×→18,262× constant correction (§4), the snap-transaction balance repair (§5), the hyperbola envelope direction inversion + floor-tail failure 2,713/3,825 (§3 lineage), the ci_ready silent-drop caught by the proofs themselves (§1, §12), the TB that caught iverilog's real-conversion rounding (§5), and the mathmetal lane's four harness bugs caught by the checks' own failure paths before any of them passed (§6×2, §7×2, §8×2, plus the echo-gate sby's same-edge sampling and 16-bit shift overflow) — a dossier that never caught its own errors would be asking for trust; this one asks for a terminal.
 
-*Mathmetal lane addendum (2026-08-29): the three academic verifiers and the echo-gate sby were built to falsify, not to decorate — every artifact here has bit its author at least once during construction, which is the cheapest evidence that the checks are not ceremonial. The bounded enumerators print their bounds on every run; bounded checks are bounded, and the general theorems remain where they were proved.*
+*Mathmetal lane addendum (2026-08-29): the three academic verifiers and the echo-gate sby were built to falsify, not to decorate — every artifact here has bit its author at least once during construction, which is the cheapest evidence that the checks are not ceremonial. The bounded enumerators print their bounds on every run; bounded checks are bounded, and the general theorems remain where they were proved. The round trip's return cargo — where the metal changed the math — is `docs/academic/RETURN.md`: verification changed both ends.*
 
 *Breakdown lane, 2026-08-29. Deny by running. The commands are above.*
