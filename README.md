@@ -10,7 +10,7 @@ map at the bottom is the hallway.
 
 1. **Pure Verilog-2005 (IEEE 1364-2005), synthesizable subset.** No vendor primitives, no IP, no `initial` blocks in rtl/ (testbenches excepted), no SystemVerilog in rtl/.
 2. **Everything is a cell.** The quilt opcodes (qm_bind / qm_link / qm_effect / qm_view / qm_tick) are the only way anything touches anything.
-3. **Intelligence lives at the bottom.** Hebbian edge updates, power-law decay, cosine/vMF estimation, dial state — implemented as plain RTL modules, fixed-point, streaming.
+3. **Intelligence lives at the bottom.** Hebbian edge updates, power-law/hyperbolic decay, dial state — implemented as plain RTL modules, fixed-point, streaming. The cosine/vMF reading of those weights is defined in the docs (`docs/academic/`); its dedicated readout is reserved in v1. One tick, traced: [docs/THE-TICK.md](docs/THE-TICK.md).
 4. **Any IO can enter a cell.** One generic ingress/egress contract; adapters are thin and dumb.
 5. **Verified or it doesn't exist.** Every module ships with a testbench runnable on open tools (iverilog/verilator). No toolchain lock-in, ever.
 
@@ -25,15 +25,24 @@ map at the bottom is the hallway.
 - `tools/` — QUF reference, backend fuzz, edge benches, gc-verifies
 - `docs/` — decisions, math notes, floorplans (see `docs/INDEX.md`)
 
-## Quickstart — every command below was run on 2026-08-29 (iteration 1)
+## Quickstart — one command per lane (Makefile, verified 2026-08-29 iteration 2)
 
 Toolchain: stock oss-cad-suite at `/home/eileen/tools/oss-cad-suite/bin`
 (Icarus 13.0, Verilator, Yosys 0.47+22, SymbiYosys 0.47, boolector,
-nextpnr-ice40 0.7-131, icepack, icetime). Put it on PATH first:
+nextpnr-ice40 0.7-131, icepack, icetime). The Makefile pins that PATH
+itself — no export needed. All four targets below were run and verified
+green on 2026-08-29 (iteration 2); the full verification story, per-lane
+caveats, and honest gaps are in `docs/VERIFICATION.md`.
 
 ```sh
-export PATH=/home/eileen/tools/oss-cad-suite/bin:$PATH
+make test      # RTL testbench suite — 18/18 PASS
+make sim       # behavioral Python lane — 34/34 OK
+make formal    # all six SymbiYosys proofs — PASS
+make synth     # yosys iCE40 elaboration of the PnR-converged top — exit 0, ~20 s
+make all       # all four
 ```
+
+Equivalent commands, run directly (what the targets invoke):
 
 ### 1. Simulation — the RTL testbench suite
 
@@ -90,12 +99,12 @@ was re-verified end-to-end through PnR on 2026-08-29: serialized
 front-end, UP5K sg48, NCELL=1 → 4232/5280 LC (80.1%), 37/96 IO, fmax
 17.36 MHz, PASS at the 12 MHz target.
 
-### Missing Makefile targets (found 2026-08-29)
+### Makefile — now real (2026-08-29, iteration 2)
 
-There is **no Makefile in the repo** — `make test`, `make formal`, and
-`make synth` all fail today. The working commands are the four blocks
-above. Wrapping them in a root Makefile is an open lane (gap #2 in
-`docs/WORLD-CLASS-BRIEF.md`); until then, run the commands directly.
+The root Makefile exists and every target was run green:
+`make test` (18/18), `make sim` (34/34), `make formal` (6× PASS),
+`make synth` (yosys exit 0). See `docs/VERIFICATION.md` for what each
+lane proves and does not prove.
 
 ## Measured results — re-verified 2026-08-29 (iteration 1)
 
@@ -123,6 +132,7 @@ original run; both PASS).
 ## Where the depth lives — docs map
 
 - `docs/INDEX.md` — **every document in the repo, one line, grouped by reader intent** (understand / verify / build / history)
+- `docs/VERIFICATION.md` — **the complete verification guide**: every lane's command, pass counts, timings, and what is NOT covered
 - `docs/QUF-SPEC.md` — the file format: QUF is the GGUF of cellular silicon
 - `docs/DOCTRINE.md` — the bet: llama.cpp, but Verilog and cellularized
 - `docs/SYNTHESIS.md` → `docs/SYNTHESIS-FPGA.md` — the mechanisms, then the metal: the iCE40 wall, the PIPE_EFF retime, the ECP5 ladder, the bitstream

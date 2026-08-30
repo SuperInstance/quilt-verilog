@@ -10,11 +10,32 @@ The README is the front door; this index is the hallway. (`docs/INDEX.md` — th
 
 ---
 
+## Suggested reading order (the intended path, not the alphabetical one)
+
+A newcomer reading this index top-to-bottom gets a different quilt than
+the one the repo's history built. The intended path:
+
+1. **[README.md](../README.md)** — the front door: The Law, quickstart, measured numbers.
+2. **[docs/THE-TICK.md](THE-TICK.md)** — one tick traced through the RTL, numbers left to right. If you read only one doc after the README, read this one.
+3. **[docs/FOUNDATION.md](FOUNDATION.md)** — the cell axioms the tick walk rests on.
+4. **[docs/QUF-SPEC.md](QUF-SPEC.md)** — how quilt state becomes a file that boots.
+5. **[docs/VERIFICATION.md](VERIFICATION.md)** — how claims above are proven; then `docs/academic/THE-BREAKDOWN.md` for the dossier (gaps and failures first-class).
+6. **[docs/BACKEND-NOTES.md](BACKEND-NOTES.md)** — what an adversarial first user found; the honest weakness list.
+
+Then branch by appetite: theory → the `docs/academic/` spine
+(quilt-calculus → GENERAL-CALCULUS → error-envelopes); applications →
+SEMANTIC-TOWER → BACK-DECK-APP → TAP-FABRIC; metal → SYNTHESIS →
+SYNTHESIS-FPGA → FPGA-BOOT → CHIP-MATRIX. The Understand table below is
+the full shelf; this is the tour.
+
+---
+
 ## Understand — what this is, why it exists, and the ideas
 
 | file | one line |
 |---|---|
 | [README.md](../README.md) | The front door: The Law, quickstart that was actually run, measured results, docs map. |
+| [docs/THE-TICK.md](THE-TICK.md) | One tick traced through the RTL: strobe → decay sweep → leak → fire-test → fanout, numbers left to right. |
 | [docs/DOCTRINE.md](DOCTRINE.md) | The bet: llama.cpp, but Verilog and cellularized — one repo, zero deps, quantized by default, weights are a file. |
 | [docs/FOUNDATION.md](FOUNDATION.md) | The mathematics of the quilt from the beginning: cell axioms D1–D5 and what they buy. |
 | [docs/ABSTRACTION-MATH.md](ABSTRACTION-MATH.md) | Hardware abstraction mathematics: dyadic staircases, traced monoidal wiring, the graded interface. |
@@ -46,6 +67,7 @@ The README is the front door; this index is the hallway. (`docs/INDEX.md` — th
 
 | file | one line |
 |---|---|
+| [docs/VERIFICATION.md](VERIFICATION.md) | The complete verification guide: every lane's command, expected pass counts, measured timings, and the honest not-covered list. |
 | [formal/README.md](../formal/README.md) | The proof suite's contract: every .sby, its invariant, verdict, runtime, environment assumptions (E1–E4), and the RTL defects the proofs forced. |
 | [sim/README.md](../sim/README.md) | The behavioral lane: Python prototypes over the same QUF, tap-fabric bridge, and how to run it. |
 | [tools/gc-verifies/README.md](../tools/gc-verifies/README.md) | GC-METAL lane: the five GENERAL-CALCULUS §8 benches, their check counts and bounds, and the regression guard. |
