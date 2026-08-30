@@ -104,8 +104,8 @@ def canon(doc):
     }
 
 
-def prop_roundtrip(iters=600):
-    rng = random.Random(0xC0FFEE)
+def prop_roundtrip(iters=600, seed=0xC0FFEE):
+    rng = random.Random(seed)
     for i in range(iters):
         doc = rand_doc(rng)
         try:
@@ -263,8 +263,8 @@ def classify_offsets(data, parsed):
     return regions
 
 
-def prop_corrupt(iters=40, files=6):
-    rng = random.Random(0xBADC0DE)
+def prop_corrupt(iters=40, files=6, seed=0xBADC0DE):
+    rng = random.Random(seed)
     regions_all = {}
     for fi in range(files):
         doc = rand_doc(rng)
@@ -379,8 +379,14 @@ def prop_rebuild_align():
 
 
 def main():
-    print("== A: round-trip properties (600 random configs) ==")
-    prop_roundtrip()
+    # Second-generation pass support: argv[1]=roundtrip iters,
+    # argv[2]=seed base (default: pinned discovery values).
+    rt_iters = int(sys.argv[1]) if len(sys.argv) > 1 else 600
+    seed_base = int(sys.argv[2], 0) if len(sys.argv) > 2 else 0
+    print("== A: round-trip properties (%d random configs, seed base %d) =="
+          % (rt_iters, seed_base or 0xC0FFEE))
+    prop_roundtrip(iters=rt_iters,
+                   seed=(0xC0FFEE + seed_base) if seed_base else 0xC0FFEE)
     print("== B: invalid configs rejected loud ==")
     prop_invalid()
     print("== C: corruption sweep (40 x 6 files) + truncation ==")

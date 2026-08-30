@@ -197,6 +197,29 @@ bash tb/run_suite.sh              # RTL suite, 18/18 PASS at commit
 python3 -m unittest sim.tools.test_tapfabric   # 34/34 with new defaults
 ```
 
+## Second-generation pass (2026-08-29, devil-nudge)
+
+Objection booked: a regression bench built from caught bugs only proves
+those are fixed. Re-ran all three fuzzers against HEAD with NEW seed
+bases at 2× discovery volume. All three fuzzer mains now take optional
+seed/scale argv (pinned discovery values unchanged when omitted):
+
+- `fuzz_quf.py 1200 0x6E276832` — 1200/1200/1200/1200 round-trip,
+  14,976/14,976 truncation caught, 0 findings.
+- `boot_fuzz.py 0xF00D5EED` — 235 cases (116 must-boot, 106
+  fail-static, 13 hold-wait): 0 half-loads, **0 split-brains**.
+- `cosim_cell.py 0x5EED5EED 120` — 128 programs, 11,105 ops,
+  **22,210 view checkpoints bit-exact (100%)**, 893 fire events matched.
+
+**Clean. The hardening claim now has second-generation evidence.**
+
+Coverage residue noted (same nudge): tb_serfabric's QUF has 3 edges but
+all-zero buckets — it proves multi-edge BOOT byte-exact, not the
+multi-edge wsum readback seam where the OR-mux lived. That seam is
+covered at cell level by cosim directed program 7 + the random-program
+wsum checkpoints above; a serfabric-level nonzero-bucket case is
+future work, not a gap in the bit-exactness claim.
+
 ## MODEL-LEDGER — the multi-model backend (amplification round)
 
 Per Casey's amplification ("use many models for the backend, really"):

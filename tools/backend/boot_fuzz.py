@@ -89,8 +89,8 @@ def expect_for(stream):
     return BOOT
 
 
-def build_cases():
-    rng = random.Random(0xB007F02)
+def build_cases(seed=0xB007F02):
+    rng = random.Random(seed)
     cases = []                          # (exp, bytes, dials or None, tpw)
 
     def add(stream, exp=None, doc=None):   # doc: kept for call-site clarity
@@ -221,7 +221,9 @@ def run_tb():
 
 
 def main():
-    cases = build_cases()
+    # Second-generation pass: argv[1]=seed override (default: pinned 0xB007F02).
+    seed = int(sys.argv[1], 0) if len(sys.argv) > 1 else 0xB007F02
+    cases = build_cases(seed)
     path = write_manifest(cases)
     nfail = sum(1 for c in cases if c[0] == FAIL)
     nboot = sum(1 for c in cases if c[0] == BOOT)

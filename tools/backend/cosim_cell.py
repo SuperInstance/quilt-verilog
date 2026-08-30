@@ -334,9 +334,13 @@ def run_tb():
 
 
 def main():
-    rng = random.Random(0xC0511)
+    # Second-generation pass: argv[1]=seed, argv[2]=n random programs
+    # (defaults: pinned discovery values).
+    seed = int(sys.argv[1], 0) if len(sys.argv) > 1 else 0xC0511
+    n_random = int(sys.argv[2]) if len(sys.argv) > 2 else 60
+    rng = random.Random(seed)
     progs = gen_directed()
-    for i in range(60):
+    for i in range(n_random):
         mode = i % 4 == 3                   # every 4th: hyperbola MODE=1
         p = gen_program(rng, rng.randrange(40, 140), mode)
         if mode:
