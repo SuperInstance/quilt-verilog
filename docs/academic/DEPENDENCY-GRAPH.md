@@ -8,6 +8,8 @@
 
 **Expansion sweep (same day, evening):** four academic-expansion papers landed (`RHO-F-FLOOR.md`, `DRIFT-AS-PREFILTER.md`, `FOLD-COVERED.md`, `DENY-BY-RUNNING.md`); this document extends the audit to them — **§2.5** (full inventory, all four registries), **§4** (expansion sweep findings: 0 content leaps, 1 declared forward ref, 2 flagged source-corrections), mermaid §3 (EXP subgraph + edges). Gap G4 registers their unexecuted benches.
 
+**Generals sweep (same day, night):** `GENERAL-CALCULUS.md` landed (the capstone: the abstract cell calculus, quilt-shape axioms Q1–Q5, four generalization axes, the product theorem, the compiler correspondence, four conjectures with registered falsifiers); this document extends the audit to it — **§2.6** (full inventory), **§4** (generals sweep findings: 0 content leaps, 0 forward refs, 1 proof-method declaration [proof-inspection lemmas GC-L1/L2, self-graded]), mermaid §3 (GC node + edges). Gap G5 registers its unexecuted benches.
+
 ---
 
 ## 1. Method
@@ -215,6 +217,31 @@ Four papers landed after the G1 closure; each is audited here on the same rule (
 | DB-P3/P3′ | RQH teeth (three properties) · evaluator-freshness trap | DENY §4/§7 | error-envelopes §3/§7.1; RFF §7 | yes | the falsification history argued as bite/non-ceremony/load-bearing-predictions; the trap cross-graded (hazard register) |
 
 **Cross-paper reference audit:** RHO-F-FLOOR and DRIFT-AS-PREFILTER mutually cite (floor ↔ feasibility boundary; cost laws ↔ floor bracket). Every load-bearing consumption is *restated* in the consuming paper (RF-L3 restates DA-L1's endpoints; DA-T6 cites the ρF < ε₀ boundary but the boundary theorem lives in RFF §3 and DRIFT needs only the inequality, stated as a hypothesis there) — no circularity, no leap. FOLD and DENY cite the others only as provenance. **Content leaps found: 0. Benign one-way forward refs: 1 (FC-T1(c) → §5, declared in-text).**
+
+### 2.6 GENERAL-CALCULUS.md (`GC`) — generals-lane inventory
+
+The capstone abstracts the monograph's concrete system into **signature / skeleton / interpretation** (GC-D1–D3) with five **quilt-shape axioms** Q1 locality, Q2 link-respect, Q3 effectfulness, Q4 totality (+Q4⁺ bounded), Q5 tickedness (GC-D4–D8); `QS` = the class (GC-D9). Every formal object is either new (the axioms, the span/product, the morphism theory) or a restatement from §2's self-contained preliminaries (GC-P0.1–P0.8, which restate CALC D1/D4/D6/D7/D9/D14/D18 — the restatement ledger was checked against the sources, identical in content; the sixth verb `qm_forget` is grounded in quilt-mhs's `forget`/`ForgetReceipt` and `rtl/quf_boot.v`'s fail-static discipline, per CULTURE-DEEP-DIVE's "5+1 opcodes" line).
+
+| ID | Concept | Where | Depends on | Earlier? | Status / disposition |
+|---|---|---|---|---|---|
+| GC-P0.1–P0.8 | self-contained preliminaries (cell/ledger/runs/links/views/tick/encoding/6-verb signature) | §2 | CALC D1/D4/D6/D7/D9/D14/D18 restated | yes (restated in-doc) | content-match verified vs monograph; the +1 verb documented (forget = booked reversal + receipt) |
+| GC-D1–D3 | signature · skeleton · interpretation | §3 | P0 family | yes | **new** — the abstraction layer |
+| GC-D4–D8 | Q1–Q5 axioms | §3 | D2, D3, P0 family | yes | **new** — locality as signature-closedness is the notable formulation |
+| GC-D9 / GC-T1 | QS class · **instantiation theorem** (5+1 ∈ QS) | §3 | D1–D8, P0.8, CALC A1–A7 (restated in P0 preamble) | yes | axiom-by-axiom verification against the monograph's own definitions — **the bridge between abstract and concrete, proved** |
+| GC-T2 | organ minimality (each verb load-bearing) | §3 | D1–D9, CALC T-family | yes | six per-verb failure exhibits; honestly scoped as *organ* (not algebraic) independence |
+| GC-T3 | arity-blind conservation (n-ary links survive) | §4.1 | CALC T1/T2 proof *inspection* | yes | **proof-inspection lemma** — method declared in §8; the inspection claim (no arity use in the conservation proofs) is checkable against the cited proofs |
+| GC-X1 / GC-T4 | phantom-link counterexample · escrowed-consent repair | §4.1 | P0.2/P0.4, D5, D8 | yes | **new**; escrow transaction arithmetic checked balanced per line |
+| GC-T5 / GC-X2 / GC-T6 | typing-as-refinement · signedness break · types-in-digest repair | §4.2 | D3–D9, CALC T11 | yes | refinement argument standard; GC-X2 concrete (0xC8 u8/i8) |
+| GC-L1 / GC-X3 / GC-T7 | no-commutativity lemma · mirror-divergence counterexample · FIFO repair | §4.3 | CALC T1/T2/T4/FOLD FC-L1–FC-P2 | yes | GC-L1 second proof-inspection lemma; GC-X3's two-line witness is FC-P2(b)'s shape generalized to effects (kinship declared in-doc); FIFO repair = op-CRDT causal-delivery restated, cited |
+| GC-D10 / GC-L2 / GC-X4 / GC-T8 | discipline classes · tick erasure · starvation · wavefront eager simulation | §4.4 | P0.3, D8, CALC A6/T6/T7 | yes | GC-L2 third inspection lemma; GC-T8 proved (eager construction); buffering price honestly deferred to GC-C2 |
+| GC-D11/D12 / GC-T9 | adapter span · product · **product theorem** | §5 | D1–D9, P0.4/P0.5, CALC D13/D18 | yes | **new and proved**; span conditions each individually shown necessary (drop-encoding→X2, drop-consent→X1, drop-thinness→Q1); heterogeneous-tick deadband corollary proved inline |
+| GC-D13 / GC-T10 / GC-T11 / GC-X5 | morphism (faithful M1–M4) · composition+image · zoom-is-faithfulness · the fourth place | §6 | D1–D9, CALC D18/P1/P2, TOWER S-D10/S-T7 | yes | **new and proved**; M3 booking-preservation is B9/T10(b) lifted to maps; GC-X5 is the pre-B6/B8 world exhibited as the counterexample |
+| GC-P1 | substrate table = quilt-shape witness kit | §6.3 | TOWER S-K1, D4–D8 | yes | row↔axiom bijection argued row-wise |
+| GC-P2 + §6.4 table | the Split formalized; lineage placed as partial interpretations | §6.4 | GC-T2, LINEAGE §1–§5 | yes | historical claims cite LINEAGE's primary-source registry as provenance; organ table is checkable per source |
+| GC-C1–C4 | four conjectures w/ registered falsifiers | §7 | all of the above | yes | house style; each falsifier is an executable artifact spec; grades honest ((a)-halves proved where they exist: GC-T2, GC-T8, GC-T9) |
+| GC §8 | five benches to assertion level | §8 | — | — | registered; unexecuted → gap **G5** |
+
+**Generals-sweep findings: 0 content leaps. 0 forward references. 3 declared proof-inspection lemmas (GC-T3, GC-L1, GC-L2) — a *method* (auditing the monograph's proofs for what they consume), self-graded in §8 as checkable by re-reading the cited proofs. Term drift: none — canonical names (§7.2) adopted verbatim; the Q1–Q5 axiom names are new vocabulary, defined at first use (GC-D4–D8).**
 
 ---
 
@@ -434,6 +461,30 @@ graph TD
 
     classDef exp fill:#cdf,stroke:#46b,stroke-width:2px;
     class RFF,DAC,FLD,DBR exp;
+
+    subgraph GC["GENERAL-CALCULUS.md (generals, capstone)"]
+        GCA["GC-D1–D9 signature/skeleton/<br/>interpretation + Q1–Q5 axioms<br/>(QS class)"]
+        GCT1["GC-T1 instantiation: 5+1 ∈ QS<br/>GC-T2 organ minimality"]
+        GCAX["GC axes: escrow (X1/T4),<br/>typing (T5/X2/T6), FIFO (L1/X3/T7),<br/>tick (L2/X4/T8)"]
+        GCPROD["GC-T9 product theorem<br/>(span composition)<br/>+ snap-pair instance"]
+        GCMOR["GC-T10/T11 faithful morphisms,<br/>zoom-is-faithfulness (X5)<br/>+ lineage as partial interpretations"]
+        GCC["GC-C1–C4 conjectures<br/>(sufficiency, synchrony,<br/>span necessity, snap normal form)"]
+    end
+
+    CD1c --> GCA
+    CA --> GCA
+    CT12 --> GCT1
+    CT4c --> GCAX
+    CT5c --> GCPROD
+    FLD --> GCAX
+    CD15c --> GCPROD
+    CT10 --> GCMOR
+    L0c --> GCMOR
+    CJ --> GCMOR
+    GCA --> GCT1 --> GCAX --> GCPROD --> GCMOR --> GCC
+
+    classDef genclass fill:#e6ccff,stroke:#7b2d8b,stroke-width:2px;
+    class GCA,GCT1,GCAX,GCPROD,GCMOR,GCC genclass;
     classDef calc fill:#ddf,stroke:#46b,stroke-width:2px;
 ```
 
@@ -494,6 +545,8 @@ graph TD
 
 **Expansion-paper sweep (2026-08-29, same day, after G1 closure).** Full inventory in §2.5. Findings: **0 content leaps** across the four papers; 1 benign declared forward reference (FC-T1(c) → its §5); 2 flagged **corrections-of-source** carried honestly in-document (RFF-C1: the Thm 5(iii) sketch's point-move adversary under-delivers the claimed band in ℝⁿ — repaired by the radial metric perturbation, with the ≤ 2× overclaim quantified; FC-P2: walk-state honesty strengthened from balance-fold-relative to no-fold-any-size). Mutual RFF↔DAC citations are non-circular (each restates what it consumes). Term drift: none new — the papers adopt the canonical names of §7.2 and the CALC registry verbatim.
 
+**Generals sweep (2026-08-29, night).** Full inventory in §2.6. Findings: **0 content leaps; 0 forward references**; 3 declared **proof-inspection lemmas** (GC-T3, GC-L1, GC-L2 — the method: auditing the monograph's proofs for which properties they *consume*, with the audit itself re-checkable; a new lemma class, honestly distinct from both proof and conjecture, graded in GC §8). One notable epistemic event: the capstone **re-grades an informal tower claim as a theorem's hypothesis** — "language below the horizon" becomes faithfulness (M1–M4) of a morphism, and the pre-B6/B8 world is exhibited as the counterexample GC-X5 rather than an assertion. No source corrections required: the concrete instantiations GC-T1/GC-T2 verified against the monograph without finding drift (cell tuple, axioms, snap names — all §7.2-canonical).
+
 ### Explicitly informal / open / conditional (recorded, not leaps)
 
 - I1: Backend theorem (marked informal; asterisk → P1).
@@ -511,6 +564,7 @@ graph TD
 - **No undefined term remains in a proof.** The only cited-but-unformalized objects are: Laws 1–5 (defined in README — pointer added), SYNTHESIS I1/I2/Q2/Q3 (defined and enforced in SYNTHESIS; machine-proof pending and honestly flagged there), QUF-SPEC, ABSTRACTION-MATH, and the ai-writings papers (external companions, cited by name).
 - **G1 closed (re-sweep):** `quilt-calculus.md` is audited (§2.3). **0 content leaps**; 5 benign forward refs (CF1–CF5); 5 drift notes (DR1–DR4, N2) all reconciled in §7 — none affects any proof's validity. The calculus independently re-derives or upgrades B1–B10's content (B9 and CALC-T10(b) even converge on the same four-legged snap repair from independent trees) and adds three genuinely new closures: CALC-T3(c) tolerance additivity, CALC-T6 k-chain freshness composition, CALC-T10(c) linear snap-debt bound. The "no leaps" verdict now covers **all three committed formal docs**.
 - **Expansion papers audited (2026-08-29 evening):** the four academic-expansion papers (§2.5) — RHO-F-FLOOR, DRIFT-AS-PREFILTER, FOLD-COVERED, DENY-BY-RUNNING — pass the same bar: every dependency defined earlier or restated in-document, 0 content leaps, 1 declared forward ref, 2 honest source-corrections flagged in place. The bar now covers **seven committed formal docs**.
+- **Generals paper audited (2026-08-29 night):** GENERAL-CALCULUS (§2.6) passes the same bar: 0 content leaps, 0 forward refs, 3 declared proof-inspection lemmas (a self-graded method class), its preliminaries content-verified against the monograph. The bar now covers **eight committed formal docs** — and the tower has its capstone: the concrete 5+1 proved an instance of the abstract QS class, the four axes graded, composition and compilation theorem'd, four conjectures posted with falsifiers.
 
 ---
 
@@ -522,6 +576,7 @@ graph TD
 | G2 | SYNTHESIS I1/I2/Q2/Q3 premises simulation-enforced; sby machine-proofs (AMATH checklist #3/#4) pending | formal lane | open — honest, tracked in AMATH |
 | G3 | Invariant M's provenance KV keys (§4.3) specified, not built | semantic-tower lane | open — M conditional until QUF keys ship |
 | G4 | Expansion-paper benches unexecuted (pen-only theorems): floor/committee bench (= B4 reuse), drift-equivalence cell-diff, fold counterexample replay, `dossier-lint` schema validator | academic-expansion lane | open — specs to assertion level in RFF §8, DRIFT §7, FOLD §11, DENY §9; each extends an existing gap (B4/B5) rather than opening lane overhead |
+| G5 | Generals-paper benches unexecuted (GC §8): `escrow_bench.py` (phantom + escrow assertions), `nc_bench.py` (divergence + FIFO convergence), `wavefront_bench.py` (eager simulation + GC-C2 burst family), `type_bench.py` (u8/i8 + digest-pinned decode), `product_bench.py` (heterogeneous-tick deadband) | generals lane | open — specs to assertion level in GC §8; same B4/B5 substrate reuse family; GC-C1–C4 falsifiers registered in GC §7 |
 
 ---
 
