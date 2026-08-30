@@ -1,0 +1,11 @@
+save   examples/t3_quf_roundtrip/out/room.quf (640 bytes)  verify clean  sha256 109a4118d7831443...
+reload  cells=2  THRESH: cell0=0x6000 cell1=0x3800  edge buckets=[10, 0, 0, 0, 0, 0, 0, 0]
+id     rebuild(parsed) == file bytes  -> canonical form holds
+mutate  cells=2  THRESH: cell0=0x3800 cell1=0x3800  edge buckets=[11, 0, 0, 0, 0, 0, 0, 0]
+       sha256 1a2da8fb33c00cae...  (differs: state changed, file changed)
+restore cells=2  THRESH: cell0=0x6000 cell1=0x3800  edge buckets=[10, 0, 0, 0, 0, 0, 0, 0]
+id     room.quf still boots the ORIGINAL state (THRESH 0x6000, 10 cofires) -- the file is the state
+refuse dial byte flip: quf.sha256 mismatch: payload content corrupted after write
+refuse bad version  : corrupt2.quf: unsupported version 2
+refuse truncated    : truncated value at 284
+T3 PASS: save -> reload -> identity -> mutate -> restore -> refuse

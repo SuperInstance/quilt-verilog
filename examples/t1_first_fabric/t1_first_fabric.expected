@@ -1,0 +1,19 @@
+== T1 first fabric: NCELL=2, TPW=4 (tick every 16 cycles) ==
+      [egress op=5 src=0 dst=f dat=0000]
+      [egress op=5 src=1 dst=f dat=0000]
+bind  cells 0 and 1 bound (ACK seen)
+      [egress op=5 src=0 dst=f dat=6000]
+view  cell 0 THRESH before  = 0x6000   (THRESH before)
+      [egress op=5 src=0 dst=f dat=0000]
+      [egress op=5 src=0 dst=f dat=2000]
+view  cell 0 THRESH after   = 0x2000   (THRESH after)
+      [egress op=5 src=0 dst=f dat=1000]
+view  cell 0 wsum (edges)   = 0x1000   (wsum (edges))
+      [egress op=5 src=0 dst=f dat=0000]
+view  cell 0 act before     = 0x0000   (act before)
+      [egress op=5 src=0 dst=f dat=07bc]
+view  cell 0 act after eff  = 0x07bc   (act after eff)
+      [egress op=5 src=0 dst=f dat=06d2]
+view  cell 0 act +3 ticks   = 0x06d2   (act +3 ticks)
+T1 PASS: bind->link->effect->view->tick, 0 errors
+t1_first_fabric.v:182: $finish called at 2490000 (1ps)

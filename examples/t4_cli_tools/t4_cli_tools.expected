@@ -1,0 +1,117 @@
+$ python3 tools/quf.py create examples/t3_quf_roundtrip/room.json examples/t4_cli_tools/out/room.quf
+wrote examples/t4_cli_tools/out/room.quf (544 bytes) + examples/t4_cli_tools/out/room.quf.hex
+$ python3 tools/quf.py verify examples/t4_cli_tools/out/room.quf
+QUF VERIFY PASS: examples/t4_cli_tools/out/room.quf (544 bytes)
+$ python3 tools/quf.py info examples/t4_cli_tools/out/room.quf
+QUF v1, 10 KV pairs, 4 sections
+  quf.version    string t3 tutorial 1.0
+  cell_count     u32    2
+  edge_count     u32    1
+  route_count    u32    2
+  edge.k         u32    8
+  tick_period    u32    16
+  quant.dials    string Q1.15
+  quant.edges    string Q1.15
+  quant.routing  string u8
+  align          u32    32
+  section dials    kind=0 off=384    size=64
+  section edges    kind=0 off=448    size=20
+  section routing  kind=0 off=480    size=4
+  section ticks    kind=0 off=512    size=12
+$ python3 tools/quf.py dump examples/t4_cli_tools/out/room.quf
+QUF v1, 10 KV pairs, 4 sections
+  quf.version    string t3 tutorial 1.0
+  cell_count     u32    2
+  edge_count     u32    1
+  route_count    u32    2
+  edge.k         u32    8
+  tick_period    u32    16
+  quant.dials    string Q1.15
+  quant.edges    string Q1.15
+  quant.routing  string u8
+  align          u32    32
+  section dials    kind=0 off=384    size=64
+  section edges    kind=0 off=448    size=20
+  section routing  kind=0 off=480    size=4
+  section ticks    kind=0 off=512    size=12
+{
+ "dials": [
+  [
+   2048,
+   128,
+   6,
+   12,
+   5,
+   24576,
+   4,
+   11469,
+   20,
+   0,
+   64,
+   2,
+   0,
+   0,
+   8,
+   8
+  ],
+  [
+   2048,
+   128,
+   6,
+   12,
+   5,
+   14336,
+   4,
+   11469,
+   20,
+   0,
+   64,
+   2,
+   0,
+   0,
+   8,
+   8
+  ]
+ ],
+ "edges": [
+  {
+   "src": 0,
+   "dst": 1,
+   "mode": 0,
+   "slot": 0,
+   "base": 4096,
+   "wh": 0,
+   "age": 0,
+   "buckets": [
+    10,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ]
+  }
+ ],
+ "routing": [
+  {
+   "dst": 0,
+   "via": 0
+  },
+  {
+   "dst": 1,
+   "via": 1
+  }
+ ],
+ "ticksched": {
+  "tpw": 4,
+  "phases": [
+   0,
+   3
+  ]
+ }
+}
+$ python3 tools/quf.py hex examples/t4_cli_tools/out/room.quf examples/t4_cli_tools/out/room.hex
+wrote examples/t4_cli_tools/out/room.hex (544 bytes)
+hex image header: 0220 (bytes); dials payload starts at hex line 385

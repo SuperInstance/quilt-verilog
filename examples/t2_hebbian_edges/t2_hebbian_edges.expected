@@ -1,0 +1,11 @@
+VCD info: dumpfile t2_hebbian_edges.vcd opened for output.
+== T2 hebbian edges: NCELL=2, TPW=4, K=8 ladder ==
+view  cell 0 wsum after link  = 0x1000
+train 10 effects delivered (src=1 -> dst=0)
+view  cell 0 wsum after 10x   = 0x1a00
+view  cell 0 act (buzz)       = 0x425c
+dial  HL=2 (half-life = 2 ticks), letting ticks sweep
+view  cell 0 wsum ~4 ticks    = 0x1140
+view  cell 0 wsum swept out   = 0x1000
+T2 PASS: ladder learned 0x1000->0x1A00, forgot ->0x1000
+t2_hebbian_edges.v:180: $finish called at 14790000 (1ps)
