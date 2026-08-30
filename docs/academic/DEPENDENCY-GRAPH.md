@@ -6,6 +6,8 @@
 
 **Re-sweep (G1 closure, same day):** `docs/academic/quilt-calculus.md` landed (commit `0e0e851`) after this audit's tree snapshot was taken; this document now extends the audit to it — **§2.4** (full statement inventory, 18 D + 7 A + 11 T + 2 P + 3 C), **§4** (re-sweep findings: 5 benign forward refs, 4 term-drift notes, 0 content leaps), **§7** (cross-doc reconciliation: cell tuple, snap transaction naming, envelopes parameter dictionary). **G1 is closed** — see §6. Note the timeline: the calculus commit (11:51) *predates* this audit's commit (11:56); the two lanes ran concurrently on divergent trees, which is why B9 and CALC-T10(b) independently discovered the same snap-transaction defect (convergent finding, §7.2).
 
+**Expansion sweep (same day, evening):** four academic-expansion papers landed (`RHO-F-FLOOR.md`, `DRIFT-AS-PREFILTER.md`, `FOLD-COVERED.md`, `DENY-BY-RUNNING.md`); this document extends the audit to them — **§2.5** (full inventory, all four registries), **§4** (expansion sweep findings: 0 content leaps, 1 declared forward ref, 2 flagged source-corrections), mermaid §3 (EXP subgraph + edges). Gap G4 registers their unexecuted benches.
+
 ---
 
 ## 1. Method
@@ -175,6 +177,44 @@ The calculus is **self-contained by declaration** ("no other quilt document is a
 | QUF-SPEC §8 (extensibility), §9 (loader profile) | F-D6, S-D4, S-D10 | OK |
 | ABSTRACTION-MATH §1/§5 (traced monoidal; staircase envelope theorem) | F-DC1, S-T4 | OK — the envelope theorem is a one-line proof (ELEGANCE E4) |
 | ai-writings papers 66/67/68/70 | S-T4, F-D2, F-D3 | external research companion, cited by name — not in repo scope |
+
+### 2.5 Expansion papers (academic-expansion lane, 2026-08-29) — inventory
+
+Four papers landed after the G1 closure; each is audited here on the same rule (dependencies defined earlier or restated in-document; no leaps). Numbering is doc-local (RF-/DA-/FC-/DB- prefixes); cross-paper citations are annotated for whether the cite is load-bearing or a provenance pointer.
+
+| ID | Concept | Where | Depends on | Earlier? | Status / disposition |
+|---|---|---|---|---|---|
+| RFF-D1–D9 | Truth frame, budgets/rate, judge/margins, **delay-F audit channel**, policy, error, **swept mass**, schedule/cost, regimes | RHO-F-FLOOR §2 | DA-D2/D5 restated in full (budgets rebuilt); D7 view-freshness consumed as the modeled worst case, restated as RF-D4 | yes (self-restated) | upgrade of conjectures C2-d1/d2 + D7 — **the audit channel is the new formal object** |
+| RFF-L1 | Indistinguishability lemma | RFF §3 | RF-D4/D5 only | yes | **new** — the floor's mechanism, absent from the sources |
+| RFF-L2–L4 | Anchor lag · incremental accumulation · equal-spacing (averaging) | RFF §3–4 | RF-D4/D5; DA-L1; RF-D8 | yes | L3 ≡ conjectures Lemma 4 with explicit endpoints; L4 pays Prop C's flagged exchange-argument debt (averaging suffices) |
+| RFF-T1/T2 | Pointwise floor · worst-case floor (two-phase adversary, key-outward radial metric perturbation) | RFF §3 | RFF-L1–L3, RF-D2 legality check in-proof | yes | upgrade of Thm 5(iii): **adversary formalized, legality proved, attainment graded** (RFF-C1: swept band vs naive band — the sketch's point-move under-delivers in ℝⁿ; the metric perturbation is the repair — a flagged correction to the source's mechanism) |
+| RFF-C1/C2 | One-sidedness condition · infeasibility at ρF ≥ ε₀ | RFF §3 | RFF-T2, RF-D7 | yes | the headline μ({m ≤ ρF}) form's attainment condition made explicit (≤ 2× overclaim otherwise) |
+| RFF-P1 | Achievability bracket (periodic policies) | RFF §3 | RF-L2/L3 | yes | ≡ conjectures Thm 5(i) re-derived in the RFF model — brackets the floor with Φ(ρ(T+F)) |
+| RFF-T3/T4 | Aggregate/members split · **service-floor phase diagram** | RFF §4 | RF-D8/D9, RFF-L4 | yes | T3 ≡ Prop C with debts paid (both bounds + attainment); T4 **new**: forced-diversity minimum m ≥ ⌈δ_min/T_w⌉, phases exchange at δ_min = T_w |
+| RFF-P2 | Audit-cadence equilibrium F\* = ε₀√k/(ρ(√c+√k)) | RFF §6 | RFF cost functional | yes | **new** — freshness as a purchasable; strictly convex, unique interior optimum |
+| RFF §7 | The floor test (design handbook) | RFF §7 | all of the above | yes | procedure + decision table; evaluator-freshness trap formalized in DENY-P3′ |
+| DA-T1/T2 | Additive composition (upper) · **annulus tightness (lower)** | DRIFT §3 | DA-D1–D4 | yes | T1 ≡ CALC-T3(c) restated; T2 **new** — composed tolerance is exactly r+Σρᵢ, per-input adversarial controllability in geodesic spaces (lens-vs-shell honesty note) |
+| DA-L1 | Perturbation accumulation, full routing | DRIFT §4 | DA-D1 | yes | ≡ conjectures Lemma 4 with the one-perturbation-per-step discipline named and derived in both directions |
+| DA-T3/T4 | Drift band · drift-is-prefilter equivalence | DRIFT §4 | DA-L1 | yes | ≡ conjectures Thm 4 + Cor 4′, self-contained; DA-C2 the twin sentence (F ↔ γ) |
+| DA-T5–T7 | Periodic bound · three pricing laws + sensitivity · **power-law scaling ρ^{α/(α+1)}** | DRIFT §5 | DA-T3, RF-L2 (anchor lag, cited as companion; restated as the T+F lag) | yes | T5/T6 ≡ Thm 5(i)/(ii)/(iv) unpacked (floor-correction factor, √↔linear regime boundary, derivatives); T7 **new** |
+| DA-P2 + OP-1 | Sufficiency theorem / necessity refuted / GH shape · **the open problem** | DRIFT §6 | DA-D3, DA-D8′ | yes | necessity refutation (**verdicts stable under unbounded η** — interior oscillation) is **new**; crossing functional E(t) sandwich err ≤ E ≤ Φ(γ) **new**; OP-1 stated with two counterexample shapes |
+| FC-D1–D9 | Log/fold/compaction/answering regime/fold-covered/lossless/post-hoc/augmented checkpoint/three classes | FOLD §2/§7/§9 | D4 posting structure restated | yes | ≡ C3-d1–d3 restated; FC-D7's not-enumerable-in-advance reading of post-hoc-ness sharpened |
+| FC-L1 | Order independence (T4's semilattice abstracted) | FOLD §2 | FC-D2 | yes | ≡ CALC-T4's induction lifted to arbitrary folds |
+| FC-T1 | Lossless ⟺ fold-covered | FOLD §3 | FC-L1 | yes | ≡ conjectures Thm 6, both directions in full; digest's role = announcement, proof deferred to FC-X1 (one-way, benign — CF-class) |
+| FC-T2 | T4/T5 as fold instances (+ closure under products) | FOLD §4 | FC-L1, FC-D2 | yes | ≡ Thm 6(c) expanded into fold tables |
+| FC-X1 | Post-hoc exclusion, both regimes + **commitment framing** | FOLD §5 | FC-T1(b), FC-L2 | yes | ≡ Counterexample 7; **new**: binding/hiding split with the candidate-list caveat stated (separation ≠ extraction) |
+| FC-L2 | ROM hiding lemma | FOLD §5 | FC-D3 | yes | ≡ the hiding lemma, with the hidden-inputs condition explicit |
+| FC-P1 | **Fiber entropy: c − O(log c) bits lost** | FOLD §6 | FC-T1(b) | yes | **new** — quantitative sharpening; independently implies Ω(c) |
+| FC-T3/L3 | Recovery: Λ-fold + Merkle witness protocol to verification steps | FOLD §7 | FC-D8, FC-L3 | yes | ≡ Thm 8 expanded (per-step soundness; [Mer80] collision-resistance scoped) |
+| FC-T4 | Ω(c) pricing | FOLD §8 | counting | yes | ≡ Cor 9, full proof |
+| FC-P2 | **Walk-state is Class S outright (permutation argument)** | FOLD §9 | FC-L1 | yes | **strengthening** of conjectures §3.5 remark: no commutative fold, any size (two-element witness L₁=[cofire,shift] vs L₂=[shift,cofire]); posting-more-only-lengthens-replay priced |
+| FC-P3 | The hinge: consolidation ≡ exclusion opacity | FOLD §10 | FC-T1/T2 | yes | the same-phenomenon remark, stated as a proposition |
+| DB-D1–D5 | Denial cost · pen grades · **M1/M2/M3** · license table · denial table | DENY §1–2/§5 | THE-BREAKDOWN's tallies | yes | **new formalization**: grades as licenses (LT) and recipes (DT); M1/M2/M3 is the refinement the dossier's single "machine-checked" compresses |
+| DB-T1 | Denial monotonicity | DENY §5 | DB-D2–D5 | yes | **new** (nesting + LT/DT alignment) |
+| SCHEMA + DB-P2 | Six-field contracts + completeness bijection | DENY §3 | THE-BREAKDOWN structure | yes | **new** — field contracts with failure modes; removal-collapses argument |
+| DB-P3/P3′ | RQH teeth (three properties) · evaluator-freshness trap | DENY §4/§7 | error-envelopes §3/§7.1; RFF §7 | yes | the falsification history argued as bite/non-ceremony/load-bearing-predictions; the trap cross-graded (hazard register) |
+
+**Cross-paper reference audit:** RHO-F-FLOOR and DRIFT-AS-PREFILTER mutually cite (floor ↔ feasibility boundary; cost laws ↔ floor bracket). Every load-bearing consumption is *restated* in the consuming paper (RF-L3 restates DA-L1's endpoints; DA-T6 cites the ρF < ε₀ boundary but the boundary theorem lives in RFF §3 and DRIFT needs only the inequality, stated as a hypothesis there) — no circularity, no leap. FOLD and DENY cite the others only as provenance. **Content leaps found: 0. Benign one-way forward refs: 1 (FC-T1(c) → §5, declared in-text).**
 
 ---
 
@@ -357,6 +397,43 @@ graph TD
     class D2,D3,D4,MIR,STR,EMB,AGR,D6,L0c,MZ ok;
     class P1,P2,P3 open;
     class CD1c,CD3c,CD4c,CT12,CT3c,CT4c,CT5c,CT67,CD15c,CT10,CT11,CP2c,CC calc;
+    %% expansion-paper nodes/edges (academic-expansion lane, 2026-08-29)
+    subgraph CONJ["conjectures.md + THE-BREAKDOWN (2026-08-29 wave)"]
+        CJ["conjectures C1-C3 attacked<br/>(Thms 1-8, CEx 2 & 7)"]
+        ENV["error-envelopes T1-T5<br/>+ correction ledger C1-C6"]
+        BRK["THE-BREAKDOWN dossier<br/>(12 sections, grades, gaps B1-B12)"]
+        ZCL["zero-claw-update<br/>(Prop C, night-audit numbers)"]
+    end
+
+    subgraph EXP["expansion papers (academic-expansion)"]
+        RFF["RHO-F-FLOOR.md<br/>indistinguishability lemma,<br/>swept-band floor, committee split,<br/>phase diagram, floor test"]
+        DAC["DRIFT-AS-PREFILTER.md<br/>annulus tightness, drift-is-stage,<br/>pricing laws, OP-1"]
+        FLD["FOLD-COVERED.md<br/>fiber entropy, walk-state<br/>permutation kill, hinge"]
+        DBR["DENY-BY-RUNNING.md<br/>grades/licenses/denial table,<br/>M1/M2/M3, schema contracts"]
+    end
+
+    CT3c --> DAC
+    CD3c --> DAC
+    CC --> CJ
+    CT12 --> CJ
+    CT4c --> CJ
+    CT5c --> CJ
+    CJ --> RFF
+    CJ --> DAC
+    CJ --> FLD
+    ZCL --> RFF
+    CD4c --> FLD
+    CT4c --> FLD
+    CT5c --> FLD
+    BRK --> DBR
+    ENV --> DBR
+    CJ --> DBR
+    RFF --> DAC
+    DAC --> RFF
+    RFF --> DBR
+
+    classDef exp fill:#cdf,stroke:#46b,stroke-width:2px;
+    class RFF,DAC,FLD,DBR exp;
     classDef calc fill:#ddf,stroke:#46b,stroke-width:2px;
 ```
 
@@ -415,6 +492,8 @@ graph TD
 
 **Cosmetic:** the calculus abstract's statement registry says "13 proofs"; the document contains 27 ∎-terminated proof arguments (multi-part theorems counted per part). Undercount, no content impact — noted for the calculus lane's next pass.
 
+**Expansion-paper sweep (2026-08-29, same day, after G1 closure).** Full inventory in §2.5. Findings: **0 content leaps** across the four papers; 1 benign declared forward reference (FC-T1(c) → its §5); 2 flagged **corrections-of-source** carried honestly in-document (RFF-C1: the Thm 5(iii) sketch's point-move adversary under-delivers the claimed band in ℝⁿ — repaired by the radial metric perturbation, with the ≤ 2× overclaim quantified; FC-P2: walk-state honesty strengthened from balance-fold-relative to no-fold-any-size). Mutual RFF↔DAC citations are non-circular (each restates what it consumes). Term drift: none new — the papers adopt the canonical names of §7.2 and the CALC registry verbatim.
+
 ### Explicitly informal / open / conditional (recorded, not leaps)
 
 - I1: Backend theorem (marked informal; asterisk → P1).
@@ -431,6 +510,7 @@ graph TD
 - **All 10 content leaps are fixed in `BRIDGES.md` with real derivations** (B1–B10), not prose gestures.
 - **No undefined term remains in a proof.** The only cited-but-unformalized objects are: Laws 1–5 (defined in README — pointer added), SYNTHESIS I1/I2/Q2/Q3 (defined and enforced in SYNTHESIS; machine-proof pending and honestly flagged there), QUF-SPEC, ABSTRACTION-MATH, and the ai-writings papers (external companions, cited by name).
 - **G1 closed (re-sweep):** `quilt-calculus.md` is audited (§2.3). **0 content leaps**; 5 benign forward refs (CF1–CF5); 5 drift notes (DR1–DR4, N2) all reconciled in §7 — none affects any proof's validity. The calculus independently re-derives or upgrades B1–B10's content (B9 and CALC-T10(b) even converge on the same four-legged snap repair from independent trees) and adds three genuinely new closures: CALC-T3(c) tolerance additivity, CALC-T6 k-chain freshness composition, CALC-T10(c) linear snap-debt bound. The "no leaps" verdict now covers **all three committed formal docs**.
+- **Expansion papers audited (2026-08-29 evening):** the four academic-expansion papers (§2.5) — RHO-F-FLOOR, DRIFT-AS-PREFILTER, FOLD-COVERED, DENY-BY-RUNNING — pass the same bar: every dependency defined earlier or restated in-document, 0 content leaps, 1 declared forward ref, 2 honest source-corrections flagged in place. The bar now covers **seven committed formal docs**.
 
 ---
 
@@ -441,6 +521,7 @@ graph TD
 | G1 | `docs/academic/quilt-calculus.md` not committed (concurrent lane) | calculus lane | **closed 2026-08-29 (audit-resweep):** landed as `0e0e851`; audited in §2.3 — 0 leaps, CF1–CF5 + DR1–DR4/N2 reconciled in §7 |
 | G2 | SYNTHESIS I1/I2/Q2/Q3 premises simulation-enforced; sby machine-proofs (AMATH checklist #3/#4) pending | formal lane | open — honest, tracked in AMATH |
 | G3 | Invariant M's provenance KV keys (§4.3) specified, not built | semantic-tower lane | open — M conditional until QUF keys ship |
+| G4 | Expansion-paper benches unexecuted (pen-only theorems): floor/committee bench (= B4 reuse), drift-equivalence cell-diff, fold counterexample replay, `dossier-lint` schema validator | academic-expansion lane | open — specs to assertion level in RFF §8, DRIFT §7, FOLD §11, DENY §9; each extends an existing gap (B4/B5) rather than opening lane overhead |
 
 ---
 
