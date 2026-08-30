@@ -24,7 +24,7 @@ Numbered log of places where QUF-SPEC.md and QUF-FORGETTING-V1.md were insuffici
 - All characters in the name part (after `epoch.`) must be digits (0–9)?
 - Or just the numeric portion can use hex, octal, etc.?
 
-**WHAT YOU GUESSED**: After `epoch.`, all characters must be ASCII decimal digits (0–9), matched via `isascii_digit()`. Leading zeros are forbidden (e.g., `epoch.00` is invalid). Parser extracts the name suffix and validates this before parsing epoch_no.
+**WHAT YOU GUESSED**: After `epoch.`, all characters must be ASCII decimal digits (0–9), matched via `isascii_digit()`. (Gatekeeper catch: the ORIGINAL text here claimed leading-zero rejection was implemented — it is NOT; the parser accepts `epoch.05` as a name, which is exactly what foreman gap 16 exploits. Resolution left open by the spec: reject or normalize.)
 
 **SEVERITY**: Low — spec text is clear ("ASCII digits only"), but the pseudocode (§4) only checks `isascii_digit()` without specifying rejection of leading zeros. Implementation is strict.
 

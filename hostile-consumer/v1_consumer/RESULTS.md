@@ -52,6 +52,9 @@ payload/epoch (64-cell quilt fragment). Machine: eileen.
 | 16 | ~23–30 µs (median ≈26 µs) | 0.52 ms |
 | 64 | ~23–85 µs (median ≈30 µs) | 2.03 ms |
 
+(Gatekeeper rerun on the same machine measured 44–47 µs/epoch and
+0.18/0.77/3.03 ms mounts — same shape, ~1.5x drift; treat these as
+machine-load bands, not point values.)
 Per-epoch verify cost is flat in N (≈25–30 µs/epoch ≈ 3.3 µs/KB — HMAC-SHA256
 at ~0.3 GB/s, software); mount scales linearly with total bytes because the
 seal covers the payload — see gap 18: "O(1) skip" in the one-sentence contract
@@ -93,4 +96,9 @@ cannot mean payload-free skipping, or the seal would not protect what is skipped
   DeepSeek direct also balance-blocked. Fallback gatekeeper: opencode/GLM-4.6
   (different model family from the implementer), bullshit-test only. Verdict
   recorded below.
-- GATEKEEPER VERDICT: <!-- filled after the gatekeeper pass -->
+- GATEKEEPER VERDICT: **PASS** (opencode/GLM-4.6 gatekeeper, /tmp/v1impl/gate.log).
+  Independently reproduced: cargo test 14/14, matrix 13/13, every E-code via direct
+  CLI runs, flipbit corpus = one_live + exactly 1 flipped status byte, §4 flaws
+  textually confirmed (E4_BAD_NAME bare expression at doc line 190, no E5 raise in
+  §4 pseudocode, restore() undefined at line 203). Non-fatal flags (both fixed in
+  this commit): GAPS.md gap-2 doc/code contradiction; bench drift note below.
