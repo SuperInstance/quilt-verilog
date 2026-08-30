@@ -1,0 +1,23 @@
+{
+ "lane": "cpu",
+ "cells": [
+  [
+   "nano",
+   "qwen2.5:0.5b"
+  ],
+  [
+   "wesley",
+   "granite3.1-dense:2b"
+  ],
+  [
+   "lfm",
+   "Liquid-LFM2.5-2.6B"
+  ]
+ ],
+ "n": 100,
+ "rounds_done": 100,
+ "query_count": 300,
+ "cut_note": null,
+ "started_ts": 1788052764.7167852,
+ "updated_ts": 1788053682.1101892
+}

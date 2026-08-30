@@ -1,0 +1,70 @@
+{
+ "ts": 1788051915.436352,
+ "scored": [
+  {
+   "name": "nano",
+   "tag": "qwen2.5:0.5b",
+   "schema_probe_ok": 4,
+   "schema_probe_n": 4,
+   "parse_rate": 1.0,
+   "gtok_s_short": 223.6,
+   "score": 3.0,
+   "med_lat_s": 4.37
+  },
+  {
+   "name": "wesley",
+   "tag": "granite3.1-dense:2b",
+   "schema_probe_ok": 4,
+   "schema_probe_n": 4,
+   "parse_rate": 1.0,
+   "gtok_s_short": 94.1,
+   "score": 2.421,
+   "med_lat_s": 9.45
+  },
+  {
+   "name": "lfm",
+   "tag": "Liquid-LFM2.5-2.6B",
+   "schema_probe_ok": 4,
+   "schema_probe_n": 4,
+   "parse_rate": 1.0,
+   "gtok_s_short": 91.0,
+   "score": 2.407,
+   "med_lat_s": 7.83
+  },
+  {
+   "name": "qwen3",
+   "tag": "qwen3:8b",
+   "schema_probe_ok": 4,
+   "schema_probe_n": 4,
+   "parse_rate": 1.0,
+   "gtok_s_short": 26.4,
+   "score": 2.118,
+   "med_lat_s": 12.47
+  },
+  {
+   "name": "q3b",
+   "tag": "qwen2.5:3b",
+   "schema_probe_ok": 3,
+   "schema_probe_n": 4,
+   "parse_rate": 0.75,
+   "gtok_s_short": 84.4,
+   "score": 1.877,
+   "med_lat_s": 6.76
+  }
+ ],
+ "top3": [
+  [
+   "nano",
+   "qwen2.5:0.5b"
+  ],
+  [
+   "wesley",
+   "granite3.1-dense:2b"
+  ],
+  [
+   "lfm",
+   "Liquid-LFM2.5-2.6B"
+  ]
+ ],
+ "criterion": "2*schema-probe parse rate (4 turns, GPU lane, temp 0) + normalized bench gtok/s (short)"
+}

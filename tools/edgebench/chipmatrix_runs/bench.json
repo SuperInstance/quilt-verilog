@@ -1,0 +1,142 @@
+{
+ "ts": 1788051731.476071,
+ "prompt_set": {
+  "short": [
+   "s1",
+   "s2",
+   "s3",
+   "s4",
+   "s5"
+  ],
+  "long": [
+   "L1",
+   "L2"
+  ],
+  "temperature": 0.0,
+  "deterministic": true
+ },
+ "lanes": {
+  "ollama-gpu": {
+   "nano": {
+    "n_ok": 7,
+    "ptok_s_short": 2990.8,
+    "gtok_s_short": 223.6,
+    "ptok_s_long": 8808.0,
+    "gtok_s_long": 230.9,
+    "med_prompt_toks": 36,
+    "med_gen_toks": 28,
+    "med_lat_s": 0.17
+   },
+   "q3b": {
+    "n_ok": 7,
+    "ptok_s_short": 1504.6,
+    "gtok_s_short": 84.4,
+    "ptok_s_long": 3054.7,
+    "gtok_s_long": 78.1,
+    "med_prompt_toks": 36,
+    "med_gen_toks": 15,
+    "med_lat_s": 0.22
+   },
+   "wesley": {
+    "n_ok": 7,
+    "ptok_s_short": 1957.0,
+    "gtok_s_short": 94.1,
+    "ptok_s_long": 3713.1,
+    "gtok_s_long": 89.9,
+    "med_prompt_toks": 44,
+    "med_gen_toks": 61,
+    "med_lat_s": 0.71
+   },
+   "qwen3": {
+    "n_ok": 7,
+    "ptok_s_short": 236.7,
+    "gtok_s_short": 26.4,
+    "ptok_s_long": 747.2,
+    "gtok_s_long": 22.3,
+    "med_prompt_toks": 44,
+    "med_gen_toks": 31,
+    "med_lat_s": 1.47
+   },
+   "lfm": {
+    "n_ok": 7,
+    "ptok_s_short": 1045.3,
+    "gtok_s_short": 91.0,
+    "ptok_s_long": 3082.8,
+    "gtok_s_long": 90.7,
+    "med_prompt_toks": 39,
+    "med_gen_toks": 61,
+    "med_lat_s": 1.58
+   }
+  },
+  "ollama-cpu": {
+   "nano": {
+    "n_ok": 7,
+    "ptok_s_short": 932.4,
+    "gtok_s_short": 110.1,
+    "ptok_s_long": 662.3,
+    "gtok_s_long": 97.1,
+    "med_prompt_toks": 36,
+    "med_gen_toks": 53,
+    "med_lat_s": 0.54
+   },
+   "q3b": {
+    "n_ok": 7,
+    "ptok_s_short": 226.8,
+    "gtok_s_short": 31.7,
+    "ptok_s_long": 148.2,
+    "gtok_s_long": 27.0,
+    "med_prompt_toks": 36,
+    "med_gen_toks": 16,
+    "med_lat_s": 0.7
+   },
+   "wesley": {
+    "n_ok": 7,
+    "ptok_s_short": 300.3,
+    "gtok_s_short": 38.6,
+    "ptok_s_long": 171.3,
+    "gtok_s_long": 30.6,
+    "med_prompt_toks": 44,
+    "med_gen_toks": 48,
+    "med_lat_s": 1.44
+   },
+   "qwen3": {
+    "n_ok": 7,
+    "ptok_s_short": 85.8,
+    "gtok_s_short": 15.7,
+    "ptok_s_long": 61.9,
+    "gtok_s_long": 12.4,
+    "med_prompt_toks": 44,
+    "med_gen_toks": 31,
+    "med_lat_s": 2.78
+   },
+   "lfm": {
+    "n_ok": 7,
+    "ptok_s_short": 142.9,
+    "gtok_s_short": 33.9,
+    "ptok_s_long": 155.2,
+    "gtok_s_long": 32.3,
+    "med_prompt_toks": 39,
+    "med_gen_toks": 55,
+    "med_lat_s": 8.47
+   }
+  }
+ },
+ "ort": {
+  "summary": {
+   "n_ok": 7,
+   "ptok_s_short": 201.7,
+   "gtok_s_short": 20.9,
+   "ptok_s_long": 794.0,
+   "gtok_s_long": 16.2,
+   "med_prompt_toks": 15,
+   "med_gen_toks": 24,
+   "med_lat_s": 1.24
+  },
+  "note": "greedy token loop WITH KV cache (merged graph: empty past [1,12,0,64] on the prompt pass, present.* fed back per step) on Xenova/gpt2 int8 (128 MB, HF hub); gpt2-124m is a throughput probe, not a cell candidate (it cannot follow the op schema)."
+ },
+ "notes": [
+  "ptok/s = prompt_eval_count/prompt_eval_duration; gtok/s = eval_count/eval_duration -- Ollama's own counters, load time excluded.",
+  "Prompts are unique per (model,lane) so prompt eval is cache-cold; the small shared system prefix may be cached after the warmup query.",
+  "gpu lane = Ollama default placement (no num_gpu override); cpu lane = num_gpu 0 (all layers on the HX370)."
+ ]
+}

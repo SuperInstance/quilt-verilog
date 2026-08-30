@@ -1,0 +1,64 @@
+{
+ "ts": 1788050647.6328242,
+ "ollama": {
+  "version": "0.32.15",
+  "live": true,
+  "host": "http://127.0.0.1:11434"
+ },
+ "gpu": {
+  "wsl_dxg": true,
+  "nvidia_smi": "NVIDIA GeForce RTX 4050 Laptop GPU, 6141 MiB, 595.79",
+  "note": "CUDA user-space present via /usr/lib/wsl/lib"
+ },
+ "cpu": {
+  "model": "AMD Ryzen AI 9 HX 370 w/ Radeon 890M",
+  "threads": 24
+ },
+ "ort": {
+  "live": true,
+  "version": "1.28.0",
+  "providers": [
+   "AzureExecutionProvider",
+   "CPUExecutionProvider"
+  ]
+ },
+ "directml": {
+  "live": false,
+  "why": "pip rc=1: ERROR: No matching distribution found for onnxruntime-directml"
+ },
+ "vulkan": {
+  "icds": [
+   "asahi_icd.json",
+   "gfxstream_vk_icd.json",
+   "intel_hasvk_icd.json",
+   "intel_icd.json",
+   "lvp_icd.json",
+   "nouveau_icd.json",
+   "radeon_icd.json",
+   "virtio_icd.json"
+  ],
+  "loader": true,
+  "sdk_headers": false,
+  "dzn_icd": false,
+  "vulkaninfo": false,
+  "cmake": false,
+  "sudo_noninteractive": false,
+  "buildable": false,
+  "blockers": [
+   "no Vulkan SDK headers (/usr/include/vulkan)",
+   "no cmake",
+   "no dzn (Vulkan-on-D3D12) ICD; mesa ICDs present (asahi_icd.json,gfxstream_vk_icd.json,intel_hasvk_icd.json,intel_icd.json,lvp_icd.json,nouveau_icd.json,radeon_icd.json,virtio_icd.json) cannot drive the paravirtual WSL GPU",
+   "no vulkaninfo to enumerate devices",
+   "apt locked (sudo needs a password); SDK/ICDs not installable from this shell"
+  ]
+ },
+ "llamacpp_vulkan": {
+  "built": false,
+  "why": "not attempted: no Vulkan SDK headers (/usr/include/vulkan); no cmake; no dzn (Vulkan-on-D3D12) ICD; mesa ICDs present (asahi_icd.json,gfxstream_vk_icd.json,intel_hasvk_icd.json,intel_icd.json,lvp_icd.json,nouveau_icd.json,radeon_icd.json,virtio_icd.json) cannot drive the paravirtual WSL GPU; no vulkaninfo to enumerate devices; apt locked (sudo needs a password); SDK/ICDs not installable from this shell"
+ },
+ "npu": {
+  "wsl_device_nodes": [],
+  "sysfs_accel": [],
+  "reachable_from_wsl": false
+ }
+}

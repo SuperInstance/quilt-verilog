@@ -1,2 +1,3 @@
 tb/run/
 tb/formal/*/
+tools/edgebench/chipmatrix_runs/gpt2-onnx/

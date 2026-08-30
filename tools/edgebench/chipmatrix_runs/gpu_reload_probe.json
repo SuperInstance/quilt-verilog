@@ -1,0 +1,74 @@
+{
+ "ts": 1788053907.7825346,
+ "question": "why are GPU cell turns ~3.5s when eval runs at 200+ tok/s?",
+ "answer": "Ollama's GPU lane (WSL /dev/dxg, 6GB) keeps one runner hot: every model switch reloads weights (load_duration ~3.5s); same-runner back-to-back queries are 0.00s load. The alternating 3-cell pair pattern pays the reload on every query. CPU-lane runners stay resident in RAM and pay no such cost.",
+ "warmup": [
+  {
+   "model": "nano",
+   "lat_s": 0.35,
+   "load_s": 0.0,
+   "eval_count": 21,
+   "eval_dur_s": 0.26
+  },
+  {
+   "model": "wesley",
+   "lat_s": 4.48,
+   "load_s": 3.66,
+   "eval_count": 64,
+   "eval_dur_s": 0.7
+  },
+  {
+   "model": "lfm",
+   "lat_s": 4.41,
+   "load_s": 4.14,
+   "eval_count": 14,
+   "eval_dur_s": 0.15
+  }
+ ],
+ "burst_3x_nano": [
+  {
+   "model": "nano",
+   "lat_s": 3.74,
+   "load_s": 3.55,
+   "eval_count": 21,
+   "eval_dur_s": 0.1
+  },
+  {
+   "model": "nano",
+   "lat_s": 0.1,
+   "load_s": 0.0,
+   "eval_count": 21,
+   "eval_dur_s": 0.08
+  },
+  {
+   "model": "nano",
+   "lat_s": 0.09,
+   "load_s": 0.0,
+   "eval_count": 21,
+   "eval_dur_s": 0.08
+  }
+ ],
+ "alternate_nano_wesley_nano": [
+  {
+   "model": "nano",
+   "lat_s": 0.1,
+   "load_s": 0.0,
+   "eval_count": 21,
+   "eval_dur_s": 0.08
+  },
+  {
+   "model": "wesley",
+   "lat_s": 4.29,
+   "load_s": 3.5,
+   "eval_count": 64,
+   "eval_dur_s": 0.68
+  },
+  {
+   "model": "nano",
+   "lat_s": 3.71,
+   "load_s": 3.52,
+   "eval_count": 21,
+   "eval_dur_s": 0.1
+  }
+ ]
+}
