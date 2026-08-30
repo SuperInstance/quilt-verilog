@@ -1,0 +1,10 @@
+calibrating (times each model, warms the cache)...
+calib lfm     Liquid-LFM2.5-2.6B           3.32s/query (load 0.0s)
+calib qwen3   qwen3:8b                     5.05s/query (load 0.0s)
+calib wesley  granite3.1-dense:2b          3.95s/query (load 0.0s)
+calib nano    qwen2.5:0.5b                 2.25s/query (load 0.0s)
+projection: 21.8s/round, N=200 -> ~73 min
+round   1/200  24.5s  ops[lfm:fire lfm:fire lfm:link qwen3:fire qwen3:link wesley:link]  parse 6/6  warmth +0.258  eta 81m
+round   2/200  14.9s  ops[qwen3:fire nano:dial nano:dial nano:dial wesley:dial wesley:dial]  parse 12/12  warmth +0.256  eta 65m
+round   3/200  24.6s  ops[lfm:link lfm:link lfm:link qwen3:link qwen3:link]  parse 17/18  warmth +0.231  eta 70m
+round   4/200  15.2s  ops[qwen3:link nano:fire nano:dial wesley:fire wesley:fire]  parse 22/24  warmth +0.119  eta 65m

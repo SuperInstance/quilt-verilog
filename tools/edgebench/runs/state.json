@@ -1,0 +1,26 @@
+{
+ "config": {
+  "rounds": 200,
+  "max_minutes": 90.0,
+  "checkpoint_every": 25,
+  "models": [
+   "Liquid-LFM2.5-2.6B",
+   "qwen3:8b",
+   "granite3.1-dense:2b",
+   "qwen2.5:0.5b"
+  ]
+ },
+ "rounds_done": 0,
+ "n": 200,
+ "query_count": 0,
+ "cut_note": null,
+ "started_ts": 1788048193.3247933,
+ "calibration": {
+  "lfm": 3.318544387817383,
+  "qwen3": 5.0464383363723755,
+  "wesley": 3.9461370706558228,
+  "nano": 2.248616933822632
+ },
+ "projected_s_per_round": 21.83960509300232,
+ "updated_ts": 1788048222.4464211
+}
