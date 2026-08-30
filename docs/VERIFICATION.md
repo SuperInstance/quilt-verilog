@@ -15,7 +15,7 @@ itself; you do not need to export anything.
 make test      # RTL testbench suite (iverilog)          — ~1-2 min
 make sim       # behavioral Python lane (unittest)       — seconds
 make formal    # all six SymbiYosys proofs               — see timings below
-make synth     # yosys elaboration of the iCE40 top      — ~20 s
+make synth     # full iCE40 flow: yosys → nextpnr → icepack — see Lane 4
 make all       # all four, in that order
 ```
 
