@@ -434,22 +434,25 @@ shared machine — verdicts and wall times straight from each task's
 | `flit_pipe.fly` | BMC 40 | PASS | 73 s |
 | `fabric.conservation` | BMC 55 | PASS | 37 s |
 | `cell_core.tick` | BMC (README: 80) | PASS | 215 s |
-| `cell_core.fair` | BMC (README: 80) | PASS (documented; see note) | — |
+| `cell_core.fair` | BMC 130 (see note) | PASS, last measured 2026-08-29 at depth 80 — **not re-measured in this pass**; tree's .sby is depth 130, full completion still pending (see note) | — |
 
 The five measured rows land on the documented timings (3 s / <1 s /
 72 s / 38 s / 215 s, formal/README.md) — verdicts are the stable fact.
 
-**cell_core.fair note (full honesty).** The last complete PASS runs are
-the documented 2026-08-29 iterations (498–919 s across passes; formal/
-README.md, VERIFICATION.md Lane 3). It was re-attempted four times for
-this guide without completing: the tree's `formal/cell_core.fair.sby`
-now carries depth 130 (deeper than the README's "BMC 80" label), a solo
-run costs well over an hour, and this box was shared with sibling lanes
-at load ~8 (which also caused a workdir collision — `sby -f` wipes the
-shared `formal/<task>/` dir; serialize formal runs per clone). Every
-attempt ground past step 100 with **zero counterexamples** before being
-cut by session limits or that collision, so no fresh wall time is
-claimed. Budget 1–2 h solo; deep steps slow to ≈3–4 min/step past 100.
+**cell_core.fair note (full honesty).** Depth 130: why — the fair lane's
+Finding 3 (devil nudge, 2026-08-29) added tick-interference cases to the
+gap reasoning, and the composite bound I1b is `gap ≤ 128`
+(`GAP_MAX=128` in `f_cell_core_fair.v`): at depth 80 a 128-cycle gap
+cannot even be expressed, so I1b is only exercisable at depth ≥ 130.
+The bump entered the tree uncommitted via the 2026-08-30 adjudication
+sweep (`25a2461`) — the fair lane authored it, never committed it; this
+is INCIDENTS.md #1's failure class and is named there. The last complete
+PASS is the 2026-08-29 depth-80 run (498–919 s; formal/README.md,
+VERIFICATION.md Lane 3). **No depth-130 completion has ever landed**: two
+attempts on 2026-08-30 were cut (one by a workdir collision — see the
+serialize rule in VERIFICATION.md Lane 3 — one by box starvation at load
+~8), both after passing step ~100 with zero counterexamples. Budget 1–2 h
+solo on a quiet box; deep steps slow to ≈3–4 min/step past 100.
 
 Scope caveats that matter when you rely on these: bounded model
 checking — "unbounded liveness is not claimed" (formal/README.md) —

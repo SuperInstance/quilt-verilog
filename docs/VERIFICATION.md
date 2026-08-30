@@ -101,6 +101,17 @@ than the real system's behavior — e.g. E2's 12-cycle engine bound vs the
 real q_hebb_edge's 10). The conservation proof uses shrunk parameters
 (EDGES_N=1, K=4, B=4, AGEW=8), not the full fabric.
 
+**Operational gotcha — serialize formal runs per clone.** `sby -f` first
+DELETES the shared workdir `formal/<task>/`, then rebuilds it. Two lanes
+running the same `.sby` (or `make formal` overlapping anyone's solo
+`formal/<task>.sby` run) will destroy each other's in-flight proof — the
+victim loses its 15–60 minute run with no error pointing at the cause
+(this bit the fair lane for real, 2026-08-30; the failure was a workdir
+wiped mid-run, not a solver issue). Rule: one formal run per workdir; if
+you must parallelize, clone the repo. Also note `cell_core.fair` is the
+long pole (see its depth-130 note above) — start it first, or run it in
+its own clone.
+
 ## Lane 4 — `make synth` + `make pnr`: iCE40 flow (yosys, then nextpnr → icepack)
 
 `make synth` runs `yosys -s synth/fpga-converged.ice40` — ELABORATION
