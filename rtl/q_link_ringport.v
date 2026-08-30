@@ -53,7 +53,18 @@ module q_link_ringport #(
 );
     wire hit       = ri_valid && (ri_dst == i_myid);
     wire consumed  = hit && ld_ready;
-    wire transit   = ri_valid && !consumed;
+    // clone fix (silicon lane, 2026-08-30, found by sim/vlt/tb_scale_vlt.cpp
+    // ENTRY-IDENTITY trap + per-pipe push/pop witnesses): `transit` used
+    // to include hit-but-not-consumed flits, so a delivery blocked by a
+    // full ingress buffer drove ro_valid=1 while ri_ready=0 held the
+    // original in the upstream slice -- the ringport PUSHED A COPY
+    // downstream every stalled cycle (measured: +1 phantom ring
+    // entry/cycle at a full inbuf; the ring fills with clones and the
+    // ledger identity breaks by exactly the clone count). The unit
+    // contract (tb_link_ringport case 2: "stalls ring, no ro progress")
+    // is HOLD: a blocked hit occupies the slice; pass-through is
+    // non-hit only, so push and pop stay paired everywhere.
+    wire transit   = ri_valid && !hit;
     wire inject_ok = !ri_valid || consumed;
 
     assign ld_valid = hit;
@@ -74,6 +85,8 @@ module q_link_ringport #(
     assign ro_a2    = transit ? ri_a2  : li_a2;
     assign ro_dat   = transit ? ri_dat : li_dat;
 
+    // consumed pops for delivery; pass-through pops when downstream takes
+    // it; a blocked hit holds its slice (ld_ready backpressure, unchanged)
     assign ri_ready = hit ? ld_ready : ro_ready;
     assign li_ready = inject_ok && ro_ready;
 

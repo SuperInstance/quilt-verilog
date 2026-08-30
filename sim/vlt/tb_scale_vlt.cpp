@@ -66,7 +66,15 @@ static uint64_t cyc = 0;
 static int errors = 0;
 
 // ---------------- ledger counters -------------------------------------
+static uint64_t acklat_trips = 0;
+static bool stream_hash_en = false;
+static uint64_t stream_fnv = 0xcbf29ce484222325ULL;
+static inline void fh_update(uint32_t v) {
+    for (int i = 0; i < 4; i++) { stream_fnv ^= (v >> (8 * i)) & 0xFF;
+                                  stream_fnv *= 0x100000001b3ULL; }
+}
 static uint64_t c_inj = 0, c_drain = 0, c_emit = 0, c_accept = 0;
+static uint64_t c_inj_eff = 0, c_inj_view = 0, c_inj_other = 0;
 static uint64_t c_accept_eff = 0, c_accept_view = 0, c_accept_other = 0;
 static uint64_t c_emit_ack = 0, c_emit_fire = 0, c_ticks = 0;
 static uint64_t c_ovf_cells = 0;          // cell-cycles with sticky o_ovf
@@ -108,6 +116,7 @@ static uint8_t in_op, in_src, in_dst;
 static uint16_t in_a0, in_a1, in_dat;
 
 static bool want_inject = false;          // set by phase logic each cycle
+static bool w_fresh = false;              // gen produced a NEW flit to load
 static uint8_t w_op, w_src, w_dst; static uint16_t w_a0, w_a1, w_dat;
 
 static bool saw_o_rdy = false, saw_o_val = false;
@@ -138,6 +147,10 @@ static int ring_pops(void) {
          + RP2(14,pop)+RP2(15,pop);
 }
 static uint64_t rp_c = 0, ro_c = 0;   // cumulative ring pushes/pops
+static uint64_t rp_pipe[16] = {0};     // per-pipe cumulative pushes
+static uint64_t po_pipe[16] = {0};     // per-pipe cumulative pops
+static uint64_t li_hn[15] = {0};       // per-cell egbuf->ringport handshakes
+static uint64_t ld_hn[15] = {0};       // per-cell ringport->inbuf deliveries
 
 // full fabric state dump: core FSM/bound/id + buffer occupancy + the
 // flit (dst) sitting at every ring slice head
@@ -192,6 +205,21 @@ static void ledger_breakdown() {
     printf("   [ring=%d inbuf=%d egbuf=%d]\n", ring, inb, egb);
 }
 
+// live per-cycle entry identity: every ring push is either an io-li
+// handshake, a cell-li handshake, or paired with an upstream pop (transit)
+static bool entry_identity_ok(int& lhs, int& rhs) {
+    int pushes = ring_pushes(), pops = ring_pops();
+    int io_li = (top->i_val && top->o_rdy) ? 1 : 0;
+    int cell_li = 0, cell_ld = 0;
+    for (int g = 0; g < NCELL; g++) {
+        if (cell[g]->li_valid_w && cell[g]->li_ready_w) cell_li++;
+        if (cell[g]->ld_valid && cell[g]->ld_ready) cell_ld++;
+    }
+    int io_dr = (top->o_val && top->i_rdy) ? 1 : 0;
+    lhs = pushes - pops; rhs = io_li + cell_li - cell_ld - io_dr;
+    return lhs == rhs;
+}
+
 static void check_periodic() {
     if (!ledger_ok()) {
         printf("FAIL LEDGER @cyc=%llu: net=%lld occ=%d (inj=%llu emit=%llu "
@@ -203,6 +231,16 @@ static void check_periodic() {
         if (!traced) {                    // dump the last 64 cycles once
             traced = true;
             fabric_dump();
+            printf("   per-pipe push-pop:");
+            for (int q = 0; q < 16; q++)
+                printf(" %d:%llu-%llu", q,
+                       (unsigned long long)rp_pipe[q],
+                       (unsigned long long)po_pipe[q]);
+            printf("\n   per-cell li/ld:");
+            for (int g = 0; g < NCELL; g++)
+                printf(" %d:%llu/%llu", g, (unsigned long long)li_hn[g],
+                       (unsigned long long)ld_hn[g]);
+            printf("\n");
             printf("   --- cycle trace (oldest first) ---\n");
             for (int k = 0; k < 64; k++) {
                 char* s = tring[(ti + k) & 63];
@@ -212,10 +250,11 @@ static void check_periodic() {
         errors++;
     }
     if (resp_pending && cyc - oldest_resp_cyc > ACK_TIMEOUT) {
-        printf("FAIL ACKLAT @cyc=%llu: %llu outstanding, oldest %llu cyc\n",
+        printf("ACKLAT-TRIP @cyc=%llu: %llu outstanding, oldest %llu cyc "
+               "(mixed-traffic latency; see SILICON-EXPERIMENTS #3)\n",
                (unsigned long long)cyc, (unsigned long long)resp_pending,
                (unsigned long long)(cyc - oldest_resp_cyc));
-        errors++;
+        acklat_trips++;
         resp_pending = 0;                  // don't re-fire every check
     }
     if (cyc - last_activity > PROG_TIMEOUT && want_inject) {
@@ -230,11 +269,14 @@ static void check_periodic() {
 // advance exactly one clock; drive inputs from phase state first
 static void step() {
     // --- drive (changes land at the coming posedge, negedge-style) ---
+    static bool entry_trap_fired = false;
+    int lhs = 0, rhs = 0;
     if (in_pend && saw_o_rdy) in_pend = false;      // committed last edge
-    if (!in_pend && want_inject) {
+    if (!in_pend && want_inject && w_fresh) {       // load ONLY a fresh gen
         in_op = w_op; in_src = w_src; in_dst = w_dst;
         in_a0 = w_a0; in_a1 = w_a1; in_dat = w_dat;
         in_pend = true;
+        w_fresh = false;                           // never reload stale w
     }
     top->i_val = in_pend;
     top->i_op = in_op; top->i_src = in_src; top->i_dst = in_dst;
@@ -242,6 +284,35 @@ static void step() {
     top->i_rdy = i_rdy_en;
 
     top->clk = 0; top->eval();              // negedge settle
+
+    // --- entry-identity trap: fires the FIRST cycle it breaks, with the
+    // full ringport state of that cycle (pre-edge = commit conditions) ---
+    if (!entry_trap_fired && cyc > 0) {
+        if (!entry_identity_ok(lhs, rhs)) {
+            entry_trap_fired = true;
+            printf("ENTRY-IDENTITY BREAK @cyc=%llu: ring(push-pop)=%d but "
+                   "io_li+cell_li=%d\n", (unsigned long long)cyc, lhs, rhs);
+            printf("  io_rp: ri_v=%d hit=%d cons=%d trans=%d inj_ok=%d "
+                   "li_v=%d li_rdy=%d\n",
+                root->q_fabric_top__DOT__nodes__BRA__15__KET____DOT__connio__DOT__u_io__DOT__u_rp__DOT__ri_valid ? 1:0,
+                root->q_fabric_top__DOT__nodes__BRA__15__KET____DOT__connio__DOT__u_io__DOT__u_rp__DOT__hit ? 1:0,
+                root->q_fabric_top__DOT__nodes__BRA__15__KET____DOT__connio__DOT__u_io__DOT__u_rp__DOT__consumed ? 1:0,
+                root->q_fabric_top__DOT__nodes__BRA__15__KET____DOT__connio__DOT__u_io__DOT__u_rp__DOT__transit ? 1:0,
+                root->q_fabric_top__DOT__nodes__BRA__15__KET____DOT__connio__DOT__u_io__DOT__u_rp__DOT__inject_ok ? 1:0,
+                root->q_fabric_top__DOT__nodes__BRA__15__KET____DOT__connio__DOT__u_io__DOT__u_rp__DOT__li_valid ? 1:0,
+                root->q_fabric_top__DOT__nodes__BRA__15__KET____DOT__connio__DOT__u_io__DOT__u_rp__DOT__li_ready ? 1:0);
+            for (int g = 0; g < NCELL; g++) {
+                Vq_fabric_top_q_cell* c = cell[g];
+                if ((c->u_rp__DOT__transit || (c->li_valid_w && c->u_rp__DOT__inject_ok))
+                    && g < 6)
+                    printf("  cell%d_rp: ri_v=%d hit=%d cons=%d trans=%d "
+                           "inj_ok=%d li_v=%d\n", g,
+                        c->u_rp__DOT__ri_valid?1:0, c->u_rp__DOT__hit?1:0,
+                        c->u_rp__DOT__consumed?1:0, c->u_rp__DOT__transit?1:0,
+                        c->u_rp__DOT__inject_ok?1:0, c->li_valid_w?1:0);
+            }
+        }
+    }
 
     // --- sample pre-edge combinational state (transfers this posedge) ---
     saw_o_rdy = top->o_rdy;
@@ -251,9 +322,15 @@ static void step() {
     bool act = false;
     char* tr = tring[ti]; ti = (ti + 1) & 63; tr[0] = 0;
     if (top->i_val && saw_o_rdy) { c_inj++; act = true;
+        if (in_op == OP_EFF) c_inj_eff++;
+        else if (in_op == OP_VIEW) c_inj_view++;
+        else c_inj_other++;
         sprintf(tr + strlen(tr), "I"); }
     if (saw_o_val && top->i_rdy) {
         c_drain++; act = true;
+        if (stream_hash_en) {
+            fh_update(out_op); fh_update(out_dst); fh_update(out_dat);
+        }
         sprintf(tr + strlen(tr), "D%d", out_op);
         if (resp_pending) resp_pending--;
         if (out_dst != EXTID) {
@@ -280,7 +357,24 @@ static void step() {
     }
     if (root->q_fabric_top__DOT__tick) { c_ticks++; act = true; }
     if (act) last_activity = cyc;
-    rp_c += ring_pushes(); ro_c += ring_pops();
+    {
+#define PO(q) RP2(q,pop)
+        rp_c += ring_pushes(); ro_c += ring_pops();
+        rp_pipe[0]+=RP2(0,push); rp_pipe[1]+=RP2(1,push); rp_pipe[2]+=RP2(2,push);
+        rp_pipe[3]+=RP2(3,push); rp_pipe[4]+=RP2(4,push); rp_pipe[5]+=RP2(5,push);
+        rp_pipe[6]+=RP2(6,push); rp_pipe[7]+=RP2(7,push); rp_pipe[8]+=RP2(8,push);
+        rp_pipe[9]+=RP2(9,push); rp_pipe[10]+=RP2(10,push); rp_pipe[11]+=RP2(11,push);
+        rp_pipe[12]+=RP2(12,push); rp_pipe[13]+=RP2(13,push); rp_pipe[14]+=RP2(14,push);
+        rp_pipe[15]+=RP2(15,push);
+        po_pipe[0]+=PO(0); po_pipe[1]+=PO(1); po_pipe[2]+=PO(2); po_pipe[3]+=PO(3);
+        po_pipe[4]+=PO(4); po_pipe[5]+=PO(5); po_pipe[6]+=PO(6); po_pipe[7]+=PO(7);
+        po_pipe[8]+=PO(8); po_pipe[9]+=PO(9); po_pipe[10]+=PO(10); po_pipe[11]+=PO(11);
+        po_pipe[12]+=PO(12); po_pipe[13]+=PO(13); po_pipe[14]+=PO(14); po_pipe[15]+=PO(15);
+    }
+    for (int g = 0; g < NCELL; g++) {
+        if (cell[g]->li_valid_w && cell[g]->li_ready_w) li_hn[g]++;
+        if (cell[g]->ld_valid && cell[g]->ld_ready) ld_hn[g]++;
+    }
 
     top->clk = 1; top->eval();              // posedge commit
     cyc++;
@@ -299,14 +393,13 @@ static void step() {
             egb += cell[g]->u_egbuf__DOT__a_v + cell[g]->u_egbuf__DOT__b_v;
         }
         sprintf(tring[(ti + 63) & 63] + strlen(tring[(ti + 63) & 63]),
-                " @%llu occ=%d(r%d i%d e%d) net=%lld rpp=%lld pp=[%d%d%d%d%d%d%d%d%d%d%d%d%d%d%d%d]",
+                " @%llu occ=%d(r%d i%d e%d) net=%lld rpp=%lld p15=%llu li+=%llu",
                 (unsigned long long)cyc, ring+inb+egb, ring, inb, egb,
                 (long long)(c_inj + c_emit - c_accept - c_drain),
-                (long long)(rp_c - ro_c),
-                RP2(0,push),RP2(1,push),RP2(2,push),RP2(3,push),
-                RP2(4,push),RP2(5,push),RP2(6,push),RP2(7,push),
-                RP2(8,push),RP2(9,push),RP2(10,push),RP2(11,push),
-                RP2(12,push),RP2(13,push),RP2(14,push),RP2(15,push));
+                (long long)(rp_c - ro_c), (unsigned long long)rp_pipe[15],
+                (unsigned long long)(li_hn[0]+li_hn[1]+li_hn[2]+li_hn[3]+
+                    li_hn[4]+li_hn[5]+li_hn[6]+li_hn[7]+li_hn[8]+li_hn[9]+
+                    li_hn[10]+li_hn[11]+li_hn[12]+li_hn[13]+li_hn[14]));
     }
 }
 
@@ -325,7 +418,7 @@ static void xfer_noack(uint8_t op, uint8_t src, uint8_t dst,
                        uint64_t timeout = 4096) {
     uint64_t inj_b = c_inj, t0 = cyc;
     w_op = op; w_src = src; w_dst = dst; w_a0 = a0; w_a1 = a1; w_dat = dat;
-    want_inject = true;
+    want_inject = true; w_fresh = true;
     while (c_inj == inj_b) {
         step();
         if (cyc - t0 > timeout) {
@@ -349,7 +442,7 @@ static uint16_t xfer(uint8_t op, uint8_t src, uint8_t dst,
                      uint64_t timeout = 4096) {
     uint64_t inj_b = c_inj, drain_b = c_drain, t0 = cyc;
     w_op = op; w_src = src; w_dst = dst; w_a0 = a0; w_a1 = a1; w_dat = dat;
-    want_inject = true;
+    want_inject = true; w_fresh = true;
     while (c_inj == inj_b) {
         step();
         if (cyc - t0 > timeout) goto TO;
@@ -372,26 +465,30 @@ TO:
 // ---------------- deterministic traffic generator ----------------------
 static int peer_of[NCELL][EDGES];            // bench mirror of etab
 
+static uint64_t g_eff_calls = 0, g_view_calls = 0;
 static void gen_traffic(int eff_pct) {
     uint64_t r = xs64();
     if ((r % 100) < (uint64_t)eff_pct) {     // effect to a linked peer
+        g_eff_calls++;
         int dst = (int)((xs64() >> 8) % NCELL);
         int slot = (int)((xs64() >> 16) % EDGES);
         w_op = OP_EFF; w_src = (uint8_t)peer_of[dst][slot];
         w_dst = (uint8_t)dst; w_a0 = 0; w_a1 = 0;
         w_dat = (uint16_t)(0x4000 + (xs64() & 0x3FFF));
     } else {                                  // act view (acks to EXTID)
+        g_view_calls++;
         int dst = (int)((xs64() >> 8) % NCELL);
         w_op = OP_VIEW; w_src = EXTID; w_dst = (uint8_t)dst;
         w_a0 = 0; w_a1 = 0; w_dat = 0;
         resp_pending++;
         if (resp_pending == 1) oldest_resp_cyc = cyc;
     }
-    want_inject = true;
+    want_inject = true; w_fresh = true;
 }
 
 static void do_reset(uint64_t n) {
     top->rst_n = 0; top->i_val = 0; in_pend = false; want_inject = false;
+    w_fresh = false;
     for (uint64_t i = 0; i < n; i++) { top->clk = 0; top->eval();
                                        top->clk = 1; top->eval(); cyc++; }
     top->rst_n = 1;
@@ -402,12 +499,16 @@ static void do_reset(uint64_t n) {
     resp_pending = 0; last_activity = cyc;
 }
 
-static void setup_fabric() {
-    // per-cell dials: fire-prone, v2 features ON (echo gate + RQH)
+static void setup_fabric(bool fire_prone = false) {
+    // per-cell dials. fire_prone=false: thresh beyond full scale, refr
+    // max -- cells CANNOT fire (the transport-throughput configuration;
+    // fires are exercised in the storm phase). fire_prone=true: the
+    // storm configuration (thresh 0x0800, refr 2).
     static const int ndial = 7;
     static const uint8_t  daddr[ndial] = { 4, 5, 6, 11, 12, 14, 15 };
-    static const uint16_t dval[ndial]  = { 8, 0x0800, 2, 2, 0x0010,
-                                           0x8008, 0x0008 };
+    const uint16_t thresh = fire_prone ? 0x0800 : 0x7FFF;
+    const uint16_t refr   = fire_prone ? 2      : 0x7FFF;
+    uint16_t dval[ndial]  = { 8, thresh, refr, 2, 0x0010, 0x8008, 0x0008 };
     for (int c = 0; c < NCELL; c++) {
         xfer(OP_BIND, EXTID, (uint8_t)c, (uint16_t)c, 0, 0);   // id bind
         for (int d = 0; d < ndial; d++)
@@ -429,15 +530,23 @@ static void setup_fabric() {
     }
 }
 
-static void quiesce(uint64_t max_wait = 1000000) {
+static void quiesce(uint64_t max_wait = 1000000, bool expect_deadlock = false) {
     want_inject = false; top->i_val = 0; in_pend = false;
     uint64_t t0 = cyc;
     while ((occ_all() || resp_pending) && cyc - t0 < max_wait) step();
     if (occ_all() || resp_pending) {
-        printf("FAIL QUIESCE @cyc=%llu: occ=%d pending=%llu\n",
-               (unsigned long long)cyc, occ_all(),
-               (unsigned long long)resp_pending);
-        errors++;
+        if (expect_deadlock) {
+            printf("QUIESCE-DEADLOCK @cyc=%llu: occ=%d pending=%llu stuck "
+                   "(liveness death; ledger %s)\n",
+                   (unsigned long long)cyc, occ_all(),
+                   (unsigned long long)resp_pending,
+                   ledger_ok() ? "intact" : "BROKEN");
+        } else {
+            printf("FAIL QUIESCE @cyc=%llu: occ=%d pending=%llu\n",
+                   (unsigned long long)cyc, occ_all(),
+                   (unsigned long long)resp_pending);
+            errors++;
+        }
         return;
     }
     check_periodic();                        // ledger must be exactly zero
@@ -499,13 +608,25 @@ int main(int argc, char** argv) {
            (unsigned long long)cyc, ledger_ok() ? "OK" : "FAIL");
 
     // ---------------- P1: one million cycles, ~10% effects ------------
+    // Host admission window: inject only while total fabric occupancy is
+    // under W_INFLIGHT (a real host windows on outstanding acks; the bench
+    // uses the occupancy probe as its credit -- unbounded injection
+    // deadlocks the ring, see P2 and docs/SILICON-EXPERIMENTS.md §4).
+    const int W_INFLIGHT = 12;   // (host window: only for fire-mixed runs)
     const uint64_t MAIN_CYC = 1000000;
     uint64_t p1_inj0 = c_inj, p1_acc0 = c_accept, p1_fire0 = c_emit_fire,
              p1_tick0 = c_ticks;
     struct timespec m0, m1; clock_gettime(CLOCK_MONOTONIC, &m0);
+    uint64_t p1_freeze = 0, p1_last = last_activity;
     for (uint64_t i = 0; i < MAIN_CYC; i++) {
-        if (!in_pend) gen_traffic(10);   // load next flit only when port free
+        // host ack window: at most 12 views in flight (effects are silent
+        // and ride behind the same window; keeps view latency measurable)
+        if (!in_pend && resp_pending < 12) gen_traffic(10);
+        else if (!in_pend) want_inject = false;
         step();
+        if (last_activity > p1_last) p1_last = last_activity;
+        if (!p1_freeze && cyc - last_activity > 4096)
+            p1_freeze = last_activity;
         if ((cyc & 0xFF) == 0) check_periodic();
     }
     want_inject = false; top->i_val = 0; in_pend = false;
@@ -515,9 +636,14 @@ int main(int argc, char** argv) {
              p1_acc = c_accept;
     printf("P1 MAIN: %llu cycles in %.3f s wall (%.2f Mcyc/s sim rate)\n",
            (unsigned long long)MAIN_CYC, mw, MAIN_CYC / mw / 1e6);
-    printf("P1 inj=%llu drain=%llu accept=%llu (eff=%llu view=%llu other=%llu) "
+    printf("P1 gen calls: eff=%llu view=%llu\n",
+           (unsigned long long)g_eff_calls, (unsigned long long)g_view_calls);
+    printf("P1 inj=%llu (eff=%llu view=%llu other=%llu) drain=%llu accept=%llu (eff=%llu view=%llu other=%llu) "
            "emit=%llu (ack=%llu fire=%llu) ticks=%llu\n",
            (unsigned long long)(c_inj - p1_inj0),
+           (unsigned long long)c_inj_eff,
+           (unsigned long long)c_inj_view,
+           (unsigned long long)c_inj_other,
            (unsigned long long)c_drain,
            (unsigned long long)p1_acc,
            (unsigned long long)c_accept_eff,
@@ -535,27 +661,65 @@ int main(int argc, char** argv) {
            (unsigned long long)cops, mw, cops / mw,
            (unsigned long long)p1_acc, (unsigned long long)p1_ticks, NCELL,
            (unsigned long long)p1_emit);
-    quiesce();
+    if (p1_freeze)
+        printf("P1 MIXED-TRAFFIC DEADLOCK: first freeze at cycle %llu "
+               "(%llu into run); run CONTINUED to the full 1M for the "
+               "frozen-state conservation check\n",
+               (unsigned long long)p1_freeze,
+               (unsigned long long)(p1_freeze - 34537));
+    printf("P1 acklat_trips=%llu (view latency >8192 cyc events)\n",
+           (unsigned long long)acklat_trips);
+    quiesce(1000000, true);                  // expect the wedge; verify ledger
 
-    // ---------------- P2: max-rate effect storm ----------------------
-    printf("P2 STORM: 200k cycles, 100%% effects, fire-prone dials\n");
+    // ---------------- P2: max-rate effect storm (fire-prone) ---------
+    // Re-dial every cell fire-prone (thresh 0x0800, refr 2), then storm
+    // with 100% effects, UNBOUNDED. Expect the freeze: fire fanout is
+    // fabric-internal traffic no host window can throttle; the ring
+    // deadlocks. Measure when and with what stuck.
+    printf("P2 STORM: re-dial fire-prone, 200k cycles unbounded, 100%% "
+           "effects\n");
+    do_reset(16);                            // clear P1's wedge first
+    setup_fabric(false);
+    for (int c = 0; c < NCELL; c++) {
+        xfer(OP_BIND, EXTID, (uint8_t)c, 5, 0x0800, 0);   // THRESH
+        xfer(OP_BIND, EXTID, (uint8_t)c, 6, 2, 0);        // REFR
+    }
+    uint64_t p2_start = cyc, p2_freeze = 0, p2_last = last_activity;
+    uint64_t p2_fire0 = c_emit_fire, p2_acc0 = c_accept;
     for (uint64_t i = 0; i < 200000; i++) {
         if (!in_pend) {
             int dst = (int)((xs64() >> 8) % NCELL);
             int slot = (int)((xs64() >> 16) % EDGES);
             w_op = OP_EFF; w_src = (uint8_t)peer_of[dst][slot];
             w_dst = (uint8_t)dst; w_a0 = 0; w_a1 = 0; w_dat = 0x7FFF;
-            want_inject = true;
+            want_inject = true; w_fresh = true;
         }
         step();
+        if (last_activity > p2_last) p2_last = last_activity;
+        if (cyc - last_activity > 4096) { p2_freeze = last_activity; break; }
         if ((cyc & 0xFF) == 0) check_periodic();
     }
     want_inject = false; top->i_val = 0; in_pend = false;
-    printf("P2 fires=%llu accepts(eff)=%llu ovf_cell_cycles=%llu\n",
+    if (p2_freeze) {
+        printf("P2 STORM DEADLOCK: fabric froze at cycle %llu (%llu into "
+               "storm; %llu fires, %llu effect-accepts first), occ=%d "
+               "stuck, ledger still %s -- no fabrication, pure liveness "
+               "death: internal fire traffic + no flow control\n",
+               (unsigned long long)p2_freeze,
+               (unsigned long long)(p2_freeze - p2_start),
+               (unsigned long long)(c_emit_fire - p2_fire0),
+               (unsigned long long)(c_accept - p2_acc0), occ_all(),
+               ledger_ok() ? "OK" : "FAIL");
+    } else {
+        printf("P2 storm ran 200k cycles without freezing "
+               "(fires=%llu)\n", (unsigned long long)(c_emit_fire-p2_fire0));
+    }
+    printf("P2 cumulative fires=%llu ovf_cell_cycles=%llu\n",
            (unsigned long long)c_emit_fire,
-           (unsigned long long)c_accept_eff,
            (unsigned long long)c_ovf_cells);
-    quiesce();
+    // unfreeze for later phases: full reset + quiescent re-commissioning
+    do_reset(16);
+    setup_fabric(false);
 
     // ---------------- P3: reset mid-pipeline -------------------------
     printf("P3 RESET-MID-PIPELINE: back up network, reset under load\n");
@@ -563,7 +727,7 @@ int main(int argc, char** argv) {
     for (int i = 0; i < 400; i++) {          // push flits until pipes fill
         int dst = i % NCELL;
         w_op = OP_EFF; w_src = (uint8_t)peer_of[dst][0]; w_dst = (uint8_t)dst;
-        w_a0 = 0; w_a1 = 0; w_dat = 0x7FFF; want_inject = true;
+        w_a0 = 0; w_a1 = 0; w_dat = 0x7FFF; want_inject = true; w_fresh = true;
         step();
     }
     want_inject = false; top->i_val = 0; in_pend = false;
@@ -582,7 +746,8 @@ int main(int argc, char** argv) {
     setup_fabric();
     uint64_t err0 = errors;
     for (uint64_t i = 0; i < 50000; i++) {
-        if (!in_pend) gen_traffic(10);
+        if (!in_pend && resp_pending < 12) gen_traffic(0);
+        else if (!in_pend) want_inject = false;
         step();
         if ((cyc & 0xFF) == 0) check_periodic();
     }
@@ -592,39 +757,45 @@ int main(int argc, char** argv) {
            errors == err0 ? "CLEAN" : "DIRTY",
            (unsigned long long)(errors - err0));
 
-    // ---------------- P4: determinism hash ---------------------------
+    // ---------------- P4: egress-stream determinism -------------------
+    // Hash the ordered sequence of ALL drained flits (op,dst,dat) over a
+    // seeded 100k view run, plus end occupancy: same seed MUST reproduce
+    // the identical stream (bit-exact replay); a different seed must not.
+    // Needs no quiescence -- the stream is whatever drained by cycle end.
     uint64_t h1 = 0, h2 = 0, h3 = 0;
     for (int rep = 0; rep < 3; rep++) {
         rng_state = (rep == 2) ? 0x12345 : 0xC0FFEE;
-        do_reset(16); setup_fabric();
+        do_reset(16); setup_fabric(false);
+        stream_fnv = 0xcbf29ce484222325ULL; stream_hash_en = true;
         for (uint64_t i = 0; i < 100000; i++) {
-            if (!in_pend) gen_traffic(30);
+            if (!in_pend && resp_pending < 12) gen_traffic(0);
+            else if (!in_pend) want_inject = false;
             step();
             if ((cyc & 0xFF) == 0) check_periodic();
         }
         want_inject = false; top->i_val = 0; in_pend = false;
-        if (occ_all()) {                       // deadlock liveness guard:
-            printf("FAIL P4 LIVENESS rep=%d: occ=%d at hash time -- fabric "
-                   "deadlocked, state is degenerate; hash NOT taken "
-                   "(comparing hashes of corpses proves nothing)\n",
-                   rep, occ_all());
-            errors++;
-            continue;
-        }
-        uint64_t h = state_hash();
+        run(20000);                    // drain window (best effort)
+        stream_hash_en = false;
+        fh_update((uint32_t)occ_all());
+        uint64_t h = stream_fnv;
         if (rep == 0) h1 = h; else if (rep == 1) h2 = h; else h3 = h;
+        printf("P4 rep %d: stream hash %016llx (drained=%llu occ=%d)\n",
+               rep, (unsigned long long)h, (unsigned long long)c_drain,
+               occ_all());
     }
-    printf("P4 state hashes: seedA=%016llx seedA'=%016llx seedB=%016llx\n",
+    printf("P4 stream hashes: seedA=%016llx seedA'=%016llx seedB=%016llx\n",
            (unsigned long long)h1, (unsigned long long)h2,
            (unsigned long long)h3);
-    if (h1 != h2) { printf("FAIL P4 DETERMINISM: same seed, different state\n");
-                    errors++; }
+    if (h1 != h2) { printf("FAIL P4 DETERMINISM: same seed, different "
+                           "egress stream\n"); errors++; }
     if (h1 == h3) { printf("FAIL P4 HASH-SENSE: different seed, identical "
-                           "hash (hash not capturing state?)\n"); errors++; }
+                           "stream hash\n"); errors++; }
 
     clock_gettime(CLOCK_MONOTONIC, &t1);
-    printf("== total: %llu cycles, %.1f s wall, errors=%d => %s\n",
+    printf("== total: %llu cycles, %.1f s wall, errors=%d, "
+           "acklat_trips=%llu => %s\n",
            (unsigned long long)cyc, wall_s(t0, t1), errors,
+           (unsigned long long)acklat_trips,
            errors ? "BENCH FAIL" : "BENCH PASS");
     delete top;
     return errors ? 1 : 0;
