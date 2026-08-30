@@ -80,6 +80,7 @@ the full shelf; this is the tour.
 | [docs/academic/THE-BREAKDOWN.md](academic/THE-BREAKDOWN.md) | The adversarial dossier: every load-bearing claim as CLAIM → DEFINITIONS → PROOF → MACHINE CHECK → ATTACK SURFACE → CLOSURE, with the exact reproduce commands. |
 | [docs/academic/RETURN.md](academic/RETURN.md) | The metal leg's return cargo: what verification taught the mathematics (the round trip's changed-things ledger). |
 | [docs/review-claude.md](review-claude.md) | Cross-review of the claude entry (ARCHITECTURE + RTL-SKETCH). |
+| [docs/UNSLOTH-CROSS-EXAM.md](UNSLOTH-CROSS-EXAM.md) | External Unsloth-doctrines pitch, cross-examined: verdict table (already-have / violates-covenant / worth-measuring), confabulations named, tick-leak truncation drift measured over 2×100k ticks. |
 | [docs/review-glm.md](review-glm.md) | Cross-review of the glm entry — The Chain-Quilt: cells, ladders, one shared math tail. |
 | [docs/review-opencode.md](review-opencode.md) | Cross-review of the opencode entry — LOOM/1. |
 | [docs/review-seed.md](review-seed.md) | Cross-review of the seed entry. |

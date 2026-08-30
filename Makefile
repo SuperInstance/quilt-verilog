@@ -59,6 +59,18 @@ formal:
 verify-all:
 	bash examples/verify.sh
 
+## drift — measured piece of docs/UNSLOTH-CROSS-EXAM.md §3: tick-leak
+## truncation drift, 2 x 100k ticks on a real q_cell (~4 s). PASS =
+## models bit-exact vs RTL; the drift numbers are data, not pass/fail.
+drift:
+	@$(call GUARD,iverilog)
+	iverilog -g2005 -s tb_decay_drift -o tb/run/tb_decay_drift.vvp \
+	  rtl/q_tick_sched.v rtl/q_flit_pipe.v rtl/q_link_ringport.v rtl/q_dialfile.v \
+	  rtl/q_hebb_edge.v rtl/q_echo_gate.v rtl/q_rqh_bank.v rtl/q_cell_core.v \
+	  rtl/q_cell.v rtl/q_io_port.v rtl/q_fabric_top.v tb/tb_decay_drift.v
+	vvp tb/run/tb_decay_drift.vvp
+
+
 ## synth — yosys iCE40 elaboration of the PnR-converged top (k4b4a8e1).
 ## Elaboration ONLY (~20 s); the measured PnR/bitstream numbers come next:
 synth:
