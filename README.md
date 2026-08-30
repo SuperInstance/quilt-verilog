@@ -38,9 +38,14 @@ caveats, and honest gaps are in `docs/VERIFICATION.md`.
 make test      # RTL testbench suite — 18/18 PASS
 make sim       # behavioral Python lane — 34/34 OK
 make formal    # all six SymbiYosys proofs — PASS
-make synth     # yosys iCE40 elaboration of the PnR-converged top — exit 0, ~20 s
-make all       # all four
+make synth     # yosys iCE40 ELABORATION of the PnR-converged top — exit 0, ~20 s
+make pnr       # the measured numbers: nextpnr (7,528/7,680 LC, 98%) + icepack → 135,100-byte bin — ~3 min
+make all       # all five
 ```
+
+If the tools aren't found, the Makefile says so with a hint (point it at
+your oss-cad-suite via `make OSSCAD=/path/to/oss-cad-suite/bin <target>`)
+instead of a bare `command not found`.
 
 Equivalent commands, run directly (what the targets invoke):
 

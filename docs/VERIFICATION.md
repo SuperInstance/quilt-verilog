@@ -15,11 +15,14 @@ itself; you do not need to export anything.
 make test      # RTL testbench suite (iverilog)          — ~1-2 min
 make sim       # behavioral Python lane (unittest)       — seconds
 make formal    # all six SymbiYosys proofs               — see timings below
-make synth     # full iCE40 flow: yosys → nextpnr → icepack — see Lane 4
-make all       # all four, in that order
+make synth     # yosys iCE40 elaboration of the converged top    — ~20 s
+make pnr       # nextpnr-ice40 → icepack of the converged top   — ~3 min
+make all       # all five, in that order
 ```
 
-All four targets were run and verified green on 2026-08-29 (iteration 2).
+All five targets were run and verified green on 2026-08-29 (iteration 2;
+`make pnr` added in the same audit wave — before it, the measured PnR
+numbers were not reachable from any make target).
 `make clean` removes generated proof dirs and `tb/run` artifacts (sources
 untouched).
 
@@ -98,16 +101,18 @@ than the real system's behavior — e.g. E2's 12-cycle engine bound vs the
 real q_hebb_edge's 10). The conservation proof uses shrunk parameters
 (EDGES_N=1, K=4, B=4, AGEW=8), not the full fabric.
 
-## Lane 4 — `make synth`: iCE40 flow (yosys → nextpnr → icepack)
+## Lane 4 — `make synth` + `make pnr`: iCE40 flow (yosys, then nextpnr → icepack)
 
-Run: `yosys -s synth/fpga-converged.ice40` — the PnR-converged k4b4a8e1
-config (the formal conservation proof's parameters) on the real
-`q_fabric_top`. Note: the script chains the FULL flow — yosys →
-nextpnr-ice40 (HX8K-CT256, 12 MHz target) → icepack — so `make synth`
-reproduces the bitstream too.
+`make synth` runs `yosys -s synth/fpga-converged.ice40` — ELABORATION
+ONLY (~20 s): the PnR-converged k4b4a8e1 config (the formal conservation
+proof's parameters) on the real `q_fabric_top`, emitting
+`synth/fabric2_k4b4a8e1_ice40.json` + a `stat` table. It does NOT run
+place-and-route. **`make pnr` is the rest of the flow** —
+nextpnr-ice40 (HX8K-CT256, 12 MHz target) → icepack — and reproduces
+the measured LC/fmax/bitstream numbers below.
 
-**Result (2026-08-29, iteration 2): exit 0, ~20 s yosys + full PnR +
-icepack.** 6,002 SB_LUT4, 898 SB_CARRY, ~2,430 FF-class cells, 157
+**Result (2026-08-29, iteration 2): synth exit 0 ~20 s; pnr exit 0 ~3
+min, full PnR + icepack.** 6,002 SB_LUT4, 898 SB_CARRY, ~2,430 FF-class cells, 157
 port bits on this tree (the committed
 `synth/stat_fabric2_k4b4a8e1.txt` records 5,951 LUT4 / 878 CARRY from the
 PIPE_EFF-retime commit; the tree has moved since — both are real
