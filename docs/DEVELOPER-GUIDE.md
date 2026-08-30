@@ -9,10 +9,10 @@ claim cites `file:line` or a measured run from this tree. Where something
 is *not* proven, it says so (see also `docs/VERIFICATION.md`, "What is
 NOT covered").
 
-Companion docs: `README.md` (front door, The Law), `docs/THE-TICK.md`
-(one tick traced), `docs/QUF-SPEC.md` (the container format),
-`formal/README.md` + `docs/FORMAL-PROOFS.md` (the six proofs),
-`docs/VERIFICATION.md` (all lanes, honest gaps).
+Companions: `README.md` (The Law), `docs/THE-TICK.md` (one tick traced),
+`docs/QUF-SPEC.md` (the container), `formal/README.md` +
+`docs/FORMAL-PROOFS.md` (the six proofs), `docs/VERIFICATION.md` (all
+lanes, honest gaps).
 
 ---
 
@@ -422,20 +422,41 @@ same QUF — not a hardware proof (VERIFICATION.md, scope note).
 
 ### make formal — six SymbiYosys proofs
 
-`sby -f` over the five `formal/*.sby` plus `tb/formal/flit_pipe.sby`.
-Wall time dominates the suite (~14 min total on the documented runs);
-per-proof measured verdicts (formal/README.md table, re-proven
-2026-08-29 with PIPE_EFF=1 pinned): flit_pipe.fly BMC 40 PASS; 
-cell_core.fair BMC 80 PASS (I1a gap ≤ 64, I1b ≤ 128, I2 response ≤ 66);
-cell_core.tick BMC 80 PASS (Q2 suppression + deadlines under flood);
-fabric.conservation BMC 55 PASS (2-cell ledger, no silent drops);
-echo_gate.dyadic BMC 25 PASS; tb/formal/flit_pipe prove-15 PASS
-(k-inductive). Honest scope: bounded model checking — "unbounded
-liveness is not claimed" (formal/README.md) — under stated environment
-contracts E1–E4, each weaker than the real system. The two RTL defects
-these proofs forced (multi-driven `tick_pend`; the ci_ready one-cycle
-hole) are documented as Findings 1–2 in formal/README.md and fixed in
-the tree.
+`sby -f` over the five `formal/*.sby` plus `tb/formal/flit_pipe.sby`
+(Makefile `FORMAL_SBY` list). Re-run for this guide, 2026-08-30, on a
+shared machine — verdicts and wall times straight from each task's
+`formal/<task>/status`:
+
+| proof | mode (tree's .sby) | verdict | measured wall time (this pass) |
+|---|---|---|---|
+| `echo_gate.dyadic` | BMC 25 | PASS | 2 s |
+| `tb/formal/flit_pipe` | prove (k-ind), depth 15 | PASS | <1 s |
+| `flit_pipe.fly` | BMC 40 | PASS | 73 s |
+| `fabric.conservation` | BMC 55 | PASS | 37 s |
+| `cell_core.tick` | BMC (README: 80) | PASS | 215 s |
+| `cell_core.fair` | BMC (README: 80) | PASS (documented; see note) | — |
+
+The five measured rows land on the documented timings (3 s / <1 s /
+72 s / 38 s / 215 s, formal/README.md) — verdicts are the stable fact.
+
+**cell_core.fair note (full honesty).** The last complete PASS runs are
+the documented 2026-08-29 iterations (498–919 s across passes; formal/
+README.md, VERIFICATION.md Lane 3). It was re-attempted four times for
+this guide without completing: the tree's `formal/cell_core.fair.sby`
+now carries depth 130 (deeper than the README's "BMC 80" label), a solo
+run costs well over an hour, and this box was shared with sibling lanes
+at load ~8 (which also caused a workdir collision — `sby -f` wipes the
+shared `formal/<task>/` dir; serialize formal runs per clone). Every
+attempt ground past step 100 with **zero counterexamples** before being
+cut by session limits or that collision, so no fresh wall time is
+claimed. Budget 1–2 h solo; deep steps slow to ≈3–4 min/step past 100.
+
+Scope caveats that matter when you rely on these: bounded model
+checking — "unbounded liveness is not claimed" (formal/README.md) —
+under stated environment contracts E1–E4, each weaker than the real
+system. The two RTL defects the proofs forced (multi-driven `tick_pend`;
+the ci_ready one-cycle hole) are documented as Findings 1–2 in
+formal/README.md and fixed in the tree.
 
 ### make synth / make pnr — iCE40 elaboration, then the measured numbers
 
@@ -459,8 +480,8 @@ Measured just now: exit 0, ~1–3 min, `synth/report_k4b4a8e1.json` →
 `synth/fabric2_k4b4a8e1.bin`. (PnR seed variance is real and documented:
 40.44 / 43.36 / 44.43 MHz across passes — VERIFICATION.md Lane 4.)
 
-`make all` = test, sim, formal, synth, pnr in order. `make clean`
-removes generated proof dirs and `tb/run` artifacts only — sources stay.
+`make all` = all five in order. `make clean` removes generated proof
+dirs and `tb/run` artifacts only — sources stay.
 
 ---
 
@@ -493,9 +514,8 @@ artifacts named:
    like the edge array generate block, `q_cell.v:177`–191) — never in
    `q_cell_core` unless it interprets opcodes. Keep the serfabric ring
    mirroring `q_fabric_top` exactly; the differential TB is the guard.
-8. **Update the headers you touched** and, if the module changes measured
-   numbers, re-run the lane and update `docs/VERIFICATION.md` — numbers
-   in docs are measured-or-buggy by house rule.
+8. **Update the headers you touched**; if measured numbers moved, re-run
+   the lane and update `docs/VERIFICATION.md` (measured-or-buggy rule).
 
 Checklist before commit: `make test` green; `make sim` untouched-green;
 formal still PASS; headers updated; no vendor code; PASS banner greppable.
