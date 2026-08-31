@@ -480,3 +480,26 @@ is worth writing at all).
 plausibly outcome (b) for the big state space, which would be evidence
 the fair strengthening needs exactly the structural lemmas its BMC
 window approximates. Adjudicated in a follow-up entry either way.
+
+**DEVIL audit closure (2026-08-30, same lane).** The PDR trophy is
+engine-attributed, not harness-attributed — verified, not assumed:
+
+1. **Assert set identical, byte-verified.**
+   `diff <(git show b82cd19:formal/fabric.conservation.prove.sby)
+   formal/fabric.conservation.pdr.sby` differs on exactly one line — the
+   engine (`smtbmc boolector` → `abc pdr`). Mode, script, files, and the
+   full harness `f_fabric_conservation.v` are byte-identical to b82cd19
+   (which postdates cd55d03's ringport fix, so the RTL is the current
+   tree too). Nothing was narrowed, assumed, or restructured for PDR.
+2. **The asymmetry is the engine, re-demonstrated on today's tree:**
+   re-ran b82cd19's exact prove run against HEAD — basecase PASS,
+   induction UNCLOSED within a 25-min budget (descending unwind, step 32
+   at kill), while abc pdr proved the same model unbounded in 25.9 s.
+   Claim stands: PDR derives what k-induction cannot, on identical
+   asserts.
+3. **Citation discipline:** every doc carrying the conservation claim
+   (FORMAL-PROOFS, formal/README, VERIFICATION) now records
+   engine + mode (`mode prove` + `abc pdr`, 25.9 s, frame 9), with the
+   explicit warning that a re-verifier running bare smtbmc prove will
+   NOT reproduce it — that run fails, by design of the property, not by
+   doc error.
