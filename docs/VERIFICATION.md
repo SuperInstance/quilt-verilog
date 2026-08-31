@@ -73,7 +73,7 @@ any number here. Summary:
 | proof | invariant (short) | mode/depth | verdict |
 |---|---|---|---|
 | `flit_pipe.fly.sby` | FIFO safety + value integrity (no loss/dup/reorder) | BMC 40 | PASS |
-| `fabric.conservation.sby` | 2-cell ledger conservation, no silent drops | BMC 55 | PASS |
+| `fabric.conservation.sby` | 2-cell ledger conservation, no silent drops | BMC 55 PASS; **UNBOUNDED PASS 2026-08-30 via `mode prove` + `abc pdr` (25.9 s, frame 9, `fabric.conservation.pdr.sby`) — cite engine+mode, a bare smtbmc prove does NOT close this property** | PASS |
 | `echo_gate.dyadic.sby` | dyadic octave bracket, PRIORITY, MONO, ZEROABSORB | BMC 25 | PASS |
 | `cell_core.tick.sby` | tick suppression + service deadlines under flood | BMC 80 | PASS |
 | `cell_core.fair.sby` | op-response bounds I1a/I1b/I2 | BMC 80 | PASS |
@@ -86,7 +86,7 @@ Measured on this machine, iteration 2 (2026-08-29, `make formal` re-run):
 | `cell_core.fair.sby` (BMC 80) | PASS | 498 s |
 | `cell_core.tick.sby` (BMC 80) | PASS | 215 s |
 | `flit_pipe.fly.sby` (BMC 40) | PASS | 72 s |
-| `fabric.conservation.sby` (BMC 55) | PASS | 38 s |
+| `fabric.conservation.sby` (BMC 55) | PASS | 38 s — plus UNBOUNDED `mode prove` + `abc pdr` PASS 28 s wall (2026-08-30) |
 | `echo_gate.dyadic.sby` (BMC 25) | PASS | 3 s |
 | `tb/formal/flit_pipe.sby` (prove) | PASS | <1 s |
 
