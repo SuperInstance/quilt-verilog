@@ -438,3 +438,45 @@ All timings on this machine (WSL2, oss-cad-suite at
 `/home/eileen/tools/oss-cad-suite/bin`; the Makefile pins the PATH).
 Nothing here is tested on hardware — see `docs/VERIFICATION.md`'s
 not-covered list before relying on any of it.
+
+### PDR referee (IDEATOR nudge, 2026-08-30): conservation closes UNBOUNDED
+
+The IDEATOR leap: before paying the whitebox L1/L2 implementation pass,
+ask `abc pdr` (IC3/PDR — auto-derives inductive invariants, no
+hand-strengthening needed) as a referee. Scout canon:
+`ecosystem/scout/2026-08-30-bmc-passes-induction-fails-glossed-state.md`.
+
+**Result: PDR CLOSED.** `formal/fabric.conservation.pdr.sby` (identical
+model, `mode prove`, engine `abc pdr`):
+
+- **Property proved unbounded** — DONE (PASS, rc=0), engine elapsed
+  25.9 s, converged at frame 9, 0 counterexamples, 6184 learned clauses,
+  0 timeouts. Wall-clock 28 s including prep.
+- Comparison: the same property needed depth-55 BMC + a prose worst-case
+  argument before; k-induction failed (see above); PDR closed it
+  unattended in half a minute, with no L1/L2 lemmas written.
+
+**What this means for L1/L2.** The referee's verdict is outcome (a):
+PDR's auto-derived invariant subsumes whatever strengthening T1/A1 need —
+which proves the strengthening EXISTS and is derivable, but the sby
+`abc pdr` wrapper does not surface the learned clauses in readable form.
+The subsumption diff against the hand-written L1/L2 prose (does PDR's
+invariant contain `op == OP_EFF`-style pipe-content clauses?) needs a
+direct `abc pdr -i` run on the model aiger
+(`formal/fabric.conservation.pdr/model/`); booked as the follow-up lane.
+Until that diff runs, the honest statement is: **the conservation
+invariant is now a machine-checked UNBOUNDED fact, not a BMC-55 window
+plus prose** — the canonical citation for cross-repo consumers upgrades
+from "BMC 55 PASS" to "mode prove / abc pdr PASS, 25.9 s".
+
+**The whitebox L1/L2 Verilog pass is no longer the only path to the
+unbounded statement** — it remains valuable only as human-readable
+documentation of *why* (the `pdr -i` dump comparison decides whether it
+is worth writing at all).
+
+**Same-cost bonus ask (in flight at write time):** `cell_core.fair.pdr`
+— the depth-130 fairness suite (2 h 29 m in BMC) as `mode prove` +
+`abc pdr`. Early log shows frame ~131 with solver timeouts appearing —
+plausibly outcome (b) for the big state space, which would be evidence
+the fair strengthening needs exactly the structural lemmas its BMC
+window approximates. Adjudicated in a follow-up entry either way.
