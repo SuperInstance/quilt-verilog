@@ -5,6 +5,10 @@
 set -euo pipefail
 HERE="$(cd "$(dirname "$0")" && pwd)"
 ROOT="$(cd "$HERE/../.." && pwd)"
+if ! command -v python3 >/dev/null 2>&1; then
+    echo "ERROR: 'python3' not found -- T3 needs Python >= 3.8 (stdlib only)." >&2
+    exit 2
+fi
 OUT="$HERE/out"
 mkdir -p "$OUT"
 

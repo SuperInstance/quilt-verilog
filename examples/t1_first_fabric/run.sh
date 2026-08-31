@@ -5,6 +5,12 @@ set -euo pipefail
 HERE="$(cd "$(dirname "$0")" && pwd)"
 ROOT="$(cd "$HERE/../.." && pwd)"
 export PATH="${OSSCAD:-/home/eileen/tools/oss-cad-suite/bin}:$PATH"
+if ! command -v iverilog >/dev/null 2>&1 || ! command -v vvp >/dev/null 2>&1; then
+    echo "ERROR: 'iverilog'/'vvp' not found after PATH assembly." >&2
+    echo "       Install oss-cad-suite or point OSSCAD at its bin/, e.g.:" >&2
+    echo "       OSSCAD=/path/to/oss-cad-suite/bin bash examples/t1_first_fabric/run.sh" >&2
+    exit 2
+fi
 OUT="$HERE/out"
 mkdir -p "$OUT"
 
