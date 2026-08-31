@@ -311,6 +311,9 @@ module tb_serfabric;
     // so the checks below address each cell's row explicitly
 
     initial begin
+        // INCIDENTS x1000 rule: probe prints carry explicit units
+        // (%t otherwise formats in the finest declared precision, ps here)
+        $timeformat(-9, 0, " ns", 10);
         // golden container rows (values == tb/quf_tb.json, aligned so the
         // only deltas vs POR defaults are dial5/9/10)
         row0[0]=16'h0800; row0[1]=16'h0080; row0[2]=16'd6;   row0[3]=16'd12;

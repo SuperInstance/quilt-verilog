@@ -150,3 +150,17 @@ formatting artifact in the probe, not in the RTL.
 entry in a MANIFEST. Cheap fix, expensive omission.
 
 — cosim-probe lane, 2026-08-30
+
+**Enforcement pass (same lane, TEACHER nudge, 2026-08-30).** The rule
+above existed as prose only; one grep made it a verified fact:
+
+- `grep -rn '%t' tb/ examples/ sim/` before the pass: 8 bare `%t` uses
+  with no `$timeformat` anywhere in the tree — 2 in committed TBs
+  (`tb_serfabric.v`, `tb_quf_boot.v`, FAIL-path prints) and 6 in
+  `tb/scratch/` debug files (untracked scratch, noted not laundered).
+- The two committed TBs now call `$timeformat(-9, 0, " ns", 10)` in
+  their init blocks, so every `%t` print carries explicit units.
+- Post-fix tree state: no bare `%t` without a unit-bearing
+  `$timeformat` in any committed file. `tb/scratch/` remains exempt
+  (debug scratch, never cited as evidence).
+- Suite re-run after the TB edits: 19 PASS / 0 FAIL.

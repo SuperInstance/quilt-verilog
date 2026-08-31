@@ -102,6 +102,9 @@ module tb_quf_boot;
     reg [3:0]  rram [0:15];
     integer i;
     initial begin
+        // INCIDENTS x1000 rule: probe prints carry explicit units
+        // (%t otherwise formats in the finest declared precision, ps here)
+        $timeformat(-9, 0, " ns", 10);
         for (i = 0; i < 4; i = i + 1)  eram[i] = 32'h0;
         for (i = 0; i < 16; i = i + 1) rram[i] = 4'h0;
     end
