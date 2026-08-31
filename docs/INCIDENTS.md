@@ -119,3 +119,34 @@ flagged until a rescue lane picked it up.
    verified reachable at commit time.
 
 — rescue lane, 2026-08-30
+
+## The ×1000 tick that never was — probe time units are self-attestations
+
+2026-08-30, cosim-probe lane (eco-quiltverilog).
+
+**Symptom.** Probing the deck co-sim's "hang," an instrumented TB measured
+`q_tick_sched_rt` firing `tick` every 327,680,000 ns — exactly 1000× the
+spec'd 2^15 = 32,768 cycles with TPW0=15. Sampled `u_ts.cnt` advanced
+1/cycle with mask 0x7fff, correct period 32,768. Two facts about the same
+net, both "measured," flatly contradictory.
+
+**Root cause.** Neither reading was wrong; the UNIT was. Verilog `%t`
+formats in the design's *finest declared precision* — 1ps here, since the
+TB declares `` `timescale 1ns/1ps ``. Every time printed by `%0t` was
+ps, not ns: 327,680,000 ps = 327,680 ns = exactly 32,768 cycles. The
+scheduler was spec-perfect from the start; the "×1000 tick" was a
+formatting artifact in the probe, not in the RTL.
+
+**Rules.**
+1. Probe prints must carry explicit units: `$timeformat(-9, 0, " ns", 8)`
+   before any `%t` use, or print raw cycle counts instead of times.
+2. A probe read without stated units is a self-attestation — same class
+   as an unmeasured number. Two "measurements" that contradict each
+   other usually mean the instrument, not the device.
+3. Before escalating a timing anomaly to an RTL bug, re-derive it in raw
+   cycle deltas; only `%0t`-free evidence books a hardware claim.
+
+**Wasted to the lesson:** one full probe round-trip and a false RTL-suspect
+entry in a MANIFEST. Cheap fix, expensive omission.
+
+— cosim-probe lane, 2026-08-30
