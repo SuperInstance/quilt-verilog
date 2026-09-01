@@ -51,6 +51,15 @@ for each. What the suite proves, per bench:
 - **tb_serfabric** — serialized fabric front-end: serial vs parallel boot and
   egress streams byte/cycle-exact (68 flits), fail-static gate mode.
 
+Beside the suite, the backend battery (`bash tools/backend/run_all.sh`, 5
+benches) holds the adversarial lanes: QUF format fuzz, boot-boundary fuzz
+(RTL), cell-level differential cosim (Python vs `q_cell`), **fabric-level
+differential cosim (Python vs `q_fabric_top`, NCELL=2 — THE-BREAKDOWN §10:
+18/18 programs bit-exact, 689 egress flits; fresh-seed second generation
+30/30, 1509 flits; measured-serialization replay, scope named in §10)**,
+and the 57-check bug regression bench. Numbers and method:
+`docs/BACKEND-NOTES.md`.
+
 **Result (2026-08-29, iteration 2): 18/18 PASS** (same tree as iteration 1's
 recorded 18/18).
 
