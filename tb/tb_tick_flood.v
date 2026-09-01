@@ -72,50 +72,71 @@ module tb_tick_flood;
     integer accid      [0:MAXC-1];   // pre-flood (setup) accepts
     integer ecyc;                    // egress count
     reg [4:0] pst [0:MAXC-1];
+    reg flood = 0;                   // set during the ingress-flood window
 
     genvar g;
     generate
         for (g = 0; g < NCELL; g = g + 1) begin : mon
-            wire [4:0] cs = (g == 0) ? dut.nodes[0].conn0.u_cell.u_core.state
-                                     : dut.nodes[g].connc.u_cell.u_core.state;
-            wire cr = (g == 0) ? dut.nodes[0].conn0.u_cell.u_core.ci_ready
-                               : dut.nodes[g].connc.u_cell.u_core.ci_ready;
-            wire cv = (g == 0) ? dut.nodes[0].conn0.u_cell.u_core.ci_valid
-                               : dut.nodes[g].connc.u_cell.u_core.ci_valid;
-            always @(posedge clk) begin
-                if (por) begin
-                    if (cv && cr)
+            if (g == 0) begin : m0
+                always @(posedge clk) if (por) begin
+                    if (dut.nodes[0].conn0.u_cell.u_core.ci_valid
+                        && dut.nodes[0].conn0.u_cell.u_core.ci_ready) begin
+                        if (flood) acc[0] <= acc[0] + 1;
+                        else       accid[0] <= accid[0] + 1;
+                    end
+                    if (dut.tick && pst[0] !== 5'd14 && !pend[0]) begin
+                        pend[0] <= 1; strobe_cyc[0] <= cyc;
+                    end
+                    if (dut.nodes[0].conn0.u_cell.u_core.state === 5'd14
+                        && pst[0] !== 5'd14 && pend[0]) begin
+                        in_tick[0] <= cyc; in_svc[0] <= 1;
+                        if (cyc - strobe_cyc[0] > dmax[0])
+                            dmax[0] <= cyc - strobe_cyc[0];
+                    end
+                    if (dut.nodes[0].conn0.u_cell.u_core.state === 5'd2
+                        && pst[0] !== 5'd2 && in_svc[0]) begin
+                        tcnt[0] <= tcnt[0] + 1;
+                        if (cyc - strobe_cyc[0] > dsmax[0])
+                            dsmax[0] <= cyc - strobe_cyc[0];
+                        if (cyc - in_tick[0] > svmax[0])
+                            svmax[0] <= cyc - in_tick[0];
+                        pend[0] <= 0; in_svc[0] <= 0;
+                    end
+                    pst[0] <= dut.nodes[0].conn0.u_cell.u_core.state;
+                end
+            end else begin : mn
+                always @(posedge clk) if (por) begin
+                    if (dut.nodes[g].connc.u_cell.u_core.ci_valid
+                        && dut.nodes[g].connc.u_cell.u_core.ci_ready) begin
                         if (flood) acc[g] <= acc[g] + 1;
                         else       accid[g] <= accid[g] + 1;
+                    end
                     if (dut.tick && pst[g] !== 5'd14 && !pend[g]) begin
                         pend[g] <= 1; strobe_cyc[g] <= cyc;
                     end
-                    if (cs === 5'd14 && pst[g] !== 5'd14 && pend[g]) begin
-                        in_tick[g] <= cyc;
-                        in_svc[g]  <= 1;
+                    if (dut.nodes[g].connc.u_cell.u_core.state === 5'd14
+                        && pst[g] !== 5'd14 && pend[g]) begin
+                        in_tick[g] <= cyc; in_svc[g] <= 1;
                         if (cyc - strobe_cyc[g] > dmax[g])
                             dmax[g] <= cyc - strobe_cyc[g];
                     end
-                    if (cs === 5'd2 && pst[g] !== 5'd2 && in_svc[g]) begin
-                        // tick-path exit reached IDLE: service complete.
-                        // armed at ST_TICK entry, completed from ANY tick
-                        // exit state (ST_TLEAK or ST_FIRE both -> ST_IDLE;
-                        // ST_RESP is op-only, never entered in service).
+                    // tick-path exit to IDLE: service complete (armed at
+                    // ST_TICK entry; ST_TLEAK and ST_FIRE both -> ST_IDLE,
+                    // ST_RESP is op-only and never entered in service)
+                    if (dut.nodes[g].connc.u_cell.u_core.state === 5'd2
+                        && pst[g] !== 5'd2 && in_svc[g]) begin
                         tcnt[g] <= tcnt[g] + 1;
                         if (cyc - strobe_cyc[g] > dsmax[g])
                             dsmax[g] <= cyc - strobe_cyc[g];
                         if (cyc - in_tick[g] > svmax[g])
                             svmax[g] <= cyc - in_tick[g];
-                        pend[g]  <= 0;
-                        in_svc[g] <= 0;
+                        pend[g] <= 0; in_svc[g] <= 0;
                     end
-                    pst[g] <= cs;
+                    pst[g] <= dut.nodes[g].connc.u_cell.u_core.state;
                 end
             end
         end
     endgenerate
-
-    reg flood = 0;
     always @(posedge clk) if (o_val) ecyc <= ecyc + 1;
 
     // LCG for flood mix (deterministic, seedable)
@@ -182,15 +203,14 @@ module tb_tick_flood;
             @(negedge clk);
             i_val = 1;
             i_src = 4'hF;
-            i_dst = seed[3:0] % NCELL;
-            seed  = rnd(seed);
+            i_dst = (rnd(seed) >> (4 + NCELL)) % NCELL;  // fresh bits: LCG
+            seed  = rnd(seed);                            // low bits are stuck
+            i_a0 = 16'd0;
             case (seed[2:0])
-              3'd0, 3'd1: i_op = 3'd2;                       // EFFECT (heavy)
-              3'd2, 3'd3: i_op = 3'd2;
-              3'd4:       i_op = 3'd3; i_a0 = 16'd1;         // view(1): heaviest op
-              3'd5:       i_op = 3'd3; i_a0 = 16'd0;
-              3'd6:       i_op = 3'd2;
-              default:    i_op = 3'd3; i_a0 = 16'd2;         // view dial
+              3'd0, 3'd1, 3'd2, 3'd3, 3'd6: i_op = 3'd2;        // EFFECT (heavy)
+              3'd4:       begin i_op = 3'd3; i_a0 = 16'd1; end // view(1): heaviest op
+              3'd5:       i_op = 3'd3;                           // view(0)
+              default:    begin i_op = 3'd3; i_a0 = 16'd2; end   // view dial
             endcase
             i_a1 = seed[15:0]; i_a2 = seed[15:0];
             i_dat = seed[15:0] & 16'h3FFF;                   // sizeable payloads
