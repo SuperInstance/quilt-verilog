@@ -460,11 +460,13 @@ model, `mode prove`, engine `abc pdr`):
 PDR's auto-derived invariant subsumes whatever strengthening T1/A1 need —
 which proves the strengthening EXISTS and is derivable, but the sby
 `abc pdr` wrapper does not surface the learned clauses in readable form.
-The subsumption diff against the hand-written L1/L2 prose (does PDR's
-invariant contain `op == OP_EFF`-style pipe-content clauses?) needs a
-direct `abc pdr -i` run on the model aiger
-(`formal/fabric.conservation.pdr/model/`); booked as the follow-up lane.
-Until that diff runs, the honest statement is: **the conservation
+**FOLLOW-UP CLOSED (2026-08-31):** the invariant was dumped — 854 clauses
+over 169 latches, machine-derived and inductive, committed readable at
+`formal/pdr-invariant/` with the analysis in `docs/PDR-INVARIANT.md`.
+Headline: it DOES contain the `op`-style pipe-content clauses
+(`!u_pipe.m_a0[3]` conditions 752/854 clauses), plus per-bit conservation
+core lemmas (`f_acc`/`f_book`/`f_emitA`/`f_pocc`) and cross-core handshake
+coordination. The honest statement is: **the conservation
 invariant is now a machine-checked UNBOUNDED fact, not a BMC-55 window
 plus prose** — the canonical citation for cross-repo consumers upgrades
 from "BMC 55 PASS" to "mode prove / abc pdr PASS, 25.9 s".
