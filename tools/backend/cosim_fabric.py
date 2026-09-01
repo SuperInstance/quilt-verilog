@@ -568,7 +568,8 @@ def run_program(prog, label):
     if r.returncode != 0 or "DONE" not in out:
         print("cosim_fabric[%s]: TB ERROR\n%s" % (label, out[-2000:]))
         return False, 0
-    trace = os.path.join(OUT, "cosim_fabric_trace.txt")    mism, neg = diff(prog, trace)
+    trace = os.path.join(OUT, "cosim_fabric_trace.txt")
+    mism, neg = diff(prog, trace)
     if mism:
         print("cosim_fabric[%s]: FINDING (%s)" % (label, mism[0]))
         for x in mism[:10]:
@@ -607,8 +608,15 @@ def main():
     rng = random.Random(seed)
     progs = [(p, "directed-%d" % i) for i, p in enumerate(gen_directed())]
     for i in range(n_random):
-        progs.append((gen_program(rng, rng.randrange(50, 130)),
-                      "rand-%d" % i))
+        p = gen_program(rng, rng.randrange(50, 130))
+        # decidable/budget-adjacent split INSIDE the random class: even
+        # programs get sub-margin waits lifted (decidable, seam exact);
+        # odd programs keep the raw wait distribution (budget-adjacent
+        # pacing stress). Classification stays pre-registered.
+        if i % 2 == 0:
+            progs.append((_decidable(p), "randD-%d" % i))
+        else:
+            progs.append((p, "randB-%d" % i))
     cls = {lab: classify_program(p) for p, lab in progs}
     n_dec = sum(1 for c in cls.values() if c == "decidable")
     n_bud = len(cls) - n_dec
