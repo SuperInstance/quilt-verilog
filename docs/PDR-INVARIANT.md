@@ -80,3 +80,72 @@ Three readable families:
   `lo###` latch indices).
 - `fabric.conservation.invariant.readable.txt` — 854 lines, one clause
   per line, ` & `-joined signal names with bit indices.
+
+## Follow-up lane (2026-08-31, STUDENT nudge): feed the clauses back
+
+**Booked ask:** assume the 854/981-clause invariant in the `mode prove`
+smtbmc run — either k-induction closes (certificate is complete + reusable)
+or it doesn't (real finding). **Outcome: partially landed, with two real
+toolchain findings and one open question the DEVIL lane should see.**
+
+**Landed:**
+
+1. **Self-contained certificate reproduction.** The SBY model aiger +
+   sby's own aiger script were replicated standalone
+   (`formal/pdr-invariant/sbyreplica/`): `abc pdr -d -I` re-proved
+   conservation unbounded (39.0 s) and — decisive — **ABC re-verified the
+   dumped invariant in the same run: "Verification of invariant with 981
+   clauses was successful"** (981 clauses / 171 latches on the replica
+   encoding; the original dump was 854/169 — different gate
+   normalization, same property). The certificate's inductiveness and
+   property-implication are machine-checked by the tool whose semantics
+   define them. Committed: `inv.txt` (PLA), `inv_readable2.txt`
+   (signal-named, bits annotated).
+
+2. **The invariant is human-readable and family-structured** (pipe
+   hypothesis, per-bit conservation core, cross-core handshake
+   coordination — see above). 10 of 981 clauses reference aiger free-state
+   bits (anyinit encodings); dropping them only weakens the lemma.
+
+**Findings (either-way ask, outcome 2-flavored):**
+
+3. **yosys silently re-declares hierarchical references.** A Verilog
+   lemma file referencing `u_coreA.act_e` from the harness gets a FRESH
+   WIRE named `\u_sub.inner_reg` with only a warning — the connection is
+   silently dropped. Any future "assume the lemma" flow must inject
+   post-`flatten` (or expose ports); naive hierarchical assumptions are
+   sound-traps.
+
+4. **`write_verilog` roundtrip of the flattened formal design is not
+   faithful** (memory bits get multiple drivers on re-read; `$anyseq`
+   cells need a whitebox stub). The smtbmc-with-assumed-lemmas harness
+   was not landed through this path.
+
+5. **OPEN QUESTION (init-encoding correspondence — DEVIL lane).** An
+   independent SMT cross-check (yosys `write_smt2 -wires` from the same
+   `design_prep.il` + hand-written property) found clauses like
+   `u_coreB.act_e[4] & u_coreB.hb_wq[4]` violated at the SMT initial
+   state: after `async2sync` + `formalff`, registers without reset
+   attributes (act/state families) appear FREE at t0 in the smt2
+   encoding, while the aiger (`write_aiger -zinit`) forces every latch to
+   0 at t0. So "the PDR invariant holds in the initial state" is true in
+   the aiger encoding and *not even well-posed* in the smt2 encoding
+   without deciding which init semantics is the intended one. The
+   conservation property itself is independently safe (smtbmc basecase
+   PASS on the same harness, and every RTL bench), but **whether the
+   abc-pdr unbounded PASS is init-faithful to the Verilog-level model
+   depends on sby's sanctioned zinit semantics and is not yet
+   adjudicated.** Until then, the honest citation remains: *unbounded in
+   the aiger encoding ABC proves; bounded-55 + prose at the Verilog
+   level; equivalence of the two encodings' initial states = open lane.*
+
+**Reproduce (replica + dump + verification, ~45 s):**
+```
+cd formal/pdr-invariant/sbyreplica
+yosys -q -p "read_rtlil design_prep.il; delete */t:\$print; \
+  hierarchy -simcheck; formalff -assume; flatten; setundef -undriven -anyseq; \
+  setattr -unset keep; delete -output; opt -full; techmap; opt -fast; \
+  memory_map -formal; formalff -clk2ff -ff2anyinit; simplemap; dffunmap; \
+  abc -g AND -fast; opt_clean; write_aiger -zinit -map sby.aim sby.aig"
+yosys-abc -c "read_aiger sby.aig; fold; strash; pdr -d -I inv.txt; quit"
+```
