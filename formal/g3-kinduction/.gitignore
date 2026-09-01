@@ -1,0 +1,8 @@
+# regenerable artifacts of the g3 lane (flatten output, sby run dirs)
+g3_flat.il
+g3_flat_assumed.il
+kind/
+invcheck/
+*.log
+fresh854.pla
+assume_cells.il

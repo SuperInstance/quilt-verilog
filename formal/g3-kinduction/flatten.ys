@@ -1,0 +1,20 @@
+# G3: flatten the fabric exactly as sby's smtbmc engine prep would,
+# stopping before techmap/abc so latch wire names match the PDR .aim.
+read -formal ../../rtl/q_flit_pipe.v
+read -formal ../../rtl/q_echo_gate.v
+read -formal ../../rtl/q_rqh_bank.v
+read -formal ../../rtl/q_hebb_edge.v
+read -formal ../../rtl/q_cell_core.v
+read -formal ../f_fabric_conservation.v
+prep -top f_fabric_conservation
+hierarchy -simcheck
+formalff -assume
+flatten
+setundef -undriven -anyseq
+setattr -unset keep
+delete -output
+opt -full
+memory_map -formal
+opt -fast
+write_rtlil g3_flat.il
+select -list w:*
