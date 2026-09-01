@@ -1,7 +1,10 @@
 #!/usr/bin/env python3
 """cosim_fabric.py -- FABRIC-LEVEL differential cosim: Python fabric
 model vs the real q_fabric_top RTL (iverilog) on ONE shared stimulus
-program (backend lane; the §10/B6 artifact at small scale, NCELL=2).
+program (backend lane; the §10/B6 artifact -- SCALE-UP lane
+2026-08-31: NCELL parameterized 2 -> 4/8 via argv[3]/QF_NCELL,
+directed set grown 6 -> 8 with ring-scale seams, and a pre-registered
+decidable/budget-adjacent classification on every program).
 
 This is the harness THE-BREAKDOWN §10 specified: the same flit stream
 feeds the Python model and the RTL ring; every egress flit (ACK/NAK
@@ -25,6 +28,20 @@ Honest scoping (what is measured vs modeled):
   * Ops are atomic per the Q2 interlock (tick_pend serviced at IDLE
     before any new ingress); the pacing contract (settle + quiescence
     per flit) keeps every response/fire inside its own window.
+  * DECIDABLE-ONLY comparison (R4 rule, adopted 2026-08-31): every
+    program is classified BEFORE running. Programs with any inter-flit
+    wait below the egress-quiescence margin (64+16*NCELL) are
+    budget-adjacent -- egress-to-window attribution there can straddle
+    a grant under backpressure, so a mismatch in that class is named a
+    window-attribution ambiguity, not a semantic finding. Directed
+    programs are lifted above the margin by construction; the random
+    generator's raw wait distribution supplies the budget-adjacent
+    class.
+  * Ring delivery semantics pinned by the scale-up directed set: a
+    fire lands on a peer cell only if the RECEIVER holds an edge keyed
+    to the sender's id (the original NCELL=2 'chained fire' case never
+    satisfied this -- its fanout was silently dropped by BOTH sides;
+    D2/D8 now link bidirectionally and the chain demonstrably fires).
 
 The cell arithmetic (Engine: train/tick/readout, sclip16 integration,
 fire test) is imported from cosim_cell.py, which proved it bit-exact
@@ -45,9 +62,14 @@ from cosim_cell import Engine, POR_DIALS, sclip16, sat_u16, to_signed16
 
 _HERE = os.path.dirname(os.path.abspath(__file__))
 _ROOT = os.path.normpath(os.path.join(_HERE, "..", ".."))
-OUT = os.path.join(_ROOT, "tb", "run")
+OUT = os.environ.get("QF_OUT", os.path.join(_ROOT, "tb", "run"))
+# scale-up: private per-process run dir unless QF_OUT says otherwise,
+# so concurrent batteries (other lanes) never share program/trace/vvp
+if "QF_OUT" not in os.environ:
+    OUT = "%s/cosim-%d" % (os.path.join(_ROOT, "tb", "run"), os.getpid())
+os.makedirs(OUT, exist_ok=True)
 
-NCELL = 2
+NCELL = int(os.environ.get("QF_NCELL", "4"))   # must match the TB's -DNCELL
 EDGES_N = 4
 EXTID = 0xF
 OP_BIND, OP_LINK, OP_EFF, OP_VIEW, OP_TICK, OP_ACK, OP_NAK = range(7)
@@ -239,11 +261,12 @@ class FabricModel:
 def gen_program(rng, nops):
     """host flits as (op,src,dst,a0,a1,a2,dat,wait)"""
     prog = []
-    prog.append((OP_BIND, EXTID, 0, 0, 0, 1, 0, 200))
-    prog.append((OP_BIND, EXTID, 1, 1, 0, 2, 0, 200))
-    bound_dials = [set(), set()]
-    linked = [set(), set()]                 # cells with >=1 edge
-    a2 = 3
+    for c in range(NCELL):
+        prog.append((OP_BIND, EXTID, c, c, 0, c + 1, 0, 200))
+    bound_dials = [set() for _ in range(NCELL)]
+    linked = [set() for _ in range(NCELL)]   # cells with >=1 edge
+    peers_all = list(range(NCELL)) + [EXTID]
+    a2 = NCELL + 1
     for _ in range(nops):
         a2 = (a2 + 1) & 0xFFFF
         r = rng.random()
@@ -264,7 +287,7 @@ def gen_program(rng, nops):
         elif r < 0.28:
             c = rng.randrange(NCELL)
             slot = rng.randrange(EDGES_N)
-            peer = rng.choice([0, 1, EXTID])
+            peer = rng.choice(peers_all)
             base = rng.choice([0, 4096, 8192, 0xF000, rng.randrange(0x10000)])
             prog.append((OP_LINK, peer, c, slot, base, a2, 0, wait))
             linked[c].add(slot)
@@ -274,7 +297,7 @@ def gen_program(rng, nops):
                              rng.randrange(0x10000), wait))   # echo
             else:
                 c = rng.randrange(NCELL)
-                peer = rng.choice([0, 1])
+                peer = rng.randrange(NCELL)
                 dat = rng.choice([0, 1, 0x7FFF, 0x8000, 0xFFFF, 0x4000,
                                   rng.randrange(0x10000)])
                 prog.append((OP_EFF, peer, c, 0, 0, a2, dat, wait))
@@ -290,78 +313,134 @@ def gen_program(rng, nops):
     return prog
 
 
+def _bind_all(a2):
+    """bind every cell (id = ring index), shared prologue"""
+    return [(OP_BIND, EXTID, c, c, 0, a2 + c, 0, 200)
+            for c in range(NCELL)]
+
+
 def gen_directed():
     progs = []
-    # D1: fire to host: cell0 links EXTID as peer, low thresh, hammer
-    p = [(OP_BIND, EXTID, 0, 0, 0, 1, 0, 200),
-         (OP_BIND, EXTID, 0, 5, 0x0100, 2, 0, 100),
-         (OP_BIND, EXTID, 0, 6, 3, 3, 0, 100),
-         (OP_LINK, EXTID, 0, 0, 0x2000, 4, 0, 200),
-         (OP_LINK, EXTID, 0, 1, 0x2000, 5, 0, 200),
-         (OP_EFF, EXTID, 0, 0, 0, 6, 0x7FFF, 400),
-         (OP_VIEW, EXTID, 0, 0, 0, 7, 0, 30000),
-         (OP_VIEW, EXTID, 0, 1, 0, 8, 0, 30000),
-         (OP_VIEW, EXTID, 0, 0, 0, 9, 0, 40000)]
+    mid = NCELL // 2
+    last = NCELL - 1
+    # D1: fire to host from a MID-ring cell (max ring distance from
+    # the io node's neighbours): low thresh, fanout on 2 slots, hammer
+    p = _bind_all(1)
+    p += [(OP_BIND, EXTID, mid, 5, 0x0100, 20, 0, 100),
+          (OP_BIND, EXTID, mid, 6, 3, 21, 0, 100),
+          (OP_LINK, EXTID, mid, 0, 0x2000, 22, 0, 200),
+          (OP_LINK, EXTID, mid, 1, 0x2000, 23, 0, 200),
+          (OP_EFF, EXTID, mid, 0, 0, 24, 0x7FFF, 400),
+          (OP_VIEW, EXTID, mid, 0, 0, 25, 0, 30000),
+          (OP_VIEW, EXTID, mid, 1, 0, 26, 0, 30000),
+          (OP_VIEW, EXTID, mid, 0, 0, 27, 0, 40000)]
     progs.append(p)
-    # D2: chained fire: cell0 peer=cell1; cell1 thresh low, fires to host
-    p = [(OP_BIND, EXTID, 0, 0, 0, 1, 0, 200),
-         (OP_BIND, EXTID, 1, 1, 0, 2, 0, 200),
-         (OP_BIND, EXTID, 0, 5, 0x4000, 3, 0, 100),
-         (OP_BIND, EXTID, 1, 5, 0x0800, 4, 0, 100),
-         (OP_LINK, 1, 0, 0, 0x4000, 5, 0, 200),
-         (OP_LINK, EXTID, 1, 0, 0x4000, 6, 0, 200),
-         (OP_EFF, 1, 0, 0, 0, 7, 0x7FFF, 400),
-         (OP_VIEW, EXTID, 0, 0, 0, 8, 0, 30000),
-         (OP_VIEW, EXTID, 1, 0, 0, 9, 0, 40000)]
+    # D2: chained fire across the WHOLE ring: cell0 -> cell1 -> ... ->
+    # cell{NCELL-1} -> EXTID. Delivery semantics: a fire lands only if
+    # the RECEIVING cell holds an edge keyed to the sender's id, so each
+    # adjacent pair is linked bidirectionally (slot 0 = forward edge,
+    # slot 1 = receive edge). Tiny thresholds so the act halving per
+    # hop still fires through NCELL hops; each hop costs one tick.
+    p = _bind_all(1)
+    for c in range(NCELL):
+        p.append((OP_BIND, EXTID, c, 5, 0x0040, 10 + c, 0, 100))
+    for c in range(NCELL - 1):
+        p.append((OP_LINK, c + 1, c, 0, 0x4000, 20 + 2*c, 0, 200))
+        p.append((OP_LINK, c, c + 1, 1, 0x4000, 21 + 2*c, 0, 200))
+    p.append((OP_LINK, EXTID, last, 2, 0x4000, 20 + 2*NCELL, 0, 200))
+    p.append((OP_EFF, 1, 0, 0, 0, 40, 0x7FFF, 400))
+    p.append((OP_VIEW, EXTID, last, 0, 0, 41, 0,
+              30000 + 20000 * NCELL))
+    p.append((OP_VIEW, EXTID, 0, 0, 0, 42, 0, 40000))
     progs.append(p)
-    # D3: nak paths: ops to unbound... both cells bind first, so probe
-    # dial13 ignore + view sel3 NAK + unknown-src effect drop + echo
-    p = [(OP_BIND, EXTID, 0, 0, 0, 1, 0, 200),
-         (OP_BIND, EXTID, 1, 1, 0, 2, 0, 200),
-         (OP_BIND, EXTID, 0, 13, 0xBEEF, 3, 0, 200),
-         (OP_VIEW, EXTID, 0, 2, 13, 4, 0, 300),
-         (OP_VIEW, EXTID, 0, 3, 0, 5, 0, 300),
-         (OP_EFF, 1, 0, 0, 0, 6, 0x7FFF, 300),      # no edge: drop
-         (OP_VIEW, EXTID, 0, 0, 0, 7, 0, 300),
-         (OP_EFF, EXTID, EXTID, 0, 0, 8, 0xABCD, 300),
-         (OP_EFF, 1, 0, 0, 0, 9, 0x7FFF, 20000)]    # drop + tick window
+    # D3: nak paths: probe dial13 ignore + view sel3 NAK + unknown-src
+    # effect drop + echo (cells all bound first)
+    p = _bind_all(1)
+    p += [(OP_BIND, EXTID, 0, 13, 0xBEEF, 10, 0, 200),
+          (OP_VIEW, EXTID, 0, 2, 13, 11, 0, 300),
+          (OP_VIEW, EXTID, 0, 3, 0, 12, 0, 300),
+          (OP_VIEW, EXTID, last, 3, 0, 13, 0, 300),
+          (OP_EFF, 1, 0, 0, 0, 14, 0x7FFF, 300),      # no edge: drop
+          (OP_VIEW, EXTID, last, 0, 0, 15, 0, 300),
+          (OP_EFF, EXTID, EXTID, 0, 0, 16, 0xABCD, 300),
+          (OP_EFF, 1, last, 0, 0, 17, 0x7FFF, 20000)]  # drop + ticks
     progs.append(p)
     # D4: re-link same slot keeps bucket state; base changes readback
-    p = [(OP_BIND, EXTID, 0, 0, 0, 1, 0, 200),
-         (OP_LINK, 1, 0, 2, 0x1000, 2, 0, 200),
-         (OP_EFF, 1, 0, 0, 0, 3, 0x4000, 300),
-         (OP_EFF, 1, 0, 0, 0, 4, 0x4000, 300),
-         (OP_LINK, 1, 0, 2, 0x3000, 5, 0, 300),
-         (OP_EFF, 1, 0, 0, 0, 6, 0x4000, 300),
-         (OP_VIEW, EXTID, 0, 1, 0, 7, 0, 300),
-         (OP_VIEW, EXTID, 0, 0, 0, 8, 0, 40000)]
+    p = _bind_all(1)
+    p += [(OP_LINK, 1, 0, 2, 0x1000, 10, 0, 200),
+          (OP_EFF, 1, 0, 0, 0, 11, 0x4000, 300),
+          (OP_EFF, 1, 0, 0, 0, 12, 0x4000, 300),
+          (OP_LINK, 1, 0, 2, 0x3000, 13, 0, 300),
+          (OP_EFF, 1, 0, 0, 0, 14, 0x4000, 300),
+          (OP_VIEW, EXTID, 0, 1, 0, 15, 0, 300),
+          (OP_VIEW, EXTID, 0, 0, 0, 16, 0, 40000)]
     progs.append(p)
     # D5: saturation: max bases, hammer past bucket + wacc saturation
-    p = [(OP_BIND, EXTID, 0, 0, 0, 1, 0, 200)]
+    p = _bind_all(1)
     for i in range(4):
         p.append((OP_LINK, EXTID if i == 3 else 1, 0, i, 0xF000,
-                  2 + i, 0, 200))
-    p += [(OP_EFF, 1, 0, 0, 0, 6, 0x7FFF, 300)] * 6
-    p += [(OP_VIEW, EXTID, 0, 1, 0, 20, 0, 300),
-          (OP_VIEW, EXTID, 0, 0, 0, 21, 0, 40000)]
+                  10 + i, 0, 200))
+    p += [(OP_EFF, 1, 0, 0, 0, 20, 0x7FFF, 300)] * 6
+    p += [(OP_VIEW, EXTID, 0, 1, 0, 26, 0, 300),
+          (OP_VIEW, EXTID, 0, 0, 0, 27, 0, 40000)]
     progs.append(p)
     # D6: dial-13 probe: ftrace refills on fire, leaks with deadband snap
-    p = [(OP_BIND, EXTID, 0, 0, 0, 1, 0, 200),
-         (OP_BIND, EXTID, 0, 5, 0x0100, 2, 0, 100),
-         (OP_LINK, EXTID, 0, 0, 0x2000, 3, 0, 200),
-         (OP_EFF, EXTID, 0, 0, 0, 4, 0x7FFF, 400),
-         (OP_VIEW, EXTID, 0, 2, 13, 5, 0, 30000),   # fired -> 0xFFFF
-         (OP_VIEW, EXTID, 0, 2, 13, 6, 0, 30000),   # leaked once
-         (OP_VIEW, EXTID, 0, 2, 13, 7, 0, 40000),
-         (OP_VIEW, EXTID, 0, 2, 13, 8, 0, 40000)]
+    p = _bind_all(1)
+    p += [(OP_BIND, EXTID, 0, 5, 0x0100, 10, 0, 100),
+          (OP_LINK, EXTID, 0, 0, 0x2000, 11, 0, 200),
+          (OP_EFF, EXTID, 0, 0, 0, 12, 0x7FFF, 400),
+          (OP_VIEW, EXTID, 0, 2, 13, 13, 0, 30000),   # fired -> 0xFFFF
+          (OP_VIEW, EXTID, 0, 2, 13, 14, 0, 30000),   # leaked once
+          (OP_VIEW, EXTID, 0, 2, 13, 15, 0, 40000),
+          (OP_VIEW, EXTID, 0, 2, 13, 16, 0, 40000)]
     progs.append(p)
-    return progs
+    # D7: probe decay UNDER CONGESTION: three ring-spread cells all
+    # firing to the host on the same ticks while their dial-13 probes
+    # are read between effects -- leak/refill interleavings the cell
+    # cosim never composes.
+    spread = sorted({0, mid, last})
+    p = _bind_all(1)
+    for k, c in enumerate(spread):
+        p.append((OP_BIND, EXTID, c, 5, 0x0000, 10 + k, 0, 100))
+        p.append((OP_LINK, EXTID, c, 0, 0xE000, 20 + k, 0, 200))
+    for rep in range(3):
+        for k, c in enumerate(spread):
+            p.append((OP_EFF, EXTID, c, 0, 0, 30 + rep * 8 + k,
+                      0x7FFF, 200))
+            p.append((OP_VIEW, EXTID, c, 2, 13, 34 + rep * 8 + k,
+                      0, 18000))
+    p.append((OP_VIEW, EXTID, spread[0], 2, 13, 99, 0, 40000))
+    progs.append(p)
+    # D8: ACK-to-cell-src consumption: a LINK whose src is a CELL id
+    # routes the ACK to that cell (consumed, never egressed) -- the
+    # first run's model-side finding, now pinned as a directed case.
+    # Plus a far-to-mid fanout: last cell fires to a MID cell, which
+    # holds a receive edge keyed to last so the effect actually lands
+    # (then re-fires back -- ping-pong until act decays below thresh).
+    p = _bind_all(1)
+    p += [(OP_LINK, mid, last, 0, 0x4000, 10, 0, 200),   # ACK dst=mid
+          (OP_BIND, EXTID, mid, 5, 0x0040, 11, 0, 100),
+          (OP_BIND, EXTID, last, 5, 0x0040, 12, 0, 100),
+          (OP_LINK, mid, last, 1, 0x4000, 13, 0, 200),   # fire tgt
+          (OP_LINK, last, mid, 0, 0x4000, 14, 0, 200),   # receive edge
+          (OP_EFF, mid, last, 0, 0, 15, 0x7FFF, 400),  # last fires
+          (OP_VIEW, EXTID, mid, 0, 0, 16, 0, 30000),     # fired via fx
+          (OP_VIEW, EXTID, last, 0, 0, 17, 0, 30000),
+          (OP_EFF, 1, 0, 0, 0, 18, 0x7FFF, 40000)]
+    progs.append(p)
+    return [_decidable(p) for p in progs]
 
 
-# ------------------------------------------------------------- driver --
+def _decidable(prog):
+    """lift sub-margin waits to margin+64 so every DIRECTED program is
+    in the decidable class by construction (seam coverage, not pacing
+    stress; the random generator keeps its raw wait distribution and
+    supplies the budget-adjacent class)"""
+    m = 64 + 16 * NCELL + 64
+    return [f[:7] + (max(f[7], m),) for f in prog]
+
 
 def write_program(prog):
-    os.makedirs(OUT, exist_ok=True)
     path = os.path.join(OUT, "cosim_fabric_prog.hex")
     with open(path, "w") as f:
         f.write("%d\n" % len(prog))
@@ -372,18 +451,26 @@ def write_program(prog):
 
 
 def run_tb():
+    global _COMPILED_NCELL
     vvp = os.path.join(OUT, "tb_cosim_fabric.vvp")
     env = dict(os.environ)
     env["PATH"] = "/home/eileen/tools/oss-cad-suite/bin:" + env["PATH"]
-    r = subprocess.run(
-        "iverilog -g2005 -s tb_cosim_fabric -o %s "
-        "rtl/q_tick_sched.v rtl/q_flit_pipe.v rtl/q_link_ringport.v "
-        "rtl/q_dialfile.v rtl/q_hebb_edge.v rtl/q_echo_gate.v "
-        "rtl/q_rqh_bank.v rtl/q_cell_core.v rtl/q_cell.v rtl/q_io_port.v "
-        "rtl/q_fabric_top.v tb/tb_cosim_fabric.v"
-        " && vvp %s" % (vvp, vvp),
-        shell=True, cwd=_ROOT, capture_output=True, text=True, env=env)
-    return r
+    if _COMPILED_NCELL != NCELL:      # compile once per NCELL config
+        r = subprocess.run(
+            "iverilog -g2005 -DNCELL=%d -s tb_cosim_fabric -o %s "
+            "rtl/q_tick_sched.v rtl/q_flit_pipe.v rtl/q_link_ringport.v "
+            "rtl/q_dialfile.v rtl/q_hebb_edge.v rtl/q_echo_gate.v "
+            "rtl/q_rqh_bank.v rtl/q_cell_core.v rtl/q_cell.v rtl/q_io_port.v "
+            "rtl/q_fabric_top.v tb/tb_cosim_fabric.v" % (NCELL, vvp),
+            shell=True, cwd=_ROOT, capture_output=True, text=True, env=env)
+        if r.returncode != 0:
+            return r
+        _COMPILED_NCELL = NCELL
+    return subprocess.run(
+        "vvp %s +prog=%s/cosim_fabric_prog.hex "
+        "+trace=%s/cosim_fabric_trace.txt"
+        % (vvp, OUT, OUT), shell=True, cwd=_ROOT,
+        capture_output=True, text=True, env=env)
 
 
 def diff(prog, trace_path):
@@ -481,8 +568,7 @@ def run_program(prog, label):
     if r.returncode != 0 or "DONE" not in out:
         print("cosim_fabric[%s]: TB ERROR\n%s" % (label, out[-2000:]))
         return False, 0
-    trace = os.path.join(OUT, "cosim_fabric_trace.txt")
-    mism, neg = diff(prog, trace)
+    trace = os.path.join(OUT, "cosim_fabric_trace.txt")    mism, neg = diff(prog, trace)
     if mism:
         print("cosim_fabric[%s]: FINDING (%s)" % (label, mism[0]))
         for x in mism[:10]:
@@ -491,28 +577,70 @@ def run_program(prog, label):
     return True, neg
 
 
+_COMPILED_NCELL = -1
+
+
+def classify_program(prog):
+    """pre-registered decidable vs budget-adjacent split (R4 rule:
+    DECIDABLE-ONLY comparison with the narrowing named). Budget-
+    adjacent = any inter-flit wait below the egress-quiescence margin
+    (64 + 16*NCELL): there, egress-to-window attribution can straddle
+    the next grant under backpressure, so an attribution-only diff is
+    budget tuning, not semantics. Semantic findings are counted on the
+    decidable class; a budget-adjacent mismatch is reported as
+    window-attribution ambiguity, not a semantic finding."""
+    margin = 64 + 16 * NCELL
+    for f in prog:
+        if f[7] < margin:
+            return "budget-adjacent"
+    return "decidable"
+
+
 def main():
+    global NCELL
     seed = int(sys.argv[1], 0) if len(sys.argv) > 1 else 0xFAB41C
     n_random = int(sys.argv[2]) if len(sys.argv) > 2 else 12
+    if len(sys.argv) > 3:
+        NCELL = int(sys.argv[3])
+    print("cosim_fabric: NCELL=%d seed=0x%X n_random=%d"
+          % (NCELL, seed, n_random))
     rng = random.Random(seed)
     progs = [(p, "directed-%d" % i) for i, p in enumerate(gen_directed())]
     for i in range(n_random):
         progs.append((gen_program(rng, rng.randrange(50, 130)),
                       "rand-%d" % i))
+    cls = {lab: classify_program(p) for p, lab in progs}
+    n_dec = sum(1 for c in cls.values() if c == "decidable")
+    n_bud = len(cls) - n_dec
+    print("cosim_fabric: classification (pre-registered): "
+          "%d decidable / %d budget-adjacent (wait < %d)"
+          % (n_dec, n_bud, 64 + 16 * NCELL))
     ok = 0
     tot_eg = 0
+    ok_dec = 0
     fails = []
+    fail_cls = []
     for prog, label in progs:
         good, neg = run_program(prog, label)
         tot_eg += neg
         if good:
             ok += 1
+            if cls[label] == "decidable":
+                ok_dec += 1
         else:
             fails.append(label)
-    print("cosim_fabric: %d/%d programs bit-exact, %d egress flits "
-          "compared" % (ok, len(progs), tot_eg))
+            fail_cls.append(cls[label])
+    print("cosim_fabric: %d/%d programs bit-exact (NCELL=%d), %d egress "
+          "flits compared" % (ok, len(progs), NCELL, tot_eg))
+    print("cosim_fabric: decidable class %d/%d bit-exact; "
+          "budget-adjacent class %d/%d"
+          % (ok_dec, n_dec, ok - ok_dec, n_bud))
     if fails:
-        print("cosim_fabric: FAILING: %s" % ", ".join(fails))
+        for lab, c in zip(fails, fail_cls):
+            print("cosim_fabric: FAILING %s [%s]%s" % (
+                lab, c,
+                " -- window-attribution ambiguity (named, not semantic)"
+                if c == "budget-adjacent" else ""))
         return 1
     return 0
 

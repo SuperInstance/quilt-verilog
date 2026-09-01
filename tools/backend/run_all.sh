@@ -17,8 +17,8 @@ python3 tools/backend/boot_fuzz.py || fail=1
 echo "=== [3/5] differential cosim: Python model vs q_cell (iverilog) =="
 python3 tools/backend/cosim_cell.py || fail=1
 
-echo "=== [4/5] fabric-level cosim: Python vs q_fabric_top (iverilog) ="
-python3 tools/backend/cosim_fabric.py || fail=1
+echo "=== [4/5] fabric-level cosim: Python vs q_fabric_top NCELL=4 (iverilog) ="
+python3 tools/backend/cosim_fabric.py 0xFAB41C 12 4 || fail=1
 
 echo "=== [5/5] bug regression bench ==================================="
 python3 tools/backend/regress_backend.py || fail=1
