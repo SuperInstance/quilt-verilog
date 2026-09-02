@@ -265,3 +265,41 @@ another consumer for most of the window (single 6 GB VRAM slot, 30/70
 CPU/GPU offload) — it got exactly one oracle question before the lane
 closed, and that answer is the one logged. No voice was faked; the
 absence is the finding.
+
+## Fabric-level cosim pass (2026-08-31, worker lane) — §10/B6 closed small-scale
+
+The last open gap in THE-BREAKDOWN: a shared-stimulus Python-vs-RTL diff on
+the real ring (`q_fabric_top`, NCELL=2, TPW=14). Landed as
+`tools/backend/cosim_fabric.py` + `tb/tb_cosim_fabric.v` (commit 3157b3d);
+18/18 programs bit-exact at the pinned seed (689 egress flits), fresh-seed
+second generation 30/30 (1509 flits), wired into run_all.sh [4/5].
+
+What the harness does differently from a naive one (each was a bug first):
+
+- **The model replays the MEASURED serialization.** The TB records each
+  cell's cycle-stamped core event stream — op acceptances (ci handshake)
+  and tick services (ST_TICK entries). My first cut sampled serviced-tick
+  counts at GRANT time and the first random program disagreed (act 0 vs
+  32): a tick serviced while an op was queued behind it orders
+  tick-before-op on the ring, and grant-time sampling cannot see that.
+  Event-stream replay is exact; the counts-only view is not.
+- **Tick pulses MERGE mid-service** (tick_pend is a latch, not a counter):
+  pulse counts would over-count decays. Serviced counts are the truth.
+- **Intra-window egress order is multiset-checked**, window attribution
+  exact: response-vs-fire order inside one pacing window depends on ring
+  micro-timing and is deliberately not claimed.
+- **Fire-fanout delivery is cross-checked**: every modeled fanout effect
+  must match an accepted op on the peer's stream, or it is a FINDING
+  (a lost fanout cannot pass silently).
+
+Two model-side semantics pinned by the first disagreement, neither
+reachable by the cell-level cosim or the invariant bench:
+
+1. A link flit whose `src` is a peer CELL gets its ACK routed to that cell
+   (delivered, consumed silently) — only `src==EXTID` ACKs egress.
+2. `view(2)` on dial 13 reads the LIVE `q_echo_gate` trace (0xFFFF refill
+   on fire, deadband-snap leak per tick), not dial storage. The cell-level
+   model never read dial 13 post-fire; the fabric lane did, first try.
+
+Residual scope (honest): NCELL=2, measured-not-universal serialization,
+serdes front-end still RTL-vs-RTL only. Scale-out is future lane work.

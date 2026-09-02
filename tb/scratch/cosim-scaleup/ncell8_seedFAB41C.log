@@ -1,0 +1,11 @@
+cosim_fabric: NCELL=8 seed=0xFAB41C n_random=12
+cosim_fabric: classification (pre-registered): 14 decidable / 6 budget-adjacent (wait < 192)
+cosim_fabric: 20/20 programs bit-exact (NCELL=8), 790 egress flits compared
+cosim_fabric: decidable class 14/14 bit-exact; budget-adjacent class 6/6
+EXIT=0
+2026-09-01T06:13:16Z
+# lane note: matrix cell A (NCELL=8 pinned-seed continuity). Harness =
+# fb60056 (= 5d9d848 unmodified). Private worktree ../quilt-cosim-wt, no
+# contention. First NCELL=8 result on this lane: 20/20, 790 egress flits,
+# decidable 14/14 + budget-adjacent 6/6. Wall ~1 min (idle machine; the
+# 7-min NCELL=4 phase-1 run contended with another lane's checkout churn).

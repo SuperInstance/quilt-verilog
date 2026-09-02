@@ -460,11 +460,13 @@ model, `mode prove`, engine `abc pdr`):
 PDR's auto-derived invariant subsumes whatever strengthening T1/A1 need —
 which proves the strengthening EXISTS and is derivable, but the sby
 `abc pdr` wrapper does not surface the learned clauses in readable form.
-The subsumption diff against the hand-written L1/L2 prose (does PDR's
-invariant contain `op == OP_EFF`-style pipe-content clauses?) needs a
-direct `abc pdr -i` run on the model aiger
-(`formal/fabric.conservation.pdr/model/`); booked as the follow-up lane.
-Until that diff runs, the honest statement is: **the conservation
+**FOLLOW-UP CLOSED (2026-08-31):** the invariant was dumped — 854 clauses
+over 169 latches, machine-derived and inductive, committed readable at
+`formal/pdr-invariant/` with the analysis in `docs/PDR-INVARIANT.md`.
+Headline: it DOES contain the `op`-style pipe-content clauses
+(`!u_pipe.m_a0[3]` conditions 752/854 clauses), plus per-bit conservation
+core lemmas (`f_acc`/`f_book`/`f_emitA`/`f_pocc`) and cross-core handshake
+coordination. The honest statement is: **the conservation
 invariant is now a machine-checked UNBOUNDED fact, not a BMC-55 window
 plus prose** — the canonical citation for cross-repo consumers upgrades
 from "BMC 55 PASS" to "mode prove / abc pdr PASS, 25.9 s".
@@ -480,3 +482,26 @@ is worth writing at all).
 plausibly outcome (b) for the big state space, which would be evidence
 the fair strengthening needs exactly the structural lemmas its BMC
 window approximates. Adjudicated in a follow-up entry either way.
+
+**DEVIL audit closure (2026-08-30, same lane).** The PDR trophy is
+engine-attributed, not harness-attributed — verified, not assumed:
+
+1. **Assert set identical, byte-verified.**
+   `diff <(git show b82cd19:formal/fabric.conservation.prove.sby)
+   formal/fabric.conservation.pdr.sby` differs on exactly one line — the
+   engine (`smtbmc boolector` → `abc pdr`). Mode, script, files, and the
+   full harness `f_fabric_conservation.v` are byte-identical to b82cd19
+   (which postdates cd55d03's ringport fix, so the RTL is the current
+   tree too). Nothing was narrowed, assumed, or restructured for PDR.
+2. **The asymmetry is the engine, re-demonstrated on today's tree:**
+   re-ran b82cd19's exact prove run against HEAD — basecase PASS,
+   induction UNCLOSED within a 25-min budget (descending unwind, step 32
+   at kill), while abc pdr proved the same model unbounded in 25.9 s.
+   Claim stands: PDR derives what k-induction cannot, on identical
+   asserts.
+3. **Citation discipline:** every doc carrying the conservation claim
+   (FORMAL-PROOFS, formal/README, VERIFICATION) now records
+   engine + mode (`mode prove` + `abc pdr`, 25.9 s, frame 9), with the
+   explicit warning that a re-verifier running bare smtbmc prove will
+   NOT reproduce it — that run fails, by design of the property, not by
+   doc error.
