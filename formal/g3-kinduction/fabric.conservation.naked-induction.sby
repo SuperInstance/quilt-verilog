@@ -1,0 +1,19 @@
+# G3 negative control (kept as documentation): the guarded harness is
+# NOT k-inductive without the mined clauses.  Same input as the
+# certificate (g3_flat_guarded.il via /tmp copy in the original run;
+# regenerate guarded_aig.il + inject nothing), result measured
+# 2026-09-02: basecase PASS, induction FAIL at step 0 -- i.e. the 910
+# clauses in bare_inv.pla are load-bearing, not decoration.
+[options]
+mode prove
+depth 10
+
+[engines]
+smtbmc boolector
+
+[script]
+read_rtlil guarded_aig.il
+prep -top f_fabric_conservation
+
+[files]
+guarded_aig.il

@@ -1,0 +1,42 @@
+# G3 CERTIFICATE -- FINAL FORM
+#
+# Claim: fabric.conservation (all 9 asserts of f_fabric_conservation.v)
+# holds unboundedly under the harness's own assumes, certified by plain
+# k-induction over a netlist whose asserts are guarded by a sticky
+# assume-violation flag (b' = b & !sticky) plus the 910-clause PDR
+# invariant injected as $assume cells.
+#
+# Why this is engine-independent: the proof below is base-case +
+# induction-step in smtbmc/boolector.  No PDR, no fold, no abc run log.
+# The invariant was MINED with abc pdr (once) from a no-fold AIG whose
+# write_aiger -symbols names every latch, so every clause resolved
+# against the netlist's own wires: 910/910 kept, 0 dropped
+# (inject_assumes.py report) -- vs the committed 854-clause lane where
+# the fold-retimed latch ordinals left 246/854 ambiguous and trace
+# matching resolved 668/673 folded latches as ambiguous.
+#
+# Self-checking: if any clause were mistranslated, the base case would
+# fail loudly (the invariant is checked against reachable states), and
+# a wrong guard would break the base case of the unguarded asserts'
+# semantics (see transform_guards.py sticky discussion).
+#
+# Pipeline (all under formal/g3-kinduction/):
+#   flatten.ys -> g3_flat.il
+#   transform_guards.py -> g3_flat_guarded.il   (sticky assume guard)
+#   guarded_aig.ys -> guarded_aig.il + .aim     (sby's aig model recipe)
+#   bake_constraints.py -> guarded_baked.aig    (C-outputs baked in)
+#   yosys-abc "pdr -d" -> guarded_inv.pla       (910 clauses, named)
+#   inject_assumes.py -> guarded_assumed.il     (this file's input)
+[options]
+mode prove
+depth 12
+
+[engines]
+smtbmc boolector
+
+[script]
+read_rtlil guarded_assumed.il
+prep -top f_fabric_conservation
+
+[files]
+guarded_assumed.il

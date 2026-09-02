@@ -6,3 +6,19 @@ invcheck/
 *.log
 fresh854.pla
 assume_cells.il
+# run dirs of this lane's sby configs
+fabric.conservation.g3-certificate/
+fabric.conservation.naked-induction/
+# intermediates of the certificate pipeline (regenerable; see README)
+g3_flat_guarded.il
+guarded_aig.il
+guarded_aig.aig
+guarded_aig.aim
+guarded_aig.log
+guarded_aig.ys.bak
+guarded_baked.aig
+guarded_bare.aig
+guarded_assumed.il
+guarded_inv.pla
+sup_groups.json
+sim_check*.py
