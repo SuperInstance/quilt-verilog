@@ -25,3 +25,4 @@ sim_check*.py
 guarded_assumed_aug.il
 bare_inv_aug.pla
 fabric.conservation.g3-completion/
+shift_closure_manifest.txt

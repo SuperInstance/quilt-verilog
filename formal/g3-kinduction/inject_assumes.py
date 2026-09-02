@@ -64,16 +64,24 @@ def main(pla, aig, aim, il, out):
         line = line.rstrip("\n")
         if line.startswith(".ilb"):
             support = [int(x[2:]) for x in line.split()[1:]]
-        elif line.startswith(".") or line.startswith("#") or not line:
             continue
-        else:
-            cubes, o = line.split()
-            if o != "1":
-                continue
-            lit = [(support[j], -1 if c == "1" else +1)
-                   for j, c in enumerate(cubes) if c in "01"]
-            if lit:
-                clauses.append(lit)
+        # a PLA data row is two tokens with output in {0,1}; rows padded with
+        # '.' can start with '.' and must NOT be read as dot-directives
+        parts = line.split()
+        if parts and parts[0].startswith(".") and not (
+                len(parts) == 2 and parts[1] in ("0", "1")):
+            continue
+        if not line.strip() or line.startswith("#"):
+            continue
+        if not parts:
+            continue
+        cubes, o = parts[0], parts[-1]
+        if o not in ("0", "1"):
+            continue
+        lit = [(support[j], -1 if c == "1" else +1)
+               for j, c in enumerate(cubes) if c in "01"]
+        if lit:
+            clauses.append(lit)
 
     wires = {}
     for line in open(il):

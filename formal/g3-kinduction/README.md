@@ -90,18 +90,40 @@ compressing PDR output.
 Expert nudge split the partial-coverage observation into (A) genuinely
 position-specific vs (B) PDR terminated early. Discriminator run:
 `fabric.conservation.g3-completion.sby` -- extend the 11 partially
-covered families to their missing anchors (+15 candidate clauses, 10
-non-redundant after dedup against the mined set; buses are width 8,
+covered families to their missing anchors (+15 candidate clauses, all
+injected after the parser fix below; buses are width 8,
 families covered anchors 1..6/2..7 of 8) and re-run k-induction on the
 augmented invariant: **PASS, basecase + induction.** The completions
 are valid inductive strengthening, so the asymmetry was a PDR
 termination artifact, NOT a design asymmetry. G1's live shape is now
 *template completion / parametric proof*: mine the family templates,
-complete them by construction, discharge once per family. Remaining
-follow-ups: close the boundary anchors the width-8 buses reject
-(f_acc[7]|f_acc[8]-class pairs fall off the bus edge -- are they
-unreachable by construction?), and type the 741 singletons by
-anchor-convention violation, not just count them.
+complete them by construction, discharge once per family.
+
+### Shift closure CONFIRMED (2026-09-02, teacher nudge) + parser bug found
+
+The teacher nudge framed the 90 cross-position singleton clauses as a
+cyclic-code question: "do they close under shift" = is the clause set a
+shift-invariant subspace (circulant kernel / generator polynomial over
+F2[x]/(x^n-1)). Empirical discriminator: `shift_closure.py` generates
+every valid shifted variant of all data-bus singleton templates
+(+702 rows; 45 shifts skipped as out-of-support, 466 already-present
+anchors) and the full 1612-clause augmented invariant PASSES
+k-induction (`fabric.conservation.g3-shiftclosure.sby`). The data
+clause set is shift-closed as inductive strengthening: conservation is
+ring-invariant; the 661 control/handshake singleton clauses are the
+genuine non-parametric residue. Cyclic-code lineage for the eventual
+parametric proof: the family templates behave as code words of a
+shortened cyclic code; completion/shift-closure = closure under the
+ring action.
+
+**Parser bug found and fixed (inject_assumes.py):** PLA data rows whose
+first column is unbound start with the default char '.', and the parser
+skipped ALL leading-dot lines as dot-directives -- silently dropping
+681/702 shift rows and 5/15 completion rows in the first runs. Fixed:
+a data row is now recognized as two tokens with output in {0,1}. All
+three sby runs re-verified after the fix (910 / 925 / 1612 clauses,
+all PASS). The prior claim "+15 candidates, 10 non-redundant" was
+wrong -- it was 5 rows silently dropped by this bug.
 
 ## Honest caveats
 
