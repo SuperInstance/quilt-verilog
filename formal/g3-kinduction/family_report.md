@@ -46,3 +46,23 @@ largest: [15, 7, 6, 6, 6, 6, 5, 5, 5, 5]  members/family (mean 1.15)
 | 38 | 2 | [1, 2] | `~ciB_pipe_valid | g3_sticky | ~loA_valid | ~u_coreA.tick_pend | ~u_coreB.state[0] | u_coreB.state[1] | u_coreB.tick_pend` |
 | 39 | 2 | [2, 3] | `~ciA_ready | g3_sticky | ~u_coreA.state[0]` |
 | 40 | 2 | [1, 2] | `~f_sB | g3_sticky | ~hb_cmdB[0] | ~u_coreB.tick_pend` |
+
+## Singleton structure-typing appendix (2026-09-02, second pass)
+
+Why each of the 759 singleton clauses fails to group (both anchor
+conventions give the same partition):
+
+| count | type |
+|-------|------|
+| 661 | contains a control/handshake latch (state, tick_pend, hb_*, ciB_*, pipe/eng internals) — control-state invariants, not ring-data clauses; outside the parametric-family program by construction |
+| 90  | cross-position data coupling: buses appear at *different* relative offsets (neighbor relations, e.g. book[i-1] vs emit[i]) — genuinely position-shaped, not template-completable by shift alone |
+| 7   | data-only multi-bus at same offset — candidate future family members |
+| 1   | data-only single-bus (f_pocc rel=[-1,0]) |
+
+Plus the bit census: f_acc/f_book/f_emitA/f_pocc ALL use bits 0..7 in
+the mined invariant, so position 7 is reachable and constrained — the
+missing anchors in the symmetric families were PDR termination
+(superseded by the completion run PASS above), and the residual
+boundary-shape question reduces to whether the ~90 cross-position
+neighbor clauses close under shift. That is the next discriminator if
+template completion is pushed further.
