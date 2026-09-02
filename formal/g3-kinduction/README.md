@@ -85,6 +85,24 @@ pursued, must be constructed modularly (per-flit argument) from the
 design, using the certificate only as a safety net -- not extracted by
 compressing PDR output.
 
+### G1 REOPENED same day: template-completion is VALID (hypothesis B confirmed)
+
+Expert nudge split the partial-coverage observation into (A) genuinely
+position-specific vs (B) PDR terminated early. Discriminator run:
+`fabric.conservation.g3-completion.sby` -- extend the 11 partially
+covered families to their missing anchors (+15 candidate clauses, 10
+non-redundant after dedup against the mined set; buses are width 8,
+families covered anchors 1..6/2..7 of 8) and re-run k-induction on the
+augmented invariant: **PASS, basecase + induction.** The completions
+are valid inductive strengthening, so the asymmetry was a PDR
+termination artifact, NOT a design asymmetry. G1's live shape is now
+*template completion / parametric proof*: mine the family templates,
+complete them by construction, discharge once per family. Remaining
+follow-ups: close the boundary anchors the width-8 buses reject
+(f_acc[7]|f_acc[8]-class pairs fall off the bus edge -- are they
+unreachable by construction?), and type the 741 singletons by
+anchor-convention violation, not just count them.
+
 ## Honest caveats
 
 - The clause set is still machine-mined, not human-prose; the next step

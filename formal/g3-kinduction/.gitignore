@@ -22,3 +22,6 @@ guarded_assumed.il
 guarded_inv.pla
 sup_groups.json
 sim_check*.py
+guarded_assumed_aug.il
+bare_inv_aug.pla
+fabric.conservation.g3-completion/
