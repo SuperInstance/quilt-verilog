@@ -70,6 +70,21 @@ README. Regenerable (`.gitignore`): flattened ILs, aigs, aims, sby run
 dirs, `guarded_inv.pla` (symbol-dump, kept out because its `.ilb`
 alias list invites the positional-zip bug).
 
+## G1 runway: first honest result is NEGATIVE (2026-09-02)
+
+`group_clauses.py` + `family_report.md`: grouping the 910 clauses by
+ring-symmetry template (identical up to one bit-offset anchor) yields
+**792 families, 741 singletons, mean 1.15 members/family** under both
+anchorings. The symmetric families that do exist are PARTIALLY covered
+(e.g. `f_acc[0] | f_acc[i] | ~f_emitA[i]` for i=1..6 only, of 15
+positions). Conclusion: PDR's invariant is position-specific and
+minimal, not a closed ring template -- the "prove the family template
+once per ring position" compression plan does NOT apply to the
+machine-mined clause set. A human-readable conservation proof, if
+pursued, must be constructed modularly (per-flit argument) from the
+design, using the certificate only as a safety net -- not extracted by
+compressing PDR output.
+
 ## Honest caveats
 
 - The clause set is still machine-mined, not human-prose; the next step
