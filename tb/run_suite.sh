@@ -38,6 +38,7 @@ t tb/tb_q_echo_gate.v      tb_q_echo_gate
 t tb/tb_q_rqh_bank.v       tb_q_rqh_bank
 t tb/tb_rqh_saturation.v  tb_rqh_saturation "rtl/q_hebb_rqh.v"
 t tb/tb_cell_core.v        tb_cell_core
+t tb/tb_act_bias.v         tb_act_bias
 t tb/tb_io_port.v          tb_io_port
 t tb/tb_fabric_smoke.v     tb_fabric_smoke
 t tb/tb_fabric_smoke_v2.v  tb_fabric_smoke_v2

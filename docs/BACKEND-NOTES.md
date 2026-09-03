@@ -161,6 +161,24 @@ PermissionError for a bad `--outdir`; now a clean one-liner, rc=1.
 
 ## What remains weak (honestly)
 
+### Gapped effect-stream loss (OPEN, candidate RTL hazard, found 2026-09-03 by the B8 lane)
+
+While building `tb/tb_act_bias.v`, a loss window appeared in the
+ingress path of `q_cell` for **pure gapped effect streams**: with a new
+effect flit presented every ~6 cycles (12 negedges), 6–8 of 32 effects
+never train/integrate (wsum short by exactly 256×lost); with ≥15-cycle
+spacing (30 negedges — the `tb_cell_core` test-3 cadence) or with any
+other op (view) interleaved per effect, the same stream is lossless.
+Stage counters localize it loosely: q_flit_pipe in==out (clean); loss
+sits between ring accept and hebb train; every TB send observed
+ri_ready=1 at its sampling negedge. NOT root-caused — could still be a
+protocol artifact of the ad-hoc probe. Next: waveform trace or a formal
+assertion (the cell_core proofs cover the tick-pending ready hole; this
+shape may be uncovered). Until closed: do NOT quote effect counts from
+gapped streams. `tb_act_bias` is immune by construction (view per
+effect + per-checkpoint floor-model equality asserts the stream was
+lossless).
+
 - ~~**Hardware is digest-blind.**~~ **Closed (this pass):** the `crc32`
   KV (§12.2) is the silicon-checkable digest the loader needed — a
   trailing-shape u32 KV fits the FSM, and the loader now accumulates
