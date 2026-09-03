@@ -525,14 +525,28 @@ def verify_bytes(buf, path=""):
                           % (len(payload["edges"]), ec * (12 + k)))
     if "routing" in payload and rc is not None:
         if len(payload["routing"]) != rc * 2:
-            issues.append("routing size %d != route_count*2"
-                          % (len(payload["routing"]), rc))
+            issues.append("routing size %d != route_count*2=%d"
+                          % (len(payload["routing"]), rc * 2))
     if "ticks" in payload and cc is not None:
         if len(payload["ticks"]) != 4 + 4 * cc:
             issues.append("ticks size %d != 4+4*cell_count"
                           % len(payload["ticks"]))
     if ("dials" in payload or "ticks" in payload) and cc is None:
         issues.append("cell_count KV required when dials/ticks present")
+    if "dials" in payload and cc and len(payload["dials"]) == cc * NDIALS * 2:
+        # dial 13 (FTRACE) is a read-only probe alias in q_dialfile: the
+        # write port ignores it (i_wr && i_addr != D_FTRACE) and reads
+        # return the live echo trace. A nonzero value stored in a QUF
+        # dial row is therefore silently DROPPED in silicon -- flag it
+        # like tpw>31 (BACKEND-NOTES "dead weight" bullet)
+        for ci in range(cc):
+            v = struct.unpack_from("<H", payload["dials"],
+                                   ci * NDIALS * 2 + 13 * 2)[0]
+            if v != 0:
+                issues.append("cell %d dial 13 (FTRACE) = 0x%04x is "
+                              "write-ignored in silicon (read-only "
+                              "probe alias); value will not land"
+                              % (ci, v))
     if "ticks" in payload and cc:
         tpw = struct.unpack_from("<I", payload["ticks"], 0)[0]
         tp = hdr.get("tick_period")

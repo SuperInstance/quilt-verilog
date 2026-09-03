@@ -193,10 +193,17 @@ PermissionError for a bad `--outdir`; now a clean one-liner, rc=1.
   byte, eod ignored in HOLD): correct fail-static behavior, but a host
   that asserts eod-before-bytes never gets an error code — it just
   waits. The fuzz bench pins this as the documented contract.
-- **Dial 13 (FTRACE) in a QUF dial row is dead weight**: the dialfile
-  ignores writes to the probe alias by construction; boot_fuzz masks
-  it to POR 0 in expectations. quf.py still stores whatever the JSON
-  said.
+- ~~**Dial 13 (FTRACE) in a QUF dial row is dead weight**~~ **Closed
+  (this pass)**: the dialfile ignores writes to the probe alias by
+  construction; boot_fuzz masks it to POR 0 in expectations. quf.py
+  verify now flags a nonzero stored dial 13 as a hard issue ("value
+  will not land", hex-formatted) and boot_fuzz whitelists it in
+  HW_BLIND (hardware tolerates + drops, oracle lands on 0 — same
+  asymmetry doctrine as tpw). Fixing it flushed a REAL latent verify
+  crash: the routing-size message had 1 placeholder for 2 args
+  (TypeError on corrupt route_count KV) — found by the fuzz RNG stream
+  shifting when generators stopped emitting nonzero dial 13. Regress
+  adds the patched-file hostile check; GOOD fixture normalized.
 - ~~The suite runner does not invoke the backend battery.~~ Closed:
   `run_suite.sh` runs `tools/backend/run_all.sh` as its final stage
   (wired in commit e6f746d); the suite output's `PASS backend_battery:`

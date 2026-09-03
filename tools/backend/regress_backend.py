@@ -6,6 +6,7 @@ here. House style: exact checks, PASS/FAIL lines, exit 1 on any failure.
 """
 import os
 import re
+import struct
 import subprocess
 import sys
 import tempfile
@@ -40,7 +41,9 @@ def run_cli(*args, cwd=None):
 
 GOOD_DOC = {
     "header": {"cell_count": 2, "edge.k": 8, "align": 32},
-    "dials": [[i | 1 for i in range(16)] for _ in range(2)],
+    # dial 13 zeroed: read-only probe alias, never stored state
+    "dials": [[0 if j == 13 else j | 1 for j in range(16)]
+              for _ in range(2)],
     "edges": [{"src": 0, "dst": 1, "mode": 0, "slot": 0, "base": 4096,
                "wh": 0, "age": 0, "buckets": [1] + [0] * 7}],
     "ticksched": {"tpw": 6, "phases": [0, 3]},
@@ -165,6 +168,17 @@ def t_quf_library():
     issues = quf.verify_bytes(bytes(b))
     check("garbage tpw: flagged without ValueError",
           any("tick_period" in i for i in issues))
+    # dial 13 (FTRACE) probe alias: silicon write-ignores it, so a
+    # nonzero stored value must verify dirty with the explicit message
+    # (BACKEND-NOTES "dead weight" bullet; HW_BLIND in boot_fuzz)
+    b2 = bytearray(GOOD)
+    parsed = quf.read(bytes(b2))
+    dials_off = [t for t in parsed["table"] if t[0] == "dials"][0][2]
+    struct.pack_into("<H", b2, dials_off + 13 * 2, 0xBEEF)
+    issues = quf.verify_bytes(bytes(b2))
+    check("dial 13 nonzero: flagged as write-ignored",
+          any("dial 13 (FTRACE)" in i and "0xbeef" in i.lower()
+              for i in issues), issues)
     # typed-KV guards (edge.k as string etc.)
     for kv, val in (("edge.k", "8"), ("cell_count", "2"),
                     ("edge_count", "3"), ("route_count", "3")):

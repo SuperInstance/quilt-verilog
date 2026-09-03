@@ -66,7 +66,8 @@ def rand_doc(rng):
     align = rng.choice([8, 16, 32, 64, 4096])
     doc = {
         "header": {"cell_count": cc, "edge.k": k, "align": align},
-        "dials": [[rng.randrange(0x10000) for _ in range(quf.NDIALS)]
+        "dials": [[0 if j == 13 else rng.randrange(0x10000)
+                   for j in range(quf.NDIALS)]
                   for _ in range(cc)],
         "edges": [{"src": rng.randrange(cc), "dst": rng.randrange(cc),
                    "mode": rng.randrange(2), "slot": rng.randrange(4),
