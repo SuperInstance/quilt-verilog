@@ -169,6 +169,17 @@ not-covered list — read that section before relying on any of this:
   EDGES_N=1, K=4, B=4 — not full fabric scale.
 - **The Python lane is a model, not a miter** — no formal equivalence
   proof between Python and RTL semantics.
+- **The dev-rounds ladder is model-grade, not silicon-grade.** The
+  interference/rounds experiments (rounds 2–7:
+  `spikes/225-e1-interference-tick/dev-rounds/`) run on an integer-only
+  Python harness over the same QUF/tick semantics the RTL implements —
+  not on the Verilog. Numbers there (contention walls, phase decay, the
+  N=4 trueRes 12.2%→86.3% lag-compensation result, the co-fire wall at
+  N≈7) are **findings about the model**: candidate spec limits a
+  silicon lane should confirm, not measured Verilog properties. The
+  README verification table above deliberately lists only RTL benches,
+  formal proofs, and synthesis; rounds work joins that table if and
+  when a lane reproduces it against the fabric RTL.
 - **No CI.** Verification runs when an iterator runs it.
 
 The prove-mode attempt on conservation exists, failed informatively, and
