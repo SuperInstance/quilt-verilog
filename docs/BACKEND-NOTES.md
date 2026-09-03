@@ -197,9 +197,10 @@ PermissionError for a bad `--outdir`; now a clean one-liner, rc=1.
   ignores writes to the probe alias by construction; boot_fuzz masks
   it to POR 0 in expectations. quf.py still stores whatever the JSON
   said.
-- The suite runner (`tb/run_suite.sh`) does not invoke the backend
-  battery; run `bash tools/backend/run_all.sh` beside it. Wiring it in
-  was left out deliberately — that file is shared with live lanes.
+- ~~The suite runner does not invoke the backend battery.~~ Closed:
+  `run_suite.sh` runs `tools/backend/run_all.sh` as its final stage
+  (wired in commit e6f746d); the suite output's `PASS backend_battery:`
+  line is the fuzz + boot-fuzz + cosim + regress quartet.
 
 ## Reproduce
 

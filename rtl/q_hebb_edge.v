@@ -46,6 +46,23 @@ module q_hebb_edge #(
 );
     localparam AW = K + B + 1;   // readout accumulator width
 
+    // Thm 5a width guard (error-envelopes.md §5.1; THE-BREAKDOWN B12).
+    // The shipped readout contract is a 17-bit accumulator: at K=8,B=8
+    // the max ladder sum (2^B-1)(2^(K+1)-2) = 130050 < 2^17 -- TIGHT
+    // (0.78% headroom; pinning 17 bits, B=9 or K=9 busts it). Note
+    // AW = K+B+1 itself can never overflow (free = 2^(B+1)+2^(K+1)-2
+    // > 0 identically) -- the guard enforces the FIXED 17-bit readout
+    // contract, so a widened config is an elaboration error, not a
+    // silent width change (tb_thm5a_width.v machine-checks the math).
+    initial begin
+        if (((2**B - 1) * (2**(K+1) - 2) >= (1 << 17)) || (AW > 17)) begin
+            $display("ELAB ERROR: q_hebb_edge Thm5a width violation: "
+                     , "K=%0d B=%0d max sum %0d vs 17-bit acc contract",
+                     K, B, (2**B - 1) * (2**(K+1) - 2));
+            $finish;
+        end
+    end
+
     // priority encode of W (hyperbolic interval exponent)
     function [3:0] msb16;
         input [PW-1:0] v;

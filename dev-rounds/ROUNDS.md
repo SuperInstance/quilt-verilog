@@ -22,3 +22,10 @@ Rule: skip items visibly in flight (check timestamps here + wheel/WHEEL-LOG.md).
 - **Verdict:** REFUTED-as-booked / PARTIAL-CONFIRM — raw win is fan-out-gated (N=3: +0.1pp, N=5: +1.6pp, clears ≥2pp gate only at N=8: +11.9pp stress); under lag compensation the win EXPLODES (+24.1pp N=5, +56.2pp N=8), so "lag symptom" is false — the compensator synchronizes twins and *needs* the sort. T2 promoted to RTL with N≥6 boundary (round 3, de5ad6b).
 - **Commit:** 9491c25 (round 2) · de5ad6b (round 3 boundary sharpening)
 - **Headline:** mag C=1 vs admit-all, stress raw: +11.9pp at N=8 (57.8→69.7 %w, maxE 99.2→48.0); compensated: +56.2pp at N=8 (42.7→98.9).
+
+---
+
+## Round 3 — O3 (quanta floor) + O2b boundary — DONE (backfilled 2026-09-03 11:5x; see spike dev-rounds/ROUND-3-O3-quanta-floor.md)
+- **Verdict:** PARTIAL-REFUTE / KNEE RELOCATED — ±5 fails 99% gate at K=2 stress (97.5%); adopt ±7 (4-bit) as ESP32/.qm default (≥99.2% everywhere). Z₃ debt inversion persists 8/8. O2b: contention wall located at N=6.
+- **Commits:** 999348e (O3) · de5ad6b (O2b)
+- **Headline:** ±7 is the floor (min retention 99.2% across all 8 K×regime cells)

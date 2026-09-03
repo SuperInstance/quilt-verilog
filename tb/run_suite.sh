@@ -57,6 +57,21 @@ fi
 t tb/tb_serfabric.v       tb_serfabric "rtl/q_uf_loader.v rtl/quf_boot.v rtl/q_tick_sched_rt.v rtl/q_boot_gate.v rtl/q_serfabric_top.v"
 t tb/tb_wedge_repro.v     tb_wedge_repro    # silicon-lane regression guard: the commissioning wedge (SILICON-EXPERIMENTS F1) must stay dead
 
+# Thm 5a width-construction property (THE-BREAKDOWN B12): 130050 < 2^17
+# machine-checked + the DUT elaboration guard firing on the busting config
+if iverilog -g2005 -o /tmp/thm5a.vvp -s tb_thm5a_width tb/tb_thm5a_width.v \
+   && vvp /tmp/thm5a.vvp | tee /tmp/thm5a_out | grep -q "TB-THM5A PASS"; then
+  echo "PASS  tb_thm5a_width: $(grep -o '130050.*0.78%' /tmp/thm5a_out | head -1)"
+else
+  echo "FAIL  tb_thm5a_width"; cat /tmp/thm5a_out; fail=1
+fi
+if iverilog -g2005 -o /tmp/thm5ag.vvp -s tb_thm5a_guard rtl/q_hebb_edge.v tb/tb_thm5a_guard.v \
+   && vvp /tmp/thm5ag.vvp 2>&1 | grep -q "ELAB ERROR"; then
+  echo "PASS  tb_thm5a_guard: K=9,B=8 config rejected at elaboration (17-bit acc contract)"
+else
+  echo "FAIL  tb_thm5a_guard: overflowing config was NOT rejected"; fail=1
+fi
+
 # backend battery: format fuzz, boot-boundary fuzz, differential cosim
 # (cell + fabric), bug regression (~2.5 min; see tools/backend/run_all.sh)
 if bash tools/backend/run_all.sh > /tmp/backend_out 2>&1; then
