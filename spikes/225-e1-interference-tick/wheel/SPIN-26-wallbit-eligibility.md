@@ -55,6 +55,41 @@ anchors (3 anchors × 3 seeds shas) AND rescue ≥ +33pp (Spin-22 booked).
   caused it; verdict "wall bit not free".
 - Per-t100 verdict reported exactly (expected: identical across the class).
 
+## RESULTS (booked 2026-09-03 15:15, run in spin26-output.txt)
+
+All canaries PASS, incl. exact SPIN-25 toggle reproduction
+(kcoh5 +7.9 / ladder30 −1.4).
+
+- **Distinct-θ table:** all five t100 ∈ {100,105,110,120,133} are ONE
+  sha-class (admission {nf=7} only) — P-1 confirmed; panel run on rep
+  t100=100 only.
+- **Byte-identity table (vs gate="never", seeds {1,7,42}):**
+  kcoh5@15 = YES · ladder@30 = YES · **zero7 = NO**.
+- **Rescue:** +33.4pp (step5K1 0.3→36.9, step5K2 0.4→30.6) — P-3 met.
+- **VERDICT (pre-stated rule):** wall bit **NOT eligible-embedded**.
+  Failing anchor: **zero7** [0]·7; causing depth: **nf=7** — the
+  seven-reader zero-spread grammar is itself an nf=7 pile-up generator,
+  so the wall bit opens there: 0.1 → 99.8 (a +99.7pp effect, not noise).
+  P-2 falsified specifically because "healthy = pile-up-free" was wrong
+  for zero7 at depth 7.
+
+**Scar / nuance (booked, not buried):** the failure is an anchor
+*classification* artifact as much as a physics one — zero7 at never is
+near-broken (0.1) and the wall bit *rescues* it to 99.8, exactly the
+rescue the rule wanted. Under a re-reading where zero7 moves to the
+rescue set (pile-up grammar), the wall bit is byte-free on kcoh5@15 and
+ladder@30 with rescue +33.4 (step5) and +99.7 (zero7). But the
+pre-registration fixed the anchors; the rule fires as filed. The honest
+booking: **no free lunch on the wall bit for grammars that can emit nf=7
+concurrently; free-lunch claim is representation-dependent.**
+
+**Follow-up filed:** re-run eligibility with zero7 reclassified as
+pile-up grammar (rescue set {step5K1, step5K2, zero7}); if healthy =
+{kcoh5@15, ladder@30} holds byte-identity, "free lunch" becomes
+legitimate under the corrected taxonomy (cheap: same machinery, sha
+classes already computed).
+
+
 ## CANARIES (must pass before anything counts)
 
 1. spread=0 byte-identity across gate modes (spin-25 C1 pattern).
