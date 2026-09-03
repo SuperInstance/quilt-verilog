@@ -62,3 +62,22 @@ where the assumption lived.
 - Deck: apply the audit-trail template to frame #36; if the culprit is
   the u8 bucket width itself, the *contract* changes and both Python and
   C move with it — that is a legitimate outcome, not a failure.
+
+## The hostile-tpw row (2026-09-03, e6f746d) — one known-blind input, four substrates
+
+A file that claims `tpw=40` when the hardware epoch field is 5 bits —
+the sharpest exhibit yet of why the ladder exists. Same bytes, four
+substrates, four different truths:
+
+| Rung | What tpw=40 does | Blindness |
+|------|------------------|-----------|
+| 1 Python | **REJECTED** post-e6f746d (verify: "tpw 40 exceeds 5-bit hw epoch field"); pre-fix it verified clean — the reference substrate had the blindness first | verifier range |
+| 2 C99 | golden model follows quf.py semantics — rejects iff its quf port tracks rung 1 | port sync |
+| 3 Verilator (loader) | **BOOTS, epoch latches tpw&31 = 8** — by design, registered HW-blind | 5-bit field: cannot see the claim |
+| 4 ESP32 | *whatever the silicon actually does* — the rung the ladder exists to find out | real hardware |
+
+The disagreement is not a bug — it is the map. Python's strictness,
+the loader's tolerance, and silicon's eventual verdict are three
+observations of one blindness class; see
+[docs/BLINDNESS-REGISTRY.md](../../docs/BLINDNESS-REGISTRY.md) for the
+full twin-table and zeroclaw §6's formal twin (blindness-groups).
