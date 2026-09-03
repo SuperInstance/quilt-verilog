@@ -75,10 +75,12 @@ Canaries (mandatory, abort on fail):
      published (brief said 0.1 -> accept [0.0, 0.5]), step1/N=31 = 0.1,
      kcoh5@30 = 53.2 (+/-0.2). All true12, pinned EV=12.
 """
+import os
 import sys
 from collections import Counter, deque
 
-sys.path.insert(0, "inventors-derby")
+HERE = os.path.dirname(os.path.abspath(__file__))
+sys.path.insert(0, os.path.join(os.path.dirname(HERE), "inventors-derby"))
 from exp_glm1 import run_fabric, within_pm  # noqa: E402
 
 SEEDS = (1, 7, 42, 1999, 20260902)
@@ -489,11 +491,11 @@ def main():
     _, e6 = exp1()
     best, _ = exp2(e6)
     exp3(best)
-    x = 1508029952   # ledger state after SPIN-11-adversary's pick
+    x = 486256185   # current ledger head (after SPIN-12-conservation pick)
     x2 = (1103515245 * x + 12345) & 0x7FFFFFFF
     print(f"\nLCG ritual: proposal-dispatched spin (SPIN-8's proposal) — no pick"
-          f" consumed; ledger at dispatch 1508029952; next selection reference:"
-          f" 1508029952 -> {x2} -> mod 10 = {x2 % 10}")
+          f" consumed; ledger head 486256185; next selection reference:"
+          f" 486256185 -> {x2} -> mod 10 = {x2 % 10}")
 
 
 if __name__ == "__main__":
