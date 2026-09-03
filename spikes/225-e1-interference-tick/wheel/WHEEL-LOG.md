@@ -48,3 +48,18 @@
 - **Dispatch status:** IN FLIGHT (one lane max — held). Deliverable: wheel/SPIN-6-topology.md.
 - **Verdict:** pending (record in next spin's log entry when lane completes).
 - **LCG state after this advance: 2035015474** (next spin continues from here).
+
+
+## SPIN-10-PHASE-SCHEDULING (dispatched 2026-09-03 07:19 AKDT)
+- **Spoke:** PHASE-SCHEDULING (banked novel N1/N2 + SPIN-5 chatter convergence) · lane: wheel_spin10_phase (zai/glm-5.3, run mode)
+- **Brief:** Promote phase-aware scheduling to a first-class knob. (1) even-offset sweep from the zero-grammar origin (d∈{0,1,2,3,6}), residency-per-event, evenly-spread-optimality at matched max offset; (2) transplant into real grammars (ladder/cohort 3+3/kcoh5-fresh, spread 15+30, K∈{1,2}); (3) composition: N1 memory window (σ=3, +31.7pp) × anti-sync on one channel. Canaries: offset=0 byte-match novel baseline + Spin-5 zero@15 replay. Integer-only, seeds 1/7/42/1999/20260902.
+- **Verdict: VALIDATED-as-knob / substitutes-not-complements.**
+  - Knob VALIDATED: origin cure +20.3pp (77.3→97.6 at one tick), cross-channel transfer (tri3 zero-lock 81.0→100.0 at d=1), upgrades GOOD grammars not just chatter: kcoh5@15+AS-exact `[0,1,2,3,4,15]` = **79.4% K=1 (best-ever at spread 15, −32% events vs zero-lock)**, K=2 rescues +14.8 (cohort15) / +16.0 (kcoh5@15); sequential refs flat ±0.2pp → arm-specific mechanism. Dose boundary: kcoh5@30 AS-exact K=1 −3.1pp (freshness spent beats sync cured at large spread; AS-min safe +3.5).
+  - Evenly-spread NEAR-optimal not optimal: coh5 `[0,0,0,5,5,5]` 99.0 beats even5 97.6 (K=1) and kcoh5 74.1 beats even-ladder 71.5 @15 (K=1); even-6-phase wins every K=2 comparison — phase-count optimum is K-dependent; max-offset budget M dominates fine structure ~25pp vs 1–3pp (M=5 band 93.8–99.0 vs M=15 band 47.3–74.1).
+  - Composition (money question) FALSIFIED for additivity: N1's +31.7pp window is phase-fragile (+31.7→+21.2→+7.6→+2.0→−0.2 across [0,10]→[0,16]); on tri3 6-twin the K8−K1 sign flips with d (−14.4/−3.5/+2.7/−13.1/−1.2) — phase scheduling re-ranks the memory term, and the joint optimum (even1 K=1, 100.0%) uses NO memory. Anti-sync and cross-tick memory are substitutes competing for the same job (pulse-stream coherence); memory is compensation of last resort.
+  - Unifying booking: decorrelation budget (max−min)·σ ≲ 2Δ — e1 knee 15·1.6=24, tri3 even1 span 5·3=15 OK vs even2 10·3=30 collapsed; origin dip = the span-0 degenerate point. SPAN-BUDGET law proposed as next spoke (tri3 boundary bracketed 5<b≤10, unmeasured).
+  - Canaries 2/2 first-run PASS: run2≡run_fabric 8/8 full-dict; 33/33 published anchors exact incl. events/debt (zero 77.3/50.0/69.0 ev 8756/15133/9964 debt 187834/511660/195470; N1 tri3 13.9/39.4/41.9/45.6).
+  - New data points: ladder10 K8 = 90.8 (K8 max on d-grid); ladder30 K8 = 14.0 (K8 < K2 deep in collapse — memory anti-useful there).
+  - Scars: RPE integer display rounding (orderings exact, magnitudes at 1 decimal); AS-exact confounds de-sync with mild staleness redistribution (bounded by flat sequential refs; pure zero-staleness de-sync impossible on this fabric — lag-0 twins offset only upward, structural asymmetry booked); 6-twin tri3 family changes N vs N1 anchor (faithful 2-twin test reported separately); optimality grid bounded to M∈{5,15}.
+- **Files:** wheel/SPIN-10-phase-scheduling.md + spin10_phase_scheduling.py + spin10-output.txt.
+- **LCG advance: 2035015474 → 368800899 → mod 10 = 9 (next continues from here).**
