@@ -8,3 +8,6 @@ tb/formal/*/
 tb/run/
 tb/scratch/
 tools/edgebench/chipmatrix_runs/gpt2-onnx/
+cosim/obj/
+cosim/out/
+cosim/vlt/
