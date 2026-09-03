@@ -1,0 +1,14 @@
+
+== CANARY D: hetero runner uniform-pd == mc=0 byte-identity ==
+  PASS: 4 configs full-dict identical
+CANARY D: PASS
+
+
+== EXP 4: mixed-pd adjudication — is O2b's EVEN wall N=6 an effective-pd effect? ==
+   (pre-registered as P5a/P5b in this file's docstring BEFORE this run)
+  mix   | N=4    | N=5    | N=6    | N=7    | N=8    | N=9    | N=13  | edge
+  (2, 3) |  16.2  |   0.4D |   0.2D |   0.2D |   0.1D |   0.1D |   0.1D| 5
+  (3, 6) |  14.4  |  10.3  |  14.0  |  14.4  |  21.9  |   0.3D |   0.1D| 9
+
+  P5a mix(2,3): edge=5 — weakest-member law (REGISTERED primary): O2b's N=6 stays a separate law
+  P5b mix(3,6): edge=9 — mixture protection / sub-linear composition (registered alternative)
