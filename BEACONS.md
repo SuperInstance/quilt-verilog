@@ -84,3 +84,5 @@
 6. **GC-C4 (snap normal form, n-variable multi-fire case).** Partial authority, deferred debt, and variable-coupled corrections are the registered wiggle room; a bounded extension of `product_bench` would close or split it.
 
 Order rationale: 1–3 are measured sweeps with briefs already written (execution risk only); 4–6 extend existing green benches (theory risk only). All six protect active deployment decisions (O4 debt gates, scheduler×AS stacking, multi-substrate composition).
+
+7. **SPIN-22-one-level-gate (the θ dial is phantom at fixed pd).** Byte-proven: every θ in (1, 1+1/pd) is the same function at pd=3/N=7 (28 ladder levels, sha-identical). Deployment rule: the embedded gate is the 1-bit comparison `nf > 2*pd` — no divider, no LUT. Open edge: find the first pd where the band holds two crossings (true gate resolution vs pd); any future "θ tuning" claim inside a single-pd band is a constant-sweep red flag.
