@@ -1,0 +1,211 @@
+E7-EMBED-ROUTE | 40 pairs (20260902) | 80 concepts x 4 domains
+models: ['nomic-embed-text', 'all-minilm:22m', 'bge-m3']
+
+=== MODEL nomic-embed-text ===
+  radius q25 hop2=1005074: dead=0.30 mean_hops=0.90
+  radius q50 hop2=1096918: dead=0.00 mean_hops=0.85
+  radius q75 hop2=1178527: dead=0.00 mean_hops=0.42
+  [WARM] memory -> envy: memory > doubt > envy [ok]
+  [WARM] memory -> silence: memory > absence > silence [ok]
+  [WARM] justice -> envy: justice > envy [ok]
+  [WARM] justice -> silence: justice > truth > silence [ok]
+  [WARM] doubt -> mercy: doubt > tide > river > mercy [ok]
+  [WARM] valley -> geyser: valley > dune > geyser [ok]
+  [WARM] glacier -> marsh: glacier > lagoon > marsh [ok]
+  [WARM] meadow -> ridge: meadow > ridge [ok]
+  [WARM] delta -> geyser: delta > dune > geyser [ok]
+  [WARM] storm -> marsh: storm > marsh [ok]
+  [WARM] keel -> hull: keel > hull [ok]
+  [WARM] compass -> helm: compass > helm [ok]
+  [WARM] lighthouse -> shipyard: lighthouse > shipyard [ok]
+  [WARM] lighthouse -> wake: lighthouse > tide > wake [ok]
+  [WARM] compass -> wake: compass > sail > wake [ok]
+  [WARM] rope -> brick: rope > brick [ok]
+  [WARM] spoon -> crate: spoon > bucket > crate [ok]
+  [WARM] needle -> hinge: needle > wrench > hinge [ok]
+  [WARM] rope -> mirror: rope > chair > mirror [ok]
+  [WARM] nail -> needle: nail > needle [ok]
+  [COLD] habit -> delta: habit > rhythm > river > delta [ok]
+  [COLD] swell -> crate: swell > crate [ok]
+  [COLD] keel -> pencil: keel > spoon > pencil [ok]
+  [COLD] truth -> spoon: truth > chair > spoon [ok]
+  [COLD] helm -> nail: helm > hammer > nail [ok]
+  [COLD] compass -> ladder: compass > chair > ladder [ok]
+  [COLD] entropy -> rudder: entropy > storm > rudder [ok]
+  [COLD] envy -> wrench: envy > wrench [ok]
+  [COLD] mercy -> lagoon: mercy > river > lagoon [ok]
+  [COLD] paradox -> hull: paradox > tide > hull [ok]
+  [COLD] absence -> hammer: absence > silence > wake > hammer [ok]
+  [COLD] rhythm -> cave: rhythm > brick > cave [ok]
+  [COLD] limit -> chart: limit > mountain > chart [ok]
+  [COLD] purpose -> shipyard: purpose > mooring > shipyard [ok]
+  [COLD] origin -> mooring: origin > purpose > mooring [ok]
+  [COLD] silence -> mountain: silence > threshold > mountain [ok]
+  [COLD] chance -> shovel: chance > tide > shovel [ok]
+  [COLD] rumor -> buoy: rumor > swell > mooring > buoy [ok]
+  [COLD] memory -> basket: memory > bucket > basket [ok]
+  [COLD] threshold -> blanket: threshold > swell > blanket [ok]
+  distinct intermediate cells: 23/34 uses
+  top-10 hubs: [('tide', 4), ('chair', 3), ('river', 3), ('bucket', 2), ('dune', 2), ('mooring', 2), ('swell', 2), ('absence', 1), ('brick', 1), ('doubt', 1)]  (share=0.618)
+  hub usage by domain: [('NAUTICAL', 10), ('OBJECT', 9), ('LANDSCAPE', 8), ('ABSTRACT', 7)]
+  dead-end rate: 0.000  mean hops: 0.85
+  regime: {"WARM": {"mean_hops": 0.65, "funnel_top3": 0.15}, "COLD": {"mean_hops": 1.05, "funnel_top3": 0.3}}
+  -- quantization stability vs fine baseline (S=1000) --
+    S250         jaccard=0.883 lcs=0.889 identical=0.900 (n=30)
+    S250+d7      jaccard=0.883 lcs=0.889 identical=0.900 (n=30)
+    S250+d13     jaccard=0.883 lcs=0.889 identical=0.900 (n=30)
+    S250+d42     jaccard=0.883 lcs=0.889 identical=0.900 (n=30)
+    S100         jaccard=0.656 lcs=0.661 identical=0.725 (n=31)
+    S100+d7      jaccard=0.656 lcs=0.661 identical=0.725 (n=31)
+    S100+d13     jaccard=0.656 lcs=0.661 identical=0.725 (n=31)
+    S100+d42     jaccard=0.656 lcs=0.661 identical=0.725 (n=31)
+    S40          jaccard=0.511 lcs=0.517 identical=0.625 (n=30)
+    S40+d7       jaccard=0.511 lcs=0.517 identical=0.625 (n=30)
+    S40+d13      jaccard=0.511 lcs=0.517 identical=0.625 (n=30)
+    S40+d42      jaccard=0.511 lcs=0.517 identical=0.625 (n=30)
+
+=== MODEL all-minilm:22m ===
+  radius q25 hop2=1282632: dead=0.35 mean_hops=0.90
+  radius q50 hop2=1431551: dead=0.03 mean_hops=0.78
+  radius q75 hop2=1533237: dead=0.00 mean_hops=0.42
+  [WARM] memory -> envy: memory > habit > envy [ok]
+  [WARM] memory -> silence: memory > silence [ok]
+  [WARM] justice -> envy: justice > mirror > envy [ok]
+  [WARM] justice -> silence: justice > silence [ok]
+  [WARM] doubt -> mercy: doubt > silence > mercy [ok]
+  [WARM] valley -> geyser: valley > river > geyser [ok]
+  [WARM] glacier -> marsh: glacier > marsh [ok]
+  [WARM] meadow -> ridge: meadow > ridge [ok]
+  [WARM] delta -> geyser: delta > river > geyser [ok]
+  [WARM] storm -> marsh: storm > marsh [ok]
+  [WARM] keel -> hull: keel > hull [ok]
+  [WARM] compass -> helm: compass > fjord > helm [ok]
+  [WARM] lighthouse -> shipyard: lighthouse > shipyard [ok]
+  [WARM] lighthouse -> wake: lighthouse > wake [ok]
+  [WARM] compass -> wake: compass > mountain > wake [ok]
+  [WARM] rope -> brick: rope > brick [ok]
+  [WARM] spoon -> crate: spoon > bucket > crate [ok]
+  [WARM] needle -> hinge: needle > hinge [ok]
+  [WARM] rope -> mirror: rope > anchor > mirror [ok]
+  [WARM] nail -> needle: nail > needle [ok]
+  [COLD] habit -> delta: habit > rhythm > delta [ok]
+  [COLD] swell -> crate: swell > bucket > crate [ok]
+  [COLD] keel -> pencil: keel > shovel > pencil [ok]
+  [COLD] truth -> spoon: truth > nail > spoon [ok]
+  [COLD] helm -> nail: helm > hammer > nail [ok]
+  [COLD] compass -> ladder: compass > ladder [ok]
+  [COLD] entropy -> rudder: entropy > rhythm > rope > rudder [ok]
+  [COLD] envy -> wrench: envy > mirror > hammer > wrench [ok]
+  [COLD] mercy -> lagoon: mercy > estuary > lagoon [ok]
+  [COLD] paradox -> hull: paradox > iceberg > hull [ok]
+  [COLD] absence -> hammer: absence > hinge > hammer [ok]
+  [COLD] rhythm -> cave: rhythm > silence > cave [ok]
+  [COLD] limit -> chart: limit > threshold [DEAD]
+  [COLD] purpose -> shipyard: purpose > mast > shipyard [ok]
+  [COLD] origin -> mooring: origin > fjord > mooring [ok]
+  [COLD] silence -> mountain: silence > cave > mountain [ok]
+  [COLD] chance -> shovel: chance > brick > shovel [ok]
+  [COLD] rumor -> buoy: rumor > chance > hull > buoy [ok]
+  [COLD] memory -> basket: memory > justice > basket [ok]
+  [COLD] threshold -> blanket: threshold > thicket > mast > blanket [ok]
+  distinct intermediate cells: 23/31 uses
+  top-10 hubs: [('bucket', 2), ('fjord', 2), ('hammer', 2), ('mast', 2), ('mirror', 2), ('rhythm', 2), ('river', 2), ('silence', 2), ('anchor', 1), ('brick', 1)]  (share=0.581)
+  hub usage by domain: [('OBJECT', 11), ('LANDSCAPE', 9), ('ABSTRACT', 7), ('NAUTICAL', 4)]
+  dead-end rate: 0.025  mean hops: 0.78
+  regime: {"WARM": {"mean_hops": 0.45, "funnel_top3": 0.1}, "COLD": {"mean_hops": 1.1, "funnel_top3": 0.2}}
+  -- quantization stability vs fine baseline (S=1000) --
+    S250         jaccard=0.963 lcs=0.963 identical=0.975 (n=27)
+    S250+d7      jaccard=0.963 lcs=0.963 identical=0.975 (n=27)
+    S250+d13     jaccard=0.963 lcs=0.963 identical=0.975 (n=27)
+    S250+d42     jaccard=0.963 lcs=0.963 identical=0.975 (n=27)
+    S100         jaccard=0.875 lcs=0.881 identical=0.900 (n=28)
+    S100+d7      jaccard=0.875 lcs=0.881 identical=0.900 (n=28)
+    S100+d13     jaccard=0.875 lcs=0.881 identical=0.900 (n=28)
+    S100+d42     jaccard=0.875 lcs=0.881 identical=0.900 (n=28)
+    S40          jaccard=0.679 lcs=0.679 identical=0.775 (n=28)
+    S40+d7       jaccard=0.679 lcs=0.679 identical=0.775 (n=28)
+    S40+d13      jaccard=0.679 lcs=0.679 identical=0.775 (n=28)
+    S40+d42      jaccard=0.679 lcs=0.679 identical=0.775 (n=28)
+
+=== MODEL bge-m3 ===
+  radius q25 hop2=870795: dead=0.17 mean_hops=0.90
+  radius q50 hop2=948339: dead=0.00 mean_hops=0.60
+  radius q75 hop2=1026467: dead=0.00 mean_hops=0.33
+  [WARM] memory -> envy: memory > envy [ok]
+  [WARM] memory -> silence: memory > silence [ok]
+  [WARM] justice -> envy: justice > envy [ok]
+  [WARM] justice -> silence: justice > silence [ok]
+  [WARM] doubt -> mercy: doubt > promise > mercy [ok]
+  [WARM] valley -> geyser: valley > glacier > geyser [ok]
+  [WARM] glacier -> marsh: glacier > river > marsh [ok]
+  [WARM] meadow -> ridge: meadow > ridge [ok]
+  [WARM] delta -> geyser: delta > kettle > geyser [ok]
+  [WARM] storm -> marsh: storm > marsh [ok]
+  [WARM] keel -> hull: keel > helm > hull [ok]
+  [WARM] compass -> helm: compass > hammer > helm [ok]
+  [WARM] lighthouse -> shipyard: lighthouse > shipyard [ok]
+  [WARM] lighthouse -> wake: lighthouse > wake [ok]
+  [WARM] compass -> wake: compass > beacon > wake [ok]
+  [WARM] rope -> brick: rope > brick [ok]
+  [WARM] spoon -> crate: spoon > chart > crate [ok]
+  [WARM] needle -> hinge: needle > hinge [ok]
+  [WARM] rope -> mirror: rope > mountain > mirror [ok]
+  [WARM] nail -> needle: nail > needle [ok]
+  [COLD] habit -> delta: habit > chart > delta [ok]
+  [COLD] swell -> crate: swell > chart > crate [ok]
+  [COLD] keel -> pencil: keel > pencil [ok]
+  [COLD] truth -> spoon: truth > spoon [ok]
+  [COLD] helm -> nail: helm > sail > nail [ok]
+  [COLD] compass -> ladder: compass > lantern > ladder [ok]
+  [COLD] entropy -> rudder: entropy > river > rudder [ok]
+  [COLD] envy -> wrench: envy > wrench [ok]
+  [COLD] mercy -> lagoon: mercy > river > lagoon [ok]
+  [COLD] paradox -> hull: paradox > delta > hull [ok]
+  [COLD] absence -> hammer: absence > storm > hammer [ok]
+  [COLD] rhythm -> cave: rhythm > kettle > cave [ok]
+  [COLD] limit -> chart: limit > chart [ok]
+  [COLD] purpose -> shipyard: purpose > sail > shipyard [ok]
+  [COLD] origin -> mooring: origin > mountain > mooring [ok]
+  [COLD] silence -> mountain: silence > forest > mountain [ok]
+  [COLD] chance -> shovel: chance > spoon > shovel [ok]
+  [COLD] rumor -> buoy: rumor > beacon > buoy [ok]
+  [COLD] memory -> basket: memory > basket [ok]
+  [COLD] threshold -> blanket: threshold > lantern > blanket [ok]
+  distinct intermediate cells: 15/24 uses
+  top-10 hubs: [('chart', 3), ('river', 3), ('beacon', 2), ('kettle', 2), ('lantern', 2), ('mountain', 2), ('sail', 2), ('delta', 1), ('forest', 1), ('glacier', 1)]  (share=0.792)
+  hub usage by domain: [('LANDSCAPE', 9), ('NAUTICAL', 8), ('OBJECT', 6), ('ABSTRACT', 1)]
+  dead-end rate: 0.000  mean hops: 0.60
+  regime: {"WARM": {"mean_hops": 0.45, "funnel_top3": 0.15}, "COLD": {"mean_hops": 0.75, "funnel_top3": 0.25}}
+  -- quantization stability vs fine baseline (S=1000) --
+    S250         jaccard=0.958 lcs=0.958 identical=0.975 (n=24)
+    S250+d7      jaccard=0.958 lcs=0.958 identical=0.975 (n=24)
+    S250+d13     jaccard=0.958 lcs=0.958 identical=0.975 (n=24)
+    S250+d42     jaccard=0.958 lcs=0.958 identical=0.975 (n=24)
+    S100         jaccard=0.885 lcs=0.885 identical=0.925 (n=26)
+    S100+d7      jaccard=0.885 lcs=0.885 identical=0.925 (n=26)
+    S100+d13     jaccard=0.885 lcs=0.885 identical=0.925 (n=26)
+    S100+d42     jaccard=0.885 lcs=0.885 identical=0.925 (n=26)
+    S40          jaccard=0.654 lcs=0.654 identical=0.775 (n=26)
+    S40+d7       jaccard=0.654 lcs=0.654 identical=0.775 (n=26)
+    S40+d13      jaccard=0.654 lcs=0.654 identical=0.775 (n=26)
+    S40+d42      jaccard=0.654 lcs=0.654 identical=0.775 (n=26)
+
+=== CROSS-MODEL COMPARISON ===
+  nomic-embed-text vs all-minilm:22m:
+    per-pair intermediate Jaccard 0.074 (null 0.000, lift +0.074) [n=34/40 both-routed]
+    LCS 0.078 | warm 0.071 vs cold 0.075
+    hub top-10 overlap 3/17 shared=['brick', 'bucket', 'river']
+    hub-count Spearman rho=-0.441
+  nomic-embed-text vs bge-m3:
+    per-pair intermediate Jaccard 0.030 (null 0.014, lift +0.017) [n=33/40 both-routed]
+    LCS 0.030 | warm 0.000 vs cold 0.053
+    hub top-10 overlap 1/19 shared=['river']
+    hub-count Spearman rho=-0.541
+  all-minilm:22m vs bge-m3:
+    per-pair intermediate Jaccard 0.000 (null 0.000, lift +0.000) [n=30/40 both-routed]
+    LCS 0.000 | warm 0.000 vs cold 0.000
+    hub top-10 overlap 1/19 shared=['river']
+    hub-count Spearman rho=-0.602
+
+done in 8.1s -> metrics.json, routes_raw.json
+EXIT=0

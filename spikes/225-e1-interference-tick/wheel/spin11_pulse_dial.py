@@ -66,6 +66,34 @@ P4 (K-trough interaction): under the best-compensated variant at
     min(comp K=1, comp K=4)): the trough is overlap geometry, not firing
     mass, so compensation should not close it.
 
+EXP 4 — mixed-pd adjudication (EXPERT nudge 2026-09-03, ACCEPTED;
+    added to THIS SAME COMMIT before any run, so it is pre-registered
+    too). O2b (round 3, de5ad6b) located a fan-out wall at N=6 — EVEN,
+    which cannot be 2pd+1 for integer pd. Two families could produce it:
+    (a) heterogeneous/effective pd (mix of twin periods -> pd_eff in
+    (2,3)), or (b) a different law. Instrument: half pd_a / half pd_b
+    twins (per-sensor pd, alternating by index) on ladder(30,N),
+    UNCOMPENSATED, delta=12, K=1, N in {4,5,6,7,8,9,13}, same seeds,
+    divergence := all 5 seeds maxResid > 10^6 (EXP 1's definition).
+    Note pd=2 twins individually diverge at N=5, so mix (2,3)'s edge is
+    bounded above by 5 unless the fabric as a whole behaves otherwise.
+
+P5a (mix 2,3): edge = 5 = weakest-member law — the pd=2 half diverges
+    at its own wall and drags the shared g; heterogeneity does NOT
+    create an even wall; O2b's N=6 stays a separate law (booked as
+    such). ALTERNATIVE outcomes: edge 6 -> effective-pd unification
+    anchor for O2b; edge > 5 -> mixture protection (non-diverging
+    members absorb the diverging half's shove).
+P5b (mix 3,6): pure walls are 7 and 13, so NO member individually
+    diverges below 7 — this arm is the clean adjudicator. Registered
+    BEFORE the run: edge 7 = weakest-member law (primary prediction);
+    edge 6 = even wall from pd_eff ~ 4-5 in (3,6) -> O2b unification,
+    the room-pressure mapping gets a predictive anchor; edge >= 8 or
+    none = mixture protection / sub-linear composition.
+Canary D (mandatory): hetero runner with a UNIFORM pd list is
+    byte-identical (full dict) to run_fabric_mc(mc=0) across 4 configs
+    — the per-sensor path adds nothing when the population is pure.
+
 Canaries (mandatory, abort on fail):
   A: run_fabric_mc(mc=0) full-dict byte-identity vs exp_glm1.run_fabric
      across 8 configs (grammars x pd x K x delta, incl. spread-0).
@@ -479,6 +507,140 @@ def exp3(best):
         print(f"   {name:>8}: off {s_off:+6.1f}  comp {s_on:+6.1f}  "
               f"{'FLIP' if s_off * s_on < 0 else 'same sign'}")
     return tab
+
+
+# ---------------------------------------------------------------- EXP 4
+def run_fabric_hetero(mode, ticks, lats, pds, lies=None, K=4, delta=12,
+                      drift=6, seed=20260902):
+    """Interference arm of exp_glm1.run_fabric with PER-SENSOR pd.
+    Byte-identical to run_fabric_mc(mc=0) when pds is uniform (Canary D)."""
+    rng = LCG(seed)
+    g = reality(0)
+    pulses = deque()
+    n = len(lats)
+    lies = lies or {}
+    emissions = []
+    events = mass = cancels = chatter = settles = 0
+    last = -10
+    resid = []
+    cflags = []
+    for t in range(ticks):
+        reads = [reality(max(0, t - lats[i])) + (lies[i](t) if i in lies else 0)
+                 for i in range(n)]
+        s_true = reality(t)
+        g += rng.below(2 * drift + 1) - drift
+        while pulses and pulses[-1][1] == 0:
+            pulses.pop()
+        errs = [r - g for r in reads]
+        trig = [(i, e) for i, e in enumerate(errs) if abs(e) > delta]
+        cflag = 0
+        if mode == "sequential":
+            if trig:
+                i, e = trig[0]
+                g += e
+                events += 1
+                mass += abs(e)
+                emissions.append((t, i, e, e))
+                if t - last == 1:
+                    chatter += 1
+                last = t
+        else:
+            for i, e in trig:
+                m = abs(e) // pds[i] or 1
+                pm = m if e > 0 else -m
+                pulses.appendleft([pm, K])
+                events += 1
+                mass += abs(e)
+                emissions.append((t, i, pm, e))
+            if pulses:
+                net = sum(p[0] for p in pulses)
+                if net == 0 and any(p[0] > 0 for p in pulses) \
+                        and any(p[0] < 0 for p in pulses):
+                    cancels += 1
+                    cflag = 1
+                decayed = deque()
+                for mag, life in pulses:
+                    if life > 0:
+                        if abs(mag) > 1:
+                            mag = mag - (mag // 2)
+                        decayed.append([mag, life - 1])
+                pulses = decayed
+                g += net
+            if trig:
+                if t - last == 1:
+                    chatter += 1
+                last = t
+        resid.append(abs(s_true - g))
+        cflags.append(cflag)
+        if all(abs(r - g) <= delta for r in reads):
+            settles += 1
+    return dict(events=events, mass=mass, cancels=cancels, chatter=chatter,
+                settles=settles, resid=resid, cflags=cflags,
+                emissions=emissions, audit=None, ticks=ticks)
+
+
+def hcell(lats, pds, K=1, delta=DELTA, seeds=SEEDS):
+    rs = [run_fabric_hetero("interference", TICKS, lats, pds, K=K,
+                            delta=delta, drift=6, seed=s) for s in seeds]
+    mr = [max(r["resid"]) for r in rs]
+    t12 = [within_pm(r["resid"], EV) for r in rs]
+    return dict(t12=t12, m=mean(t12) / 10, mr=mr,
+                div=all(x > DIV_AT for x in mr))
+
+
+def canary_d():
+    print("\n== CANARY D: hetero runner uniform-pd == mc=0 byte-identity ==")
+    ok = True
+    for lats, pd in ((ladder(30), 3), (ladder(30, 9), 2),
+                     (ladder_step(30, 5), 6), (kcoh(5, 30), 12)):
+        pds = [pd] * len(lats)
+        a = run_fabric_mc("interference", TICKS, lats, K=1, pd=pd, delta=DELTA,
+                          drift=6, seed=SEEDS[0], mc=0)
+        b = run_fabric_hetero("interference", TICKS, lats, pds, K=1,
+                              delta=DELTA, drift=6, seed=SEEDS[0])
+        if a != b:
+            ok = False
+            print(f"  MISMATCH lats={lats[:8]} pd={pd}")
+    print(f"  {'PASS' if ok else 'FAIL'}: 4 configs full-dict identical")
+    return ok
+
+
+def exp4():
+    print("\n== EXP 4: mixed-pd adjudication — is O2b's EVEN wall N=6 an"
+          " effective-pd effect? ==")
+    print("   (pre-registered as P5a/P5b in this file's docstring BEFORE"
+          " this run)")
+    ns = (4, 5, 6, 7, 8, 9, 13)
+    print("  mix   | " + " | ".join(f"N={n:<4}" for n in ns) + "| edge")
+    edges = {}
+    for mix in ((2, 3), (3, 6)):
+        row = []
+        for n in ns:
+            lats = ladder(30, n)
+            pds = [mix[i % 2] for i in range(n)]   # alternate by sensor idx
+            c = hcell(lats, pds)
+            row.append(show(c))
+        edge = next((n for n in ns if hcell(ladder(30, n),
+                                            [mix[i % 2]
+                                             for i in range(n)]).get("div")),
+                    None)
+        edges[mix] = edge
+        print(f"  {str(mix):>5} | " + " | ".join(f"{x:<6}" for x in row)
+              + f"| {edge}")
+    e23, e36 = edges[(2, 3)], edges[(3, 6)]
+    print(f"\n  P5a mix(2,3): edge={e23} — "
+          + ("weakest-member law (REGISTERED primary): O2b's N=6 stays a"
+             " separate law" if e23 == 5 else
+             "DEVIATION from registered primary — see P5a alternatives"))
+    print(f"  P5b mix(3,6): edge={e36} — "
+          + ("weakest-member law (REGISTERED primary): no even-wall"
+             " unification" if e36 == 7 else
+             ("EVEN WALL at 6 -> effective-pd unification with O2b;"
+              " room-pressure mapping gets its predictive anchor"
+              if e36 == 6 else
+              "mixture protection / sub-linear composition (registered"
+              " alternative)")))
+    return edges
 
 
 def main():
