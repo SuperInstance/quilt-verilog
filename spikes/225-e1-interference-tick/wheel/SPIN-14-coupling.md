@@ -121,3 +121,35 @@ pulse-superposition channel).*
 LCG advance for next spin: 368800899 → **1508029952** → mod 10 = **2**.
 
 VERDICT: MIXED — universal subadditivity falsified (zero-lock K=2 residual +11.9pp; scheduler×AS superadditive +47.2pp stacked to a new best cell 89.0% cohort8+AS@K=2), but N1 memory is subadditive-or-destructive in 14/16 cells (all real grammars) and AS beats N1 everywhere (grammar-class prediction falsified; failure-mode prediction wins): superadditivity = orthogonal failure channels, substitutes = same channel.
+
+## Spin-15 charter (IDEATOR nudge 2026-09-03, ACCEPTED): predict composition, don't measure it
+
+Spin 14's closing line — "superadditivity = orthogonal failure channels" —
+is currently a description, not a law: it explains the zero-lock +11.9pp
+AFTER seeing it. Spin 15 flips it predictive. Design:
+
+1. **Channel fingerprint.** For each knob (scheduler swap, AS, N1/memory,
+   future: dial-level knobs), classify which failure channel it attacks:
+   staleness / intra-cohort correlation / chatter — from EXISTING spin
+   evidence (spin 12's n_f×K, spin 10's even1@zero, spin 14's EXP3
+   failure-mode result), not new runs.
+2. **Pre-register stackability.** Pairs predicted orthogonal → predict
+   residual sign and rough magnitude per (grammar, K) cell BEFORE running
+   (spin-12-style pre-registration; spin-8 scar convention).
+3. **Test.** Run only the discriminating pairs. The law graduates if
+   channel-orthogonality predicts residual sign across the grid; the
+   payoff is portable: "when do improvements compose" is what the elephant
+   room needs (why mood-dial + presence-dial beats cranking either) and
+   what quilt-deck's substrate ladder wants (choose backends per failure
+   mode, not per benchmark).
+
+**One-line falsifier (pre-registered):** if any orthogonal-channel pair
+composes SUBadditively outside zero-lock, the law is zero-lock-local —
+say so in the headline, retire "compositional law".
+
+Worth noting honestly: spin 14 EXP4 already gives one datapoint AGAINST
+the naive version — coh8 AS+N1 (62.3) is subadditive vs AS alone (89.0)
+despite AS=decorrelation and N1=memory looking channel-distinct; N1's
+channel label may be wrong (EXP3 says chatter-compensation, which IS
+AS's channel — the fingerprint may collapse them). That collapse is
+exactly the kind of thing spin 15 should settle cheaply.
