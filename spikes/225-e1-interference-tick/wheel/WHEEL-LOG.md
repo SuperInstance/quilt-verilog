@@ -41,10 +41,10 @@
 - **LCG advance: 1147902781 → 2035015474 → mod 10 = 4 (TOPOLOGY next).**
 
 
-## SPIN-5-TOPOLOGY (dispatched 2026-09-03 07:02 AKDT)
+## SPIN-6-TOPOLOGY (dispatched 2026-09-03 07:02 AKDT)
 - **SPIN-4 verdict recorded:** MIXED — spread-law knee VALIDATED at spread≈15 (93.5→71.5→49.2% across 10/15/20, N=6 K=1 ladder), N-independence SUPPORTED first-order (N=2/3/6 all in 10–29% collapsed band at spread=30), pattern-invariance FALSIFIED (cohort 49.3% vs ladder 26.8% at spread=30 K=1), spread=0 chatter anomaly (50–77%, worse than spread=5's 97.6% — U-shaped at origin). Files: wheel/SPIN-4-metrology.md + spin4_metrology.py.
-- **Spoke:** TOPOLOGY (spoke 4, LCG: 1147902781 → 2035015474 → 2035015474 mod 10 = 4) · lane: wheel_spin5_topology (zai/glm-5.3, run mode)
+- **Spoke:** TOPOLOGY (spoke 4, LCG: 1147902781 → 2035015474 → 2035015474 mod 10 = 4) · lane: wheel_spin6_topology (zai/glm-5.3, run mode)
 - **Brief:** Cohort-majority law test (SPIN-4's proposed PATTERN-GRAMMAR, framed as topology): N=6 fixed, K∈{1,2,8}, spread=15 at the knee, sweep multiset grammar (graded ladder, k-cohort splits k=1..5, bimodal, single laggard, single outlier, 3v3 binary anchor). Plus knee densification: ladder spread 12–24 step 2 vs 2Δ=24 prediction. Integer-only, seeds 1/7/42/1999/20260902, self-canaries (spin4 ladder spread=15 replay ~71.5/60.0/70.7%, spread=0 identity), real runs.
-- **Dispatch status:** IN FLIGHT (one lane max — held). Deliverable: wheel/SPIN-5-topology.md.
+- **Dispatch status:** IN FLIGHT (one lane max — held). Deliverable: wheel/SPIN-6-topology.md.
 - **Verdict:** pending (record in next spin's log entry when lane completes).
 - **LCG state after this advance: 2035015474** (next spin continues from here).
