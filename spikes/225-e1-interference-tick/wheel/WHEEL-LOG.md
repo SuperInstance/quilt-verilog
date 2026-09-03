@@ -167,3 +167,7 @@
 - **Dispatch status:** IN FLIGHT (one lane max — held). Deliverable: wheel/SPIN-18-coupling.md.
 - **Verdict:** pending (record in next spin's log entry when lane completes).
 - **LCG state after this advance: 267834847** (next spin continues from here).
+
+## SPIN-20-QUESTIONS COMPLETE (2026-09-03 14:1x AKDT)
+- **Spoke:** QUESTIONS (meta — Casey: "we want to find new useful questions") · lane: wheel_spin20_questions (zai/glm-5.3, run mode). No runs; harvest over BEACONS + all SPIN files + GC + ROUNDS + README.
+- **Deliverable:** wheel/SPIN-20-questions.md — 24 raw questions (seams S1-S6, standing numbers U1-U5, scars I1-I3, inversions V1-V5, substrate B1-B3, fisherman F1-F3) + TOP-10 ranked by novelty×falsifiability×compute⁻¹. Headline seeds: (1) is the K=2 catastrophe fabric law or THIS-reality artifact — nobody ever varied reality (~20 min); (2) does the compensated co-fire wall N≈7 sit at 2pd+1 — wall unification (~30 min); (3) does the learned scheduler survive ±7/4-bit quantization (~10 min); (4) do all knees collapse in (span·σ)/2Δ units (zero-compute meta + 15-min tri3 confirm); (7) does the spread knee exist in fabric RTL — the README's own model-vs-silicon gate (~2-4h verilator). Existing proposals (SPIN-19, sub-1.0 θ, SPIN-15 charter) explicitly not re-asked.
