@@ -446,6 +446,7 @@ Error codes (`o_err`, sticky, stops the load):
 | 7    | nonzero u64 high word (offset or size)         |
 | 8    | KV/section name longer than 255 bytes          |
 | 9    | `edge.k` out of 1..16                          |
+| 12   | payload digest mismatch (`crc32`, §12.2)       |
 
 ## 10. JSON schema and CLI (`tools/quf.py`)
 
@@ -509,6 +510,30 @@ Layout walk: fixed header 16 B → 10 KV pairs 241 B → section table
 ; ticks: 06000000 00000000 03000000
 ; trailing zero padding to 576
 ```
+
+## 12. Integrity digests (opt-in)
+
+Both digests cover PAYLOAD bytes only (section data in table order);
+header, KV pairs, and alignment padding are excluded. Both are plain
+header KVs, so consumers that do not understand them skip them per §8.
+
+### 12.1 `quf.sha256` (host-side)
+
+Hex string over sha256 of the (name, size, data) triplets — see
+`tools/quf.py add_digest` / `verify` (`--digest`). Python-side only;
+the RTL has no sha engine. Digest KV itself shifts offsets, so it is
+computed over the digested doc REBUILT without the KV.
+
+### 12.2 `crc32` (silicon-checkable)
+
+IEEE CRC-32 (zlib convention: init 0xFFFFFFFF, poly 0xEDB88320
+reflected, final xor 0xFFFFFFFF) over the raw payload byte stream in
+table order, stored as a u32 header KV. Writer: `quf.py create --crc32`
+(or `hdr["crc32"] = "auto"`). Loader: `rtl/q_uf_loader.v` accumulates a
+bit-serial CRC over payload-state bytes only and gates DONE on the
+captured digest (error 12 on mismatch); the check runs one cycle after
+the last payload byte (NBA-order) and covers ONLY containers that carry
+the KV — undigested files load exactly as before.
 
 Full hex (whitespace-insensitive):
 

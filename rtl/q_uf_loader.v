@@ -23,7 +23,9 @@
 //
 // Error codes (o_err, sticky): 1 bad magic, 2 bad version, 3 layout
 // overrun, 4 bad endian word, 5 known KV not u32, 6 unknown value type,
-// 7 nonzero u64 high word, 8 name too long, 9 edge.k out of range.
+// 7 nonzero u64 high word, 8 name too long, 9 edge.k out of range,
+// 12 crc32 digest mismatch (§12.2; the digest-blindness closure -- a
+// corrupted-but-structural payload can no longer boot silently).
 module q_uf_loader #(
     parameter AIDW = 4
 )(
@@ -61,7 +63,8 @@ module q_uf_loader #(
 );
     localparam [7:0] E_MAGIC = 8'd1, E_VER = 8'd2, E_LAYOUT = 8'd3,
                      E_ENDIAN = 8'd4, E_KVTYPE = 8'd5, E_VTYPE = 8'd6,
-                     E_BIG = 8'd7, E_NAME = 8'd8, E_EK = 8'd9;
+                     E_BIG = 8'd7, E_NAME = 8'd8, E_EK = 8'd9,
+                     E_CRC = 8'd12;
 
     // GGUF-compatible value-type ids
     localparam [3:0] VT_STR = 4'd8, VT_ARR = 4'd9;
@@ -74,7 +77,7 @@ module q_uf_loader #(
                      S_SECK   = 5'd15, S_SECO   = 5'd16, S_SECS   = 5'd17,
                      S_DATA   = 5'd18, S_DIALS  = 5'd19, S_EDGES  = 5'd20,
                      S_ROUTE  = 5'd21, S_TICKS  = 5'd22, S_DONE   = 5'd23,
-                     S_ERRX   = 5'd24;
+                     S_ERRX   = 5'd24, S_FIN   = 5'd25;
 
     reg [4:0]   state;
 
@@ -122,8 +125,47 @@ module q_uf_loader #(
     wire [4:0]   nlenn = (nlen < 5'd16) ? (nlen + 5'd1)     : nlen;
 
     wire [2:0]  kid = nlong ? 3'd0 :
-                      (nlenn == 5'd6 && nbn[47:0] == "edge.k") ? 3'd1 : 3'd0;
-    reg  [2:0]  kv_id;     // 0 none, 1 edge.k
+                      (nlenn == 5'd6 && nbn[47:0] == "edge.k") ? 3'd1 :
+                      (nlenn == 5'd5 && nbn[39:0] == "crc32")  ? 3'd2 : 3'd0;
+    reg  [2:0]  kv_id;     // 0 none, 1 edge.k, 2 crc32
+
+    // ----------------------------------------------------- crc32 digest --
+    // §12.2: IEEE CRC32 (reflected, poly EDB88320, init/xor 0xFFFFFFFF)
+    // over section PAYLOAD bytes in table order. Bit-serial combinational
+    // step per consumed byte; one payload byte arrives per cycle (be_adv),
+    // which the unrolled 8-step function keeps up with. KV/table/padding
+    // bytes are excluded (the writer computes over the same byte set).
+    function [31:0] crc32_next;
+        input [31:0] c;
+        input [7:0]  b;
+        integer k;
+        reg [31:0] x;
+        begin
+            x = c ^ {24'd0, b};
+            for (k = 0; k < 8; k = k + 1)
+                x = (x >> 1) ^ (x[0] ? 32'hEDB88320 : 32'd0);
+            crc32_next = x;
+        end
+    endfunction
+
+    reg [31:0]  crc_cur;
+    reg [31:0]  crc_exp;
+    reg         crc_have;   // crc32 KV present in this container
+    wire        in_payload  = (state == S_DIALS) || (state == S_EDGES) ||
+                              (state == S_ROUTE) || (state == S_TICKS);
+    wire        payload_adv = in_payload && be_adv;
+
+    // finish gate: a captured digest must match before the load is done.
+    // crc_cur holds the RAW register; §12.2 stores the FINALIZED CRC32
+    // (zlib convention, final xor 0xFFFFFFFF) -- finalize on compare.
+    // NBA-order note: finish_ok must NOT check crc_cur in the same cycle
+    // as the last payload byte -- the crc accumulator block commits that
+    // byte's update via NBA and would be read stale (found by tb case 5:
+    // the check compared a digest missing its final byte). One-cycle
+    // S_FIN resolution state lets the accumulator land first.
+    task finish_ok; begin
+        state <= S_FIN;
+    end endtask
 
     wire [2:0]  sid = nlong ? 3'd0 :
                       (nlenn == 5'd5  && nbn[39:0] == "dials")   ? 3'd1 :
@@ -227,8 +269,7 @@ module q_uf_loader #(
 
     task goto_data; begin
         if (!qany) begin
-            state  <= S_DONE;
-            o_done <= 1'b1;
+            finish_ok;
         end else if (qok) begin
             enter_payload;
         end else if (qwait) begin
@@ -246,6 +287,15 @@ module q_uf_loader #(
         else
             state <= S_KVNL;
     end endtask
+
+    // crc32 accumulator (own block: payload bytes are the ONLY bytes it
+    // sees, one per be_adv cycle; no other process assigns crc_cur)
+    always @(posedge clk) begin
+        if (!rst_n)
+            crc_cur <= 32'hFFFFFFFF;
+        else if (payload_adv)
+            crc_cur <= crc32_next(crc_cur, be_b);
+    end
 
     always @(posedge clk) begin
         if (!rst_n) begin
@@ -282,6 +332,8 @@ module q_uf_loader #(
             rt_first    <= 1'b1;
             rt_tmp      <= 4'd0;
             tphase      <= 1'b0;
+            crc_exp     <= 32'd0;
+            crc_have    <= 1'b0;
             o_dial_wr   <= 1'b0;
             o_dial_addr <= 4'd0;
             o_dial_wdata<= 16'd0;
@@ -300,7 +352,16 @@ module q_uf_loader #(
             o_edge_wr  <= 1'b0;
             o_route_wr <= 1'b0;
 
-            if (be_adv) begin
+            if (state == S_FIN) begin
+                // digest check now that the final crc update has landed
+                if (crc_have && ((crc_cur ^ 32'hFFFFFFFF) != crc_exp)) begin
+                    state <= S_ERRX;
+                    o_err <= E_CRC;
+                end else begin
+                    state  <= S_DONE;
+                    o_done <= 1'b1;
+                end
+            end else if (be_adv) begin
                 pos <= posn;
 
                 case (state)
@@ -420,10 +481,16 @@ module q_uf_loader #(
                       v32 <= v32n[31:8];
                       if (bc == 2'd3) begin
                           bc <= 2'd0;
-                          if (v32n == 32'd0 || v32n > 32'd16) begin
-                              state <= S_ERRX; o_err <= E_EK;
-                          end else begin
-                              eK <= v32n[4:0];
+                          if (kv_id == 3'd1) begin
+                              if (v32n == 32'd0 || v32n > 32'd16) begin
+                                  state <= S_ERRX; o_err <= E_EK;
+                              end else begin
+                                  eK <= v32n[4:0];
+                                  kv_done;
+                              end
+                          end else begin  // kv_id == 2: crc32 (§12.2)
+                              crc_exp  <= v32n;
+                              crc_have <= 1'b1;
                               kv_done;
                           end
                       end else bc <= bc + 2'd1;
@@ -572,8 +639,7 @@ module q_uf_loader #(
                               // ordering when the winner IS the entry
                               // being registered (consumed on entry).
                               if (!qanyX) begin
-                                  state  <= S_DONE;
-                                  o_done <= 1'b1;
+                                  finish_ok;
                               end else if (qminX == posn) begin
                                   state    <= pstateX;
                                   pleft    <= psizeX;
@@ -598,8 +664,7 @@ module q_uf_loader #(
                   // --------------------------------------------- payloads --
                   S_DATA: begin  // consume padding until next known section
                       if (!qany) begin
-                          state  <= S_DONE;
-                          o_done <= 1'b1;
+                          finish_ok;
                       end else if (posn == qmin) begin
                           enter_payload;
                       end else if (posn > qmin) begin
