@@ -52,3 +52,8 @@ Rule: skip items visibly in flight (check timestamps here + wheel/WHEEL-LOG.md).
 - **Verdict:** DONE — WALL MOVED — N=4 interference trueRes 12.2% → 86.3% with per-twin lag compensation (F19/F20 blade, 11/11 exact lag discovery): capacity law restated as "stale-sensing capacity, not twin count." New co-fire wall at N~7 (comp trueRes 61.3% at N=7 → 42.6% at N=8). Sequential arm hits 100.0% comp at every N. Lag blade verified 11/11 exact across lags 3–70; anchors replay 8/8 vs glm-1 sheet B; canaries 3/3 PASS (double-run byte-identity, anchor replay, self-canary CAUGHT).
 - **Commit:** 0a637a1
 - **Headline:** N=4 trueRes 12.2→86.3% (comp); co-fire wall relocates to N~7
+
+## Round 8 — Q1 (class-grain boundary, linear-superposition substrates) — DISPATCHED 2026-09-03 14:2x AKDT
+- **Item:** Q1 — map the class-grain boundary: embedding-census needs class grain (F5), Hadamard linear-superposition holds at identity grain (glm-2 #2, 13ppm). Axes: (1) nonlinear vs linear readout, (2) learned-vs-fixed coin dynamics, (3) 1-D vs 2-D dimensionality. Decider property identified or boundary honestly unmapped.
+- **Lane:** dev_q1_class_grain_boundary (zai/glm-5.3, run mode). Deliverable: dev-rounds/ROUND-8-Q1-class-grain.md. Commit + push g3-kinduction mandated.
+- **Verdict:** pending (append on lane completion).
