@@ -94,3 +94,30 @@ capability — the elephant's per-counterparty dial memory is how the fleet
 practices it.
 
 — doctrine entry, E1 arena, 2026-09-02
+
+## Re-banking — O1 K-replay (2026-09-02, dev round 1; see inventors-derby/O1-K-REPLAY.md)
+
+The K-axis replay (S3/F13) forced the ledger's first champion change and a calm re-key.
+All changes verified on holdout seeds (11, 313, 8888); 10/10 byte-match control gates
+passed before any new number was read.
+
+- **Stress champion: static probe `K=1, pd=2, d=16` interference — 96.1%** (old champion
+  granite K5/pd4/d16: 93.2%). Not a crown swap but a **triple-axis Pareto domination**
+  (pct 96.1>93.2, debt 121,762<132,823, maxE 33<38); zero seed variance across all 8
+  seeds run. It also dominates the impulse-d16 unseen entry (96.0/139,949/61).
+- **Stress debt crown: K=2/pd=2/d16 (debt 111,224)** — debt and pct no longer travel
+  together; the stress Pareto front is K1/pd2 (pct+maxE), K2/pd2 (debt), K3/pd4
+  (interior). Old champion kept in the structural bank — first LLM-crowned champion,
+  lineage preserved.
+- **Calm (Δ=6) re-key: K=1/pd=2 interference, 98.0% vs impulse 56.6** — the calm
+  specialist seat flips from sequential to short-K interference; holdout 98.0 vs 57.3.
+  Calm (d12) stays impulse (98.0 tie, debt 33,514 ≪ 57,264). The calm boundary is a
+  deadband-to-conflict property, not a mode property.
+- **Standing bias booked: grid anchoring.** No LLM contestant has ever proposed K≤3
+  interference (arena v2: all K∈{4,5,8}; v3 widened rounds: K=4, then a mode jump).
+  Static non-LLM probes are now a permanent arena fixture; the ledger banks results,
+  not lineages. Schema fix landed: arena.py v3, K∈{1..8}.
+- Playbook update: read the deadband-to-conflict ratio, then call the tail —
+  conflicted room → shortest tails (K≤2); calm or wide room → no tails (or K=1/pd=2,
+  which won both frames of its own — the new play is "quantized impulse", pending
+  its mode-classification question).

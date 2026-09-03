@@ -35,7 +35,7 @@ a correction fires. Two correction modes exist:
   that decay by halving over K ticks; overlapping pulses ADD before touching g.
 
 Tune for maximum percent of ticks where BOTH sensors are within delta of g,
-tie-broken by lower total ledger mass. Constraints: 1 <= K <= 16,
+tie-broken by lower total ledger mass. Constraints: 1 <= K <= 8,
 1 <= pulse_div <= 8, 4 <= delta <= 24, mode is one of the two above.
 
 Known data point: impulse alone scores ~52% within, maxErr 61. Interference
@@ -111,7 +111,7 @@ def parse_response(text):
         p = _salvage_truncated(text)
     if not isinstance(p, dict):
         return None, text.strip()[:120]
-    p["K"] = max(1, min(16, int(p["K"])))
+    p["K"] = max(1, min(8, int(p["K"])))  # v3 (O1): widened axis 16->8 so short-K is reachable
     p["pulse_div"] = max(1, min(8, int(p["pulse_div"])))
     p["delta"] = max(4, min(24, int(p["delta"])))
     if p["mode"] not in ("sequential", "interference"):
