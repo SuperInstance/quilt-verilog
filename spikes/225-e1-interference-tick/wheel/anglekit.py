@@ -21,11 +21,22 @@ Public API:
   bisect_n(u, v), bisect_b(u, v)  -> shared refinement ops (exact)
   combine(u, v, a, b)             -> shared refinement op (exact)
   angle_deg(key), angdist(a, b)   -> display helpers (float)
+  part_class(key), real_length(key) -> construction-cost classes (COST DOCTRINE)
   build_table(seed_set, depth=3, k_bits=16) -> AngleTable
-  AngleTable.select(target_deg, tolerance_deg) -> Selection | None
-      minimal-address-bits exact construction within tolerance of target;
-      None if the table has nothing within tolerance (sampling hole).
+  AngleTable.select(target_deg, tolerance_deg, prefer="cost") -> Selection | None
+      COST DOCTRINE (addendum 4): the objective is NOT min |theta-target| but
+      min CONSTRUCTION COST subject to |theta-target| <= tolerance.
+      prefer="cost"  (default): rank by (part_class, bits, depth, err) —
+          Pythagorean-standard forms (integer real length k=sqrt(X^2+3Y^2),
+          k <= 64: the 3-4-5-class shelf) beat exotic high-norm hits even
+          when the exotic is closer. The engineer's tolerance is exactly
+          the room that makes standard parts viable.
+      prefer="bits"  : legacy min-bitstring ranking (SPIN-13c/d semantics)
+      prefer="nearest": min angle error, then bits
+      None if nothing is within tolerance (sampling hole).
   AngleTable.key/bits/bitstring/evaluate(i)  -> exact node accessors
+  AngleTable.catalog(max_k=64)   -> the shelf of standard parts
+  AngleTable.bracket(target)     -> adjacent pair for hand refinement
   AngleTable.stats()              -> entries/payload/bytes per depth
 
 Determinism: fixed LCG pair sampling; identical inputs give byte-identical
@@ -108,6 +119,35 @@ def angle_deg(key):
 def angdist(a, b):
     d = abs(a - b) % 360.0
     return min(d, 360.0 - d)
+
+
+# ---------------- cost doctrine (addendum 4) ----------------
+_STD_K_MAX = 64
+
+
+def part_class(key):
+    """Construction-cost class of a direction (integer-only).
+    norm2 = X^2 + 3Y^2 is the exact squared real length in the (X, Y*sqrt3)
+    frame; a perfect square means INTEGER real length k — the Pythagorean
+    analog in this frame (Euclid-style: X=m^2-3n^2, Y=2mn, k=m^2+3n^2).
+    class 0: standard part — integer length, k <= 64 (cheap/common/durable)
+    class 1: integer length, any k
+    class 2: small mundane norm (norm2 <= 100)
+    class 3: exotic (everything else)"""
+    X, Y = key
+    n2 = X * X + 3 * Y * Y
+    k = math.isqrt(n2)
+    if k * k == n2:
+        return 0 if k <= _STD_K_MAX else 1
+    return 2 if n2 <= 100 else 3
+
+
+def real_length(key):
+    """Exact integer real length k if X^2+3Y^2 is a perfect square, else None."""
+    X, Y = key
+    n2 = X * X + 3 * Y * Y
+    k = math.isqrt(n2)
+    return k if k * k == n2 else None
 
 
 # ---------------- table construction ----------------
@@ -228,12 +268,11 @@ class AngleTable(object):
         memo[i] = k
         return k
 
-    def select(self, target_deg, tolerance_deg):
-        """Minimal-address-bits exact construction within tolerance of the
-        target. Tolerance is caller-supplied (the engineer's parameter).
-        Fast path: cached dense per-tolerance table (O(1) read) when the
-        key grid is fine enough; exact window scan otherwise."""
-        if tolerance_deg >= 4.0 * self.buck_w:
+    def select(self, target_deg, tolerance_deg, prefer="cost"):
+        """Rank-and-return within tolerance. The engineer supplies tolerance;
+        the ranking policy implements the cost doctrine (module docstring):
+        prefer='cost' (default) | 'bits' (legacy) | 'nearest'."""
+        if prefer == "bits" and tolerance_deg >= 4.0 * self.buck_w:
             slots = self._dense.get(tolerance_deg)
             if slots is None:
                 slots = self._build_dense(tolerance_deg)
@@ -242,18 +281,20 @@ class AngleTable(object):
             if nid == -1:
                 return None
             if angdist(angle_deg(self.nodes[nid][0]), target_deg) > tolerance_deg:
-                nid = self._exact_scan(target_deg, tolerance_deg)  # bucket edge
+                nid = self._exact_scan(target_deg, tolerance_deg, prefer)
                 if nid is None:
                     return None
         else:
-            nid = self._exact_scan(target_deg, tolerance_deg)
+            nid = self._exact_scan(target_deg, tolerance_deg, prefer)
             if nid is None:
                 return None
         nd = self.nodes[nid]
         ang = angle_deg(nd[0])
         return {"node": nid, "key": nd[0], "bits": nd[1],
                 "bitstring": (nd[2], nd[1]), "angle_deg": ang,
-                "err_deg": angdist(ang, target_deg)}
+                "err_deg": angdist(ang, target_deg),
+                "cost_class": part_class(nd[0]),
+                "real_length": real_length(nd[0])}
 
     def bracket(self, target_deg):
         """The two angularly-adjacent table directions around a target —
@@ -263,7 +304,19 @@ class AngleTable(object):
         return (self.key(self._aorder[(i - 1) % len(angs)]),
                 self.key(self._aorder[i % len(angs)]))
 
-    def _exact_scan(self, t, tol):
+    def catalog(self, max_k=_STD_K_MAX):
+        """The shelf of standard parts: distinct directions with integer real
+        length k <= max_k, cheapest address first."""
+        out = {}
+        for nd in self.nodes:
+            k = real_length(nd[0])
+            if k is not None and k <= max_k:
+                cur = out.get(nd[0])
+                if cur is None or nd[1] < cur[0]:
+                    out[nd[0]] = (nd[1], nd[7], k)
+        return sorted((v[2], key, v[0], v[1]) for key, v in out.items())
+
+    def _exact_scan(self, t, tol, prefer="bits"):
         angs = self._aang
         n = len(angs)
         i = bisect.bisect_left(angs, t)
@@ -277,12 +330,20 @@ class AngleTable(object):
         if hi == n and angdist(angs[0], t) <= tol:
             lo = 0
         best = None
+        best_rank = None
         for j in range(lo, hi):
             if angdist(angs[j], t) > tol:
                 continue
             nid = self._aorder[j]
-            b = self.nodes[nid][1]
-            if best is None or b < self.nodes[best][1]:
+            nd = self.nodes[nid]
+            if prefer == "cost":
+                rank = (part_class(nd[0]), nd[1], nd[7], angdist(angs[j], t))
+            elif prefer == "nearest":
+                rank = (angdist(angs[j], t), nd[1])
+            else:  # "bits" (legacy SPIN-13c/d semantics)
+                rank = (nd[1], nd[7], angdist(angs[j], t))
+            if best_rank is None or rank < best_rank:
+                best_rank = rank
                 best = nid
         return best
 

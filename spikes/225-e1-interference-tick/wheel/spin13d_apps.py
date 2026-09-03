@@ -127,7 +127,7 @@ def run_all():
     for tab, tol in ((tabA, TOL_A), (tabA, TOL_B), (tabB, TOL_B), (tabB, TOL_A)):
         for i in range(16):
             t = (360.0 * (i + 1) * PHI) % 360.0
-            sel = tab.select(t, tol)
+            sel = tab.select(t, tol, prefer="bits")
             ref = exhaustive_ref(tab, t, tol)
             nchk += 1
             if (sel is None) != (ref is None):
@@ -155,7 +155,7 @@ def run_all():
     errs = []
     for e in edges:
         t = math.degrees(math.atan2(e[1], e[0])) % 360.0
-        sel = tabA.select(t, TOL_A)
+        sel = tabA.select(t, TOL_A, prefer="bits")  # legacy policy pinned (13d semantics)
         if sel is None:
             miss += 1
             ref = mechanic_refine(tabA, t, TOL_A)
@@ -184,7 +184,7 @@ def run_all():
     total_bits = 0
     errs = []
     for t in legs:
-        sel = tabB.select(t, TOL_B)
+        sel = tabB.select(t, TOL_B, prefer="bits")  # legacy policy pinned (13d semantics)
         if sel is None:
             P("    heading %8.3f deg: MISS" % t)
             continue

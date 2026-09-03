@@ -88,7 +88,7 @@ python3 -u spin13_snap_shadow.py > spin13-output.txt 2>&1   # ~40 s, byte-identi
 python3 -u spin13b_closure.py > spin13b-output.txt 2>python3 -u spin13b_closure.py > spin13b-output.txt 2>&1  # ~50 s, byte-identical across runs1  # ~50 s, byte-identical across runs
 python3 -u spin13c_lut.py > spin13c-output.txt 2>python3 -u spin13b_closure.py > spin13b-output.txt 2>&1  # ~50 s, byte-identical across runs1     # ~2.5 min, byte-identical across runs
 ```
-Artifacts: `wheel/anglekit.py` (shared toolkit), `wheel/spin13_snap_shadow.py`, `wheel/spin13-output.txt`, `wheel/spin13b_closure.py`, `wheel/spin13b-output.txt`, `wheel/spin13c_lut.py`, `wheel/spin13c-output.txt`, `wheel/spin13d_apps.py`, `wheel/spin13d-output.txt`, this file.
+Artifacts: `wheel/anglekit.py` (shared toolkit), `wheel/spin13_snap_shadow.py`, `wheel/spin13-output.txt`, `wheel/spin13b_closure.py`, `wheel/spin13b-output.txt`, `wheel/spin13c_lut.py`, `wheel/spin13c-output.txt`, `wheel/spin13d_apps.py`, `wheel/spin13d-output.txt`, `wheel/spin13e_cost.py`, `wheel/spin13e-output.txt`, this file.
 
 ---
 
@@ -152,3 +152,22 @@ The deliverable is now shaped as a division of labor, implemented in **`wheel/an
 Both applications met spec (**all selections within the engineer's tolerance**), with a 20× spread in construction cost driven entirely by the tolerance parameter — the contract working as intended.
 
 Canaries: closure totals anchored to SPIN-13b (PASS), `select` == independent exhaustive reference across both tables × both tolerances (64 checks PASS), exact 30° balanced bisection (PASS), full double-run + external byte identity (PASS). Scar: the first version failed double-run identity — the shared LCG stream wasn't reset per table build; fixed by making every `build_table` self-contained.
+
+---
+
+# ADDENDUM 4 (SPIN-13e) — THE COST DOCTRINE in `select()` (Casey)
+
+**The monofilament analogy:** big data says the optimal line is √8 ≈ 2.83 mm, but 3 mm is cheap, common, durable, and trades only a sliver of catch-rate. "This is why we reach for Pythagorean shapes… you can customize everything to enough floating points for tolerance, or you can do it the easy way."
+
+**Implementation:** `select()` now defaults to `prefer="cost"` — the objective is **min construction cost subject to |θ−target| ≤ tolerance**, ranked by `(part_class, bits, depth, err)`. *Pythagorean-standard parts* = primitive directions with **integer real length** k = √(X²+3Y²) ≤ 64 — the exact Euclid-formula analog in the Z[√3] frame (X=m²−3n², Y=2mn, k=m²+3n²: e.g., (1,1)k2, (1,4)k7, (13,3)k14). Class 0 = standard part; 1 = integer length, any k; 2 = small mundane norm; 3 = exotic. `prefer="bits"` (13c/d legacy) and `prefer="nearest"` remain available; 13d's demo is pinned to legacy and byte-reproduces.
+
+**Measured (Eisenstein seed, depth-3 table — 70 standard parts on the shelf of 32,254 entries; depth-1: 26 parts):**
+
+- **Divergence from nearest-angle picks: 100% at 3° tolerance, 98% at 1°, 16% at 0.01°.** The nearest-angle policy picked a standard part **0/64** times — chasing exotic precision always wins by angle, which is exactly the disease the doctrine cures.
+- **The sliver, quantified:** traded precision = median **39% of tolerance** at 1° (0.39°), 26% at 0.1°, always ≤ tolerance by construction (448/448 picks verified within spec). This is *bigger* than the analogy's 6% — because the shelf is thin (70 parts). The sliver shrinks as the shelf grows; the room is the engineer's to grant.
+- **What it buys:** standard-part constructions at 17–23 bits with k ≤ 64, norm² ≤ 4k², vs exotic nearest hits at 28–31 bits with norm² 17k–27k. Exemplar @ 222.49°±1°: nearest (−121,−64) norm² 26,929 @ 31 bits, err 0.0014° → cost (−23,−12) **k=31** @ 23 bits, err 0.389° — a durable standard part using 39% of the granted room. Bits parity vs the legacy min-bits policy (median 0 saved; 3 at 0.3°): the doctrine buys *standardness*, not just shortness.
+- **Viability envelope (fraction of targets with ≥1 standard part within tolerance):** 64/64 at 10°, 57/64 at 3°, 25/64 at 1°, 11/64 at 0.3°, ~0 below 0.03°. **Below ~0.1° the shelf runs out and the mechanic's shared refinement ops take over** (13d showed bisect_b filling holes) — the engineer's tolerance choice literally selects which regime the mechanic works in.
+
+Canaries: 13b anchor PASS, exact-30° PASS, known-triple part_class checks PASS, all 448 cost picks within tolerance PASS, double-run + external byte identity PASS.
+
+**Contract, final form:** the engineer owns tolerance (the room that makes standard parts viable); the mechanic owns refinement with shared tools; the toolkit ranks by construction cost, never by naked closeness — and reaches for Pythagorean shapes because they are the cheap, common, durable ones.
