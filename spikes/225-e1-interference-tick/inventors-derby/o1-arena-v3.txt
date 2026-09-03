@@ -1,0 +1,75 @@
+== PHASE 0: SELF-CANARY — banked numbers must reproduce byte-exact ==
+  PASS  champion K=5/pd4/d16 stress: got {'pct': 93.2, 'debt': 132823, 'maxerr': 38}  want {'pct': 93.2, 'debt': 132823, 'maxerr': 38}
+  PASS  impulse d12 stress baseline: got {'pct': 51.4, 'debt': 244973, 'maxerr': 61}  want {'pct': 51.4, 'debt': 244973, 'maxerr': 61}
+  PASS  gentle K=2/pd3/d6 (glm-3 #3): got {'pct': 92.1, 'debt': 113573, 'maxerr': 32}  want {'pct': 92.1, 'debt': 113573, 'maxerr': 32}
+  PASS  gentle impulse d6 baseline: got {'pct': 56.6, 'debt': 117198, 'maxerr': 53}  want {'pct': 56.6, 'debt': 117198, 'maxerr': 53}
+  gates: 4/4 PASS
+
+  champion holdout (stress): {'pct': 93.1, 'debt': 134760, 'maxerr': 38}
+
+== PHASE 1: STATIC GRID PROBES  K in {{1,2,3}} x pd in {{2,3}}, d=16 ==
+  probe K=1 pd=2 d=16  stress  96.1% debt=121762 maxE= 33   calm  98.0% debt= 91133 maxE= 34
+  probe K=1 pd=3 d=16  stress  95.6% debt=157899 maxE= 33   calm  98.0% debt=128831 maxE= 28
+  probe K=2 pd=2 d=16  stress  95.1% debt=111224 maxE= 45   calm  97.9% debt= 67623 maxE= 39
+  probe K=2 pd=3 d=16  stress  95.7% debt=127381 maxE= 37   calm  98.0% debt= 93433 maxE= 35
+  probe K=3 pd=2 d=16  stress  93.1% debt=116776 maxE= 43   calm  97.4% debt= 66540 maxE= 41
+  probe K=3 pd=3 d=16  stress  95.1% debt=123432 maxE= 39   calm  97.9% debt= 83977 maxE= 36
+  -- gentle-tight frame (d6, drift3/lat5): short-K vs impulse calm specialist --
+  probe K=2 pd=2 d=6   gentle  90.2% debt= 98194 maxE= 36   (impulse d6: 56.6%)
+  probe K=2 pd=3 d=6   gentle  92.1% debt=113573 maxE= 32   (impulse d6: 56.6%)
+  probe K=3 pd=2 d=6   gentle  82.1% debt=105054 maxE= 37   (impulse d6: 56.6%)
+  probe K=3 pd=3 d=6   gentle  85.5% debt=109411 maxE= 34   (impulse d6: 56.6%)
+
+== PHASE 2: LLM TOURNAMENT v3 (K in 1..8 open; both regimes judged) ==
+
+ROUND 1:
+   83.1%  debt= 174978  maxerr= 39  qwen3:8b                     K=4 pd=3 d=12 interference
+   83.1%  debt= 174978  maxerr= 39  granite3.1-dense:2b          K=4 pd=3 d=12 interference
+   83.1%  debt= 174978  maxerr= 39  lfm2.5-350m:latest           K=4 pd=3 d=12 interference
+   83.1%  debt= 174978  maxerr= 39  lfm2.5-1.2b-instruct:latest  K=4 pd=3 d=12 interference
+   83.1%  debt= 174978  maxerr= 39  Liquid-LFM2.5-2.6B:latest    K=4 pd=3 d=12 interference
+
+ROUND 2 (canary row planted above):
+   96.0%  debt= 117881  maxerr= 61  granite3.1-dense:2b          K=5 pd=4 d=18 sequential
+   83.1%  debt= 174978  maxerr= 39  qwen3:8b                     K=4 pd=3 d=12 interference
+   83.1%  debt= 174978  maxerr= 39  lfm2.5-350m:latest           K=4 pd=3 d=12 interference
+   83.1%  debt= 174978  maxerr= 39  lfm2.5-1.2b-instruct:latest  K=4 pd=3 d=12 interference
+   83.1%  debt= 174978  maxerr= 39  Liquid-LFM2.5-2.6B:latest    K=4 pd=3 d=12 interference
+
+ROUND 3:
+   96.0%  debt= 117881  maxerr= 61  granite3.1-dense:2b          K=5 pd=4 d=18 sequential  [ratcheted (proposed 6/7/15 sequential scored 73.4%)]
+   83.1%  debt= 174978  maxerr= 39  qwen3:8b                     K=4 pd=3 d=12 interference
+   83.1%  debt= 174978  maxerr= 39  lfm2.5-350m:latest           K=4 pd=3 d=12 interference
+   83.1%  debt= 174978  maxerr= 39  lfm2.5-1.2b-instruct:latest  K=4 pd=3 d=12 interference
+   83.1%  debt= 174978  maxerr= 39  Liquid-LFM2.5-2.6B:latest    K=4 pd=3 d=12 interference
+
+  -- every LLM proposal ever parsed (K-axis audit) --
+  r1 Liquid-LFM2.5-2.6B:latest    K=4 pd=3 d=12 interference stress=83.1% calm=97.3%
+  r1 lfm2.5-1.2b-instruct:latest  K=4 pd=3 d=12 interference stress=83.1% calm=97.3%
+  r1 lfm2.5-350m:latest           K=4 pd=3 d=12 interference stress=83.1% calm=97.3%
+  r1 qwen3:8b                     K=4 pd=3 d=12 interference stress=83.1% calm=97.3%
+  r1 granite3.1-dense:2b          K=4 pd=3 d=12 interference stress=83.1% calm=97.3%
+  r2 Liquid-LFM2.5-2.6B:latest    K=4 pd=3 d=12 interference stress=83.1% calm=97.3%
+  r2 lfm2.5-1.2b-instruct:latest  K=4 pd=3 d=12 interference stress=83.1% calm=97.3%
+  r2 lfm2.5-350m:latest           K=4 pd=3 d=12 interference stress=83.1% calm=97.3%
+  r2 qwen3:8b                     K=4 pd=3 d=12 interference stress=83.1% calm=97.3%
+  r2 granite3.1-dense:2b          K=5 pd=4 d=18 sequential   stress=96.0% calm=98.0%
+  r3 Liquid-LFM2.5-2.6B:latest    K=4 pd=3 d=12 interference stress=83.1% calm=97.3%
+  r3 lfm2.5-1.2b-instruct:latest  K=4 pd=3 d=12 interference stress=83.1% calm=97.3%
+  r3 lfm2.5-350m:latest           K=4 pd=3 d=12 interference stress=83.1% calm=97.3%
+  r3 qwen3:8b                     K=4 pd=3 d=12 interference stress=83.1% calm=97.3%
+  r3 granite3.1-dense:2b          K=6 pd=7 d=15 sequential   stress=73.4% calm=98.0%
+  short-K (K<=3, interference) LLM proposals across all rounds: 0
+
+== PHASE 3: HOLDOUT VERIFICATION (frozen seeds, disjoint) ==
+  static-probe K=1 pd=2 d=16: tourn 96.1% -> holdout 96.1% (debt 123093, maxE 34)  beats-93.2:True  beats-champ-holdout:True
+  static-probe K=1 pd=3 d=16: tourn 95.6% -> holdout 95.6% (debt 161308, maxE 33)  beats-93.2:True  beats-champ-holdout:True
+  static-probe K=2 pd=2 d=16: tourn 95.1% -> holdout 95.1% (debt 111284, maxE 46)  beats-93.2:True  beats-champ-holdout:True
+  static-probe K=2 pd=3 d=16: tourn 95.7% -> holdout 95.7% (debt 129230, maxE 35)  beats-93.2:True  beats-champ-holdout:True
+  static-probe K=3 pd=3 d=16: tourn 95.1% -> holdout 95.0% (debt 123884, maxE 39)  beats-93.2:True  beats-champ-holdout:True
+
+== PROMOTION ==
+  NEW CHAMPION: static-probe {'mode': 'interference', 'K': 1, 'pulse_div': 2, 'delta': 16} — tourn 96.1% / holdout 96.1% (vs banked 93.2 / champ-holdout 93.1)
+  champion K=5 debt crown NOT dominated (noted); ledger calm cell re-keyed.
+
+(done) 2026-09-03 07:36:55 AKDT
