@@ -108,3 +108,47 @@ Scars booked:
 
 Canaries: F17 anchors exact (830/308/5 + trust pairs); lag blade 2/2 exact; mislabeled-arm
 self-canary CAUGHT; double-run byte-identical. 4/4.
+
+## Cofire v2 charter (EXPERT nudge 2026-09-03, ACCEPTED): predictability, not agreement
+
+The post-mortem above names the kill and then doesn't take the shot. Taken.
+**The v2 predicate is lagged cross-PREDICTION, not agreement.** In a conflict
+regime honest antagonists are perfectly *predictable* antagonists: twin i's
+trigger at t−lag predicts twin j's at t with a stable correlation — whose sign
+may be negative, and that's fine. A liar breaks predictability, not agreement.
+So the trust update scores online windowed correlation of (i@t−lag, j@t) —
+sign and/or magnitude — and demotes on UNPREDICTABILITY: disagreement with a
+stable negative correlation keeps trust; noise or inversion kills it. This
+keeps F21's lag (the only ingredient ever shown discriminative) and discards
+the assumption that killed G1/G2 (honest = agreeing).
+
+Spec points (binding):
+
+- **(a) Integer-friendly online correlation.** No float division in the
+  fabric. Candidate: per-pair sign-product accumulator with exponential
+  decay — `s ← s − (s>>D) + sign(i@t−lag)·sign(j@t)`; trust maps from
+  |s| (predictable at either sign) and demotion from |s| collapsing toward
+  0 under liars. D (decay rate) and the window equivalent are pre-registered
+  per seed-set before the run; the accumulator saturates at the same width
+  discipline as the wsum path.
+- **(b) Kinship for the writeup.** This is zeroclaw's reader-delta doctrine
+  (Reading 2) at twin scale: judge the OTHER's drift against what your
+  reading of them predicts — not against agreement. Cross-reference
+  SuperInstance/zeroclaw-dissertation thesis v2 when writing §3.2's
+  rationale; same shape, different substrate.
+
+Pre-registered gates for the v2 probe (replacing G1/G2; G3 whistle stays):
+
+- **G1′** honest-antagonist NO-BLEED: clean stress mean ≥800‰ AND end-trust
+  mean ≥7.0 (the scar above demands the no-bleed bound explicitly).
+- **G2′** liar demotion to floor: lying-T2 late-window trust at floor on
+  ≥900‰ of ticks, T1 trust ≥7.0 (discrimination, not bleed-through).
+- **G4** negative-correlation preservation (new, the predicate's whole
+  point): an honest pair measured with stable negative lagged correlation
+  (|s| above the stability band) ends the run at INIT trust, not floor.
+
+**One-line falsifier:** if predictability-based trust also bleeds on honest
+antagonists (|s| estimates too noisy at honest SNR to separate stable-
+negative from noise within the window), the ENTIRE trust-learning family
+demotes to monitor-only — whistle stays, learning leaves the control path
+permanently, and §3.2 runs selection-only as already booked.
