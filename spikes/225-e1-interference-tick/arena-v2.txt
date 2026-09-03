@@ -1,0 +1,31 @@
+== baselines ==
+  impulse        51.4%  debt=244973  maxerr=61
+  interference   83.1%  debt=174978  maxerr=39
+
+== ROUND 1: initial designs ==
+   93.2%  debt= 132823  maxerr= 38  granite3.1-dense:2b          K=5 pd=4 d=16 interference
+   83.1%  debt= 174978  maxerr= 39  lfm2.5-350m:latest           K=4 pd=3 d=12 interference
+   83.1%  debt= 174978  maxerr= 39  lfm2.5-1.2b-instruct:latest  K=4 pd=3 d=12 interference
+  -----  Liquid-LFM2.5-2.6B:latest    [unparseable: We need to design a control strategy for an integer-only snap system. The problem description is a bit abstract. Let's p]
+  -----  qwen3:8b                     [unparseable: ]
+
+== ROUND 2: revise after seeing leaderboard (ratchet active) ==
+   93.2%  debt= 132823  maxerr= 38  granite3.1-dense:2b          K=5 pd=4 d=16 interference  [ratcheted (proposed 8/6/15 interference scored 72.5%)]
+   83.1%  debt= 174978  maxerr= 39  lfm2.5-350m:latest           K=4 pd=3 d=12 interference
+   83.1%  debt= 174978  maxerr= 39  lfm2.5-1.2b-instruct:latest  K=4 pd=3 d=12 interference
+  -----  Liquid-LFM2.5-2.6B:latest    [unparseable: The user wants me to design a control strategy for an integer-only snap system. The problem is a bit abstract, but I nee]
+  -----  qwen3:8b                     [unparseable: ]
+
+== ROUND 3: second revision (ratchet active) ==
+   93.2%  debt= 132823  maxerr= 38  granite3.1-dense:2b          K=5 pd=4 d=16 interference  [ratcheted (proposed 8/6/15 interference scored 72.5%)]
+   83.1%  debt= 174978  maxerr= 39  lfm2.5-350m:latest           K=4 pd=3 d=12 interference  [ratcheted (proposed 5/3/12 interference scored 81.1%)]
+   83.1%  debt= 174978  maxerr= 39  lfm2.5-1.2b-instruct:latest  K=4 pd=3 d=12 interference  [ratcheted (proposed 5/3/12 interference scored 81.1%)]
+  -----  Liquid-LFM2.5-2.6B:latest    [unparseable: We need to interpret the problem. The user asks: "You design a control strategy for an integer-only snap system. ... ROU]
+  -----  qwen3:8b                     [unparseable: ]
+
+== champion ==
+granite3.1-dense:2b — 93.2% within, debt 132823, maxerr 38
+strategy: {"K": 5, "pulse_div": 4, "delta": 16, "mode": "interference", "reason": "Based on the known data point, increasing K and pulse_div allows for more precise corrections, potentially improving the percentage of ticks where both sensors are within delta of g. The chosen delta is higher than the previous, allowing for larger corrections and more margin for error."}
+reason: Based on the known data point, increasing K and pulse_div allows for more precise corrections, potentially improving the percentage of ticks where both sensors are within delta of g. The chosen delta is higher than the previous, allowing for larger corrections and more margin for error.
+
+vs hand-tuned interference: 83.1 % — beats hand

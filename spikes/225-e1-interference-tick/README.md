@@ -97,3 +97,28 @@ applied at spike scale.
 - `PORTING-NOTES.md` — ESP32-S3 .qm porting analysis (KimiCode lane)
 
 Run: `python3 e1.py` · `gcc -O2 -o e1c e1.c && ./e1c` · compare CSVs.
+
+## Model Arena — Liquid models compete (2026-09-02, `arena.py`, `ledger.py`)
+
+Self-improvement tournament: local models design snap strategies (JSON: K,
+pulse_div, delta, mode), the E1 harness judges on 5 seeds, two regimes scored
+in the Variety Ledger (`ledger.py`).
+
+- **Champion: granite3.1-dense:2b — K=5, ÷4, Δ=16 → 93.2% within, debt
+  132823, maxErr 38. Beats the human hand-tune (83.1%) by 10 points.**
+- LFM 350m + 1.2b independently converged on the hand-tuned optimum in R1 —
+  consensus without communication.
+- **Ratchet validated**: R2/R3 revision pressure made agents propose worse
+  strategies (72.5%, 81.1%); the ratchet held every champion. Amnesia-free
+  competition.
+- **Variety Ledger confirms score relativity**: impulse is the calm-regime
+  specialist (98.0% calm / 51.4% stress); granite champion owns stress (sole
+  stress Pareto member). Impulse is Pareto-optimal in calm — the leaderboard
+  "loser" is a banked regime-specialist. 5/6 strategies are Pareto-optimal
+  in at least one regime. Variety is not charity; it is data.
+- Known issue: LFM 2.6B narrates past its JSON budget; qwen3:8b returns
+  empty via raw generate (needs chat template). Both excluded, not fixed.
+
+Files: `arena.py` (tournament, ratchet), `arena-v2.txt` (results),
+`ledger.py` + `ledger-results.txt` (variety ledger), `VARIETY-LEDGER.md`
+(doctrine).
