@@ -653,6 +653,10 @@ def main():
     _, e6 = exp1()
     best, _ = exp2(e6)
     exp3(best)
+    if not canary_d():
+        print("CANARY D FAIL — EXP 4 aborted")
+    else:
+        exp4()
     x = 486256185   # current ledger head (after SPIN-12-conservation pick)
     x2 = (1103515245 * x + 12345) & 0x7FFFFFFF
     print(f"\nLCG ritual: proposal-dispatched spin (SPIN-8's proposal) — no pick"
