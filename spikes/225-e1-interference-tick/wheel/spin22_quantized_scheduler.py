@@ -35,7 +35,9 @@ def sha(r):
 
 def cell(lats, t100, K=1, seeds=S3):
     rs = [run_fabric_gate("interference", TICKS, lats, K=K, pd=3, delta=12,
-                          drift=6, seed=s, gate=t100 / 100) for s in seeds]
+                          drift=6, seed=s,
+                          gate=(t100 if isinstance(t100, str) else t100 / 100))
+          for s in seeds]
     t12 = [within_pm(r["resid"], EV) for r in rs]
     return (mean(t12) / 10, [sha(r) for r in rs])
 
