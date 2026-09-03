@@ -127,7 +127,7 @@ deadlines, op-response bounds — is stated in plain mathematics in
 
 ## Layout
 
-- `rtl/` — 17 modules: the winning architecture as built (the truth)
+- `rtl/` — 18 modules (17 fabric + `live_canon.v`, the Phase 251 Live Canon): the winning architecture as built (the truth)
 - `tb/` — testbenches, the suite runner, formal harnesses
 - `sim/` — behavioral Python prototypes over the same QUF the RTL loads
 - `formal/` — machine-checked invariants (SymbiYosys)
