@@ -16,3 +16,9 @@ Ordered queue: RESEARCH-AGENDA §4 O1–O7, then §Q open questions, then wheel 
 - **Verdict:** REFUTED-as-booked / PARTIAL-CONFIRM — win is fan-out-gated (slack at N≤5 raw: +0.0/+1.6pp; clears gate at N=8 raw: +11.9pp stress) and does NOT vanish under lag compensation — it explodes (+24.1pp at N=5, +56.2pp at N=8). "Contention is a lag symptom" false; inverse true: compensator synchronizes twins and *needs* the sort (comp admit-all at N=8 is −15.1pp vs raw). T2 promoted to RTL with N≥~5 boundary note; not demoted.
 - **Commit:** 9491c25
 - **Headline:** mag C=1 vs admit-all, stress raw: +11.9pp at N=8 (57.8→69.7 %w, maxE 99.2→48.0); compensated: +56.2pp at N=8 (42.7→98.9).
+
+## Round 3 — O2b boundary probe — 2026-09-03 ~00:3x AKDT
+- **Item:** IDEATOR nudge on round 2 — sample N∈{6,7}, locate the transition
+- **Verdict:** CONFIRMED-SHARPENED — the wall is at **N=6** (raw +4.5pp, first ≥2pp clearance; N=5 was +1.6). Comp-arm amplification has its own knee at 7→8 (+25.0 → +37.6 → +56.2). Lag blade 28/28 exact.
+- **Commit:** (this commit)
+- **Headline:** "the wall is at N=6" — T2 RTL boundary note resolved to a located threshold; lag-amp curve booked as the measured response of a synthetic room-pressure generator (O2-ROOM-PRESSURE-MAPPING.md).
