@@ -1,0 +1,150 @@
+== TRAIN: ladder grid (5, 10, 15, 20, 25, 30) K(1, 2, 4) seeds (1, 7, 42) ==
+  corpus 259200 ticks, base resident rate 0.5830
+  [  shape] acc 0.7541, int-sign 1.0, weights {'n_f': 0.017, 'm_s': -0.986, 'K': -0.246, 'nf_K': 0.14, 'fresh_maj': 0.463}
+  [  shape] OFF=1744 C=[12, -47, -202, 26, 1005]
+  [shape_p] acc 0.7552, int-sign 1.0, weights {'n_f': 0.503, 'm_s': -0.836, 'K': -0.247, 'nf_K': 0.14, 'fresh_maj': 0.364, 'prot': -0.354}
+  [shape_p] OFF=715 C=[352, -40, -203, 26, 790, -974]
+  [   full] acc 0.7784, int-sign 0.9444, weights {'in_flight': -1.239, 'n_f': 0.621, 'm_s': -0.612, 'K': 1.114, 'nf_K': -0.633, 'fresh_maj': 0.438}
+  [   full] OFF=-622 C=[-388, 435, -29, 915, -117, 952]
+  [ full_p] acc 0.7784, int-sign 1.0, weights {'in_flight': -1.227, 'n_f': 0.866, 'm_s': -0.534, 'K': 1.096, 'nf_K': -0.611, 'fresh_maj': 0.388, 'prot': -0.196}
+  [ full_p] OFF=-1128 C=[-384, 607, -26, 900, -113, 843, -540]
+  [ v1plus] acc 0.7781, int-sign 1.0, weights {'in_flight': -1.23, 'mean_lag': 1.31, 'stale_mass': -0.483, 'K': 1.107, 'n_f': 0.483, 'm_s': -1.69, 'nf_K': -0.626, 'fresh_maj': 0.33}
+  [ v1plus] OFF=-494 C=[-385, 308, -338, 909, 338, -81, -116, 716]
+  [v1plus_p] acc 0.7781, int-sign 1.0, weights {'in_flight': -1.225, 'mean_lag': 1.004, 'stale_mass': -0.5, 'K': 1.094, 'n_f': 0.5, 'm_s': -1.402, 'nf_K': -0.61, 'fresh_maj': 0.333, 'prot': -0.097}
+  [v1plus_p] OFF=-224 C=[-383, 236, -350, 898, 350, -67, -113, 723, -266]
+
+== THRESHOLD SELECT (train seeds/grammars only) ==
+  [shape] training z deciles: [-1652, -1352, -994, -544, -36, 438, 686, 2123, 2417, 2729, 2775]
+  [shape] tlo=   -994 thi=    686  train-ladder mean true% 59.2  interventions 57624
+  [shape] tlo=   -994 thi=   2123  train-ladder mean true% 59.2  interventions 28824
+  [shape] tlo=   -994 thi=   2417  train-ladder mean true% 59.2  interventions 24
+  [shape] tlo=   -544 thi=    686  train-ladder mean true% 61.8  interventions 57645
+  [shape] tlo=   -544 thi=   2123  train-ladder mean true% 61.8  interventions 28845
+  [shape] tlo=   -544 thi=   2417  train-ladder mean true% 61.8  interventions 45
+  [shape] tlo=    -36 thi=    686  train-ladder mean true% 65.7  interventions 57672
+  [shape] tlo=    -36 thi=   2123  train-ladder mean true% 65.7  interventions 28872
+  [shape] tlo=    -36 thi=   2417  train-ladder mean true% 65.7  interventions 72
+  [shape] SELECTED tlo=-36 thi=2417 (train-ladder mean 65.7%, 72 interventions — min-intervention within 2pp of best 65.7%)
+  [shape_p] training z deciles: [-1585, -1283, -1025, -572, -163, 551, 801, 2277, 2475, 2574, 2596]
+  [shape_p] tlo=  -1025 thi=    801  train-ladder mean true% 58.7  interventions 57621
+  [shape_p] tlo=  -1025 thi=   2277  train-ladder mean true% 58.7  interventions 28821
+  [shape_p] tlo=  -1025 thi=   2475  train-ladder mean true% 58.7  interventions 14421
+  [shape_p] tlo=   -572 thi=    801  train-ladder mean true% 61.8  interventions 57645
+  [shape_p] tlo=   -572 thi=   2277  train-ladder mean true% 61.8  interventions 28845
+  [shape_p] tlo=   -572 thi=   2475  train-ladder mean true% 61.8  interventions 14445
+  [shape_p] tlo=   -163 thi=    801  train-ladder mean true% 64.3  interventions 57663
+  [shape_p] tlo=   -163 thi=   2277  train-ladder mean true% 64.3  interventions 28863
+  [shape_p] tlo=   -163 thi=   2475  train-ladder mean true% 64.3  interventions 14463
+  [shape_p] SELECTED tlo=-163 thi=2475 (train-ladder mean 64.3%, 14463 interventions — min-intervention within 2pp of best 64.3%)
+  [full] training z deciles: [-5752, -1682, -888, -482, -112, 294, 865, 2202, 2790, 3153, 3792]
+  [full] tlo=   -888 thi=    865  train-ladder mean true% 63.7  interventions 69421
+  [full] tlo=   -888 thi=   2202  train-ladder mean true% 68.0  interventions 42664
+  [full] tlo=   -888 thi=   2790  train-ladder mean true% 71.4  interventions 12180
+  [full] tlo=   -482 thi=    865  train-ladder mean true% 65.6  interventions 73354
+  [full] tlo=   -482 thi=   2202  train-ladder mean true% 70.0  interventions 44560
+  [full] tlo=   -482 thi=   2790  train-ladder mean true% 73.6  interventions 13985
+  [full] tlo=   -112 thi=    865  train-ladder mean true% 67.2  interventions 82110
+  [full] tlo=   -112 thi=   2202  train-ladder mean true% 72.0  interventions 47931
+  [full] tlo=   -112 thi=   2790  train-ladder mean true% 75.0  interventions 16340
+  [full] SELECTED tlo=-482 thi=2790 (train-ladder mean 73.6%, 13985 interventions — min-intervention within 2pp of best 75.0%)
+  [full_p] training z deciles: [-5690, -1662, -914, -530, -166, 218, 933, 2169, 2883, 3039, 3779]
+  [full_p] tlo=   -914 thi=    933  train-ladder mean true% 63.8  interventions 67015
+  [full_p] tlo=   -914 thi=   2169  train-ladder mean true% 67.8  interventions 42995
+  [full_p] tlo=   -914 thi=   2883  train-ladder mean true% 70.6  interventions 12000
+  [full_p] tlo=   -530 thi=    933  train-ladder mean true% 65.8  interventions 71569
+  [full_p] tlo=   -530 thi=   2169  train-ladder mean true% 70.4  interventions 45548
+  [full_p] tlo=   -530 thi=   2883  train-ladder mean true% 74.3  interventions 13732
+  [full_p] tlo=   -166 thi=    933  train-ladder mean true% 67.4  interventions 80300
+  [full_p] tlo=   -166 thi=   2169  train-ladder mean true% 71.7  interventions 49527
+  [full_p] tlo=   -166 thi=   2883  train-ladder mean true% 75.0  interventions 16322
+  [full_p] SELECTED tlo=-530 thi=2883 (train-ladder mean 74.3%, 13732 interventions — min-intervention within 2pp of best 75.0%)
+  [v1plus] training z deciles: [-5632, -1596, -984, -523, -132, 287, 908, 2178, 2842, 3079, 3732]
+  [v1plus] tlo=   -984 thi=    908  train-ladder mean true% 63.9  interventions 65967
+  [v1plus] tlo=   -984 thi=   2178  train-ladder mean true% 66.9  interventions 42840
+  [v1plus] tlo=   -984 thi=   2842  train-ladder mean true% 69.7  interventions 12372
+  [v1plus] tlo=   -523 thi=    908  train-ladder mean true% 66.0  interventions 71841
+  [v1plus] tlo=   -523 thi=   2178  train-ladder mean true% 70.4  interventions 45032
+  [v1plus] tlo=   -523 thi=   2842  train-ladder mean true% 73.6  interventions 13443
+  [v1plus] tlo=   -132 thi=    908  train-ladder mean true% 67.5  interventions 80074
+  [v1plus] tlo=   -132 thi=   2178  train-ladder mean true% 71.9  interventions 47688
+  [v1plus] tlo=   -132 thi=   2842  train-ladder mean true% 75.0  interventions 15008
+  [v1plus] SELECTED tlo=-523 thi=2842 (train-ladder mean 73.6%, 13443 interventions — min-intervention within 2pp of best 75.0%)
+  [v1plus_p] training z deciles: [-5610, -1592, -958, -513, -145, 253, 926, 2153, 2869, 3025, 3761]
+  [v1plus_p] tlo=   -958 thi=    926  train-ladder mean true% 63.3  interventions 65260
+  [v1plus_p] tlo=   -958 thi=   2153  train-ladder mean true% 67.6  interventions 42988
+  [v1plus_p] tlo=   -958 thi=   2869  train-ladder mean true% 69.3  interventions 12392
+  [v1plus_p] tlo=   -513 thi=    926  train-ladder mean true% 66.0  interventions 71100
+  [v1plus_p] tlo=   -513 thi=   2153  train-ladder mean true% 71.1  interventions 45767
+  [v1plus_p] tlo=   -513 thi=   2869  train-ladder mean true% 74.4  interventions 14031
+  [v1plus_p] tlo=   -145 thi=    926  train-ladder mean true% 67.1  interventions 79627
+  [v1plus_p] tlo=   -145 thi=   2153  train-ladder mean true% 72.1  interventions 47882
+  [v1plus_p] tlo=   -145 thi=   2869  train-ladder mean true% 74.4  interventions 15505
+  [v1plus_p] SELECTED tlo=-513 thi=2869 (train-ladder mean 74.4%, 14031 interventions — min-intervention within 2pp of best 74.4%)
+
+== DEPLOYED MODEL: v1plus_p (train-ladder 74.4%) ==
+== CANARY 1: sequential-arm byte-identity (schedulers active) ==
+  PASS: 120/120 sequential runs byte-identical with schedulers active
+
+== CANARY 2: harness identity (interference, scheduler off) ==
+  PASS: 60/60 interference runs byte-identical to exp_glm1.run_fabric
+
+== CANARY 3: SPIN-5 replay ladder s=15 K=1 (scheduler off) ==
+  per-seed permille got (709, 713, 721, 714, 717) pub (709, 713, 721, 714, 717)  mean 71.5% (tolerance +-2pp of 71.5)
+  PASS
+
+== CANARY 4: spread=0 byte-identity (zero grammar, schedulers active) ==
+  PASS: 36/36 zero-grammar scheduled runs byte-identical to run_fabric
+
+== CANARY 5: v1 replay (published held-out per-seed permille, exact) ==
+  PASS: 18/18 v1 held-out cells replay exact
+
+ALL CANARIES: PASS
+
+== EVAL: held-out grammars, seeds {1999, 20260902}, K{1,2,4} ==
+grammar     K   s15%   s30%    v1%   shape% shape_p%    full%  full_p%  v1plus%v1plus_p%v1plus_p-s15v1plus_p-s30v1plus_p-v1
+cohort3+3   1   57.1   48.9   57.1     57.1     57.1     57.1     57.1     57.1     57.1      +0.0      +8.2      +0.0
+cohort3+3   2   41.1   33.3   75.2     41.1     41.1     66.8     66.8     76.9     77.3     +36.2     +44.0      +2.1
+cohort3+3   4   61.5   21.8   81.0     61.5     61.5     87.7     87.8     88.3     88.0     +26.5     +66.2      +7.0
+out5_1      1   73.5   53.2   73.5     73.5     73.5     73.5     73.5     73.5     73.5      +0.0     +20.3      +0.0
+out5_1      2   49.1   46.0   49.1     49.1     49.1     49.1     49.1     49.1     49.1      +0.0      +3.1      +0.0
+out5_1      4   75.8   67.0   76.5     75.8     75.8     78.5     80.1     80.2     80.2      +4.4     +13.2      +3.7
+kcoh5       1   73.5   53.2   73.5     73.5     73.5     73.5     73.5     73.5     73.5      +0.0     +20.3      +0.0
+kcoh5       2   49.1   46.0   49.1     49.1     49.1     49.1     49.1     49.1     49.1      +0.0      +3.1      +0.0
+kcoh5       4   75.8   67.0   76.5     75.8     75.8     78.5     80.1     80.2     80.2      +4.4     +13.2      +3.7
+zero        1   77.1   77.1   77.1     77.1     77.1     77.1     77.1     77.1     77.1      +0.0      +0.0      +0.0
+zero        2   47.5   47.5   47.5     47.5     47.5     47.5     47.5     47.5     47.5      +0.0      +0.0      +0.0
+zero        4   73.6   73.6   73.6     73.6     73.6     73.6     73.6     73.6     73.6      +0.0      +0.0      +0.0
+  mech cohort3+3 K=1  v1plus_p: shrink=0 restore=0 final=[0, 0, 0, 15, 15, 15]
+  mech cohort3+3 K=2  v1plus_p: shrink=16 restore=0 final=[0, 0, 0, 7, 7, 7]
+  mech cohort3+3 K=4  v1plus_p: shrink=718 restore=542 final=[0, 0, 0, 8, 8, 8]
+  mech kcoh5     K=1  v1plus_p: shrink=0 restore=0 final=[0, 0, 0, 0, 0, 15]
+  mech kcoh5     K=2  v1plus_p: shrink=0 restore=0 final=[0, 0, 0, 0, 0, 15]
+  mech kcoh5     K=4  v1plus_p: shrink=1978 restore=1550 final=[0, 0, 0, 0, 0, 9]
+  mech out5_1    K=1  v1plus_p: shrink=0 restore=0 final=[0, 0, 0, 0, 0, 15]
+  mech out5_1    K=2  v1plus_p: shrink=0 restore=0 final=[0, 0, 0, 0, 0, 15]
+  mech out5_1    K=4  v1plus_p: shrink=1978 restore=1550 final=[0, 0, 0, 0, 0, 9]
+  mech zero      K=1  v1plus_p: shrink=0 restore=0 final=[0, 0, 0, 0, 0, 0]
+  mech zero      K=2  v1plus_p: shrink=0 restore=0 final=[0, 0, 0, 0, 0, 0]
+  mech zero      K=4  v1plus_p: shrink=3079 restore=3794 final=[0, 0, 0, 0, 0, 0]
+
+  in-domain sanity: ladder@15 K=1 v1plus_p-scheduled = 71.5% (static replay 71.5%)
+  kcoh5 == out5_1 byte-identical on eval seeds (K1,2,4): True
+
+== VERDICT (deployed candidate = v1plus_p) ==
+  [    shape]  MIXED     mean vs s15  +0.0  vs s30 +10.0  vs v1  -4.6   worst  +0.0/ +0.0/-34.1  zero-reg False
+  [  shape_p]  MIXED     mean vs s15  +0.0  vs s30 +10.0  vs v1  -4.6   worst  +0.0/ +0.0/-34.1  zero-reg False
+  [     full]  MIXED     mean vs s15  +4.8  vs s30 +14.8  vs v1  +0.2   worst  +0.0/ +0.0/ -8.4  zero-reg False
+  [   full_p]  MIXED     mean vs s15  +5.0  vs s30 +15.1  vs v1  +0.5   worst  +0.0/ +0.0/ -8.4  zero-reg False
+  [   v1plus]  VALIDATED mean vs s15  +6.0  vs s30 +16.0  vs v1  +1.4   worst  +0.0/ +0.0/ +0.0  zero-reg True
+  [ v1plus_p]* VALIDATED mean vs s15  +6.0  vs s30 +16.0  vs v1  +1.4   worst  +0.0/ +0.0/ +0.0  zero-reg True
+
+== PROTECTION TERM: out5_1-class gap (SPIN-12 residual +22.4pp @ K=4) ==
+  [shape_p-  shape] out5_1 K=4: 75.8 -> 75.8  (+0.0)  [static15 75.8, v1 76.5]
+  [shape_p-  shape] kcoh5 K=4: 75.8 -> 75.8  (+0.0)  [static15 75.8, v1 76.5]
+  [full_p-   full] out5_1 K=4: 78.5 -> 80.1  (+1.6)  [static15 75.8, v1 76.5]
+  [full_p-   full] kcoh5 K=4: 78.5 -> 80.1  (+1.6)  [static15 75.8, v1 76.5]
+  [v1plus_p- v1plus] out5_1 K=4: 80.2 -> 80.2  (+0.0)  [static15 75.8, v1 76.5]
+  [v1plus_p- v1plus] kcoh5 K=4: 80.2 -> 80.2  (+0.0)  [static15 75.8, v1 76.5]
+  prot weight (std): full_p -0.196, v1plus_p -0.097
+
+  wrote /home/eileen/projects/quilt-verilog/spikes/225-e1-interference-tick/wheel/kimi-predictor/results2.json
