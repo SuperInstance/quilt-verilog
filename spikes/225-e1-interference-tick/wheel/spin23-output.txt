@@ -1,0 +1,85 @@
+SPIN-23 TAXONOMY TRACE-SWAP — 2026-09-03 15:00:44
+config: N=6, seeds(panel)=(1, 7, 42), ticks=4800, delta=12, drift=6, pd=3, P=16 anchors
+== CANARY 1: spread=0 byte-identity (scheduler path vs static-5, per trace, K{1,2,4,8} x seeds{1,7,42}) ==
+  PASS: 36 configs byte-identical
+
+== CANARY 2: R0 anchors exact (5-seed means) ==
+  ladder@15 K=1: 71.5 (want 71.5) -> PASS
+  zero@15   K=1: 77.3 (want 77.3) -> PASS
+
+== CANARY 3: SPIN-21 K=2 floor >= 7.5pp reproduces on every rerun trace (zero grammar, 5-seed) ==
+  triangle  K-sweep 83.9/56.1/74.6/69.4  trough=18.5pp -> PASS
+  sawtooth  K-sweep 61.1/34.5/75.9/69.0  trough=26.6pp -> PASS
+  plateau   K-sweep 37.0/29.4/74.3/68.7  trough=7.5pp -> PASS
+
+ALL CANARIES: PASS
+
+== PANEL: tax-class anchors per trace (5-seed-style TWmean tax, panel seeds {1,7,42}) ==
+
+-- triangle --
+  T1_osc_s15          43.9
+  T1_osc_s25          34.1
+  T1_osc_s5           52.8
+  T1_tax_s15          20.7
+  T1_tax_s25          25.2
+  T1_tax_s5            2.2
+  T2_tax_d25          30.4
+  T2_tax_d50          25.2
+  T2_tax_d75          10.3
+  T3_dphi_osc         -0.9
+  T3_tax_hifirst      26.2
+  T3_tax_lofirst      25.2
+  T4_tax_K1            1.1
+  T4_tax_K2           25.2
+  T4_tax_K4            5.4
+  T4_tax_K8            6.6
+
+-- sawtooth --
+  T1_osc_s15          33.9
+  T1_osc_s25          34.3
+  T1_osc_s5           65.1
+  T1_tax_s15          27.5
+  T1_tax_s25          11.7
+  T1_tax_s5          -12.3
+  T2_tax_d25          22.6
+  T2_tax_d50          11.7
+  T2_tax_d75           9.6
+  T3_dphi_osc        -24.4
+  T3_tax_hifirst      36.1
+  T3_tax_lofirst      11.7
+  T4_tax_K1           -5.5
+  T4_tax_K2           11.7
+  T4_tax_K4            2.8
+  T4_tax_K8            3.3
+
+-- plateau --
+  T1_osc_s15          16.2
+  T1_osc_s25           3.4
+  T1_osc_s5           29.0
+  T1_tax_s15          34.6
+  T1_tax_s25          36.7
+  T1_tax_s5            6.9
+  T2_tax_d25          35.4
+  T2_tax_d50          36.7
+  T2_tax_d75          14.8
+  T3_dphi_osc         -0.9
+  T3_tax_hifirst      37.6
+  T3_tax_lofirst      36.7
+  T4_tax_K1            0.5
+  T4_tax_K2           36.7
+  T4_tax_K4            1.2
+  T4_tax_K8            2.0
+
+== VERDICTS (decision rule pre-registered in .md) ==
+class                                   triangle  sawtooth   plateau   verdict
+T1: amplitude gate (25>15>5, gate<3pp)      hold      FLIP         ~   INDETERMINATE
+T2: duty/guerrilla (25>50>75)               hold      hold      hold   SURVIVES
+T3: phase (hi-first >= lo-first)            hold      hold      hold   SURVIVES
+T4: K=2 spike (K2 > others by 3pp)          hold      hold      hold   SURVIVES
+
+-- detail: steps per trace --
+  triangle   T1[+1,+1,gate=Y] T2[+1,+1] T3[dphi_tax=+0.9] T4[K2-max_other=+18.6]
+  sawtooth   T1[-1,+1,gate=Y] T2[+1,+0] T3[dphi_tax=+24.4] T4[K2-max_other=+8.3]
+  plateau    T1[+0,+1,gate=N] T2[+0,+1] T3[dphi_tax=+0.9] T4[K2-max_other=+34.7]
+
+DONE. elapsed 4 s
