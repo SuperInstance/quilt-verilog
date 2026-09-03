@@ -219,3 +219,24 @@ This repo is built by teams of iterators, one theme per pass:
 AUDIT → FIX → MEASURE → COMMIT. Every commit states what it verified.
 Nothing is ever deleted — archive by rename (the README this page
 replaced lives on as `README.archived-20260830.md`).
+
+## Sister projects (the polyformalism)
+
+The Quilt cell is the same cell in 5 substrates. Each is bit-exact
+with the others via QUF (the Quilt Universal Format, defined in
+[docs/QUF-SPEC.md](docs/QUF-SPEC.md)):
+
+| Substrate | Repo | Language | QUF test |
+|---|---|---|---|
+| Silicon (this repo) | [quilt-verilog](https://github.com/SuperInstance/quilt-verilog) | Verilog-2005 | native (18/18 RTL + 6/6 sby) |
+| C kernel | [quilt-c](https://github.com/SuperInstance/quilt-c) | C99 | 49 QUF conformance tests |
+| Rust no_std | [quilt-rust](https://github.com/SuperInstance/quilt-rust) | Rust 2021 | 8 QUF tests |
+| Python (time.cell) | [quilt-timesfm](https://github.com/SuperInstance/quilt-timesfm) | Python 3.8+ | native |
+| VHDL | [quf-vhdl](https://github.com/SuperInstance/quf-vhdl) | VHDL-2008 | 10/10 byte-exactness tests |
+
+The VHDL sister project ([quf-vhdl](https://github.com/SuperInstance/quf-vhdl))
+is a 1:1 port that produces byte-for-byte identical QUF files from
+the same JSON input. See the comparison doc
+[docs/VERILOG_VS_VHDL.md](https://github.com/SuperInstance/quf-vhdl/blob/main/docs/VERILOG_VS_VHDL.md)
+for the 4 logical routes where the two substrates diverge — and the
+5 invariants where they converge.
