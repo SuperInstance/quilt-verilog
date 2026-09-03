@@ -10,3 +10,9 @@ Ordered queue: RESEARCH-AGENDA §4 O1–O7, then §Q open questions, then wheel 
 - **Verdict:** CONFIRMED — new champion banked
 - **Commit:** fb63ff4
 - **Headline:** new champion K=1/pd=2/d16 interference 96.1% (triple-axis Pareto domination of old 93.2% champion); calm Δ=6 re-keyed (98.0 vs 56.6); grid-anchoring arena bias booked.
+
+## Round 2 — O2 contention boundary — 2026-09-02 23:5x AKDT
+- **Item:** O2 (contention controller boundary; F14 mag+C=1 vs admit-all, raw vs lag-compensated)
+- **Verdict:** REFUTED-as-booked / PARTIAL-CONFIRM — win is fan-out-gated (slack at N≤5 raw: +0.0/+1.6pp; clears gate at N=8 raw: +11.9pp stress) and does NOT vanish under lag compensation — it explodes (+24.1pp at N=5, +56.2pp at N=8). "Contention is a lag symptom" false; inverse true: compensator synchronizes twins and *needs* the sort (comp admit-all at N=8 is −15.1pp vs raw). T2 promoted to RTL with N≥~5 boundary note; not demoted.
+- **Commit:** (filled post-commit — see next)
+- **Headline:** mag C=1 vs admit-all, stress raw: +11.9pp at N=8 (57.8→69.7 %w, maxE 99.2→48.0); compensated: +56.2pp at N=8 (42.7→98.9).
