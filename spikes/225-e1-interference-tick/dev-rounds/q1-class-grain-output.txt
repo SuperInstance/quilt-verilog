@@ -1,0 +1,45 @@
+ROUND 8 — Q1 CLASS-GRAIN BOUNDARY (Hadamard-walk harness, anchor-matched: n=96, L=193, cap=2^20)
+
+[CANARY C2] anchor replay: identity=     13 ppm, 16-grain=     11 ppm, rescales=27, losses=1566 -> PASS
+
+[CANARY C3] self-canary (classical null mislabeled as fabric): identity TVD= 817460 ppm vs baseline      13 ppm -> CAUGHT
+
+axis / arm                                   ident ppm 16-grain ppm bin gain  resc   loss
+-----------------------------------------------------------------------------------------
+A0 baseline (anchor, linear, fixed, 1-D)            13           11    1.199    27   1566
+A1 readout=linear                                   13           11    1.199    27   1566
+A1 readout=threshold                                 0            0      0.0    27   1566
+A1 readout=signum                                   10            4    2.487    27   1566
+A2 dynamics: LCG-perturbed coin, seed=1              4            1    2.405    33    297
+A2 dynamics: LCG-perturbed coin, seed=7              6            2    2.733    42    342
+A2 dynamics: LCG-perturbed coin, seed=42             0            0    3.700    79   1139
+A2 dynamics: LCG-perturbed coin, seed=1999           3            2    1.779    28    285
+A2 dynamics: LCG-perturbed coin, seed=20260902         0            0    1.442    79   1180
+A3 dimension: 2-D grid (129x129)                    13           11    1.158    27   1566
+
+A1-APPENDIX: threshold-cut sweep (T = max|v| // frac), caps 2^20 and 2^24:
+cut (frac)       cap=2^20 ident    class cap=2^24 ident    class
+max//128                      0        0              0        0
+max//4096                     0        0              0        0
+max//65536                    0        0              0        0
+max//262144               11904    11761              0        0
+max//1048576             564766   123365              0        0
+(read: failure appears only when T approaches the quantization floor
+ (~max/cap); at the same relative cut, cap=2^24 is clean — a WIDTH
+ effect, not a grain effect. Class grain never rescues: worst row is
+ 564766 ident -> 123365 class ppm.)
+
+[CANARY C1] double-run byte-identity: harness is deterministic (fixed seeds,
+             no wall-clock, no unordered iteration) — caller verifies via sha256 of two runs.
+
+grain-law hint per row (identity/class TVD ratio, x100 floored):
+  A0 baseline (anchor, linear, fixed, 1-D)     ratio ~ 1.20x
+  A1 readout=linear                            ratio ~ 1.20x
+  A1 readout=threshold                         ratio ~ 0.00x
+  A1 readout=signum                            ratio ~ 2.49x
+  A2 dynamics: LCG-perturbed coin, seed=1      ratio ~ 2.41x
+  A2 dynamics: LCG-perturbed coin, seed=7      ratio ~ 2.73x
+  A2 dynamics: LCG-perturbed coin, seed=42     ratio ~ 3.70x
+  A2 dynamics: LCG-perturbed coin, seed=1999   ratio ~ 1.78x
+  A2 dynamics: LCG-perturbed coin, seed=20260902 ratio ~ 1.44x
+  A3 dimension: 2-D grid (129x129)             ratio ~ 1.16x
