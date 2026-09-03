@@ -1,0 +1,9 @@
+# cosim/synth_gate_never.ice40 -- SPIN-19 SYNTH: the gate cell (GMODE=2,
+# theta=1.1) alone on iCE40, registered-IO wrapper, real divider cost.
+# Usage: yosys -s cosim/synth_gate_never.ice40  (run with OSSCAD on PATH)
+read_verilog -DSYNTHESIS rtl/q_wall_gate.v
+read_verilog -DSYNTHESIS cosim/spin19_synth_top.v
+chparam -set GMODE 0 q_wall_gate
+hierarchy -check -top spin19_synth_top
+synth_ice40 -top spin19_synth_top -json cosim/synth_gate_never.json
+tee -o cosim/stat_gate_never.txt stat -top spin19_synth_top

@@ -56,4 +56,13 @@ Rule: skip items visibly in flight (check timestamps here + wheel/WHEEL-LOG.md).
 ## Round 8 — Q1 (class-grain boundary, linear-superposition substrates) — DISPATCHED 2026-09-03 14:2x AKDT
 - **Item:** Q1 — map the class-grain boundary: embedding-census needs class grain (F5), Hadamard linear-superposition holds at identity grain (glm-2 #2, 13ppm). Axes: (1) nonlinear vs linear readout, (2) learned-vs-fixed coin dynamics, (3) 1-D vs 2-D dimensionality. Decider property identified or boundary honestly unmapped.
 - **Lane:** dev_q1_class_grain_boundary (zai/glm-5.3, run mode). Deliverable: dev-rounds/ROUND-8-Q1-class-grain.md. Commit + push g3-kinduction mandated.
+- **Verdict:** MAPPED — identity grain survives learned coin dynamics and 2-D substrates (linear superposition robust); nonlinear readout breaks only at the quantization floor and no grain rescues it. Decider is cut-vs-floor scale, not grain.
+- **Commit:** ca836b8
+- **Headline:** boundary decider = cut-vs-floor scale, not class grain
+
+---
+
+## Round 9 — Q2 (minimal cofire homeostat) — DISPATCHED 2026-09-03 14:55 AKDT
+- **Item:** Q2 — is there a MINIMAL correction-channel homeostat with a provable no-collapse bound, or does every local no-error-signal rule learn silence? Test cofire v2 charter predicate (predictability-not-agreement, G1'/G2'/G4) + ≤3 minimal variants (refractory window, floor/decay, lagged reference) on the O6 harness.
+- **Lane:** dev_q2_cofire_minimal (zai/glm-5.3, run mode). Deliverable: dev-rounds/ROUND-9-Q2-cofire-minimal.md. Commit + push g3-kinduction mandated.
 - **Verdict:** pending (append on lane completion).

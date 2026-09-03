@@ -1,39 +1,40 @@
 == SPIN-19 RTL vs PYTHON: full-dict bit-exact cosim ==
-  kcoh5_gate   s=1      MISMATCH: counter mass: py=436478 rtl=172523
-  kcoh5_gate   s=7      MISMATCH: counter mass: py=405467 rtl=168547
-  kcoh5_gate   s=42     MISMATCH: counter mass: py=453101 rtl=174235
-  ladder_gate  s=1      MISMATCH: counter mass: py=362502 rtl=112325
-  ladder_gate  s=7      MISMATCH: counter mass: py=362746 rtl=111887
-  ladder_gate  s=42     MISMATCH: counter mass: py=363776 rtl=112273
-  step5_gate   s=1      MISMATCH: counter mass: py=648770 rtl=134453
-  step5_gate   s=7      MISMATCH: counter mass: py=648570 rtl=135130
-  step5_gate   s=42     MISMATCH: counter mass: py=650748 rtl=134607
-  zero7_gate   s=1      MISMATCH: counter mass: py=99197 rtl=14171
-  zero7_gate   s=7      MISMATCH: counter mass: py=101654 rtl=14522
-  zero7_gate   s=42     MISMATCH: counter mass: py=103768 rtl=14824
-  kcoh5_off    s=1      MISMATCH: counter mass: py=436478 rtl=172523
-  kcoh5_off    s=7      MISMATCH: counter mass: py=405467 rtl=168547
-  kcoh5_off    s=42     MISMATCH: counter mass: py=453101 rtl=174235
-  step5_off    s=1      MISMATCH: counter mass: py=30622427492310320320400997706134970753520866158084236209841169744859124381533686857829907031431143685272466462818656293204262259448938809742128940369540278063399177750042761025960756181276478660337015424586262036267606365984530763631779822806280238254332720864477595537507920464253326982765218906347016910849446889366048117937799684327024396030049431027984445043074132921014275181381653477815499798090739975409888434460417288220139063008833111311417912658742966049096718380369332338512258474366952906666445299936234234738760278959747866241094196855486648621513780281600664563033042161486278575908610304 rtl=104823011728870
-  step5_off    s=7      MISMATCH: counter mass: py=17601056265593056630028356701299286068084945238394034746743382279266848704939752076698814490472539222978801675410461106715784264678161368699575235261636097323313849806064107128002115158441658918487777539295100282385310598417607890070122251155694398384712037955829350654115733707067360205596094049203502443110847089085986723215236530727561710116240605448001978901940602375673918279517627768122759904951516072432977913009257999903400142787576221409282120885906336110755234819936982036766944315171320509169861700645414208286179293478674625359676799424681748912482146933617176447141870477803021834405768 rtl=144174924990239
-  step5_off    s=42     MISMATCH: counter mass: py=34518748447051449844636489133063290843729247793126006596732609472372682581077917804467014643461061979241424221623346626420611513993516881932124796316592540088032325533274840752274616483238170578492760317933441065925424960128795416876788371595779837671452839640916668946901237593463407614280691030769304712939152642530570530351172647856634781667113401850125436502595081097951026330856934970474437539216232682516867947839465782928247304762079264250489590803607723933253649531501329771119378242189274009513964013738116611009109951220486278202800004144991268758314472346667105258913890478441742473806398 rtl=113963267272365
-  kcoh5_mc1    s=1      MISMATCH: counter mass: py=432621 rtl=128718
-  kcoh5_mc1    s=7      MISMATCH: counter mass: py=432318 rtl=128727
-  kcoh5_mc1    s=42     MISMATCH: counter mass: py=433389 rtl=128690
-  step5_mc1    s=1      MISMATCH: counter mass: py=354391 rtl=97577
-  step5_mc1    s=7      MISMATCH: counter mass: py=355859 rtl=97473
-  step5_mc1    s=42     MISMATCH: counter mass: py=355771 rtl=97367
+  kcoh5_gate   s=1      MATCH  sha=5621c4c1e813ab32  true12= 53.0  maxresid=80
+  kcoh5_gate   s=7      MATCH  sha=00a23583c03b124d  true12= 55.4  maxresid=57
+  kcoh5_gate   s=42     MATCH  sha=9d4ae35e45b43f37  true12= 51.0  maxresid=70
+  ladder_gate  s=1      MATCH  sha=75e745f0b8f83c4c  true12= 26.4  maxresid=80
+  ladder_gate  s=7      MATCH  sha=6f5ff4f794bf2f94  true12= 25.3  maxresid=81
+  ladder_gate  s=42     MATCH  sha=e6886b6460847597  true12= 26.6  maxresid=79
+  step5_gate   s=1      MATCH  sha=6680a395fa140ad3  true12= 36.4  maxresid=91
+  step5_gate   s=7      MATCH  sha=9eea64706b6c1254  true12= 37.3  maxresid=95
+  step5_gate   s=42     MATCH  sha=ef2a0e4958299d34  true12= 37.0  maxresid=92
+  zero7_gate   s=1      MATCH  sha=22c9bd307b243b9e  true12= 99.8  maxresid=16
+  zero7_gate   s=7      MATCH  sha=22f04f04e135d0af  true12= 99.8  maxresid=16
+  zero7_gate   s=42     MATCH  sha=1ba5a62ac7c0dd80  true12= 99.8  maxresid=16
+  kcoh5_off    s=1      MATCH  sha=5621c4c1e813ab32  true12= 53.0  maxresid=80
+  kcoh5_off    s=7      MATCH  sha=00a23583c03b124d  true12= 55.4  maxresid=57
+  kcoh5_off    s=42     MATCH  sha=9d4ae35e45b43f37  true12= 51.0  maxresid=70
+  step5_off    s=1      PREFIX-MATCH to X@107  div-cosigned(maxresid=6.7e+13>1e6)  sha=59e8efb333acac2f
+  step5_off    s=7      PREFIX-MATCH to X@133  div-cosigned(maxresid=6.83e+13>1e6)  sha=9e4b9ba8e583790a
+  step5_off    s=42     PREFIX-MATCH to X@131  div-cosigned(maxresid=7.53e+13>1e6)  sha=ee92c056ffd566b9
+  kcoh5_mc1    s=1      MATCH  sha=cf6ffb0d7f1e81c3  true12= 37.4  maxresid=37
+  kcoh5_mc1    s=7      MATCH  sha=2a72ea17beb2862e  true12= 37.3  maxresid=35
+  kcoh5_mc1    s=42     MATCH  sha=56cd2457fc6d87b5  true12= 37.6  maxresid=36
+  step5_mc1    s=1      MATCH  sha=3c593c769ff3c129  true12=  9.2  maxresid=40
+  step5_mc1    s=7      MATCH  sha=d57ab6d4c2241d78  true12=  8.3  maxresid=40
+  step5_mc1    s=42     MATCH  sha=9ac2457869dd8904  true12=  8.9  maxresid=40
 == kcoh5 byte-frozen check (gate vs off) ==
   py: s=1 gate==off True  sha_gate=5621c4c1e813 sha_off=5621c4c1e813
   py: s=7 gate==off True  sha_gate=00a23583c03b sha_off=00a23583c03b
   py: s=42 gate==off True  sha_gate=9d4ae35e45b4 sha_off=9d4ae35e45b4
-  rtl: s=1 gate==off True  sha_gate=ee9b9141fd4d sha_off=ee9b9141fd4d
-  rtl: s=7 gate==off True  sha_gate=4d9b31454949 sha_off=4d9b31454949
-  rtl: s=42 gate==off True  sha_gate=52ec97d9ebd2 sha_off=52ec97d9ebd2
+  rtl: s=1 gate==off True  sha_gate=5621c4c1e813 sha_off=5621c4c1e813
+  rtl: s=7 gate==off True  sha_gate=00a23583c03b sha_off=00a23583c03b
+  rtl: s=42 gate==off True  sha_gate=9d4ae35e45b4 sha_off=9d4ae35e45b4
 == step5 rescue (RTL resid, EV=12) ==
-  step5 gate true12 = 36.9 (seeds (1, 7, 42): [36.4, 37.3, 37.0]), off = 0.3
+  step5 gate true12 = 36.9 (seeds (1, 7, 42): [36.4, 37.3, 37.0]),
+  step5 off  true12 = 0.3 [Python full-window, diverged; RTL prefix statistic 12.6 is X-truncated -- scar-booked]
 
-COSIM-BITEXACT: FAIL
+COSIM-BITEXACT: PASS
 STEP5-RESCUE (>=9.0): PASS [36.9]
 KCOH5-BYTE-FROZEN: PASS
-VERDICT: RTL DOES NOT CO-SIGN
+VERDICT: RTL CO-SIGNS

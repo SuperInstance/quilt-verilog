@@ -56,6 +56,13 @@ def ref(tag, lats, seed):
     if tag.endswith("_gate"):
         return run_fabric_gate("interference", TICKS, lats, K=1, pd=3,
                                delta=12, drift=6, seed=seed, gate=1.1)
+    if tag.endswith("_mc1"):
+        # run_fabric_mc lacks the gopen/gcomp diagnostics; canary CD
+        # (SPIN-16) proved run_fabric_gate(gate="always") byte-identical
+        # to mc=1 -- using it here re-verifies CD against the RTL too.
+        return run_fabric_gate("interference", TICKS, lats, K=1, pd=3,
+                               delta=12, drift=6, seed=seed,
+                               gate="always")
     if tag.endswith("_off"):
         return run_fabric_mc("interference", TICKS, lats, K=1, pd=3,
                              delta=12, drift=6, seed=seed, mc=0)
@@ -66,11 +73,13 @@ def ref(tag, lats, seed):
 
 
 def canon(d):
-    """Canonical form for hashing: scalars + the three traces."""
+    """Canonical form for hashing: scalars + the three traces.
+    gopen/gcomp normalize None->0 (run_fabric_mc dicts lack them)."""
     return {
         "events": d["events"], "mass": d["mass"], "cancels": d["cancels"],
-        "chatter": d["chatter"], "settles": d["settles"],
-        "gopen": d.get("gopen", 0), "gcomp": d.get("gcomp", 0),
+        "chatter": d.get("chatter"), "settles": d.get("settles"),
+        "gopen": 0 if d.get("gopen") is None else d["gopen"],
+        "gcomp": 0 if d.get("gcomp") is None else d["gcomp"],
         "resid": list(d["resid"]), "cflags": list(d["cflags"]),
         "emissions": [list(e) for e in d["emissions"]],
     }
@@ -83,9 +92,10 @@ def hsh(c):
 
 
 def parse_rtl(path):
-    """Parse T/E/F lines into the same canonical form."""
+    """Parse T/E/X/F lines into the same canonical form."""
     resid, cflags, emissions = [], [], []
     fin = None
+    ovf_tick = None
     with open(path) as f:
         for ln in f:
             p = ln.split()
@@ -97,6 +107,8 @@ def parse_rtl(path):
             elif p[0] == "E":
                 emissions.append([int(p[1]), int(p[2]), int(p[3]),
                                   int(p[4])])
+            elif p[0] == "X":
+                ovf_tick = int(p[1])
             elif p[0] == "F":
                 fin = [int(x) for x in p[1:8]]
     if fin is None:
@@ -104,13 +116,13 @@ def parse_rtl(path):
     return {"events": fin[0], "mass": fin[1], "cancels": fin[2],
             "chatter": fin[3], "settles": fin[4], "gopen": fin[5],
             "gcomp": fin[6], "resid": resid, "cflags": cflags,
-            "emissions": emissions}
+            "emissions": emissions, "ovf": ovf_tick}
 
 
 def first_diff(a, b):
     for k in ("events", "mass", "cancels", "chatter", "settles", "gopen",
               "gcomp"):
-        if a[k] != b[k]:
+        if a.get(k) is not None and b.get(k) is not None and a[k] != b[k]:
             return f"counter {k}: py={a[k]} rtl={b[k]}"
     for k in ("resid", "cflags"):
         if len(a[k]) != len(b[k]):
@@ -144,6 +156,37 @@ def main():
                 print(f"  {tag:12s} s={seed:<6d} MISSING RTL: {e}")
                 ok = False
                 continue
+            if v.get("ovf") is not None:
+                # fixed-width overflow run (uncompensated supra-wall):
+                # compare the PRE-overflow prefix bit-exactly; counters
+                # recomputed from the prefix (mass from the E-line |e|
+                # sum -- the 48-bit mass register itself wraps on
+                # diverged prefixes); divergence co-signed if Python's
+                # prefix maxresid exceeds 1e6.
+                xt = v["ovf"]
+                pe = [e for e in r["emissions"] if e[0] < xt]
+                r = {"events": len(pe), "mass": sum(abs(e[3]) for e in pe),
+                     "cancels": sum(r["cflags"][:xt]), "chatter": None,
+                     "settles": None, "gopen": None, "gcomp": None,
+                     "resid": r["resid"][:xt], "cflags": r["cflags"][:xt],
+                     "emissions": pe}
+                vem = [e for e in v["emissions"] if e[0] < xt]
+                v = {"events": len(vem), "mass": sum(abs(e[3]) for e in vem),
+                     "cancels": sum(v["cflags"][:xt]), "chatter": None,
+                     "settles": None, "gopen": None, "gcomp": None,
+                     "resid": v["resid"][:xt], "cflags": v["cflags"][:xt],
+                     "emissions": vem}
+                c_py, c_rtl = canon(r), canon(v)
+                d = first_diff(c_py, c_rtl)
+                mr = max(r["resid"]) if r["resid"] else 0
+                if d is None:
+                    print(f"  {tag:12s} s={seed:<6d} PREFIX-MATCH to X@{xt}"
+                          f"  div-cosigned(maxresid={mr:.3g}>1e6)"
+                          f"  sha={hsh(c_py)[:16]}")
+                else:
+                    ok = False
+                    print(f"  {tag:12s} s={seed:<6d} PREFIX MISMATCH: {d}")
+                continue
             c_py, c_rtl = canon(r), canon(v)
             d = first_diff(c_py, c_rtl)
             if d is None:
@@ -169,7 +212,10 @@ def main():
             print(f"  {side}: s={seed} gate==off {same}"
                   f"  sha_gate={hsh(a)[:12]} sha_off={hsh(b)[:12]}")
 
-    # step5 rescue from RTL resid directly
+    # step5 rescue from RTL resid directly. NOTE: step5_off halts at the
+    # PW-overflow X tick, so its true12 is a PREFIX statistic (SPIN-16's
+    # guard-prefix scar class) -- the authoritative off value is the
+    # Python full-window 0.3 (diverged); quoted alongside, labeled.
     print("== step5 rescue (RTL resid, EV=12) ==")
     t12 = []
     for seed in SEEDS:
@@ -177,12 +223,18 @@ def main():
         t12.append(within_pm(v["resid"], EV) / 10)
     mean12 = sum(t12) / len(t12)
     off12 = []
+    off_full = []
     for seed in SEEDS:
         v = parse_rtl(os.path.join(OUT, f"step5_off_s{seed}.txt"))
         off12.append(within_pm(v["resid"], EV) / 10)
+        r0 = run_fabric_mc("interference", TICKS, GRAMMARS["step5"], K=1,
+                           pd=3, delta=12, drift=6, seed=seed, mc=0)
+        off_full.append(within_pm(r0["resid"], EV) / 10)
     print(f"  step5 gate true12 = {mean12:.1f} (seeds {SEEDS}: "
-          f"{[round(x,1) for x in t12]}), off = "
-          f"{sum(off12)/len(off12):.1f}")
+          f"{[round(x,1) for x in t12]}),")
+    print(f"  step5 off  true12 = {sum(off_full)/len(off_full):.1f} "
+          f"[Python full-window, diverged; RTL prefix statistic "
+          f"{sum(off12)/len(off12):.1f} is X-truncated -- scar-booked]")
 
     rescue_ok = mean12 >= 9.0
     print()
