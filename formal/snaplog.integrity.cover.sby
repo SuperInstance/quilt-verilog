@@ -1,0 +1,18 @@
+# snaplog.integrity.cover.sby -- non-vacuity companion to
+# snaplog.integrity.sby: saturation, overflow drops (x2), frozen fires,
+# window-edge fires, oldest/mid reads all reachable within depth 30.
+[options]
+mode cover
+depth 30
+
+[engines]
+smtbmc boolector
+
+[script]
+read -formal q_snaplog.v
+read -formal f_snaplog_integrity.v
+prep -top f_snaplog_integrity
+
+[files]
+rtl/q_snaplog.v
+formal/f_snaplog_integrity.v

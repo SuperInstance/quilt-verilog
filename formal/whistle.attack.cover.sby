@@ -1,0 +1,19 @@
+# whistle.attack.cover.sby -- non-vacuity companion to whistle.attack.sby:
+# the dial set is nonempty and the stimulus reaches the whistle, strikes,
+# and the deadline inside the depth (guards the attack BMC against a
+# vacuous-PASS through inconsistent dial assumptions).
+[options]
+mode cover
+depth 45
+
+[engines]
+smtbmc boolector
+
+[script]
+read -formal q_whistle.v
+read -formal f_whistle_attack.v
+prep -top f_whistle_attack
+
+[files]
+rtl/q_whistle.v
+formal/f_whistle_attack.v

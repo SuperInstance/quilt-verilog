@@ -1,0 +1,18 @@
+# whistle.honest.sby -- T3 safety, UNBOUNDED: honest windows never alarm.
+# mode prove (k-induction): every q_whistle state bit is boundary-visible,
+# so the no-false-positive property closes inductively (see harness header).
+[options]
+mode prove
+depth 15
+
+[engines]
+smtbmc boolector
+
+[script]
+read -formal q_whistle.v
+read -formal f_whistle_honest.v
+prep -top f_whistle_honest
+
+[files]
+rtl/q_whistle.v
+formal/f_whistle_honest.v
