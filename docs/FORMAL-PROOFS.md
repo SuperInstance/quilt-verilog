@@ -27,6 +27,7 @@ fact; the seconds are context, not claim.
 | `formal/fabric.conservation.sby` | BMC 55 | PASS | **35.9 s** | 38 s |
 | `formal/flit_pipe.fly.sby` | BMC 40 | PASS | **74.0 s** | 72 s |
 | `formal/cell_core.tick.sby` | BMC 80 | PASS | not re-run | 215 s |
+| `formal/cell_core.tick.prove.sby` | prove (PDR), depth 130 | PASS | **747 s** (2026-09-03) | — |
 | `formal/cell_core.fair.sby` | BMC 80 | PASS | not re-run | 498 s |
 | `formal/g3-kinduction/fabric.conservation.g3-certificate.sby` | prove (k-induction), depth 12, smtbmc boolector | PASS | **10 s** (2026-09-02) | — |
 
@@ -298,6 +299,17 @@ document (error-envelopes), with this proof supplying its integer core.
 
 ## 4. `formal/cell_core.tick.sby` — non-deferrable time survives permanent flood
 
+**Unbounded upgrade (2026-09-03): `formal/cell_core.tick.prove.sby`
+CLOSES the tick-depth lane — the same deadline assertions (Q2a1 <=100
+cycles, Q2a2 <=66, Q2b pending⇒!ci_ready), same harness
+(`formal/f_cell_core_tick.v`), closed by abc PDR (depth 130): **PASS,
+747 s, no traces**. This is genuine unbounded liveness: EVERY strobed
+tick is serviced within 100 cycles in ALL reachable futures, under
+permanent ingress flood and arbitrary strobes, with fairness exactly
+E1/E2/E3 (hardware contracts: local egress single-owner lo/lx_ready=1,
+q_hebb_edge answers in 10/2 silicon — BACKEND-NOTES). BMC-80 remains
+the fast regression; the prove run is the certificate.
+
 **DUT**: `rtl/q_cell_core.v` (EDGES_N=4, K=8), the real engine/dialfile
 contracts below. **Strategy**: BMC, depth 80, shadow trackers. The
 adversarial environment: **ingress flood** (`ci_valid` held high forever,
@@ -436,6 +448,7 @@ sby -f formal/flit_pipe.fly.sby   # ~1 min
 sby -f formal/fabric.conservation.sby  # ~40 s
 sby -f formal/echo_gate.dyadic.sby     # ~3 s
 sby -f formal/cell_core.tick.sby       # ~4-10 min
+sby -f formal/cell_core.tick.prove.sby # ~12.5 min (unbounded liveness)
 sby -f formal/cell_core.fair.sby       # ~8-15 min
 sby -f tb/formal/flit_pipe.sby         # <1 s (k-induction)
 ```
