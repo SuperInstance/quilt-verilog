@@ -103,6 +103,7 @@ module q_wall_gate #(
     localparam ST_IDLE = 2'd0, ST_RUN = 2'd1, ST_DONE = 2'd2;
 
     reg [LSW-1:0] i_lats_reg [0:N-1];
+    reg signed [PW-1:0] mass_add;            // blocking accumulator
 
     // per-tick combinational
     reg signed [PW-1:0] reads [0:N-1];
@@ -113,6 +114,8 @@ module q_wall_gate #(
     reg [3:0]        neff;
     reg              open_;
     reg signed [PW-1:0] net, g_now, s_true;
+    reg signed [PW+5:0] netw;               // wide net: no silent wrap
+    reg               ovf;                  // this tick overflows PW
     reg              any_pos, any_neg, cancel, guard_hit;
     reg signed [PW-1:0] mtmp;
     reg [TW-1:0]     eff, ph;
@@ -139,7 +142,8 @@ module q_wall_gate #(
         nf        = 4'd0;
         neff      = 4'd0;
         open_     = 1'b0;
-        net       = {PW{1'b0}};
+        netw      = {PW+6{1'b0}};
+        ovf       = 1'b0;
         any_pos   = 1'b0;
         any_neg   = 1'b0;
         cancel    = 1'b0;
@@ -189,17 +193,24 @@ module q_wall_gate #(
             for (jj = 0; jj < N; jj = jj + 1) begin
                 if (kk == (t % K)) begin
                     if (trig[jj]) begin
-                        net = net + pm_new[jj];
+                        netw = netw + pm_new[jj];
                         if (pm_new[jj] > 0) any_pos = 1'b1;
                         if (pm_new[jj] < 0) any_neg = 1'b1;
                     end
                 end else if (jj < cnt[kk]) begin
-                    net = net + mags[kk][jj];
+                    netw = netw + mags[kk][jj];
                     if (mags[kk][jj] > 0) any_pos = 1'b1;
                     if (mags[kk][jj] < 0) any_neg = 1'b1;
                 end
             end
-        cancel = (net == 0) && any_pos && any_neg;
+        net   = netw[PW-1:0];
+        // fixed-width contract: DECLARE (never hide) the overflow that
+        // unbounded-Python supra-wall divergence runs into
+        ovf   = (netw > 54'sd140737488355327)
+                || (netw < -54'sd140737488355328)
+                || ((g_now + netw) > 54'sd140737488355327)
+                || ((g_now + netw) < -54'sd140737488355328);
+        cancel = (netw == 0) && any_pos && any_neg;
     end
 
     // ------------------------------------------------------------ sequencer
@@ -246,9 +257,12 @@ module q_wall_gate #(
                   if ((GMODE != 0) && guard_hit)
                       $display("T %0d %0d %0d %0d %0d", t,
                                f_abs(s_true - g_now), 0, 0, 0);
+                  else if (ovf) begin
+                      $display("X %0d", t);  // PW overflow: trace ends here
+                  end
                   else begin
                       $display("T %0d %0d %0d %0d %0d", t,
-                               f_abs(s_true - (g_now + net)), cancel, nf,
+                               f_abs(s_true - (g_now + netw)), cancel, nf,
                                open_);
                       for (a = 0; a < N; a = a + 1)
                           if (trig[a])
@@ -267,6 +281,14 @@ module q_wall_gate #(
                       o_bail   <= 1'b1;
                       st       <= ST_DONE;
                       o_running<= 1'b0;
+                  end else if (ovf) begin
+                      // PW overflow (uncompensated supra-wall runaway):
+                      // halt CLEAN before any state/counter update --
+                      // the X tick belongs to no prefix; F-line counters
+                      // are exact for the pre-overflow prefix.
+                      o_bail   <= 1'b1;
+                      st       <= ST_DONE;
+                      o_running<= 1'b0;
                   end else begin
                       for (a = 0; a < N; a = a + 1) begin
                           o_em_pm[a*PW +: PW] <= pm_new[a];
@@ -275,7 +297,7 @@ module q_wall_gate #(
                       o_em_mask <= trig;
                       o_gopen   <= open_;
                       o_cflag   <= cancel;
-                      o_resid   <= f_abs(s_true - (g_now + net));
+                      o_resid   <= f_abs(s_true - (g_now + netw));
 
                       // retire + write slot t%K with the fresh cohort
                       cnt[t % K] <= nf;
@@ -284,8 +306,11 @@ module q_wall_gate #(
 
                       if (nf != 0) begin
                           o_events <= o_events + nf;
+                          mass_add = 0;
                           for (a = 0; a < N; a = a + 1)
-                              if (trig[a]) o_mass <= o_mass + f_abs(errs[a]);
+                              if (trig[a])
+                                  mass_add = mass_add + f_abs(errs[a]);
+                          o_mass <= o_mass + mass_add;
                           if (neff > 1) o_gcomp <= o_gcomp + nf;
                           if (open_)    o_gopen_tot <= o_gopen_tot + 1;
                           if (t == last + 1) o_chatter <= o_chatter + 1;
@@ -295,7 +320,7 @@ module q_wall_gate #(
 
                       // net applied to g (Python applies only if pulses
                       // exist; pulses empty forces net==0, so exact)
-                      g <= g_now + net;
+                      g <= g_now + netw;
 
                       // decay all live mags: (|m|>1) ? ceil(m/2) : m.
                       // Slot t%K gets the FRESH values decayed (Python
@@ -310,7 +335,7 @@ module q_wall_gate #(
                       // settles: all |reads_i - g'| <= delta
                       sall = 1'b1;
                       for (q = 0; q < N; q = q + 1)
-                          if (f_abs(reads[q] - (g_now + net)) > DELTA)
+                          if (f_abs(reads[q] - (g_now + netw)) > DELTA)
                               sall = 1'b0;
                       if (sall) o_settles <= o_settles + 1;
 
