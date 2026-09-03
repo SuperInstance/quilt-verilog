@@ -29,3 +29,24 @@ Rule: skip items visibly in flight (check timestamps here + wheel/WHEEL-LOG.md).
 - **Verdict:** PARTIAL-REFUTE / KNEE RELOCATED — ±5 fails 99% gate at K=2 stress (97.5%); adopt ±7 (4-bit) as ESP32/.qm default (≥99.2% everywhere). Z₃ debt inversion persists 8/8. O2b: contention wall located at N=6.
 - **Commits:** 999348e (O3) · de5ad6b (O2b)
 - **Headline:** ±7 is the floor (min retention 99.2% across all 8 K×regime cells)
+
+## Round 4 — O4 (closed-loop regime motion) — DONE (2026-09-03 ~12:3x; backfilled 12:33 from commit b692aea)
+- **Verdict:** BOUNDARY BOOKED — %w gate PASSED (adaptive 932‰ vs best-static 778‰, +154‰) but debt gate FAILED (57,136 > 32,770); NOT promoted to E4. κ-detector conflict entry 90 ticks vs 1600-tick dwell; L̂±1 knife-edge scar (bursty L̂=9→994‰, L̂=10→336‰). F19 doctrine confirmed in-run; E4 demo arm should pre-load blade+compensator+sequential with κ-dial as slow backstop.
+- **Commit:** b692aea
+- **Headline:** 932‰ beats every static arm on %w but fails debt gate — boundary booked with 90-tick detector lag + L̂ knife-edge.
+
+
+## Round 5 — O5 (phase-decay coupling, multi-seed) — DONE (2026-09-03 12:5x; backfilled from commit ffecc06; see spike dev-rounds/ROUND-5-O5-phase-decay.md)
+- **Verdict:** PROMOTED — +2.0pp stress mean, 5/5 seeds positive (F24 confirm); matched-duty admission gate destroys (−27.8pp) — decay-modulation vs admission-gating contrast is real.
+- **Commit:** ffecc06
+- **Headline:** +2.0pp stress, 5/5 seeds; gate at matched duty −27.8pp
+
+## Round 6 — O6 (cofire homeostat) — DONE (2026-09-03; commits 3cee756 + 987d6e4; see spike dev-rounds/ROUND-6-O6-cofire-homeostat.md)
+- **Verdict:** DEMOTE — v1.1 fails G1 (778‰ honest < 800‰) and G2 (no discriminative demotion); whistle G3 passes 3.4×. Cofire → v2 charter booked (predictability-not-agreement predicate, G1'/G2' + G4 gates); demo runs selection-only.
+- **Commits:** 3cee756 (verdict) · 987d6e4 (v2 charter)
+- **Headline:** 778‰ honest < 800‰ gate → cofire demoted to v2, demo selection-only
+
+## Round 7 — O7 (bundle wall × compensation) — DISPATCHED 2026-09-03 13:39 AKDT
+- **Item:** O7 — is the N=4 bundle-capacity wall (F7: true-residency 91%→10% by N≥4) lag-driven? Per-twin lag blades (F19/F20) + compensation, N∈{2..8} × {raw,comp} × {calm,stress}, 5 seeds, 4800 ticks. Decision: N=4 comp trueRes ≥50% ⇒ "stale-sensing capacity, not twin count"; unmoved ⇒ geometric two-law split.
+- **Lane:** dev_o7_bundle_wall (zai/glm-5.3, run mode). Deliverable: dev-rounds/ROUND-7-O7-bundle-wall.md. Commit + push g3-kinduction mandated.
+- **Verdict:** pending (append on lane completion).
