@@ -125,3 +125,16 @@ hashes canonical full-dict forms of BOTH sides. Output:
    re-run the committed 18-TB suite for bit-exact v1 coexistence —
    the "add to fabric" cost question answered structurally, not just
    by standalone stat.
+
+## Synth numbers (auto-appended)
+
+```
+SPIN-19 SYNTH SUMMARY (yosys 0.47 iCE40, spin19_synth_top wrapper)
+config: N=7 K=1 PD=3 PW=48 DELTA=12, registered-IO wrapper
+baseline fabric (make synth, q_fabric_top k4b4a8e1): 5978 LUT4 / 2434 FF / 879 SB_CARRY (committed round-3: 5951/~2340)
+gate cell GMODE=0 (never):  LUT4=16971  DFF=309  CARRY=12676
+gate cell GMODE=2 (theta):  LUT4=17857  DFF=309  CARRY=12944
+gate marginal cost (theta - never): LUT4 886  DFF 0  CARRY 268
+divider-dominated: the 48-bit |e|/pd (const) + m/neff (runtime) path is the
+bulk of BOTH arms; the theta gate itself is a cross-mult comparator + mux.
+```
