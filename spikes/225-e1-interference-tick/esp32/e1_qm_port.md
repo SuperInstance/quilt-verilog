@@ -259,3 +259,46 @@ not a guess:
    referenced by the harness objects; all state static per §1 (< 1 KiB).
 4. **Tick budget.** Worst-case tick ≤ ~21 µs @ 240 MHz measured on target
    (bounded by `MAX_PULSES`, data-dependent but capped — real-time safe).
+
+## 9. DEVIL cross-exam receipts (2026-09-03)
+
+Three challenges, three answered with receipts — the port doc is
+destined for the boat, so the edges live here in writing.
+
+**(1) Held-out seeds — not training-data agreement.** The §8 sweep uses
+the five dev seeds `{1, 7, 42, 1999, 20260902}` — the same seeds the
+arena policies were iterated on, so "10/10" alone would be agreeing
+with its training data. Cross-exam result: the held-out set
+`{13, 313, 777, 271828, 90210}` run through the same ring translation
+at stress params reproduces `e1.py` **exactly on all six integer
+metrics, 10/10 rows** (pct column reconciles as percent-vs-per-mille:
+50.6% == 506‰). The claim "ring-verified" survives the 727ab7d
+seed-split test.
+
+**(2) Horizon — no additive drift at 10×.** Integer conversion is a
+silent-semantics class, so the horizon of the verification sweep is now
+stated and tested: both engines are already integer-only end to end
+(e1.py has no float path; `pct_within` percent is reporting-only), and
+at **48,000 ticks (10× the sweep horizon)** all 10 rows — 5 dev seeds ×
+2 arms — reproduce exactly (events, debt, constructive, cancellations,
+chatter, maxErr). A full per-tick `g`-trace diff (seed 1, interference,
+48k points) is byte-identical. There is no slow integer/float diverge
+to accumulate: drift is additive-checkable and checks clean at 10×.
+Honest caveat: 48k ≠ unbounded; the .qm target adds ADC quantization
+(§7 certificate), which is a NEW integer input stream, not a rounding
+accumulation — covered by the dyadic-envelope checklist, not by this
+sweep.
+
+**(3) Ring overflow — policy is drop-new, divergence documented.** The
+64-entry pulse ring is FIFO with a **drop-new** overflow policy: the
+push sites are guarded `if (n_pulses < MAX_PULSES)` — a trigger that
+arrives with the ring full is counted (events/debt still booked) but
+its pulse never enters the superposition. e1.py's `deque` grows
+unboundedly, so under sustained interference beyond 64 live pulses the
+C/.qm plant gets *less* correction than the Python twin. That regime is
+unreachable in the verification harness: pulse life is K=4..5 ticks and
+at most 2 pulses enter per tick, so live-pulse peak is ~2K = 8..10,
+6× below overflow. On the boat, sustained ring-full means trigger rate
+≥ 16/snaps-per-life-tick — by then the delta deadband (§7 certificate)
+is mis-sized, which is a separate, louder alarm. Signed int32 `g`
+cannot overflow in-regime (random walk ±~800 at 48k ticks vs 2³¹).
