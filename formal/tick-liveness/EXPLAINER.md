@@ -81,3 +81,29 @@ ring. The dumped clause family is the asset to diff across
 instantiations — if the ring-scale invariants are per-cell copies plus
 boundary clauses, G2 closes almost for free; if not, the diff IS the
 new coupling analysis.
+
+## Naming the structure (TEACHER, 2026-09-03)
+
+What this proof is, in the literature's language: **assume-guarantee /
+compositional contract reasoning** (McMillan's circular
+assume-guarantee; contract-based design). "Tick liveness holds GIVEN
+E1/E2/E3" means the theorem is parameterized by an environment model.
+Two teaching consequences, booked:
+
+1. **E1/E2/E3 are the load-bearing unproven objects.** E2 is
+   empirically measured (10/2), not proven — legitimate, but the
+   result must never be summarized as "tick liveness proven" without
+   the "given E1/E2/E3" conditional. Cross-repo booking: these three
+   contracts are the next dataset for zeroclaw's §8 clause-pricing
+   instrument — an M-move/κ pass prices how much of the liveness
+   rests on each environment clause. One instrument, both repos.
+
+2. **Ring-scale G2 = circular assume-guarantee, non-circular by
+   interface invariant.** Do NOT re-run PDR on the whole ring. Compose:
+   per-cell tick liveness (this proof, 8743-clause artifact) with the
+   G1 conservation ring invariant (1612 clauses, 5e3109c) as the
+   interface invariant between neighbors — each cell's guarantees
+   discharge its neighbors' assumes. Referee-facing name: *circular
+   assume-guarantee made non-circular by interface invariant*; the
+   8743 and 1612 clause sets are the two owned halves of the
+   composition theorem. Cite the lineage in the write-up.
