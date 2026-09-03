@@ -223,8 +223,17 @@ Coverage residue noted (same nudge): tb_serfabric's QUF has 3 edges but
 all-zero buckets — it proves multi-edge BOOT byte-exact, not the
 multi-edge wsum readback seam where the OR-mux lived. That seam is
 covered at cell level by cosim directed program 7 + the random-program
-wsum checkpoints above; a serfabric-level nonzero-bucket case is
-future work, not a gap in the bit-exactness claim.
+wsum checkpoints above. CLOSED (worker lane, 2026-09-03): tb_serfabric
+now reads wsum back through the serialized port post-boot (asserts 0 on
+both cells -- the §9 no-engine-load-port contract, bases do NOT ride in
+via QUF) and again after LINKing distinct nonzero bases into cell0's two
+slots and cell1's slot (asserts the slot sums 0x1234+0x0050 and 0x0100).
+Driver contract learned en route: a solo host op's src must be a LIVE
+node id -- the ack is addressed back to dst=src, and an ack to a
+nonexistent id circulates the ring forever, starving ringport
+injection. Also note the serfabric wsum block sits AFTER the mirrored
+phase-2 compare on purpose: extra solo ops before it re-phase the tick
+domain and break the documented cycle-lock exceptions.
 
 ## MODEL-LEDGER — the multi-model backend (amplification round)
 

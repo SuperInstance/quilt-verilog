@@ -488,6 +488,38 @@ module tb_serfabric;
         end
         // ================= (A3 folded into A2 views above) =============
 
+        // A1x: multi-edge wsum readback (the OR-mux seam, previously only
+        // covered at cell level by cosim directed program 7). Contract
+        // note (QUF-SPEC §9): the v1 loader consumes edge records but has
+        // no engine load port, so a freshly booted fabric reads wsum = 0
+        // even though the container carries nonzero bases -- assert that
+        // honestly, then LINK distinct nonzero bases into cell0's two
+        // slots and cell1's single slot and check the per-cell slot sums.
+        serflit_solo(3'd3, 4'hF, 4'd0, {14'd0, 2'd1}, 16'd0, 16'd0, 16'd0);
+        check(sc_op[sc-1] === 3'd5, "A1 cell0 wsum view acked");
+        check(sc_dat[sc-1] === 16'd0, "A1 cell0 wsum=0 (no engine load port)");
+        serflit_solo(3'd3, 4'hF, 4'd1, {14'd0, 2'd1}, 16'd0, 16'd0, 16'd0);
+        check(sc_op[sc-1] === 3'd5, "A1 cell1 wsum view acked");
+        check(sc_dat[sc-1] === 16'd0, "A1 cell1 wsum=0 (no engine load port)");
+        serflit_solo(3'd1, 4'd1, 4'd0, {12'd0, 4'd0}, 16'h1234, 16'd0, 16'd0);
+        check(sc_op[sc-1] === 3'd5, "A1 link c0/slot0 peer1 acked");
+        // NOTE: solo-op src MUST be 4'd1 here, never 4'd2 -- the ack
+        // response is addressed back to dst=src, node id 2 does not
+        // exist on this 2-cell ring, and an ack to a nonexistent node
+        // circulates forever, starving ringport injection (observed as
+        // a wedged pend with rotating nv). src=1 acks are consumed by
+        // cell 1 as OP_ACK (no action).
+        serflit_solo(3'd1, 4'd1, 4'd0, {12'd0, 4'd1}, 16'h0050, 16'd0, 16'd0);
+        check(sc_op[sc-1] === 3'd5, "A1 link c0/slot1 peer1 acked");
+        serflit_solo(3'd1, 4'd1, 4'd1, {12'd0, 4'd0}, 16'h0100, 16'd0, 16'd0);
+        check(sc_op[sc-1] === 3'd5, "A1 link c1/slot0 peer1 acked");
+        serflit_solo(3'd3, 4'hF, 4'd0, {14'd0, 2'd1}, 16'd0, 16'd0, 16'd0);
+        check(sc_op[sc-1] === 3'd5, "A1 cell0 wsum post-link acked");
+        check(sc_dat[sc-1] === 16'h1284, "A1 cell0 wsum = 0x1234+0x0050 (OR-mux)");
+        serflit_solo(3'd3, 4'hF, 4'd1, {14'd0, 2'd1}, 16'd0, 16'd0, 16'd0);
+        check(sc_op[sc-1] === 3'd5, "A1 cell1 wsum post-link acked");
+        check(sc_dat[sc-1] === 16'h0100, "A1 cell1 wsum = 0x0100");
+
         // ================= CASE B: gate mode (flit front end) ==========
         @(negedge clk); gpor = 0;
         repeat (4) @(negedge clk);
@@ -542,7 +574,7 @@ module tb_serfabric;
         check(gc_dat[2] === 16'h5000, "B view reads back 0x5000");
 
         if (errors == 0)
-            $display("TB-SERFABRIC PASS: QUF serialized boot byte-exact (2 cells), serial==parallel egress streams (%0d flits, cycle-locked), end-state dial rows byte-exact, gate-mode fail-static + release-word epoch + serial-flit config -- all cases", pc);
+            $display("TB-SERFABRIC PASS: QUF serialized boot byte-exact (2 cells), serial==parallel egress streams (%0d flits, cycle-locked), end-state dial rows byte-exact, multi-edge wsum OR-mux readback (slot sums vs LINK bases), gate-mode fail-static + release-word epoch + serial-flit config -- all cases", pc);
         else
             $display("TB-SERFABRIC FAIL: %0d error(s)", errors);
         $finish;
