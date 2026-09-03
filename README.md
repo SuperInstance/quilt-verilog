@@ -180,6 +180,14 @@ not-covered list — read that section before relying on any of this:
   README verification table above deliberately lists only RTL benches,
   formal proofs, and synthesis; rounds work joins that table if and
   when a lane reproduces it against the fabric RTL.
+- **`rtl/q_wall_gate.v` (wheel/spin-19 lane) is outside the table's
+  surface.** It is a standalone gate module verified by its own
+  Verilator cosim against the Python reference — 21/24 full-dict
+  bit-exact, 3/24 (step5_off, seeds 1/7/42) prefix-match then cosigned
+  divergence where the arbitrary-precision reference and the 48-bit
+  datapath legitimately part ways
+  ([wheel/SPIN-19-rtl-honesty.md](wheel/SPIN-19-rtl-honesty.md)). No
+  bench, sim, or formal proof above instantiates it.
 - **No CI.** Verification runs when an iterator runs it.
 
 The prove-mode attempt on conservation exists, failed informatively, and

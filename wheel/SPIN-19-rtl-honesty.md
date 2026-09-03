@@ -1,4 +1,16 @@
-# SPIN-19: RTL-HONESTY — VERDICT: FIXED (20/24 bit-exact, step5_off unstable)
+# SPIN-19: RTL-HONESTY — VERDICT: FIXED (21/24 full bit-exact; 3 step5_off prefix-divergent)
+
+> **Counting correction (TEACHER nudge, post-commit audit):** the commit
+> message says "20/24 bit-exact" and this doc below said "4/24 failed".
+> The actual harness log (`cosim/spin19-cosim-output.txt`) says
+> **21 MATCH + 3 PREFIX-MATCH = 24**. Full accounting: 8 configs
+> (kcoh5_gate, ladder_gate, step5_gate, zero7_gate, kcoh5_off,
+> kcoh5_mc1, step5_mc1, step5_off) x 3 seeds (1, 7, 42). The 21 full
+> bit-exact are all of the first seven configs; the 3 divergent are
+> exactly step5_off s=1/7/42, each matching the Python reference to a
+> named tick (X@107/133/131) before the two arithmetics part ways
+> cosigned (Python arbitrary-precision explodes to ~10^600; RTL 48-bit
+> wraps at its datapath bound). Not 20+4, not 20+1: 21+3, all named.
 
 ## Summary
 
@@ -43,7 +55,7 @@ By accumulating into a temporary variable with blocking assignment (`=`), all tr
 
 ## Verification Results
 
-### Bit-Exact Matches (20/24)
+### Bit-Exact Matches (21/24: 7 configs x 3 seeds)
 ```
 kcoh5_gate  s=1,7,42   ✓ MATCH  true12 ≥ 50.0
 ladder_gate s=1,7,42   ✓ MATCH  
@@ -54,7 +66,12 @@ kcoh5_mc1   s=1,7,42   ✓ MATCH  (MC-A mode)
 step5_mc1   s=1,7,42   ✓ MATCH
 ```
 
-### Failed Matches (4/24, all step5_off)
+### Not-Full-Match (3/24, all step5_off s=1/7/42 -- named above)
+
+Each is a PREFIX match: bit-exact from tick 0 to a named divergence
+tick, then cosigned divergence (both sides agree in sign, differ in
+magnitude because the reference is arbitrary-precision and the RTL is
+48-bit fixed-width). The harness log is the authoritative count.
 ```
 step5_off s=1,7,42   ✗ PREFIX MISMATCH: mass EXPLODES in Python
 ```
