@@ -514,3 +514,28 @@ basin analysis — host-side by construction.
 5+. The rest in table order; trust/memory/ensemble/norm are independent
 cell-local rows that can be picked off in any sequence once 1–4 set the
 integration patterns (dial packing, probe aliases, formal invariants).
+
+### 1a. Expert cross-exam receipts (2026-09-03, d5c5e64)
+
+Three challenges on the dice prototype, all answered:
+
+1. **Spectral, not marginal.** The 1/3 stat envelope (T3) is a
+   marginal-frequency check and cannot see LCG lattice structure. TB T8
+   now asserts 3x3 symbol-transition uniformity at lag-1 and lag-2
+   (chi-square, 8 dof, 95% upper band 15.5; fixed seed -> deterministic
+   gate). Measured in-gate: lag1 12.86, lag2 11.86. Off-line sweep across
+   seeds {1, 42, 313, 777, 20260902} at lag 1..4: 19/20 chi2 in 0.9-12.9,
+   one lag-3 fluke at 25.3 on seed 42 that does not replicate at other
+   seeds -- recorded honestly as within-noise, monitored by the T8 gate.
+2. **Period pinned by Hull-Dobell, not hope.** mod 2^31, c odd,
+   a = 1 mod 4 -> full 2^31 cycle; the draw IS bits [30:16], so no state
+   bits are unused and bucketing cannot shrink the period. Written into
+   the module header.
+3. **System-property closure (booked, not done):** the dice feeds
+   admission noise; the byzantine tripwire is NOVEL-ENHANCEMENTS T3
+   (`q_whistle` -- the EXPERT said T4; T4 is K-as-dial). Acceptance test
+   for the dice in its real job: "tripwire false-positive rate within
+   spec with dice live" -- booked as the dice-whistle integration TB,
+   to run when q_whistle gets its simulation (currently
+   UNVERIFIED-BEYOND-LINT). Until that artifact exists, the dice stays
+   OUT of any admission path -- it is a standalone, gated prototype.

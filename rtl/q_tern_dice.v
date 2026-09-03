@@ -28,6 +28,18 @@
 // binding parent/host and written through i_seed/i_seed_wr. Seed 0 is
 // legal (c != 0, no fixed point: the sequence starts at 12345).
 //
+// Period (EXPERT cross-exam 2026-09-03): x lives mod 2^31 with c = 12345
+// odd and a = 1103515245 = 1 (mod 4), so x cycles ALL 2^31 states --
+// Hull-Dobell full period, no shorter cycle from the constant-multiply
+// structure. The draw IS x_next[30:16]: no state bits are discarded
+// before bucketing, so bucketing cannot shrink the period either; each
+// 15-bit draw value appears exactly 2^16 times per period and the bands
+// are contiguous draw ranges. Spectral quality is TESTED, not assumed:
+// tb T8 asserts 3x3 symbol-transition uniformity (chi-square, 8 dof,
+// 95% band) at lag-1 and lag-2 -- the marginal thirds of the stat
+// envelope cannot see serial correlation, transitions are what an
+// admission policy actually consumes.
+//
 // Cost: 33 FF, one constant multiply (1103515245 is a fixed coefficient:
 // shift-add network, no general multiplier), two 15-bit compares, one
 // 16-bit subtract. Zero dividers, zero floats. Cell-local, GALS-safe.

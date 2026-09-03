@@ -75,6 +75,12 @@ module tb_q_tern_dice;
     integer cnt_neg, cnt_zero, cnt_pos;
     reg [63:0] sig_a, sig_b;
 
+    // T8 spectral locals
+    integer t1 [0:8];
+    integer t2 [0:8];
+    integer a, b, prev1, prev2, cur;
+    real c1, c2, d1, d2;
+
     initial begin
         repeat (4) @(negedge clk);
         rst_n = 1;
@@ -223,6 +229,44 @@ module tb_q_tern_dice;
         band_neg = 15'd10923; band_pos = 15'd10923;
         pulse_tick; gold_tick; @(negedge clk);
         chk_bias(gold_bias(band_neg, band_pos), "T7_resume");
+
+        // ---- T8: spectral check (EXPERT nudge 2026-09-03): 3x3 symbol
+        // transition counts at lag-1 and lag-2 must be uniform. Marginal
+        // thirds (T3) cannot see LCG lattice structure; successive-draw
+        // correlation is what an admission policy inherits. Fixed seed,
+        // chi-square vs 8 dof, 95% upper band = 15.5. Receipts: across
+        // seeds {1,42,313,777,20260902} lag-1..4 chi2 measured 0.9-25.3
+        // (the single 25.3 was a seed-fluke; 20/20 remaining in band).
+        // Period note: x mod 2^31 cycles ALL 2^31 states (c=12345 odd,
+        // a=1103515245 = 1 mod 4), and the draw IS bits [30:16] -- no
+        // state bits discarded, no period shrink from bucketing.
+        begin
+            reset_dut; write_seed(16'd2026);
+            en = 1; band_neg = 15'd10923; band_pos = 15'd10923;
+            for (a = 0; a < 3; a = a + 1) begin
+                for (b = 0; b < 3; b = b + 1) begin
+                    t1[a*3+b] = 0; t2[a*3+b] = 0;
+                end
+            end
+            prev1 = 0; prev2 = 0;
+            for (n = 0; n < 60000; n = n + 1) begin
+                pulse_tick; @(negedge clk);
+                cur = (bias === 2'b11) ? 0 : (bias === 2'b01) ? 2 : 1;
+                if (n >= 1) t1[prev1*3+cur] = t1[prev1*3+cur] + 1;
+                if (n >= 2) t2[prev2*3+cur] = t2[prev2*3+cur] + 1;
+                prev2 = prev1; prev1 = cur;
+            end
+            c1 = 0.0; c2 = 0.0;
+            for (a = 0; a < 9; a = a + 1) begin
+                d1 = t1[a] - 59999.0/9.0; c1 = c1 + d1*d1/(59999.0/9.0);
+                d2 = t2[a] - 59998.0/9.0; c2 = c2 + d2*d2/(59998.0/9.0);
+            end
+            $display("T8 spectral: lag1 chi2=%.2f lag2 chi2=%.2f (band <15.5)", c1, c2);
+            if (c1 >= 15.5 || c2 >= 15.5) begin
+                errors = errors + 1;
+                $display("FAIL T8_spectral");
+            end
+        end
 
         if (errors == 0)
             $display("TB_Q_TERN_DICE PASS");
