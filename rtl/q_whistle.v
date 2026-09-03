@@ -48,8 +48,12 @@
 // whistle fires within bounded windows of attack onset. That needs a
 // per-window honest bound as a lemma of the conservation proof; until
 // then this module is a calibrated alarm, not a proven one. This file is
-// UNVERIFIED-BEYOND-LINT (iverilog -g2005 + verilator --lint-only pass;
-// no simulation, no formal run, no synthesis on 2026-09-02).
+// VERIFIED-FORMAL 2026-09-03: honest-no-FP proven UNBOUNDED
+// (whistle.honest, k-induction); sustained maximal lying alarms at the
+// first judged window for every legal dial pair, exhaustively
+// ($anyconst, BMC45, whistle.attack); covers reached. The bounding
+// invariant below is the proven core; the full cancellation-rate
+// constant remains future work..
 //
 // Cost: PW-bit counter + PW-bit history + PW-bit strikes + one (PW x
 // MULW) constant-dial multiply + comparator. On ECP5 the multiply maps

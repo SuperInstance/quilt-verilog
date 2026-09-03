@@ -30,7 +30,7 @@ testbench, soft core, and FPGA load identically as today, but now history is aud
   snaplog.integrity (BMC 30, exact content+order vs shadow log),
   snaplog.counters.prove (k-induction, unbounded),
   snaplog.integrity.pdr (PASS), snaplog.integrity.cover (saturation +
-  overflow drops reached at step 20). No longer UNVERIFIED-BEYOND-LINT:
+  overflow drops reached at step 20). No longer UNVERIFIED (lint is not evidence; see TEACHER note below):
   formally proven + the T9 replay TB remains future work. T9 below is
   its UP5K block-RAM backing.
 
@@ -113,7 +113,7 @@ no DSP, no SPRAM, 2 PLL, and 44.43 MHz post-route against a 12 MHz target
 (SYNTHESIS-RESULTS Table 1) = **3.70× timing headroom**. **ECP5 LFE5U-12F/25F** =
 12,144/24,288 LUT, 32/56 sysMEM EBR (18 Kb), **28 × 18×18 DSP multipliers both
 dies**, sysIO banks with differential/DDR inputs. Every idea below: mechanism →
-resource → verification → honest novelty claim. All UNVERIFIED-BEYOND-LINT until
+resource → verification → honest novelty claim. All UNVERIFIED (lint is not evidence; see TEACHER note below) until
 the named verification runs.
 
 ## T9. The SPRAM flight recorder — q_snaplog at 16,384 marks (UP5K)
@@ -255,5 +255,19 @@ iverilog -g2005 -Wall clean, verilator --lint-only -Wall clean (per top),
 elaboration checked at degenerate/deep parameter corners (DEPTH=1, DEPTH=32 /
 TICKW=32 / MAG=0; DEPTH=1 found and fixed a real out-of-order part-select).
 NOT done, on purpose: no simulation, no sby runs, no synthesis (no toolchain
-run was promised tonight), no commit. Everything above this line marked
-UNVERIFIED-BEYOND-LINT is exactly that.
+run was promised tonight), no commit. Everything above this line marked UNVERIFIED (lint is not evidence; see TEACHER note below) is exactly
+that.
+
+## Naming convention, sharpened (TEACHER nudge, 2026-09-03)
+
+The snaplog shifter bug (caught by the first proof run, 700380c)
+width-checked clean in BOTH linters and lived until a formal property
+asked readback semantics — the third such catch in one day. Conclusion,
+now doctrine: **lint-clean is negative evidence of nothing**; it
+validates bit-count, never bit-meaning. The status tag
+UNVERIFIED (lint is not evidence; see TEACHER note below) is retired and replaced by UNVERIFIED (with the
+evidence named: what ran, what closed). An artifact may cite: lint
+(exists), sim (one path), formal (all paths), proof (all paths +
+induction). The T1–T8 program's credibility rests on which rung each
+claim actually occupies; the snaplog fix is the worked example of why
+the ladder is not pedantry.

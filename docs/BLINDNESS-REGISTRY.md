@@ -54,3 +54,20 @@ current set for the loader; the digest row is a structural blindness
 "Here is the complete map of what this fabric cannot see" is a stronger
 doc than any feature list. Rule going forward: **a new HW_BLIND row or a
 new verify-vs-RTL asymmetry MUST add its row here the same tick.**
+
+## Row class: semantic-shape blindness (tooling-caused, 2026-09-03)
+
+| what-cannot-be-seen | why | priced-by-whom |
+|---|---|---|
+| semantic shift semantics of `log <= {log[TW-1:EW], entry}` from any width check | the width-checking convention (lint, elab, `iverilog -Wall`, `verilator -Wall`) validates bit-COUNT, never bit-MEANING; a concat that keeps 675 bits in place + overwrites 45 passes every width rule while destroying the shift | first .sby run (snaplog.integrity, 700380c) |
+| same class, prior instances: tpw>31 (clean until the epoch question was asked); G3 854-clause PLA (clean until PDR seeding was probed) | same shape: tool-clean ≠ semantic-correct; only a property that asks READBACK/BEHAVIOR semantics can separate | e6f746d; G3 ledger |
+
+**Doctrine (TEACHER nudge, 2026-09-03): "passes lint" is retired as
+evidence.** Lint-clean is negative evidence of nothing — it prices
+count, not meaning. Third instance in one day of the identical
+pattern: clean under every width check until a formal property asked
+readback semantics, then folded in one step. No artifact in this tree
+may cite lint as verification; the honest ladder is: lint (existence)
+→ simulation (one path) → formal (all paths). UNVERIFIED-BEYOND-LINT
+is renamed UNVERIFIED everywhere it appears: lint-clean sits BELOW the
+evidence floor, not on it.

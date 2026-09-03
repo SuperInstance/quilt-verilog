@@ -44,8 +44,13 @@
 //   assert: (a) entries [0..count-1] have non-decreasing tick when read
 //   newest->oldest backwards, (b) o_drops == fires - DEPTH once saturated,
 //   (c) freeze holds the visible window bit-stable. This file is
-//   UNVERIFIED-BEYOND-LINT (iverilog -g2005 + verilator --lint-only pass;
-//   no simulation, no formal run, no synthesis on 2026-09-02).
+//   VERIFIED-FORMAL 2026-09-03: first proof run caught a real shifter
+//   bug ({log[TW-1:EW], entry} overwrote in place instead of shifting;
+//   readback >= 1 returned zeros under a valid count) -- fixed same day.
+//   Now: snaplog.integrity (BMC30 content+order vs shadow),
+//   snaplog.counters.prove (k-induction, unbounded), integrity.pdr,
+//   integrity.cover all PASS. Replay-vs-C99 (the T1 target) remains
+//   booked, not proven.
 //
 // Cost note: DEPTH entries x EW bits of flip-flops (default 16 x 45 = 720
 // FF) plus a 24-bit tick counter -- a sketch-sized gauge. The FF shifter
