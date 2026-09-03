@@ -44,4 +44,36 @@ Champion selection is then *contextual*: the caller names the regime and the
 metric, and the ledger answers with the right saved logic. "Score" becomes a
 query, not a verdict.
 
+## The Playbook Doctrine (Casey, 2026-09-02 17:01 — football plays)
+
+> Plays are practiced depending on the other elements of the game at any
+> given moment: ahead or behind (running to drain the clock and avoid
+> interceptions vs long throws at higher risk). If the defense lines up
+> wrong for the huddle pick, a fake hand-off gets swapped in at the line.
+> Or different plays because of mismatched abilities on a specific team —
+> like an opposite's known preferences.
+
+Mapped onto the ledger:
+
+- **Plays** = banked strategies. You practice (bank) many; you run one.
+- **Game state** = regime (calm/stress ≈ ahead/behind). Play selection is
+  mechanical from the ledger: read the state, call the specialist.
+- **Reading the defense at the line** = online regime detection between
+  ticks. The snap-debt rate IS the defensive alignment tell — debt climbing
+  fast means the current play is being beaten; that is the audible trigger
+  for a mid-loop swap (fake hand-off). No replay of history, no re-deriving
+  strategy: the ledger holds the alternative and the swap is a lookup.
+- **The opposite's known preferences** = per-counterparty knowledge. This is
+  the elephant's dial memory: strategy selection keyed not just to regime
+  but to WHO is on the other side of the snap pair — a known-noisy sensor,
+  a known-drifting sim. Same playbook, personal tendencies scouted.
+- **Practice squad** = structurally-banked logics that never start but keep
+  the roster deep. You cannot audible to a play you cut.
+
+The coordinator loop is therefore: **bank plays (variety) → read the field
+(regime + opponent) → call the play (ledger lookup) → audible on debt (swap
+trigger) → practice squad intact (no monoculture).** E4's field-adaptive Δ
+is the first concrete play-call: the elephant's κ reading IS the down-and-
+distance signal.
+
 — doctrine entry, E1 arena, 2026-09-02
