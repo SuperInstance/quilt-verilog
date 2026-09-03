@@ -22,3 +22,9 @@ Ordered queue: RESEARCH-AGENDA §4 O1–O7, then §Q open questions, then wheel 
 - **Verdict:** CONFIRMED-SHARPENED — the wall is at **N=6** (raw +4.5pp, first ≥2pp clearance; N=5 was +1.6). Comp-arm amplification has its own knee at 7→8 (+25.0 → +37.6 → +56.2). Lag blade 28/28 exact.
 - **Commit:** (this commit)
 - **Headline:** "the wall is at N=6" — T2 RTL boundary note resolved to a located threshold; lag-amp curve booked as the measured response of a synthetic room-pressure generator (O2-ROOM-PRESSURE-MAPPING.md).
+
+## Round 3b — O3 quanta floor — 2026-09-03 ~11:4x AKDT
+- **Item:** O3 (cap × K × regime × 5 seeds; Z₃ sign-only arm; F23 anchor replay)
+- **Verdict:** PARTIAL-REFUTE / KNEE RELOCATED — ±5 fails the ≥99% gate at K=2 stress (97.5%); adopt **±7 (4-bit)** as ESP32/.qm default (≥99.2% retention in all 8 K×regime cells). Z₃ debt inversion persists 8/8 (stays sampling gear). Scar: F23's impulse anchor was single-seed; interference rows exact.
+- **Commit:** (this commit)
+- **Headline:** "±7 is the floor" — only cap ≥99% everywhere; K=1 stress retention at ±5 is 88.7%.
