@@ -85,5 +85,22 @@ High-D shadowing buys **precision per stored coefficient**, not directions per e
 
 ```
 python3 -u spin13_snap_shadow.py > spin13-output.txt 2>&1   # ~40 s, byte-identical across runs
+python3 -u spin13b_closure.py > spin13b-output.txt 2>&1  # ~50 s, byte-identical across runs
 ```
-Artifacts: `wheel/spin13_snap_shadow.py`, `wheel/spin13-output.txt`, this file.
+Artifacts: `wheel/spin13_snap_shadow.py`, `wheel/spin13-output.txt`, `wheel/spin13b_closure.py`, `wheel/spin13b-output.txt`, this file.
+
+---
+
+# ADDENDUM (SPIN-13b) — BISECTION-COMBINATION CLOSURE (Casey, same day)
+
+**Claim tested:** "snapped angles themselves can be bisected and combined for a plethora of absolute precision with a finite number of bits to explain, each optimizable for a situation depending on what they are relative to."
+
+**Verdict: CONFIRMED with two sharp caveats.** Closure is a massive precision multiplier under a fixed coefficient cap (eis: 36 → 32,254 exact directions, median gap 10.89° → 0.0085° = **1,285×**, min gap **45,000×** finer; target error 2.51° → 0.0046° = **548×**), and the context-optimality structure is real and clean. But (1) per *address bit*, raw budget growth beats closure (eis raw @ budget 256 reaches 0.12° in **10 bits** vs closure 0.1° in **20 bits**), and (2) closure largely **erases the dimension advantage** — the plain 2D Eisenstein seed, once closed, matches or beats the d=8 shadow seed per bit (0.1°: eis-closure 20 bits vs d8-closure 22).
+
+**Ops (integer-only, lattice renorm, no trig):** BIS_N = prim(u+v); BIS_B = prim(λu+μv) with λ²‖u‖² ≈ μ²‖v‖² chosen by exact integer norm comparison (true arc-midpoint balancing; canary: bisB of the 0° and 60° Eisenstein directions = (3,1) at **exactly 30°**); COMB = prim(αu+βv), α,β ∈ {±1,±2}. Address = op tag + two parent indices (+3 coef bits). Deterministic LCG pair sampling (12k pairs/depth, 3 depths, random/adjacent/new×random mix). Canaries 5/5 PASS incl. zero-vector rejection and double-run + external byte identity.
+
+**Plethora & ladder (eis seed, cumulative):** depth 1/2/3 → 341 / 6,012 / 32,254 directions at mean 15.2/20.9/29.7 bits for the new nodes; min gap 0.193° → 0.00214° → 0.000116° (≈90× then 18× per depth — **faster than 2⁻ᵈᵉᵖᵗʰ**, because combination Farey-density dominates, not pure halving); median gap shrinks ~6–16× per depth. Shadow seeds start richer (d=6: 984 dirs, 0.257° median) and saturate similarly (~82k dirs, 0.003° median at depth 3).
+
+**Context optimality (op duel across 32 golden targets):** loose tolerance → BASE wins; **mid tolerance (1°–0.03°) → BIS_B dominates** (e.g. 23/32 winners at 0.1° eis); **tightest tolerance (≤0.01°) → COMB takes over** (17/32 at 0.003° d=8). Interpretation: balanced bisection is the systematic gap-refiner; deep integer combinations are the extreme-precision Farey engine; the raw dictionary suffices when the target happens to sit near a lattice direction — exactly the "optimizable for a situation depending on what they are relative to" structure.
+
+**Bits-to-precision vs raw budget growth (the honest cost):** every derived node pays 2·log₂(pool) parent bits, so closure trades address bits for precision at ~2× the bit cost of just enlarging the lattice budget (d=4 raw: 0.012° @ 13 bits vs d=4 closure: 0.01° @ 28 bits). Closure wins exactly when the coefficient budget is *capped* (hardware trit-scale coefficients) — it is a precision multiplier at fixed budget, not a bit-efficient replacement for budget growth. Unreached targets at 0.003° (5–20 of 32) mark the sampling frontier of 12k pairs/depth; full closure would close them at further bit cost.
