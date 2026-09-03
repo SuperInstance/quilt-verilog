@@ -80,4 +80,15 @@ else
   echo "FAIL  backend_battery"; grep -E 'FAIL|Error' /tmp/backend_out | head -8; fail=1
 fi
 
+# GC conjecture falsifier lane: the four GC-C1..C4 benches from
+# GENERAL-CALCULUS.md §7 (benches/gc/). PASS = no kill artifact found;
+# a KILLED verdict fails loudly (publishable event, not a routine pass).
+if bash benches/gc/run_benches.sh > /tmp/gc_benches_out 2>&1 \
+   && grep -q "GC FALSIFIER SUITE: ALL PASS" /tmp/gc_benches_out; then
+  nchecks=$(grep -o 'RESULT: PASS -- [0-9]*' /tmp/gc_benches_out | grep -o '[0-9]*' | awk '{s+=$1} END {print s+0}')
+  echo "PASS  gc_falsifier_benches: 4/4 benches PASS, 0 kills, ${nchecks} exact-integer checks"
+else
+  echo "FAIL  gc_falsifier_benches"; grep -E 'RESULT:|KILLED' /tmp/gc_benches_out | head -8; fail=1
+fi
+
 exit $fail
