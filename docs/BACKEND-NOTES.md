@@ -170,10 +170,16 @@ PermissionError for a bad `--outdir`; now a clean one-liner, rc=1.
   consistency — the loader ignores all four (forward-compat). Files
   failing ONLY those checks boot fine in RTL; documented in
   `boot_fuzz.py`'s `HW_BLIND` table.
-- **tpw > 31 truncates in hardware** (`o_tick_tpw` is 5 bits); quf.py
-  accepts u32 tpw and only cross-checks tick_period. A hostile tpw=40
-  file verifies "consistent" if tick_period lies too, and the silicon
-  epoch latches tpw&31.
+- **tpw > 31 is now Python-rejected** (was: silently truncated).
+  quf.py verify flags `tpw > 31` as a hard issue -- hardware latches
+  `o_tpw` as 5 bits, so a hostile tpw=40 file would boot silicon with
+  epoch tpw=8 while the file claims 40. The writer rejects tpw out of
+  0..31 outright. The RTL-side tolerance (boots with `tpw&31` rather
+  than fail-static) remains by design and is registered in
+  `boot_fuzz.py`'s `HW_BLIND` table, whose BOOT oracle lands on
+  `tpw&31` -- same asymmetry doctrine as digest/kind blindness.
+  Hostile-file check: patched tpw=40 file (no tick_period KV) now
+  verifies dirty with the explicit epoch-field message.
 - **Hyperbola age wraps at 24 bits (AGEW)** in RTL; the Python QUF
   record carries age as u32. Diverges only after 16.7M unticked ticks
   on a wh=0 edge; cosim programs are bounded well below.

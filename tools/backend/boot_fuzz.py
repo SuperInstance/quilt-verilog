@@ -40,7 +40,8 @@ OUT = os.path.join(_ROOT, "tb", "run")
 # no kind policing, no tick_period cross-check, duplicate names where the
 # loader is last-wins like the Python dict, alignment policing)
 HW_BLIND = ("quf.sha256 mismatch", "non-standard kind",
-            "tick_period", "duplicate section name", "align")
+            "tick_period", "exceeds 5-bit hw epoch",
+            "duplicate section name", "align")
 
 
 def hw_loadbearing(issues):
