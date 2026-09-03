@@ -1,0 +1,117 @@
+== PHASE 0: CONTROL ARMS (byte-match gates; FAIL halts new claims) ==
+-- C1/C2: arena-v2.txt baselines (stress d12/pd3, drift6/lat10) --
+  [PASS] arena impulse baseline (pct,debt,maxerr): got (51.4, 244973, 61)  want (51.4, 244973, 61)
+  [PASS] arena interference baseline K=4: got (83.1, 174978, 39)  want (83.1, 174978, 39)
+-- C3: banked champion (granite K=5 pd4 d16, stress regime) --
+  [PASS] banked champion aggregate: got (93.2, 132823, 38)  want (93.2, 132823, 38)
+-- C4: README per-seed stress table (K=4 pd3 d12) --
+  [PASS] README seq pct/seed: got (51.9, 49.4, 53.1, 50.5, 51.9)  want (51.9, 49.4, 53.1, 50.5, 51.9)
+  [PASS] README seq maxErr/seed: got (61, 61, 61, 61, 61)  want (61, 61, 61, 61, 61)
+  [PASS] README seq ev/seed: got (2524, 2655, 2469, 2602, 2513)  want (2524, 2655, 2469, 2602, 2513)
+  [PASS] README int pct/seed: got (83.0, 82.5, 83.4, 83.6, 83.0)  want (83.0, 82.5, 83.4, 83.6, 83.0)
+  [PASS] README int maxErr/seed: got (38, 39, 38, 39, 39)  want (38, 39, 38, 39, 39)
+  [PASS] README int ev/seed: got (2064, 2022, 2044, 2009, 2070)  want (2064, 2022, 2044, 2009, 2070)
+-- C5: README gentle claim, stock e1.py defaults, seed 20260902 --
+  [PASS] README gentle K=8 intf %w (45.5 claim): got 45.5  want 45.5
+  [PASS] README gentle impulse %w (56.7 claim): got 56.7  want 56.7
+-- C6: ledger-results.txt rows (calm regime drift3/lat5) --
+  [PASS] ledger impulse calm d12: got (98.0, 55545, 53)  want (98.0, 55545, 53)
+  [PASS] ledger hand-intf calm d12 (K=4): got (97.3, 81617, 35)  want (97.3, 81617, 35)
+  [PASS] ledger granite champion calm: got (97.8, 87178, 35)  want (97.8, 87178, 35)
+-- C7: glm3_run_output.txt EXP5 K-sweep rows (both frames) --
+  [PASS] glm3 EXP5 stress K=1: got (92.9, 184991, 33, 102, 5059)  want (92.9, 184991, 33, 102, 5059)
+  [PASS] glm3 EXP5 stress K=2: got (91.4, 169541, 35, 70, 4218)  want (91.4, 169541, 35, 70, 4218)
+  [PASS] glm3 EXP5 stress K=3: got (86.3, 172707, 38, 128, 4300)  want (86.3, 172707, 38, 128, 4300)
+  [PASS] glm3 EXP5 stress K=4: got (83.1, 174978, 39, 353, 4446)  want (83.1, 174978, 39, 353, 4446)
+  [PASS] glm3 EXP5 stress K=5: got (81.1, 175834, 39, 786, 4440)  want (81.1, 175834, 39, 786, 4440)
+  [PASS] glm3 EXP5 stress K=6: got (80.3, 176137, 39, 1288, 4558)  want (80.3, 176137, 39, 1288, 4558)
+  [PASS] glm3 EXP5 stress K=8: got (78.2, 180397, 39, 1981, 4656)  want (78.2, 180397, 39, 1981, 4656)
+  [PASS] glm3 EXP5 gentle K=1: got (80.2, 145349, 31, 34, 9469)  want (80.2, 145349, 31, 34, 9469)
+  [PASS] glm3 EXP5 gentle K=2: got (92.1, 113573, 32, 54, 5976)  want (92.1, 113573, 32, 54, 5976)
+  [PASS] glm3 EXP5 gentle K=3: got (85.5, 109411, 34, 215, 5368)  want (85.5, 109411, 34, 215, 5368)
+  [PASS] glm3 EXP5 gentle K=4: got (75.4, 112540, 35, 1085, 5617)  want (75.4, 112540, 35, 1085, 5617)
+  [PASS] glm3 EXP5 gentle K=5: got (65.6, 120516, 36, 1691, 6347)  want (65.6, 120516, 36, 1691, 6347)
+  [PASS] glm3 EXP5 gentle K=6: got (56.3, 131773, 38, 2199, 7347)  want (56.3, 131773, 38, 2199, 7347)
+  [PASS] glm3 EXP5 gentle K=8: got (42.2, 160715, 37, 2600, 9762)  want (42.2, 160715, 37, 2600, 9762)
+-- C8: glm3 EXP5 champion-frame + ledger-calm rows --
+  [PASS] glm3 champion-frame K=5: got (93.2, 132823, 38)  want (93.2, 132823, 38)
+  [PASS] glm3 champion-frame K=2: got (94.1, 150968, 36)  want (94.1, 150968, 36)
+  [PASS] glm3 champion-frame K=3: got (94.2, 139257, 39)  want (94.2, 139257, 39)
+  [PASS] glm3 ledger-calm intf K=2 d12: got (97.8, 97682, 32)  want (97.8, 97682, 32)
+
+  ALL CONTROLS PASS — stock e1.run reproduces every published number touched.
+
+== PHASE 1: K SWEEP — both arms, 5 seeds, 4 frames, arena.py scoring ==
+
+  [stress-hand]  pd=3 delta=12 drift=6 lat=10   (README/arena baseline frame (hand tune K=4))
+    impulse (K-invariant: PROVEN): %w= 51.4 debt= 244973 maxE= 61 ev= 12763
+       K     %w  margin     debt maxE  canc  chat     ev
+       1   92.9   +41.5   184991   33   102  5059  10815
+       2   91.4   +40.0   169541   35    70  4218   9941
+       3   86.3   +34.9   172707   38   128  4300  10073
+       4   83.1   +31.7   174978   39   353  4446  10209
+       5   81.1   +29.7   175834   39   786  4440  10218
+       6   80.3   +28.9   176137   39  1288  4558  10243
+       8   78.2   +26.8   180397   39  1981  4656  10478
+
+  [gentle-tight]  pd=3 delta=6 drift=3 lat=5   (README calm frame ('interference worse in calm'))
+    impulse (K-invariant: PROVEN): %w= 56.6 debt= 117198 maxE= 53 ev= 11551
+       K     %w  margin     debt maxE  canc  chat     ev
+       1   80.2   +23.6   145349   31    34  9469  14506
+       2   92.1   +35.5   113573   32    54  5976  11410
+       3   85.5   +28.9   109411   34   215  5368  10890
+       4   75.4   +18.8   112540   35  1085  5617  11171
+       5   65.6    +9.0   120516   36  1691  6347  11901
+       6   56.3    -0.3   131773   38  2199  7347  12893
+       8   42.2   -14.4   160715   37  2600  9762  15406
+
+  [arena-champ]  pd=4 delta=16 drift=6 lat=10   (banked champion frame (granite K=5 pd4 d16))
+    impulse (K-invariant: PROVEN): %w= 96.0 debt= 139949 maxE= 61 ev=  5802
+       K     %w  margin     debt maxE  canc  chat     ev
+       1   89.1    -6.9   195587   36   114  4850   9347
+       2   94.1    -1.9   150968   36    77  3214   7190
+       3   94.2    -1.8   139257   39    68  2863   6586
+       4   94.0    -2.0   134688   41    81  2723   6360
+       5   93.2    -2.8   132823   38   125  2649   6244
+       6   91.9    -4.1   134225   38   235  2686   6293
+       8   89.3    -6.7   138528   39   605  2818   6482
+
+  [ledger-calm]  pd=3 delta=12 drift=3 lat=5   (variety-ledger calm frame (impulse d12 banked))
+    impulse (K-invariant: PROVEN): %w= 98.0 debt=  55545 maxE= 53 ev=  2878
+       K     %w  margin     debt maxE  canc  chat     ev
+       1   97.7    -0.3   134140   28    52  3012   8679
+       2   97.8    -0.2    97682   32    27  1773   6103
+       3   97.5    -0.5    88041   36     9  1605   5411
+       4   97.3    -0.7    81617   35    28  1476   4975
+       5   97.2    -0.8    76088   36    23  1318   4599
+       6   97.0    -1.0    72652   36    56  1268   4352
+       8   96.1    -1.9    68519   36   137  1176   4036
+
+== PHASE 2: K-vs-MARGIN CURVES (margin = intf %w - impulse %w) ==
+  stress-hand   margin: K1=+41.5  K2=+40.0  K3=+34.9  K4=+31.7  K5=+29.7  K6=+28.9  K8=+26.8
+                peak K=1 (+41.5); never inverts (all K > impulse)
+  gentle-tight  margin: K1=+23.6  K2=+35.5  K3=+28.9  K4=+18.8  K5=+9.0  K6=-0.3  K8=-14.4
+                peak K=2 (+35.5); inverts at K=6
+  arena-champ   margin: K1=-6.9  K2=-1.9  K3=-1.8  K4=-2.0  K5=-2.8  K6=-4.1  K8=-6.7
+                peak K=3 (-1.8); inverts at K=1
+  ledger-calm   margin: K1=-0.3  K2=-0.2  K3=-0.5  K4=-0.7  K5=-0.8  K6=-1.0  K8=-1.9
+                peak K=2 (-0.2); inverts at K=1
+
+== PHASE 3: glm-3 CLAIM — granite-tuned K=3 (94.2%) vs banked champion K=5 (93.2%) ==
+  frame: pd=4 delta=16 drift=6 lat=10 (exact banked-champion frame), per seed:
+       seed   K=2 %w   K=3 %w   K=5 %w    K3-K5   winner
+          1     94.2     94.5     93.3     +1.2   K=3
+          7     94.3     94.4     92.8     +1.6   K=3
+         42     94.0     94.0     93.6     +0.4   K=3
+       1999     94.1     94.0     93.3     +0.7   K=3
+   20260902     94.1     94.1     93.1     +1.0   K=3
+  K=2: mean 94.1%  spread 94.0..94.3  debt 150968 (per-seed 29723..30613)  maxE 36
+  K=3: mean 94.2%  spread 94.0..94.5  debt 139257 (per-seed 27126..28188)  maxE 39
+  K=5: mean 93.2%  spread 92.8..93.6  debt 132823 (per-seed 26121..27089)  maxE 38
+  per-seed winners: K=3 wins 5/5, K=5 wins 0/5
+
+== PHASE 4: DECISION RULE (see OVERNIGHT-K-REPLAY.md for the proposal) ==
+  stress-hand   best-K = 1 (92.9% vs impulse 51.4%)
+  gentle-tight  best-K = 2 (92.1% vs impulse 56.6%)
+  arena-champ   best-K = 3 (94.2% vs impulse 96.0%)
+  ledger-calm   best-K = 2 (97.8% vs impulse 98.0%)

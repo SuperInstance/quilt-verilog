@@ -1,0 +1,169 @@
+== CANARY B: full-suite double-run byte identity: PASS ==
+
+== SPIN-13 SNAP-SHADOW: multidimensional snapping shadowed to 2D ==
+integer-only core; floats for display/search metrics only
+entries B=3, seeds (1, 2, 3), dims (2, 3, 4, 6, 8)
+
+== PROJECTIONS (fixed seeded; d=2 = Eisenstein identity canary arm) ==
+  d=2 seed=1  Mx=(2, 1) My=(0, 1)  (Eisenstein identity)
+  d=2 seed=2  Mx=(2, 1) My=(0, 1)  (Eisenstein identity)
+  d=2 seed=3  Mx=(2, 1) My=(0, 1)  (Eisenstein identity)
+  d=3 seed=1  Mx=(3, 3, 2) My=(2, -1, -1)  A=11.45
+  d=3 seed=2  Mx=(3, 0, -2) My=(-3, 1, 2)  A=3.61
+  d=3 seed=3  Mx=(-2, -3, -2) My=(3, -2, 2)  A=16.52
+  d=4 seed=1  Mx=(-2, 0, -3, -2) My=(-3, -1, 0, 1)  A=13.08
+  d=4 seed=2  Mx=(1, 3, 0, -3) My=(-3, -2, 0, 3)  A=9.70
+  d=4 seed=3  Mx=(-2, -2, -3, 0) My=(-2, 3, -3, 1)  A=18.49
+  d=6 seed=1  Mx=(3, -3, 1, 3, -2, -1) My=(-1, 3, -3, 3, -3, -1)  A=35.40
+  d=6 seed=2  Mx=(1, -3, -3, 1, -1, 1) My=(-2, -3, -2, 2, -1, 3)  A=17.92
+  d=6 seed=3  Mx=(-1, 1, 1, 1, -2, 0) My=(-1, 2, 3, -3, -1, 2)  A=14.11
+  d=8 seed=1  Mx=(0, 2, -2, 0, 0, 3, -2, -3) My=(1, 3, 3, 1, 3, -2, 1, 1)  A=30.48
+  d=8 seed=2  Mx=(2, -3, -2, 2, -3, 0, 2, -2) My=(2, 2, 1, 0, 0, 1, -3, -1)  A=26.38
+  d=8 seed=3  Mx=(3, -3, 1, 0, 1, -1, -1, -1) My=(-3, 2, -2, 1, 2, -3, 0, 2)  A=24.68
+
+== CANARY A: d_in=2 shadow == direct Eisenstein set ==
+  N=    6  shadow(d=2)=    6  direct=    6  sets-equal=True
+  N=   24  shadow(d=2)=   18  direct=   18  sets-equal=True
+  N=  128  shadow(d=2)=   74  direct=   74  sets-equal=True
+  N= 1024  shadow(d=2)=  636  direct=  636  sets-equal=True
+  Eisenstein cumulative shells 6/12/18/30: got 6/12/18/30 -> PASS
+  CANARY A: PASS
+
+== EXP1a: distinct directed snap angles at MATCHED POINT BUDGET N ==
+     N |  eis-2D |     d=3     |     d=4     |     d=6     |     d=8     | ratios d3/d4/d6/d8 vs eis
+     24 |      18 |    18-24    |    13-21    |    18-18    |    16-19    |  1.17/0.94/1.00/0.97
+    128 |      74 |    58-96    |    44-88    |    47-74    |    46-50    |  1.04/0.89/0.82/0.65
+   1024 |     636 |   268-708   |   156-398   |   126-260   |   123-145   |  0.77/0.44/0.30/0.21
+   8192 |    4988 |  1062-4218  |   621-1332  |   282-654   |   251-294   |  0.53/0.20/0.09/0.05
+  (range over seeds (1, 2, 3); eis-2D is the d=2 Eisenstein baseline)
+
+== EXP1b: distinct directed snap angles at MATCHED RADIUS (norm^2 <= b) ==
+   b^2 |  eis-2D |     d=3     |     d=4     |     d=6     |     d=8     | ratios d3/d4/d6/d8 vs eis
+      1 |       6 |    4-6     |    6-8     |   10-12    |   12-14    |  0.8/1.2/1.8/2.2
+      2 |       6 |   12-18    |   18-26    |   30-40    |   46-50    |  2.5/3.7/5.8/8.0
+      3 |      12 |   20-26    |   26-48    |   62-116   |  100-114   |  1.9/3.1/7.4/8.9
+      4 |      12 |   20-26    |   26-62    |   94-168   |  146-176   |  1.9/3.7/10.9/13.4
+      6 |      12 |   48-74    |   66-142   |  144-274   |  226-280   |  5.1/8.7/17.4/21.1
+      8 |      24 |   48-74    |   66-168   |  198-454   |  336-406   |  2.5/4.9/13.6/15.5
+  NOTE: matched radius = equal coefficient magnitude budget per axis;
+  addressing a point in Z^d costs ~d*log(2R+1) bits vs ~2*log(2R+1).
+
+== EXP2: angular gap stats (degrees), distinct-direction sets ==
+  matched-budget N=1024:
+    eis-2D   dirs=  636  min=  0.1934  median= 0.4616  max=  3.004  mean= 0.5660
+    d=3 s=1  dirs=  628  min=  0.1307  median= 0.4511  max=  4.128  mean= 0.5732
+    d=3 s=2  dirs=  268  min=  0.0549  median= 0.3035  max= 19.107  mean= 1.3433
+    d=3 s=3  dirs=  708  min=  0.0715  median= 0.3669  max=  4.307  mean= 0.5085
+    d=4 s=1  dirs=  302  min=  0.2902  median= 0.9021  max=  7.589  mean= 1.1921
+    d=4 s=2  dirs=  156  min=  0.1222  median= 0.9522  max= 23.413  mean= 2.3077
+    d=4 s=3  dirs=  398  min=  0.1334  median= 0.6088  max=  8.213  mean= 0.9045
+    d=6 s=1  dirs=  260  min=  0.3596  median= 1.0023  max=  9.826  mean= 1.3846
+    d=6 s=2  dirs=  153  min=  0.2819  median= 1.1674  max= 19.107  mean= 2.3529
+    d=6 s=3  dirs=  126  min=  0.3662  median= 1.4522  max= 19.107  mean= 2.8571
+    d=8 s=1  dirs=  145  min=  0.4187  median= 1.7716  max= 13.898  mean= 2.4828
+    d=8 s=2  dirs=  137  min=  0.5872  median= 1.9451  max= 13.898  mean= 2.6277
+    d=8 s=3  dirs=  123  min=  0.3648  median= 1.8718  max= 19.107  mean= 2.9268
+  matched-radius norm^2 <= 16:
+    eis-2D   dirs=   36  min=  5.2087  median=10.8934  max= 13.898  mean=10.0000
+    d=3 s=1  dirs=  176  min=  0.4659  median= 1.5323  max=  8.213  mean= 2.0455
+    d=3 s=2  dirs=  104  min=  0.1414  median= 0.7692  max= 40.893  mean= 3.4615
+    d=3 s=3  dirs=  192  min=  0.2584  median= 1.3975  max=  7.589  mean= 1.8750
+    d=4 s=1  dirs=  350  min=  0.2363  median= 0.7876  max=  7.053  mean= 1.0286
+    d=4 s=2  dirs=  164  min=  0.1222  median= 0.9289  max= 16.102  mean= 2.1951
+    d=4 s=3  dirs=  446  min=  0.1215  median= 0.5393  max=  8.213  mean= 0.8072
+    d=6 s=1  dirs=  984  min=  0.0653  median= 0.2571  max=  4.950  mean= 0.3659
+    d=6 s=2  dirs=  510  min=  0.0745  median= 0.3557  max=  8.213  mean= 0.7059
+    d=6 s=3  dirs=  414  min=  0.0870  median= 0.4205  max=  9.826  mean= 0.8696
+    d=8 s=1  dirs=  866  min=  0.0691  median= 0.2876  max=  5.209  mean= 0.4157
+    d=8 s=2  dirs=  772  min=  0.1067  median= 0.3609  max=  4.502  mean= 0.4663
+    d=8 s=3  dirs=  712  min=  0.0637  median= 0.3101  max=  6.587  mean= 0.5056
+
+== EXP3a: POINT-SNAP at budget norm^2<=16 — quantization vs reach ==
+  eis ball real radius = 2*sqrt(16) = 8.0; shadow reach = ellipse min semi-axis
+  method        | sig1  sig2 | reach | medErr@r=3 | medErr@r=7 | medErr@r=12
+  direct-E      |  2.29  0.87 |   8.0 |    0.9022   |    0.6920   |    4.7841
+  shadow d=3 s=1 |  4.70  2.44 |   9.7 |    0.8179   |    1.0013   |    0.9830
+  shadow d=3 s=2 |  5.15  0.70 |   2.8 |    0.6165   |    1.8626   |    5.3599
+  shadow d=3 s=3 |  4.58  3.61 |  14.4 |    0.6428   |    0.8135   |    0.9098
+  shadow d=4 s=1 |  4.36  3.00 |  12.0 |    0.6165   |    0.4688   |    0.5793
+  shadow d=4 s=2 |  6.21  1.56 |   6.2 |    0.6165   |    0.6700   |    2.2995
+  shadow d=4 s=3 |  5.26  3.52 |  14.1 |    0.6165   |    0.4688   |    0.6041
+  shadow d=6 s=1 |  6.18  5.73 |  22.9 |    0.6165   |    0.4688   |    0.5793
+  shadow d=6 s=2 |  6.78  2.64 |  10.6 |    0.6165   |    0.4688   |    0.5793
+  shadow d=6 s=3 |  5.40  2.61 |  10.4 |    0.6165   |    0.4688   |    0.6041
+  shadow d=8 s=1 |  6.62  4.61 |  18.4 |    0.6165   |    0.4688   |    0.5793
+  r=3: common-region quantization (both lattices dense there); r=7/r=12
+  expose reach (eis ball ends at radius 8; shadows reach min-axis listed).
+
+== EXP3a2: quadratic B-splines over DIRECTION-SNAPPED control polygons ==
+  (vertices = cumulative snapped edges; each stored edge z has norm^2 <= 16;
+   exact dyadic B-spline sampling; ideal = R=60 arc 15..105 deg, 10 pts)
+  direct-E      : medEdgeAngErr= 0.893 max= 3.898 | tangDirs= 16/ 16 medTurnDev=  2.54 turnJmp= 1.77 endDrift=  49.41
+  shadow d=3 s=1: medEdgeAngErr= 0.174 max= 1.787 | tangDirs= 16/ 16 medTurnDev=  3.68 turnJmp= 2.21 endDrift=  26.27
+  shadow d=3 s=2: medEdgeAngErr= 0.893 max=10.000 | tangDirs= 13/ 16 medTurnDev=  3.00 turnJmp= 1.67 endDrift=  55.54
+  shadow d=3 s=3: medEdgeAngErr= 0.174 max= 1.052 | tangDirs= 16/ 16 medTurnDev=  2.11 turnJmp= 1.68 endDrift=  45.29
+  shadow d=4 s=1: medEdgeAngErr= 0.174 max= 0.893 | tangDirs= 16/ 16 medTurnDev=  3.68 turnJmp= 2.21 endDrift=  28.14
+  shadow d=4 s=2: medEdgeAngErr= 0.893 max= 6.102 | tangDirs= 16/ 16 medTurnDev=  2.43 turnJmp= 1.77 endDrift=  44.38
+  shadow d=4 s=3: medEdgeAngErr= 0.174 max= 0.893 | tangDirs= 16/ 16 medTurnDev=  2.11 turnJmp= 1.68 endDrift=  38.10
+  shadow d=6 s=1: medEdgeAngErr= 0.034 max= 0.633 | tangDirs= 16/ 16 medTurnDev=  4.01 turnJmp= 2.57 endDrift=  39.60
+  shadow d=6 s=2: medEdgeAngErr= 0.174 max= 0.893 | tangDirs= 16/ 16 medTurnDev=  2.11 turnJmp= 1.68 endDrift=  38.10
+  shadow d=6 s=3: medEdgeAngErr= 0.174 max= 0.893 | tangDirs= 16/ 16 medTurnDev=  2.11 turnJmp= 1.68 endDrift=  38.10
+  shadow d=8 s=1: medEdgeAngErr= 0.034 max= 0.633 | tangDirs= 16/ 16 medTurnDev=  4.01 turnJmp= 2.57 endDrift=  39.60
+  shadow d=8 s=2: medEdgeAngErr= 0.034 max= 0.485 | tangDirs= 16/ 16 medTurnDev=  3.76 turnJmp= 2.57 endDrift=  22.08
+  shadow d=8 s=3: medEdgeAngErr= 0.034 max= 0.817 | tangDirs= 16/ 16 medTurnDev=  3.51 turnJmp= 2.60 endDrift=  33.73
+
+== EXP3b: control polygons with EDGE DIRECTIONS snapped at budget norm^2<=16 ==
+  direct-E    : dirs=   36  medAngErr=  0.893deg max=  3.898  used=  9  endDrift(primitive-len)= 49.409
+  shadow d=3 s=1: dirs=  176  medAngErr=  0.174deg max=  1.787  used=  9  endDrift(primitive-len)= 26.269
+  shadow d=3 s=2: dirs=  104  medAngErr=  0.893deg max= 10.000  used=  7  endDrift(primitive-len)= 55.543
+  shadow d=3 s=3: dirs=  192  medAngErr=  0.174deg max=  1.052  used=  9  endDrift(primitive-len)= 45.292
+  shadow d=4 s=1: dirs=  350  medAngErr=  0.174deg max=  0.893  used=  9  endDrift(primitive-len)= 28.143
+  shadow d=4 s=2: dirs=  164  medAngErr=  0.893deg max=  6.102  used=  9  endDrift(primitive-len)= 44.378
+  shadow d=4 s=3: dirs=  446  medAngErr=  0.174deg max=  0.893  used=  9  endDrift(primitive-len)= 38.101
+  shadow d=6 s=1: dirs=  984  medAngErr=  0.034deg max=  0.633  used=  9  endDrift(primitive-len)= 39.600
+  shadow d=6 s=2: dirs=  510  medAngErr=  0.174deg max=  0.893  used=  9  endDrift(primitive-len)= 38.101
+  shadow d=6 s=3: dirs=  414  medAngErr=  0.174deg max=  0.893  used=  9  endDrift(primitive-len)= 38.101
+  shadow d=8 s=1: dirs=  866  medAngErr=  0.034deg max=  0.633  used=  9  endDrift(primitive-len)= 39.600
+  shadow d=8 s=2: dirs=  772  medAngErr=  0.034deg max=  0.485  used=  9  endDrift(primitive-len)= 22.084
+  shadow d=8 s=3: dirs=  712  medAngErr=  0.034deg max=  0.817  used=  9  endDrift(primitive-len)= 33.733
+
+== EXP3c: WORKED EXAMPLE — target direction (113, 20*sqrt3), 17.0433 deg ==
+  direct-E : best-within-cap err=0.0203  30.00deg@n2=1  10.00deg@n2=7  3.00deg@n2=7  1.00deg@n2=39  0.50deg@n2=79  0.25deg@n2=79  0.10deg@n2=79  0.05deg@n2=79
+  shadow d=3 s=1 (cap 36): best-within-cap err=0.0472  30.00deg@n2=2  10.00deg@n2=2  3.00deg@n2=2  1.00deg@n2=2  0.50deg@n2=6  0.25deg@n2=14  0.10deg@n2=14  0.05deg@n2=14
+    1.00deg: shadow norm^2=2 vs direct norm^2=39  -> 19x cheaper
+    0.25deg: shadow norm^2=14 vs direct norm^2=79  -> 5x cheaper
+    0.05deg: shadow norm^2=14 vs direct norm^2=79  -> 5x cheaper
+  shadow d=4 s=1 (cap 36): best-within-cap err=0.0472  30.00deg@n2=1  10.00deg@n2=3  3.00deg@n2=5  1.00deg@n2=5  0.50deg@n2=11  0.25deg@n2=18  0.10deg@n2=18  0.05deg@n2=18
+    1.00deg: shadow norm^2=5 vs direct norm^2=39  -> 7x cheaper
+    0.25deg: shadow norm^2=18 vs direct norm^2=79  -> 4x cheaper
+    0.05deg: shadow norm^2=18 vs direct norm^2=79  -> 4x cheaper
+  shadow d=6 s=1 (cap 25): best-within-cap err=0.0472  30.00deg@n2=2  10.00deg@n2=3  3.00deg@n2=3  1.00deg@n2=3  0.50deg@n2=4  0.25deg@n2=11  0.10deg@n2=11  0.05deg@n2=11
+    1.00deg: shadow norm^2=3 vs direct norm^2=39  -> 13x cheaper
+    0.25deg: shadow norm^2=11 vs direct norm^2=79  -> 7x cheaper
+    0.05deg: shadow norm^2=11 vs direct norm^2=79  -> 7x cheaper
+  shadow d=8 s=1 (cap 16): best-within-cap err=0.0472  30.00deg@n2=2  10.00deg@n2=2  3.00deg@n2=2  1.00deg@n2=4  0.50deg@n2=7  0.25deg@n2=14  0.10deg@n2=14  0.05deg@n2=14
+    1.00deg: shadow norm^2=4 vs direct norm^2=39  -> 9x cheaper
+    0.25deg: shadow norm^2=14 vs direct norm^2=79  -> 5x cheaper
+    0.05deg: shadow norm^2=14 vs direct norm^2=79  -> 5x cheaper
+
+== EXP3d: UNBIASED precision — 64 golden-ratio targets, budget norm^2<=16 ==
+  direct-E    : median err =  2.5078 deg   max err =  6.7939 deg
+  shadow d=3 : median err =  0.4948 deg (seeds 0.495/2.984/0.488)  gain vs eis = 5.1x
+  shadow d=4 : median err =  0.2852 deg (seeds 0.285/1.044/0.211)  gain vs eis = 8.8x
+  shadow d=6 : median err =  0.2704 deg (seeds 0.084/0.270/0.332)  gain vs eis = 9.3x
+  shadow d=8 : median err =  0.1150 deg (seeds 0.102/0.115/0.162)  gain vs eis = 21.8x
+
+== EXP4: COST — redundancy, point error, angle gain, reach ==
+    d |   A   |  dirs@8192  | kernel-redund | medAngErr@16 | medPtErr@r3 | reach
+  eis |  1.0  |     4988    |        1.00x  |    2.5078    |    0.9022   |   8.0
+    3 |  10.1 |  1062-4218   |        2.92x  |    0.4948    |    0.6428   |   9.7
+    4 |  14.1 |   621-1332   |        5.92x  |    0.2852    |    0.6165   |  12.0
+    6 |  24.8 |   282-654    |        12.80x  |    0.2704    |    0.6165   |  10.6
+    8 |  27.6 |   251-294    |        18.38x  |    0.1150    |    0.6165   |  18.4
+
+== VERDICT INPUTS ==
+  angle-count ratio d=8 @ N=8192 : 0.054  (explosion would need > 1 and growing in d)
+  angle-count ratio d=8 @ N=128  : 0.649
+  unbiased median ang err @16: eis 2.5078 vs d=8 0.1150 -> gain 21.8x
+  dirs@8192 by d: 3:3162 4:965 6:358 8:267 (eis 4988)
+

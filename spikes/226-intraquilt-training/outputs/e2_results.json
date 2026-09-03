@@ -1,0 +1,46 @@
+[
+ {
+  "split": "in-domain(ladder,seed-holdout)",
+  "n_train": 156636,
+  "n_test": 39776,
+  "base_rate": 0.3759,
+  "logreg_acc": 0.7576,
+  "logreg_auc": 0.8011,
+  "mlp_acc": 0.813,
+  "mlp_auc": 0.8735,
+  "majority_acc": 0.6241
+ },
+ {
+  "split": "TRANSFER(ladder->cohort)",
+  "n_train": 196412,
+  "n_test": 239171,
+  "base_rate": 0.4739,
+  "logreg_acc": 0.6472,
+  "logreg_auc": 0.6944,
+  "mlp_acc": 0.637,
+  "mlp_auc": 0.6527,
+  "majority_acc": 0.5261
+ },
+ {
+  "split": "TRANSFER(ladder->bimodal)",
+  "n_train": 196412,
+  "n_test": 36194,
+  "base_rate": 0.5536,
+  "logreg_acc": 0.7372,
+  "logreg_auc": 0.7644,
+  "mlp_acc": 0.7724,
+  "mlp_auc": 0.8425,
+  "majority_acc": 0.5536
+ },
+ {
+  "split": "TRANSFER(seed-hold,lad->coh)",
+  "n_train": 156636,
+  "n_test": 48391,
+  "base_rate": 0.4678,
+  "logreg_acc": 0.6467,
+  "logreg_auc": 0.6949,
+  "mlp_acc": 0.6368,
+  "mlp_auc": 0.6805,
+  "majority_acc": 0.5322
+ }
+]

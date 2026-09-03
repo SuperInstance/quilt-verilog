@@ -1,0 +1,18 @@
+# whistle.honest.cover.sby -- non-vacuity companion to whistle.honest.sby:
+# the honest environment and its boundary cases are reachable (nonzero
+# windows, window-edge coincidence, count == limit with mul == 1, clears).
+[options]
+mode cover
+depth 24
+
+[engines]
+smtbmc boolector
+
+[script]
+read -formal q_whistle.v
+read -formal f_whistle_honest.v
+prep -top f_whistle_honest
+
+[files]
+rtl/q_whistle.v
+formal/f_whistle_honest.v

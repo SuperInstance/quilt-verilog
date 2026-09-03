@@ -1,0 +1,162 @@
+{
+ "verdict": "VALIDATED",
+ "train": {
+  "base_rate": 0.6,
+  "in_domain_acc": 0.7551,
+  "weights_std": {
+   "in_flight": -0.687,
+   "mean_lag": -0.68,
+   "stale_mass": -0.622,
+   "K": 0.411
+  },
+  "C": [
+   -437,
+   -160,
+   -436,
+   842
+  ],
+  "OFF": 2470,
+  "int_sign_agreement": 1.0,
+  "mu": [
+   1.031,
+   8.5,
+   2.833,
+   1.5
+  ],
+  "sd": [
+   1.61,
+   4.349,
+   1.462,
+   0.5
+  ]
+ },
+ "tlo": -64,
+ "thi": 2482,
+ "OFF": 2470,
+ "C": [
+  -437,
+  -160,
+  -436,
+  842
+ ],
+ "ladder15_sched": 71.55,
+ "kcoh5_eq_outlier": true,
+ "gains15": 5.7,
+ "gains30": 16.2,
+ "results": {
+  "cohort3+3_K1": {
+   "static15": 57.1,
+   "static30": 48.9,
+   "sched": 57.1,
+   "per_seed": {
+    "static15": [
+     569,
+     573
+    ],
+    "static30": [
+     483,
+     494
+    ],
+    "sched": [
+     569,
+     573
+    ]
+   }
+  },
+  "cohort3+3_K2": {
+   "static15": 41.1,
+   "static30": 33.3,
+   "sched": 75.2,
+   "per_seed": {
+    "static15": [
+     388,
+     434
+    ],
+    "static30": [
+     354,
+     312
+    ],
+    "sched": [
+     761,
+     742
+    ]
+   }
+  },
+  "outlier_K1": {
+   "static15": 73.5,
+   "static30": 53.2,
+   "sched": 73.5,
+   "per_seed": {
+    "static15": [
+     741,
+     728
+    ],
+    "static30": [
+     544,
+     521
+    ],
+    "sched": [
+     741,
+     728
+    ]
+   }
+  },
+  "outlier_K2": {
+   "static15": 49.1,
+   "static30": 46.0,
+   "sched": 49.1,
+   "per_seed": {
+    "static15": [
+     486,
+     496
+    ],
+    "static30": [
+     414,
+     505
+    ],
+    "sched": [
+     486,
+     496
+    ]
+   }
+  },
+  "kcoh5_K1": {
+   "static15": 73.5,
+   "static30": 53.2,
+   "sched": 73.5,
+   "per_seed": {
+    "static15": [
+     741,
+     728
+    ],
+    "static30": [
+     544,
+     521
+    ],
+    "sched": [
+     741,
+     728
+    ]
+   }
+  },
+  "kcoh5_K2": {
+   "static15": 49.1,
+   "static30": 46.0,
+   "sched": 49.1,
+   "per_seed": {
+    "static15": [
+     486,
+     496
+    ],
+    "static30": [
+     414,
+     505
+    ],
+    "sched": [
+     486,
+     496
+    ]
+   }
+  }
+ }
+}

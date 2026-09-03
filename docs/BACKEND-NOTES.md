@@ -44,9 +44,12 @@ under "what remains weak".** The nastiest three, in order:
    (`quf.sha256` KV, sha256 over name|size|data tuples in table order —
    content-only, so it survives rebuild; `create --digest`, and
    tapfabric now exports digest-bearing QUFs). The golden vector
-   predates digests and stays byte-exact. **The RTL loader cannot check
-   digests** (no sha engine in the boot path) — hardware boots
-   digest-flagged-corrupt files anyway; see weaknesses.
+   predates digests and stays byte-exact. **Silicon-side closure
+   (this pass): `crc32` KV (§12.2)** — IEEE CRC-32 over raw payload
+   bytes in table order, `create --crc32`; the RTL loader now
+   bit-serially accumulates it and gates DONE on the digest (err 12,
+   fail-static hold; tb_quf_boot cases 5/6). `quf.sha256` stays the
+   stronger host-side anchor.
 
 ## Fuzz volumes (fixed seeds, deterministic)
 
@@ -158,13 +161,16 @@ PermissionError for a bad `--outdir`; now a clean one-liner, rc=1.
 
 ## What remains weak (honestly)
 
-- **Hardware is digest-blind.** `quf.sha256` protects every Python
-  path (verify, tapfabric import) but q_uf_loader has no sha engine:
-  a corrupted-but-structural file boots in silicon with wrong dials.
-  The boot-fuzz bench classifies digest-mismatch issues as
-  hardware-blind on purpose. Closing this needs a checksum in the
-  loader (CRC32 over payloads in a trailing KV would fit the FSM; not
-  built this pass).
+- ~~**Hardware is digest-blind.**~~ **Closed (this pass):** the `crc32`
+  KV (§12.2) is the silicon-checkable digest the loader needed — a
+  trailing-shape u32 KV fits the FSM, and the loader now accumulates
+  IEEE CRC-32 over payload bytes bit-serially and refuses DONE on
+  mismatch (error 12; undigested files unaffected, boot-fuzz 232 cases
+  still pass). `quf.sha256` remains the stronger host-side anchor;
+  hardware can now catch its own corruption class. Remaining gap
+  (honest): the loader covers only what it can name — a digest whose
+  KV carries the WRONG value, or sha256-only files, are still
+  uncheckable in silicon.
 - **Python-strict vs RTL-tolerant asymmetries remain by design**:
   verify polices `kind≠0`, alignment, duplicate names, tick_period
   consistency — the loader ignores all four (forward-compat). Files
@@ -223,8 +229,17 @@ Coverage residue noted (same nudge): tb_serfabric's QUF has 3 edges but
 all-zero buckets — it proves multi-edge BOOT byte-exact, not the
 multi-edge wsum readback seam where the OR-mux lived. That seam is
 covered at cell level by cosim directed program 7 + the random-program
-wsum checkpoints above; a serfabric-level nonzero-bucket case is
-future work, not a gap in the bit-exactness claim.
+wsum checkpoints above. CLOSED (worker lane, 2026-09-03): tb_serfabric
+now reads wsum back through the serialized port post-boot (asserts 0 on
+both cells -- the §9 no-engine-load-port contract, bases do NOT ride in
+via QUF) and again after LINKing distinct nonzero bases into cell0's two
+slots and cell1's slot (asserts the slot sums 0x1234+0x0050 and 0x0100).
+Driver contract learned en route: a solo host op's src must be a LIVE
+node id -- the ack is addressed back to dst=src, and an ack to a
+nonexistent id circulates the ring forever, starving ringport
+injection. Also note the serfabric wsum block sits AFTER the mirrored
+phase-2 compare on purpose: extra solo ops before it re-phase the tick
+domain and break the documented cycle-lock exceptions.
 
 ## MODEL-LEDGER — the multi-model backend (amplification round)
 

@@ -1,0 +1,52 @@
+eval pool: 20676 events, base OK rate 0.462
+A_real: acc=0.508 per-seed=[0.525, 0.55, 0.45] n=120 parse_fails=0
+B_shuf: acc=0.508 per-seed=[0.525, 0.55, 0.45] n=120 parse_fails=0
+B2_shuforder: acc=0.508 per-seed=[0.525, 0.55, 0.45] n=120 parse_fails=0
+C_none: acc=0.508 per-seed=[0.525, 0.55, 0.45] n=120 parse_fails=0
+{
+ "A_real": {
+  "mean_acc": 0.5083,
+  "per_seed": [
+   0.525,
+   0.55,
+   0.45
+  ],
+  "n": 120,
+  "parse_fails": 0,
+  "ok_answer_frac": 1.0
+ },
+ "B_shuf": {
+  "mean_acc": 0.5083,
+  "per_seed": [
+   0.525,
+   0.55,
+   0.45
+  ],
+  "n": 120,
+  "parse_fails": 0,
+  "ok_answer_frac": 1.0
+ },
+ "B2_shuforder": {
+  "mean_acc": 0.5083,
+  "per_seed": [
+   0.525,
+   0.55,
+   0.45
+  ],
+  "n": 120,
+  "parse_fails": 0,
+  "ok_answer_frac": 1.0
+ },
+ "C_none": {
+  "mean_acc": 0.5083,
+  "per_seed": [
+   0.525,
+   0.55,
+   0.45
+  ],
+  "n": 120,
+  "parse_fails": 0,
+  "ok_answer_frac": 1.0
+ },
+ "base_rate": 0.4615
+}

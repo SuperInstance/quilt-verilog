@@ -1,0 +1,18 @@
+# snaplog.integrity.sby -- T1 log-entry integrity, bounded window: exact
+# packed fields, FIFO/shift order, oldest-first overflow, drops counted.
+# Depth 30 admits >= 18 fires: saturation (DEPTH=16) + two overflow drops.
+[options]
+mode bmc
+depth 30
+
+[engines]
+smtbmc boolector
+
+[script]
+read -formal q_snaplog.v
+read -formal f_snaplog_integrity.v
+prep -top f_snaplog_integrity
+
+[files]
+rtl/q_snaplog.v
+formal/f_snaplog_integrity.v

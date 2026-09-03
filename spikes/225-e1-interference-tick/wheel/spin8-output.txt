@@ -1,0 +1,147 @@
+SPIN 8 — COHERENCE-RADIUS  (pre-registered predictions in spin8_coherence_radius.py docstring, written before any run)
+== CANARY A: spread=0 byte-identity across codepaths (seed 1, K=1) ==
+  PASS: 12 codepaths, 2 N-groups byte-identical
+  constructor map asserts: PASS
+
+== CANARY B: topology/pattern replay (5-seed means, tol ±0.2pp) ==
+  kcoh5@15   K=1  got  74.1  pub  74.1  OK
+  kcoh5@15   K=2  got  50.6  pub  50.6  OK
+  kcoh5@15   K=8  got  72.8  pub  72.8  OK
+  kcoh1@15   K=1  got  47.3  pub  47.3  OK
+  kcoh1@15   K=2  got  34.4  pub  34.4  OK
+  kcoh1@15   K=8  got  38.3  pub  38.3  OK
+  ladder@15  K=1  got  71.5  pub  71.5  OK
+  ladder@15  K=2  got  60.0  pub  60.0  OK
+  ladder@15  K=8  got  70.7  pub  70.7  OK
+  ladder@30  K=1  got  26.8  pub  26.8  OK
+  cohort@30  K=1  got  49.3  pub  49.3  OK
+  kcoh5@30   K=1  got  53.2  pub  53.2  OK
+  CANARIES: PASS
+
+== EXP 1: step-granularity at fixed spread 30, delta 12 ==
+     step |         N |      lats |        s1 |        s7 |       s42 |     s1999 | s20260902 |     mean% |         K
+        1 |        31 | [0, 1, 2, 3, 4, 5.. |         1 |         2 |         2 |         1 |         0 |       0.1 |         1
+        1 |        31 | [0, 1, 2, 3, 4, 5.. |         1 |         2 |         2 |         1 |         0 |       0.1 |         2
+        1 |        31 | [0, 1, 2, 3, 4, 5.. |         1 |         2 |         2 |         1 |         0 |       0.1 |         8
+        2 |        16 | [0, 2, 4, 6, 8, 1.. |         1 |         2 |         3 |         1 |         0 |       0.1 |         1
+        2 |        16 | [0, 2, 4, 6, 8, 1.. |         1 |         2 |         2 |         1 |         0 |       0.1 |         2
+        2 |        16 | [0, 2, 4, 6, 8, 1.. |         1 |         2 |         2 |         1 |         0 |       0.1 |         8
+        3 |        11 | [0, 3, 6, 9, 12, .. |         1 |         2 |         3 |         1 |         0 |       0.1 |         1
+        3 |        11 | [0, 3, 6, 9, 12, .. |         1 |         2 |         2 |         1 |         1 |       0.1 |         2
+        3 |        11 | [0, 3, 6, 9, 12, .. |         1 |         2 |         3 |         1 |         0 |       0.1 |         8
+        5 |         7 | [0, 5, 10, 15, 20.. |         1 |         4 |         4 |         5 |         3 |       0.3 |         1
+        5 |         7 | [0, 5, 10, 15, 20.. |         3 |         3 |         5 |         4 |         3 |       0.4 |         2
+        5 |         7 | [0, 5, 10, 15, 20.. |       172 |       173 |       181 |       192 |       183 |      18.0 |         8
+        6 |         6 | [0, 6, 12, 18, 24, 30] |       264 |       253 |       266 |       281 |       274 |      26.8 |         1
+        6 |         6 | [0, 6, 12, 18, 24, 30] |       267 |       297 |       300 |       287 |       293 |      28.9 |         2
+        6 |         6 | [0, 6, 12, 18, 24, 30] |       138 |       137 |       136 |       147 |       141 |      14.0 |         8
+       10 |         4 | [0, 10, 20, 30] |       104 |       107 |       104 |       106 |       104 |      10.5 |         1
+       10 |         4 | [0, 10, 20, 30] |       130 |       126 |       130 |       130 |       129 |      12.9 |         2
+       10 |         4 | [0, 10, 20, 30] |       123 |       124 |       124 |       126 |       129 |      12.5 |         8
+       15 |         3 | [0, 15, 30] |       100 |       103 |        98 |        97 |       101 |      10.0 |         1
+       15 |         3 | [0, 15, 30] |       122 |       125 |       125 |       125 |       125 |      12.4 |         2
+       15 |         3 | [0, 15, 30] |       127 |       127 |       125 |       130 |       125 |      12.7 |         8
+       30 |         2 |   [0, 30] |       123 |       126 |       122 |       123 |       124 |      12.4 |         1
+       30 |         2 |   [0, 30] |       144 |       146 |       144 |       147 |       144 |      14.5 |         2
+       30 |         2 |   [0, 30] |       136 |       139 |       142 |       144 |       142 |      14.1 |         8
+
+  K=1 sequence (coarse->fine): 30:12.4 15:10.0 10:10.5 6:26.8 5:0.3 3:0.1 2:0.1 1:0.1
+  jump step1->2: -0.0pp
+  jump step2->3: +0.0pp
+  jump step3->5: -0.2pp
+  jump step5->6: -26.4pp
+  jump step6->10: +16.3pp
+  jump step10->15: +0.5pp
+  jump step15->30: -2.4pp
+
+== EXP 2: delta x grammar at spread 30, K=1 (true% at FIXED eval window 12; native trueΔ for reference) ==
+    delta |   grammar |        s1 |        s7 |       s42 |     s1999 | s20260902 |   true12% |   native% |    evMean |  debtMean
+        6 |     kcoh5 |       628 |       622 |       625 |       616 |       614 |      62.1 |      37.0 |     20445 |    434587
+        6 |     kcoh1 |        98 |       103 |       105 |        99 |       104 |      10.2 |       5.3 |     19494 |    409322
+        6 |    ladder |       255 |       241 |       251 |       261 |       257 |      25.3 |      10.4 |     21446 |    435771
+        6 |    cohort |       411 |       412 |       402 |       412 |       419 |      41.1 |      32.4 |     20440 |    630896
+        9 |     kcoh5 |       581 |       595 |       584 |       592 |       583 |      58.7 |      47.7 |     17633 |    423733
+        9 |     kcoh1 |       105 |       120 |       103 |       113 |       109 |      11.0 |       8.3 |     16866 |    402555
+        9 |    ladder |       243 |       233 |       239 |       254 |       238 |      24.1 |      18.6 |     18159 |    409068
+        9 |    cohort |       490 |       476 |       480 |       487 |       473 |      48.1 |      47.1 |     15423 |    647669
+       12 |     kcoh5 |       530 |       554 |       510 |       544 |       521 |      53.2 |      53.2 |     16157 |    434533
+       12 |     kcoh1 |       138 |       137 |       122 |       128 |       135 |      13.2 |      13.2 |     14879 |    396566
+       12 |    ladder |       264 |       253 |       266 |       281 |       274 |      26.8 |      26.8 |     14952 |    366275
+       12 |    cohort |       492 |       495 |       500 |       483 |       494 |      49.3 |      49.3 |     14746 |    655994
+       15 |     kcoh5 |       490 |       481 |       489 |       500 |       481 |      48.8 |      60.9 |     14519 |    426648
+       15 |     kcoh1 |       143 |       141 |       135 |       142 |       143 |      14.1 |      19.9 |     13659 |    403478
+       15 |    ladder |       247 |       249 |       251 |       267 |       258 |      25.4 |      36.3 |     11881 |    315216
+       15 |    cohort |       490 |       500 |       493 |       489 |       486 |      49.2 |      50.2 |     14474 |    653136
+       18 |     kcoh5 |       410 |       411 |       407 |       413 |       421 |      41.2 |      61.4 |     13489 |    443880
+       18 |     kcoh1 |       145 |       149 |       141 |       145 |       158 |      14.8 |      30.5 |     12865 |    423309
+       18 |    ladder |       174 |       170 |       171 |       174 |       174 |      17.3 |      49.1 |      9206 |    263479
+       18 |    cohort |       495 |       497 |       492 |       491 |       491 |      49.3 |      51.7 |     14042 |    638818
+       24 |     kcoh5 |       318 |       309 |       309 |       315 |       293 |      30.9 |      81.5 |      8756 |    325992
+       24 |     kcoh1 |       123 |       110 |       118 |       133 |       109 |      11.9 |      53.3 |      8488 |    321407
+       24 |    ladder |       117 |       116 |       120 |       120 |       111 |      11.7 |      69.2 |      4649 |    152081
+       24 |    cohort |       495 |       500 |       491 |       487 |       493 |      49.3 |      57.2 |     12506 |    582974
+
+  fresh-vs-stale (kcoh5-kcoh1, true12) and ladder-cohort:
+  delta= 6: FVS  +51.9pp   ladder-cohort  -15.8pp
+  delta= 9: FVS  +47.7pp   ladder-cohort  -24.0pp
+  delta=12: FVS  +40.0pp   ladder-cohort  -22.5pp
+  delta=15: FVS  +34.7pp   ladder-cohort  -23.7pp
+  delta=18: FVS  +26.5pp   ladder-cohort  -32.1pp
+  delta=24: FVS  +19.0pp   ladder-cohort  -37.6pp
+  ladder/cohort parity delta* = None
+
+== EXP 3: pre-registered prediction check — kcoh5 delta=12 spread=45 K=1 ==
+  PREDICT (pre-registered): 41.0%, band [34, 50]
+  per-seed: [517, 532, 521, 531, 523]  mean 52.5%
+  linear-extrap reference was 32.3 (74.1@15, 53.2@30)
+  prediction verdict: FAIL
+
+LCG bookkeeping (proposal-dispatched spin; ledger resumes LCG selection next cycle): 2035015474 -> 368800899 -> mod 10 = 9
+== DIAG: mechanism of the fine-granularity collapse (seed 1, K=1) ==
+Traceback (most recent call last):
+  File "/home/eileen/projects/quilt-verilog/spikes/225-e1-interference-tick/wheel/spin8_diag.py", line 42, in <module>
+    diag(step)
+    ~~~~^^^^^^
+  File "/home/eileen/projects/quilt-verilog/spikes/225-e1-interference-tick/wheel/spin8_diag.py", line 35, in diag
+    f"meanFireNet {sum(abs(nets[t]) for t in ts)/max(1,len(ts)):.1f}  "
+                   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~
+OverflowError: integer division result too large for a float
+== DIAG: mechanism of the fine-granularity collapse (seed 1, K=1) ==
+step 1 N=31 K=1: trig/tick 30.97  eventTicks 4795  meanMult 31.00  maxMult 31  meanFireNet 1000000000000000000  maxFireNet 1000000000000000000  netSignFlip 1000permille  residMean 1000000000000000000  resid>60 998permille
+step 2 N=16 K=1: trig/tick 15.98  eventTicks 4795  meanMult 16.00  maxMult 16  meanFireNet 1000000000000000000  maxFireNet 1000000000000000000  netSignFlip 1000permille  residMean 1000000000000000000  resid>60 998permille
+step 3 N=11 K=1: trig/tick 10.99  eventTicks 4795  meanMult 11.00  maxMult 11  meanFireNet 1000000000000000000  maxFireNet 1000000000000000000  netSignFlip 1000permille  residMean 1000000000000000000  resid>60 998permille
+step 5 N= 7 K=1: trig/tick 6.99  eventTicks 4795  meanMult 7.00  maxMult  7  meanFireNet 1000000000000000000  maxFireNet 1000000000000000000  netSignFlip 1000permille  residMean 1000000000000000000  resid>60 998permille
+step 6 N= 6 K=1: trig/tick 3.10  eventTicks 4709  meanMult 3.16  maxMult  6  meanFireNet 17  maxFireNet 102  netSignFlip  844permille  residMean 21  resid>60 8permille
+step10 N= 4 K=1: trig/tick 2.13  eventTicks 4671  meanMult 2.18  maxMult  4  meanFireNet 4  maxFireNet 28  netSignFlip  451permille  residMean 21  resid>60 0permille
+step30 N= 2 K=1: trig/tick 1.72  eventTicks 4475  meanMult 1.85  maxMult  2  meanFireNet 3  maxFireNet 18  netSignFlip  317permille  residMean 21  resid>60 0permille
+
+== DIAG: K dependence of the bifurcation (seed 1) ==
+step 3 N=11 K=1: trig/tick 10.99  eventTicks 4795  meanMult 11.00  maxMult 11  meanFireNet 1000000000000000000  maxFireNet 1000000000000000000  netSignFlip 1000permille  residMean 1000000000000000000  resid>60 998permille
+step 3 N=11 K=2: trig/tick 10.99  eventTicks 4795  meanMult 11.00  maxMult 11  meanFireNet 1000000000000000000  maxFireNet 1000000000000000000  netSignFlip  944permille  residMean 1000000000000000000  resid>60 998permille
+step 3 N=11 K=8: trig/tick 10.99  eventTicks 4795  meanMult 11.00  maxMult 11  meanFireNet 1000000000000000000  maxFireNet 1000000000000000000  netSignFlip 1000permille  residMean 1000000000000000000  resid>60 998permille
+step 5 N= 7 K=1: trig/tick 6.99  eventTicks 4795  meanMult 7.00  maxMult  7  meanFireNet 1000000000000000000  maxFireNet 1000000000000000000  netSignFlip 1000permille  residMean 1000000000000000000  resid>60 998permille
+step 5 N= 7 K=2: trig/tick 6.97  eventTicks 4791  meanMult 6.98  maxMult  7  meanFireNet 1000000000000000000  maxFireNet 1000000000000000000  netSignFlip  711permille  residMean 1000000000000000000  resid>60 992permille
+step 5 N= 7 K=8: trig/tick 3.56  eventTicks 4740  meanMult 3.61  maxMult  7  meanFireNet 13  maxFireNet 66  netSignFlip  637permille  residMean 20  resid>60 0permille
+step 6 N= 6 K=1: trig/tick 3.10  eventTicks 4709  meanMult 3.16  maxMult  6  meanFireNet 17  maxFireNet 102  netSignFlip  844permille  residMean 21  resid>60 8permille
+step 6 N= 6 K=2: trig/tick 3.53  eventTicks 4739  meanMult 3.57  maxMult  6  meanFireNet 28  maxFireNet 175  netSignFlip  634permille  residMean 24  resid>60 46permille
+step 6 N= 6 K=8: trig/tick 3.08  eventTicks 4717  meanMult 3.13  maxMult  6  meanFireNet 10  maxFireNet 48  netSignFlip  617permille  residMean 20  resid>60 0permille
+step 5 N= 7 K=8: trig/tick 3.56  eventTicks 4740  meanMult 3.61  maxMult  7  meanFireNet 13  maxFireNet 66  netSignFlip  637permille  residMean 20  resid>60 0permille
+step 6 N= 6 K=1: trig/tick 3.10  eventTicks 4709  meanMult 3.16  maxMult  6  meanFireNet 17  maxFireNet 102  netSignFlip  844permille  residMean 21  resid>60 8permille
+step 6 N= 6 K=2: trig/tick 3.53  eventTicks 4739  meanMult 3.57  maxMult  6  meanFireNet 28  maxFireNet 175  netSignFlip  634permille  residMean 24  resid>60 46permille
+step 6 N= 6 K=8: trig/tick 3.08  eventTicks 4717  meanMult 3.13  maxMult  6  meanFireNet 10  maxFireNet 48  netSignFlip  617permille  residMean 20  resid>60 0permille
+
+== DIAG 2: duplicate-bloc vs gradient-band divergence discriminator ==
+   same-error fresh bloc of size M + one lag-30 laggard, K=1, delta=12
+   duplicate-mass law predicts divergence iff N=M+1 > 2*pd=6;
+   band-mass law predicts safe at any M (single error value in band).
+  M= 3 N= 4 lags[0]*3+[30]: true12%  60.3 residMean                  12 events 12267
+  M= 5 N= 6 lags[0]*5+[30]: true12%  53.0 residMean                  13 events 16181
+  M= 6 N= 7 lags[0]*6+[30]: true12%   0.2 residMean 1000000000000000000 events 33520
+  M= 7 N= 8 lags[0]*7+[30]: true12%   0.2 residMean 1000000000000000000 events 38312
+  M=11 N=12 lags[0]*11+[30]: true12%   0.2 residMean 1000000000000000000 events 57468
+== DIAG 3: does the N-optimum track delta or 2*pd? (5-seed means) ==
+   ladder steps {1,5,6,10} at spread 30, K=1, delta in {6,12,24};
+   eval window pinned at 12. If optimum stays N=6 -> tracks 2*pd=6.
+  delta= 6  step1(N=31): 0.0%   step5(N=7): 0.2%   step6(N=6): 25.3%   step10(N=4): 9.4%
+  delta=12  step1(N=31): 0.1%   step5(N=7): 0.3%   step6(N=6): 26.8%   step10(N=4): 10.5%
+  delta=24  step1(N=31): 0.2%   step5(N=7): 0.8%   step6(N=6): 11.7%   step10(N=4): 9.4%

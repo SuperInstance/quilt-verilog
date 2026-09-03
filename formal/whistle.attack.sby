@@ -1,0 +1,18 @@
+# whistle.attack.sby -- T3 completeness (bounded liveness): sustained
+# maximal lying alarms at the FIRST judged window, within 2*d_win+8
+# cycles, for every legal dial pair (assert-within-N countdown).
+[options]
+mode bmc
+depth 45
+
+[engines]
+smtbmc boolector
+
+[script]
+read -formal q_whistle.v
+read -formal f_whistle_attack.v
+prep -top f_whistle_attack
+
+[files]
+rtl/q_whistle.v
+formal/f_whistle_attack.v

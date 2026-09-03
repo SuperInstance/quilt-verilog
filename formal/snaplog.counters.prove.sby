@@ -1,0 +1,20 @@
+# snaplog.counters.prove.sby -- T1 boundary-visible counter contracts,
+# UNBOUNDED by k-induction: count/drop shadows, bounds, monotonicity,
+# delta-exact accounting, freeze rules, tick marching. The log-content
+# equality is NOT in this proof (not boundary-inductive; see
+# f_snaplog_integrity.v header) -- this is the counters half of T1.
+[options]
+mode prove
+depth 12
+
+[engines]
+smtbmc boolector
+
+[script]
+read -formal q_snaplog.v
+read -formal f_snaplog_counters.v
+prep -top f_snaplog_counters
+
+[files]
+rtl/q_snaplog.v
+formal/f_snaplog_counters.v

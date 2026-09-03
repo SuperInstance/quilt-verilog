@@ -51,6 +51,7 @@ t tb/tb_hebb_pipe.v        tb_hebb_pipe
   cp tb/run/quf_tb_input.quf.hex tb/run/quf_tb_input.hex
 }
 t tb/tb_quf_boot.v         tb_quf_boot "rtl/q_uf_loader.v rtl/quf_boot.v"
+t tb/tb_q_tern_dice.v      tb_q_tern_dice "rtl/q_tern_dice.v"
 # QUF loader lane (python golden build -> iverilog)
 if bash tools/run_quf_tb.sh > /tmp/quf_out 2>&1 && grep -q PASS /tmp/quf_out; then
   echo "PASS  tb_quf_loader: $(grep PASS /tmp/quf_out | head -1)"

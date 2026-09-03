@@ -524,3 +524,31 @@ engine-attributed, not harness-attributed — verified, not assumed:
    explicit warning that a re-verifier running bare smtbmc prove will
    NOT reproduce it — that run fails, by design of the property, not by
    doc error.
+
+## Whistle two-sided contract — first worked A-G instance (2026-09-03)
+
+The TEACHER assume-guarantee naming doctrine (29d0b3c) called for a
+worked example. Here it is, complete before the word spread:
+
+**q_whistle (T3 byzantine tripwire) closes as a two-sided contract:**
+
+- **Guarantee under the honest premise** (whistle.honest, mode prove,
+  k-induction, UNBOUNDED): given the calibration premise
+  `honest_rate <= d_base` (the assumed side), honest windows NEVER
+  alarm — zero false positives, any stimulus timing ($anyseq i_can /
+  i_tick / i_clr), any legal dial pair.
+- **Guarantee under the attack premise** (whistle.attack, BMC-45):
+  given sustained maximal lying (`i_can` every cycle) against regular
+  windows, the alarm fires at the FIRST judged window within
+  `2*d_win+8`, for every legal dial pair — exhaustive, not sampled:
+  dials are `$anyconst` under assume-guards, so the solver quantifies
+  universally over the entire legal space; the cover companion proves
+  the dial set nonempty (no vacuity).
+
+This is the A-G shape in miniature: environment assumptions stated as
+formal premises (honest-rate bound / attack model), component
+guarantees as proven properties, and the two arms bracket the behavior
+completely — nothing outside (no-FP ∪ bounded-alarm) is left
+unpriced. When G2 composition reuses the whistle as a leaf, THIS
+contract is the interface: compose on the premises, inherit the
+guarantees. Both .sby files + harnesses in formal/ (700380c).

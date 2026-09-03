@@ -1,0 +1,12 @@
+mode            events     debt  constr  cancel  chatter  maxErr  %within
+sequential        2313    23488     611       0     1417      53     56.7
+interference      2946    30708     525     538     1823      36     45.5
+
+-- stress: delta=12, drift=6, K=4, latency 10 --
+mode            events     debt  constr  cancel  chatter  maxErr  %within
+sequential        2513    48397     891       0     1820      61     51.9
+interference      2070    35508      79      68      927      39     83.0
+
+-- same fixed point? final g vs s(t_end) --
+sequential done
+interference done

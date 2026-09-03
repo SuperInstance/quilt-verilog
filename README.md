@@ -12,6 +12,8 @@ a soft core, or an FPGA load identically. This page states what exists
 and what is verified, matter-of-fact; the deep docs (map below) carry the
 rest of the story.
 
+> **From the captain:** The data says the perfect monofilament is √8 mm — 2.83, repeating forever. The fisherman rigs 3. It's on the shelf, it survives the rocks, and it loses nothing you'll notice. That gap between perfect and available is where engineering lives. So we reach for Pythagorean shapes: the angles you can build exactly, the parts already in the bin, the numbers that terminate. A cloud cluster can chase the floating-point optimum. This fabric does it the easy way — integer lattices, snapped directions, standard parts all the way down. The engineer sets the tolerance. The mechanic fits the assembly. The fish doesn't care how many digits you had.
+
 ## What is verified, in one table
 
 Every row is either re-run for this README (marked ✓, 2026-08-30) or

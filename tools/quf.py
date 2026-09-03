@@ -22,6 +22,7 @@ import json
 import os
 import struct
 import sys
+import zlib
 
 MAGIC = b"QUF\x00"
 VERSION = 1
@@ -259,7 +260,26 @@ def build(doc):
     if align < 8 or align > (1 << 20) or (align & (align - 1)) != 0:
         raise QufError("align must be a power of two in [8, 2**20]")
 
-    # -- KV pairs in canonical order, then sorted extras
+    # -- section payloads in canonical order (packed BEFORE KV
+    # serialization so an "auto" crc32 KV can cover them; payload bytes
+    # do not depend on any KV value)
+    secs = []
+    if dials is not None:
+        secs.append(("dials", _pack_dials(dials, cell_count)))
+    if edges:
+        secs.append(("edges", _pack_edges(edges, k)))
+    if routing:
+        secs.append(("routing", _pack_routing(routing)))
+    if ticks is not None:
+        secs.append(("ticks", _pack_ticks(ticks, cell_count)))
+
+    if hdr.get("crc32") == "auto":
+        # silicon-checkable digest (§12.2): IEEE CRC32 over section payload
+        # bytes in table order -- exactly the bytes the RTL loader streams,
+        # so the FSM can verify it bit-serially. Padding/KV/table excluded.
+        hdr["crc32"] = zlib.crc32(
+            b"".join(p for _, p in secs)) & 0xFFFFFFFF
+
     kvs = []
     for key in CANON_KV:
         if key in hdr:
@@ -273,17 +293,6 @@ def build(doc):
     for key, vt, v in kvs:
         kb = key.encode("utf-8")
         kv_bytes += u32(len(kb)) + kb + u32(vt) + pack_value(vt, v)
-
-    # -- section payloads in canonical order
-    secs = []
-    if dials is not None:
-        secs.append(("dials", _pack_dials(dials, cell_count)))
-    if edges:
-        secs.append(("edges", _pack_edges(edges, k)))
-    if routing:
-        secs.append(("routing", _pack_routing(routing)))
-    if ticks is not None:
-        secs.append(("ticks", _pack_ticks(ticks, cell_count)))
 
     table_len = 4 + sum(4 + len(n.encode("utf-8")) + 20 for n, _ in secs)
     base = 16 + len(kv_bytes) + table_len
@@ -551,6 +560,17 @@ def verify_bytes(buf, path=""):
         if m.hexdigest() != dig:
             issues.append("quf.sha256 mismatch: payload content "
                           "corrupted after write")
+    # integrity anchor: crc32 (optional, §12.2) covers the RAW payload
+    # bytes in table order -- the silicon-checkable digest the RTL loader
+    # verifies bit-serially (q_uf_loader error 12)
+    crc = parsed["header"].get("crc32")
+    if crc is not None:
+        c = zlib.crc32(b"".join(bytes(buf[soff:soff + ssize])
+                                for _, _, soff, ssize
+                                in parsed["table"])) & 0xFFFFFFFF
+        if c != crc:
+            issues.append("crc32 mismatch: payload bytes corrupted "
+                          "after write (got %08x want %08x)" % (c, crc))
     # decode-ability: structural sizes check out but a decoder pass must
     # also survive (fuzz-found: mismatched dials/ticks lengths crashed
     # decode with raw struct.error)
@@ -750,6 +770,8 @@ def cmd_create(args):
         raise QufError("%s: not valid JSON: %s" % (args.json, ex))
     if args.digest:
         doc = add_digest(doc)
+    if args.crc32:
+        doc.setdefault("header", {})["crc32"] = "auto"
     data = build(doc)
     with open(args.out, "wb") as f:
         f.write(data)
@@ -809,6 +831,9 @@ def main(argv=None):
     p.add_argument("out")
     p.add_argument("--digest", action="store_true",
                    help="attach quf.sha256 content digest (verify enforces)")
+    p.add_argument("--crc32", action="store_true",
+                   help="attach crc32 payload digest (§12.2; verified by "
+                        "the RTL loader in silicon)")
     p.set_defaults(fn=cmd_create)
 
     p = sub.add_parser("info", help="header + section table")

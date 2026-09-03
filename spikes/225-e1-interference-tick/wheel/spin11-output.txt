@@ -1,0 +1,158 @@
+SPIN 11 — PULSE-DIAL / MASS-COMPENSATION  (pre-registrations in spin11_pulse_dial.py docstring, committed before any run;
+ ALL predictions pinned to eval window EV=12)
+== CANARY A: run_fabric_mc(mc=0) byte-identity vs exp_glm1.run_fabric ==
+  PASS: 8 configs full-dict identical
+
+== CANARY A2: MC-A at pd=1 structural immunity (mc=1 == mc=0) ==
+  SKIP lats=[0, 6, 12, 18, 24, 30] (diverged: guard applies to mc=1 only)
+  SKIP lats=[0, 5, 10, 15, 20, 25, 30] (diverged: guard applies to mc=1 only)
+  SKIP lats=[0, 0, 0, 0, 0, 0, 0] (diverged: guard applies to mc=1 only)
+  PASS: min(n_f,1)=1 -> MC-A inert at pd=1 (P3a prerequisite holds structurally)
+
+== CANARY B: spread=0 codepath identity by N-group, per mc mode ==
+  mc=0: PASS (12 codepaths, 2 N-groups)
+  mc=1: PASS (12 codepaths, 2 N-groups)
+  mc=2: PASS (12 codepaths, 2 N-groups)
+
+== CANARY C: spin-8 replay (5-seed means, true12 pinned EV=12) ==
+  step6/N=6 K=1    got  26.8  pub  26.8  OK
+  step5/N=7 K=1    got   0.3  pub   0.3  OK
+  step1/N=31 K=1   got   0.1  pub   0.1  OK
+  kcoh5@30 K=1     got  53.2  pub  53.2  OK
+  CANARIES: PASS
+
+== EXP 1: pd x N sweep, UNCOMPENSATED (ladder spread-30, delta=12, K=1) ==
+   cell = true12% ; D = diverged (all 5 seeds maxResid > 10^6)
+  pd | N=2    | N=3    | N=4    | N=5    | N=6    | N=7    | N=8    | N=12   | N=13   | N=24   | N=25  | meanMult@2pd+1
+   1 |   4.2  |   0.1D |   0.1D |   0.1D |   0.1D |   0.1D |   0.1D |   0.1D |   0.1D |   0.1D |   0.1D | 0.3/3
+   2 |  15.3  |  12.9  |  32.6  |   0.2D |   0.2D |   0.1D |   0.1D |   0.1D |   0.1D |   0.1D |   0.1D | 0.5/5
+   3 |  12.4  |  10.0  |  10.5  |  11.9  |  26.8  |   0.3D |   0.2D |   0.1D |   0.1D |   0.1D |   0.1D | 0.7/7
+   6 |   9.6  |   8.4  |   8.5  |   8.3  |   8.4  |   8.1  |   7.9  |  13.3  |   2.3D |   0.1D |   0.1D | 1.2/13
+  12 |   9.4  |   8.7  |   8.7  |   8.7  |   8.4  |   8.5  |   8.4  |   7.8  |   7.7  |   7.8  |   8.0  | 1.1/25
+
+  wall edge location (smallest diverged N; expected 2pd+1):
+   pd= 1: edge=3  expected=3  MATCH   [N=2pd: 4.2%  N=2pd+1: 0.1%]  maxResid@2pd+1 ~ 10^18
+   pd= 2: edge=5  expected=5  MATCH   [N=2pd: 32.6%  N=2pd+1: 0.2%]  maxResid@2pd+1 ~ 10^18
+   pd= 3: edge=7  expected=7  MATCH   [N=2pd: 26.8%  N=2pd+1: 0.3%]  maxResid@2pd+1 ~ 10^18
+   pd= 6: edge=13  expected=13  MATCH   [N=2pd: 13.3%  N=2pd+1: 2.3%]  maxResid@2pd+1 ~ 10^18
+   pd=12: edge=None  expected=25  MISMATCH   [N=2pd: 7.8%  N=2pd+1: 8.0%]  maxResid@2pd+1 ~ 10^1
+  P2 (wall tracks N=2pd+1 exactly): FAIL
+   lats pd=1 N=2: [0, 30]
+   lats pd=1 N=3: [0, 15, 30]
+   lats pd=2 N=4: [0, 10, 20, 30]
+   lats pd=2 N=5: [0, 8, 15, 22, 30]
+   lats pd=3 N=6: [0, 6, 12, 18, 24, 30]
+   lats pd=3 N=7: [0, 5, 10, 15, 20, 25, 30]
+
+  >>> P1b INSTANTIATION (before EXP 2): E6 = uncomp step5/N=7 @pd=6 true12 = 8.1%  ->  band [0.1, 16.1] <<<
+
+== EXP 2a: compensated pd x N grids — where did the wall go? ==
+
+  --- MC-A (//min(n_f,pd)) ---
+  pd | N=2    | N=3    | N=4    | N=5    | N=6    | N=7    | N=8    | N=9    | N=12   | N=13   | N=18   | N=19   | N=20   | N=24   | N=25  
+   1 |   4.2  |  18.3D |  22.3D |  25.9D |  29.1D |  30.3D |  33.1D |  33.1D |  36.5D |  36.0D |  39.7D |  39.7D |  39.7D |  40.2D |  42.1D
+   2 |  15.0  |  12.2  |  12.1  |  11.0  |  10.9  |  11.7  |  18.6  |  13.3D |  20.7D |  22.8D |  28.1D |  29.0D |  30.0D |  33.3D |  33.3D
+   3 |  11.8  |   9.2  |   9.7  |   9.9  |   9.5  |   8.8  |   8.5  |   8.5  |   8.4  |   8.3  |   8.5  |   9.7  |  11.7D |  18.2D |  17.2D
+   6 |   9.1  |   7.6  |   8.0  |   8.3  |   8.6  |   8.7  |   8.7  |   8.7  |   8.1  |   8.1  |   8.0  |   7.9  |   7.9  |   7.8  |   7.9 
+  12 |   9.5  |   8.8  |   8.7  |   8.6  |   8.4  |   8.3  |   8.3  |   8.3  |   7.8  |   7.8  |   7.7  |   7.7  |   7.6  |   7.8  |   8.0 
+  edges (smallest diverged N):
+   pd= 1: edge=3   P3 pred=3   MATCH
+   pd= 2: edge=9   P3 pred=9   MATCH
+   pd= 3: edge=20   P3 pred=19   MISMATCH
+   pd= 6: edge=None   P3 pred=none<=25   MATCH
+   pd=12: edge=None   P3 pred=none<=25   MATCH
+  P3a/P3b MC-A: diverged cells = 25; pd=1 immunity proven byte-level by CANARY A2 (structural)
+
+  --- MC-B (//n_f) ---
+  pd | N=2    | N=3    | N=4    | N=5    | N=6    | N=7    | N=8    | N=9    | N=12   | N=13   | N=18   | N=19   | N=20   | N=24   | N=25  
+   1 |  47.3  |  14.7  |  16.0  |  14.4  |  16.7  |  15.4  |  15.4  |  14.8  |  14.4  |  14.1  |  13.4  |  13.6  |  13.8  |  13.2  |  12.8 
+   2 |  15.0  |  12.2  |  11.9  |  10.6  |  10.5  |  10.8  |  10.8  |  10.7  |   9.7  |  10.4  |   9.3  |   9.8  |   9.1  |   8.3  |   8.1 
+   3 |  11.8  |   9.2  |   9.7  |   9.9  |   9.5  |   8.6  |   8.4  |   8.5  |   8.7  |   8.6  |   8.6  |   8.1  |   8.1  |   8.0  |   7.8 
+   6 |   9.1  |   7.6  |   8.0  |   8.3  |   8.6  |   8.7  |   8.7  |   8.7  |   8.1  |   8.1  |   8.0  |   7.9  |   7.9  |   7.8  |   7.9 
+  12 |   9.5  |   8.8  |   8.7  |   8.6  |   8.4  |   8.3  |   8.3  |   8.3  |   7.8  |   7.8  |   7.7  |   7.7  |   7.6  |   7.8  |   8.0 
+  edges (smallest diverged N):
+   pd= 1: edge=None   P3 pred=3   MISMATCH
+   pd= 2: edge=None   P3 pred=9   MISMATCH
+   pd= 3: edge=None   P3 pred=19   MISMATCH
+   pd= 6: edge=None   P3 pred=none<=25   MATCH
+   pd=12: edge=None   P3 pred=none<=25   MATCH
+  P3c MC-B: diverged cells in whole grid = 0 (predicted 0) -> PASS
+
+== EXP 2b: rescue detail at pd=3, delta=12, K=1 (true12%) ==
+  step   N |  uncomp    MC-A    MC-B |  rescueA  rescueB
+     1  31 |     0.1    24.7    12.1 |    +24.6    +12.0
+     2  16 |     0.1     8.5     8.4 |     +8.3     +8.3
+     3  11 |     0.1     8.5     8.6 |     +8.4     +8.4
+     5   7 |     0.3     8.8     8.6 |     +8.5     +8.3
+     6   6 |    26.8     9.5     9.5 |    -17.2    -17.3
+    10   4 |    10.5     9.7     9.7 |     -0.8     -0.8
+    15   3 |    10.0     9.2     9.2 |     -0.8     -0.8
+    30   2 |    12.4    11.8    11.8 |     -0.6     -0.6
+
+  HEADLINE rescue step5/N=7: 0.3% -> MC-A 8.8% (x26), MC-B 8.6% (x25)
+  P1a absolute [12,32]: MC-A FAIL  MC-B 8.6
+  P1b relative [E6-8, E6+8] = [0.1, 16.1]: MC-A PASS  MC-B PASS
+
+== EXP 2c: pathology audit, coarse grammars @30 pd=3 K=1 ==
+   grammar |  uncomp    best |        events        cancels            maxResid
+  best-comp variant for EXP 3: MC-A
+     kcoh5 |    53.2    37.6 |  16157/20548        0/16             82/37       
+     kcoh1 |    13.2    12.1 |  14879/18005        1/16            113/77       
+    ladder |    26.8     9.5 |  14952/14821       76/1085           82/41       
+    cohort |    49.3    11.4 |  14746/24775        0/1514          109/50       
+
+== EXP 3: joint map, MC-A vs uncomp x delta {12,24} x K {1,2,4} (true12 pinned EV=12; native in parens for delta=24) ==
+
+  --- delta=12 ---
+   grammar  comp |          K=1          K=2          K=4
+     kcoh5   off |  53.2( 53.2)  47.4( 47.4)  66.6( 66.6)
+     kcoh5  MC-A |  37.6( 37.6)  47.7( 47.7)  52.7( 52.7)
+     kcoh1   off |  13.2( 13.2)  18.2( 18.2)   9.6(  9.6)
+     kcoh1  MC-A |  12.1( 12.1)  12.7( 12.7)  10.5( 10.5)
+    ladder   off |  26.8( 26.8)  28.9( 28.9)  12.8( 12.8)
+    ladder  MC-A |   9.5(  9.5)  10.6( 10.6)  11.9( 11.9)
+    cohort   off |  49.3( 49.3)  33.3( 33.3)  21.7( 21.7)
+    cohort  MC-A |  11.4( 11.4)  13.5( 13.5)  15.0( 15.0)
+     step5   off |   0.3(  0.3)   0.4(  0.4)  17.9( 17.9)
+     step5  MC-A |   8.8(  8.8)  10.1( 10.1)  12.5( 12.5)
+
+  --- delta=24 ---
+   grammar  comp |          K=1          K=2          K=4
+     kcoh5   off |  30.9( 81.5)  28.2( 59.4)  43.1( 76.8)
+     kcoh5  MC-A |  13.7( 73.5)  22.7( 77.4)  22.1( 78.3)
+     kcoh1   off |  11.9( 53.3)  19.7( 41.0)  19.6( 42.8)
+     kcoh1  MC-A |   8.0( 66.7)  12.7( 58.6)  12.5( 60.0)
+    ladder   off |  11.7( 69.2)  17.7( 66.4)  12.7( 68.9)
+    ladder  MC-A |   9.2( 64.5)  11.1( 64.1)  12.5( 65.6)
+    cohort   off |  49.3( 57.2)  21.4( 50.6)  28.5( 61.1)
+    cohort  MC-A |   8.8( 70.7)  11.3( 69.2)  13.9( 69.3)
+     step5   off |   0.8(  3.8)   1.3(  3.8)  13.2( 69.2)
+     step5  MC-A |   9.1( 64.7)  11.2( 64.1)  12.7( 65.4)
+
+  K=2 trough check (K2 < min(K1,K4)) at delta=12:
+      kcoh5: off True  comp False   off[53.2,47.4,66.6] comp[37.6,47.7,52.7]
+      kcoh1: off False  comp False   off[13.2,18.2,9.6] comp[12.1,12.7,10.5]
+     ladder: off False  comp False   off[26.8,28.9,12.8] comp[9.5,10.6,11.9]
+     cohort: off False  comp False   off[49.3,33.3,21.7] comp[11.4,13.5,15.0]
+  P4 (trough persists under comp for >=3/4): FAIL (0/4)
+
+  comp x K interaction (K4-K1 sign, delta=12):
+      kcoh5: off  +13.4  comp  +15.1  same sign
+      kcoh1: off   -3.6  comp   -1.6  same sign
+     ladder: off  -14.0  comp   +2.4  FLIP
+     cohort: off  -27.5  comp   +3.6  FLIP
+      step5: off  +17.6  comp   +3.6  same sign
+
+== CANARY D: hetero runner uniform-pd == mc=0 byte-identity ==
+  PASS: 4 configs full-dict identical
+
+== EXP 4: mixed-pd adjudication — is O2b's EVEN wall N=6 an effective-pd effect? ==
+   (pre-registered as P5a/P5b in this file's docstring BEFORE this run)
+  mix   | N=4    | N=5    | N=6    | N=7    | N=8    | N=9    | N=13  | edge
+  (2, 3) |  16.2  |   0.4D |   0.2D |   0.2D |   0.1D |   0.1D |   0.1D| 5
+  (3, 6) |  14.4  |  10.3  |  14.0  |  14.4  |  21.9  |   0.3D |   0.1D| 9
+
+  P5a mix(2,3): edge=5 — weakest-member law (REGISTERED primary): O2b's N=6 stays a separate law
+  P5b mix(3,6): edge=9 — mixture protection / sub-linear composition (registered alternative)
+
+LCG ritual: proposal-dispatched spin (SPIN-8's proposal) — no pick consumed; ledger head 486256185; next selection reference: 486256185 -> 1062517886 -> mod 10 = 6

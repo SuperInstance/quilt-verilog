@@ -1,0 +1,22 @@
+# snaplog.integrity.pdr.sby -- referee attempt at the UNBOUNDED content
+# invariant (same harness/model as snaplog.integrity.sby, byte-identical
+# asserts): abc pdr derives the inductive invariant over the flattened
+# netlist, where the hidden 720-bit log register IS visible -- the
+# canonical path the conservation lane took (FORMAL-PROOFS.md, PDR
+# referee section). Honest booking either way: PASS upgrades S1 to a
+# theorem for all time; a timeout/unknown books as "BMC-bounded only".
+[options]
+mode prove
+depth 30
+
+[engines]
+abc pdr
+
+[script]
+read -formal q_snaplog.v
+read -formal f_snaplog_integrity.v
+prep -top f_snaplog_integrity
+
+[files]
+rtl/q_snaplog.v
+formal/f_snaplog_integrity.v

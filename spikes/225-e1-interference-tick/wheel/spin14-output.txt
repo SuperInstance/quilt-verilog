@@ -1,0 +1,132 @@
+== CANARY A: published-anchor replay ==
+    config |          K |       got% |      want% |         ev |     evWant |       debt |      dWant |         ok
+  ladder15 |          1 |       71.5 |       71.5 |       5792 |       5792 |     106378 |     106378 |         OK
+  ladder15 |          2 |       60.0 |       60.0 |       9481 |          - |     259758 |          - |         OK
+      zero |          1 |       77.3 |       77.3 |       8756 |       8756 |     187834 |     187834 |         OK
+      zero |          2 |       50.0 |       50.0 |      15133 |      15133 |     511660 |     511660 |         OK
+  cohort15 |          1 |       57.1 |       57.1 |      12625 |          - |     299487 |          - |         OK
+  kcoh5@15 |          1 |       74.1 |       74.1 |      11211 |          - |     240604 |          - |         OK
+kcoh5@15AS |          1 |       79.4 |       79.4 |       7679 |          - |     138304 |          - |         OK
+
+== CANARY B: determinism (one config twice, byte-identical) ==
+  e1-reality dict equal: True;  tri3 dict equal: True  -> PASS
+
+== EXP1: 4-way arm grid  grammar x spread x K ==
+      cell |        arm |      true% |     events |       chat |    gain pp
+ ladder@15 |       base |       71.5 |       5792 |       3282 |         --
+ ladder@15 |         AS |       79.4 |       7679 |       3444 |       +7.9
+ ladder@15 |         N1 |       25.5 |      14892 |       4753 |      -46.0
+ ladder@15 |      AS+N1 |       43.5 |      14638 |       4605 |      -27.9
+ ladder@15 |       base |       60.0 |       9481 |       3526 |         --
+ ladder@15 |         AS |       66.6 |      11071 |       3833 |       +6.6
+ ladder@15 |         N1 |       27.5 |      15875 |       4775 |      -32.5
+ ladder@15 |      AS+N1 |       57.3 |      14515 |       4659 |       -2.7
+ ladder@30 |       base |       26.8 |      14952 |       4648 |         --
+ ladder@30 |         AS |       50.1 |      14592 |       4500 |      +23.4
+ ladder@30 |         N1 |        6.7 |      21298 |       4793 |      -20.0
+ ladder@30 |      AS+N1 |       51.5 |      16690 |       4599 |      +24.7
+ ladder@30 |       base |       28.9 |      16776 |       4689 |         --
+ ladder@30 |         AS |       56.2 |      15086 |       4577 |      +27.3
+ ladder@30 |         N1 |       11.4 |      21637 |       4793 |      -17.4
+ ladder@30 |      AS+N1 |       53.9 |      15860 |       4660 |      +25.0
+ cohort@15 |       base |       57.1 |      12625 |       3976 |         --
+ cohort@15 |         AS |       59.9 |      11455 |       3789 |       +2.8
+ cohort@15 |         N1 |       51.9 |      13907 |       4574 |       -5.2
+ cohort@15 |      AS+N1 |       52.1 |      14061 |       4614 |       -5.0
+ cohort@15 |       base |       41.8 |      17158 |       4012 |         --
+ cohort@15 |         AS |       56.6 |      12387 |       3747 |      +14.8
+ cohort@15 |         N1 |       31.0 |      19828 |       4674 |      -10.8
+ cohort@15 |      AS+N1 |       33.4 |      18902 |       4713 |       -8.4
+ cohort@30 |       base |       49.3 |      14746 |       4478 |         --
+ cohort@30 |         AS |       52.1 |      13942 |       4511 |       +2.9
+ cohort@30 |         N1 |       52.2 |      13898 |       4578 |       +3.0
+ cohort@30 |      AS+N1 |       50.6 |      14456 |       4618 |       +1.3
+ cohort@30 |       base |       33.3 |      19980 |       4561 |         --
+ cohort@30 |         AS |       33.2 |      19063 |       4607 |       -0.1
+ cohort@30 |         N1 |       24.1 |      22345 |       4716 |       -9.2
+ cohort@30 |      AS+N1 |       24.1 |      21805 |       4752 |       -9.2
+  kcoh5@15 |       base |       74.1 |      11211 |       3726 |         --
+  kcoh5@15 |         AS |       79.4 |       7679 |       3444 |       +5.2
+  kcoh5@15 |         N1 |       57.4 |      15762 |       4581 |      -16.8
+  kcoh5@15 |      AS+N1 |       43.5 |      14638 |       4605 |      -30.6
+  kcoh5@15 |       base |       50.6 |      15728 |       4149 |         --
+  kcoh5@15 |         AS |       66.6 |      11071 |       3833 |      +16.0
+  kcoh5@15 |         N1 |       48.7 |      16633 |       4658 |       -1.9
+  kcoh5@15 |      AS+N1 |       57.3 |      14515 |       4659 |       +6.7
+  kcoh5@30 |       base |       53.2 |      16157 |       4542 |         --
+  kcoh5@30 |         AS |       50.1 |      14592 |       4500 |       -3.1
+  kcoh5@30 |         N1 |       50.5 |      17165 |       4601 |       -2.6
+  kcoh5@30 |      AS+N1 |       51.5 |      16690 |       4599 |       -1.7
+  kcoh5@30 |       base |       47.4 |      17232 |       4589 |         --
+  kcoh5@30 |         AS |       56.2 |      15086 |       4577 |       +8.8
+  kcoh5@30 |         N1 |       44.6 |      18097 |       4667 |       -2.8
+  kcoh5@30 |      AS+N1 |       53.9 |      15860 |       4660 |       +6.5
+   zero@15 |       base |       77.3 |       8756 |       1013 |         --
+   zero@15 |         AS |       97.6 |       2598 |        313 |      +20.3
+   zero@15 |         N1 |       81.0 |       7976 |        745 |       +3.8
+   zero@15 |      AS+N1 |      100.0 |       3162 |        784 |      +22.7
+   zero@15 |       base |       50.0 |      15133 |       1382 |         --
+   zero@15 |         AS |       84.9 |       5773 |        684 |      +34.9
+   zero@15 |         N1 |       51.5 |      14634 |       1249 |       +1.6
+   zero@15 |      AS+N1 |       96.7 |       3234 |        766 |      +46.8
+   zero@30 |       base |       77.3 |       8756 |       1013 |         --
+   zero@30 |         AS |       97.6 |       2598 |        313 |      +20.3
+   zero@30 |         N1 |       81.0 |       7976 |        745 |       +3.8
+   zero@30 |      AS+N1 |      100.0 |       3162 |        784 |      +22.7
+   zero@30 |       base |       50.0 |      15133 |       1382 |         --
+   zero@30 |         AS |       84.9 |       5773 |        684 |      +34.9
+   zero@30 |         N1 |       51.5 |      14634 |       1249 |       +1.6
+   zero@30 |      AS+N1 |       96.7 |       3234 |        766 |      +46.8
+
+== EXP2: additivity residuals  joint_gain - max(single_gain) ==
+   hypothesis: residual <= +2pp in every cell
+      cell |          K |      g(AS) |      g(N1) |   g(joint) |   residual |    subadd?
+ cohort@15 |          1 |       +2.8 |       -5.2 |       -5.0 |       -7.8 |        YES
+ cohort@15 |          2 |      +14.8 |      -10.8 |       -8.4 |      -23.2 |        YES
+ cohort@30 |          1 |       +2.9 |       +3.0 |       +1.3 |       -1.7 |        YES
+ cohort@30 |          2 |       -0.1 |       -9.2 |       -9.2 |       -9.1 |        YES
+  kcoh5@15 |          1 |       +5.2 |      -16.8 |      -30.6 |      -35.8 |        YES
+  kcoh5@15 |          2 |      +16.0 |       -1.9 |       +6.7 |       -9.3 |        YES
+  kcoh5@30 |          1 |       -3.1 |       -2.6 |       -1.7 |       +0.9 |        YES
+  kcoh5@30 |          2 |       +8.8 |       -2.8 |       +6.5 |       -2.3 |        YES
+ ladder@15 |          1 |       +7.9 |      -46.0 |      -27.9 |      -35.8 |        YES
+ ladder@15 |          2 |       +6.6 |      -32.5 |       -2.7 |       -9.3 |        YES
+ ladder@30 |          1 |      +23.4 |      -20.0 |      +24.7 |       +1.4 |        YES
+ ladder@30 |          2 |      +27.3 |      -17.4 |      +25.0 |       -2.3 |        YES
+   zero@15 |          1 |      +20.3 |       +3.8 |      +22.7 |       +2.4 |         NO
+   zero@15 |          2 |      +34.9 |       +1.6 |      +46.8 |      +11.9 |         NO
+   zero@30 |          1 |      +20.3 |       +3.8 |      +22.7 |       +2.4 |         NO
+   zero@30 |          2 |      +34.9 |       +1.6 |      +46.8 |      +11.9 |         NO
+   subadditive cells: 12/16
+
+== EXP3: grammar-class x mechanism (which knob wins where) ==
+      cell |          K |      g(AS) |      g(N1) |     winner
+ cohort@15 |          1 |       +2.8 |       -5.2 |         AS
+ cohort@15 |          2 |      +14.8 |      -10.8 |         AS
+ cohort@30 |          1 |       +2.9 |       +3.0 |        tie
+ cohort@30 |          2 |       -0.1 |       -9.2 |         AS
+  kcoh5@15 |          1 |       +5.2 |      -16.8 |         AS
+  kcoh5@15 |          2 |      +16.0 |       -1.9 |         AS
+  kcoh5@30 |          1 |       -3.1 |       -2.6 |        tie
+  kcoh5@30 |          2 |       +8.8 |       -2.8 |         AS
+ ladder@15 |          1 |       +7.9 |      -46.0 |         AS
+ ladder@15 |          2 |       +6.6 |      -32.5 |         AS
+ ladder@30 |          1 |      +23.4 |      -20.0 |         AS
+ ladder@30 |          2 |      +27.3 |      -17.4 |         AS
+   zero@15 |          1 |      +20.3 |       +3.8 |         AS
+   zero@15 |          2 |      +34.9 |       +1.6 |         AS
+   zero@30 |          1 |      +20.3 |       +3.8 |         AS
+   zero@30 |          2 |      +34.9 |       +1.6 |         AS
+
+== EXP4: learned spread-scheduler swap-in (cohort 15->8 parking, K=2) ==
+   reference: cohort@15 K=2 base + AS + N1 from EXP1
+       arm |      true% |     events |       chat | vs coh15-base | vs coh15-same-arm
+      base |       77.2 |       8995 |       1310 |      +35.3 |      +35.3
+        AS |       89.0 |       4795 |        743 |      +47.2 |      +32.3
+        N1 |       44.5 |      16288 |       4413 |       +2.7 |      +13.5
+     AS+N1 |       62.3 |      10090 |       4233 |      +20.5 |      +28.9
+
+   swap-in residuals: g(AS) +11.8  g(N1) -32.6  g(joint) -14.8  residual -26.6  (subadditive: YES)
+   three-way probe: best coh15 mechanism 56.6 vs best coh8 mechanism 89.0 vs coh8 joint 62.3
+
+LCG ritual: 368800899 -> 1508029952 -> mod 10 = 2

@@ -1,0 +1,825 @@
+{
+ "config": {
+  "pairs": 40,
+  "pair_seed": 20260902,
+  "severities": [
+   1000,
+   250,
+   100,
+   40
+  ],
+  "dither_seeds": [
+   7,
+   13,
+   42
+  ],
+  "fine": 1000,
+  "max_hops": 30,
+  "models": [
+   "nomic-embed-text",
+   "all-minilm:22m",
+   "bge-m3"
+  ],
+  "corpus": {
+   "NAUTICAL": [
+    "anchor",
+    "harbor",
+    "lighthouse",
+    "foghorn",
+    "tide",
+    "rudder",
+    "keel",
+    "mast",
+    "sail",
+    "compass",
+    "mooring",
+    "buoy",
+    "wake",
+    "hull",
+    "chart",
+    "beacon",
+    "swell",
+    "helm",
+    "dockline",
+    "shipyard",
+    "bowsprit",
+    "capstan",
+    "sextant",
+    "starboard",
+    "ballast",
+    "galley",
+    "rigging",
+    "prow",
+    "stern",
+    "wharf"
+   ],
+   "OBJECT": [
+    "hammer",
+    "chair",
+    "ladder",
+    "bucket",
+    "rope",
+    "nail",
+    "brick",
+    "spoon",
+    "lantern",
+    "crate",
+    "wrench",
+    "blanket",
+    "pencil",
+    "kettle",
+    "shovel",
+    "battery",
+    "mirror",
+    "needle",
+    "hinge",
+    "basket",
+    "broom",
+    "candle",
+    "clamp",
+    "drum",
+    "fan",
+    "hook",
+    "jar",
+    "pan",
+    "plank",
+    "towel"
+   ],
+   "ABSTRACT": [
+    "justice",
+    "memory",
+    "rumor",
+    "entropy",
+    "promise",
+    "silence",
+    "envy",
+    "patience",
+    "truth",
+    "doubt",
+    "rhythm",
+    "origin",
+    "limit",
+    "chance",
+    "mercy",
+    "habit",
+    "absence",
+    "threshold",
+    "paradox",
+    "purpose",
+    "anxiety",
+    "calm",
+    "chaos",
+    "certainty",
+    "duty",
+    "grief",
+    "honor",
+    "irony",
+    "nostalgia",
+    "virtue"
+   ],
+   "LANDSCAPE": [
+    "forest",
+    "river",
+    "mountain",
+    "storm",
+    "glacier",
+    "meadow",
+    "canyon",
+    "iceberg",
+    "valley",
+    "ridge",
+    "cave",
+    "delta",
+    "marsh",
+    "fjord",
+    "dune",
+    "geyser",
+    "lagoon",
+    "tundra",
+    "thicket",
+    "estuary",
+    "bluff",
+    "creek",
+    "gorge",
+    "inlet",
+    "mesa",
+    "pond",
+    "prairie",
+    "ravine",
+    "summit",
+    "butte"
+   ]
+  }
+ },
+ "per_model": {
+  "nomic-embed-text": {
+   "counts": {
+    "grief": 4,
+    "paradox": 4,
+    "truth": 1,
+    "storm": 2,
+    "chaos": 1,
+    "calm": 5,
+    "tide": 3,
+    "memory": 1,
+    "doubt": 1,
+    "prairie": 2,
+    "river": 2,
+    "ravine": 1,
+    "mountain": 6,
+    "candle": 2,
+    "mooring": 2,
+    "rudder": 1,
+    "chair": 3,
+    "spoon": 2,
+    "wrench": 1,
+    "keel": 1,
+    "galley": 1,
+    "pencil": 2,
+    "rope": 1,
+    "blanket": 1,
+    "swell": 3,
+    "silence": 2,
+    "virtue": 1,
+    "lagoon": 1,
+    "bluff": 3,
+    "honor": 1,
+    "stern": 1,
+    "drum": 1,
+    "certainty": 1,
+    "duty": 1,
+    "starboard": 1,
+    "threshold": 1,
+    "plank": 1,
+    "justice": 1
+   },
+   "top10": [
+    [
+     "mountain",
+     6
+    ],
+    [
+     "calm",
+     5
+    ],
+    [
+     "grief",
+     4
+    ],
+    [
+     "paradox",
+     4
+    ],
+    [
+     "bluff",
+     3
+    ],
+    [
+     "chair",
+     3
+    ],
+    [
+     "swell",
+     3
+    ],
+    [
+     "tide",
+     3
+    ],
+    [
+     "candle",
+     2
+    ],
+    [
+     "mooring",
+     2
+    ]
+   ],
+   "dead_rate": 0.15,
+   "mean_hops": 1.1166666666666667,
+   "distinct": 38,
+   "top10_share": 0.5072463768115942,
+   "top3": [
+    "mountain",
+    "calm",
+    "grief"
+   ],
+   "regime": {
+    "WARM": {
+     "mean_hops": 0.9,
+     "funnel_top3": 0.2
+    },
+    "COLD": {
+     "mean_hops": 1.3333333333333333,
+     "funnel_top3": 0.26666666666666666
+    }
+   },
+   "hub_domains": {
+    "ABSTRACT": 25,
+    "LANDSCAPE": 17,
+    "NAUTICAL": 13,
+    "OBJECT": 14
+   },
+   "stability": {
+    "S250": {
+     "jaccard": 0.9545454545454546,
+     "lcs": 0.9545454545454546,
+     "route_identical": 0.95,
+     "n_jaccard": 44
+    },
+    "S250+d7": {
+     "jaccard": 0.9545454545454546,
+     "lcs": 0.9545454545454546,
+     "route_identical": 0.95,
+     "n_jaccard": 44
+    },
+    "S250+d13": {
+     "jaccard": 0.9545454545454546,
+     "lcs": 0.9545454545454546,
+     "route_identical": 0.95,
+     "n_jaccard": 44
+    },
+    "S250+d42": {
+     "jaccard": 0.9545454545454546,
+     "lcs": 0.9545454545454546,
+     "route_identical": 0.95,
+     "n_jaccard": 44
+    },
+    "S100": {
+     "jaccard": 0.8492424242424242,
+     "lcs": 0.8636363636363636,
+     "route_identical": 0.8333333333333334,
+     "n_jaccard": 44
+    },
+    "S100+d7": {
+     "jaccard": 0.8492424242424242,
+     "lcs": 0.8636363636363636,
+     "route_identical": 0.8333333333333334,
+     "n_jaccard": 44
+    },
+    "S100+d13": {
+     "jaccard": 0.8492424242424242,
+     "lcs": 0.8636363636363636,
+     "route_identical": 0.8333333333333334,
+     "n_jaccard": 44
+    },
+    "S100+d42": {
+     "jaccard": 0.8492424242424242,
+     "lcs": 0.8636363636363636,
+     "route_identical": 0.8333333333333334,
+     "n_jaccard": 44
+    },
+    "S40": {
+     "jaccard": 0.8148148148148148,
+     "lcs": 0.8296296296296297,
+     "route_identical": 0.8166666666666667,
+     "n_jaccard": 45
+    },
+    "S40+d7": {
+     "jaccard": 0.8148148148148148,
+     "lcs": 0.8296296296296297,
+     "route_identical": 0.8166666666666667,
+     "n_jaccard": 45
+    },
+    "S40+d13": {
+     "jaccard": 0.8148148148148148,
+     "lcs": 0.8296296296296297,
+     "route_identical": 0.8166666666666667,
+     "n_jaccard": 45
+    },
+    "S40+d42": {
+     "jaccard": 0.8148148148148148,
+     "lcs": 0.8296296296296297,
+     "route_identical": 0.8166666666666667,
+     "n_jaccard": 45
+    }
+   },
+   "radius_sweep": {
+    "q25": {
+     "hop2": 1011170,
+     "dead_rate": 0.15,
+     "mean_hops": 1.1166666666666667
+    },
+    "q50": {
+     "hop2": 1104575,
+     "dead_rate": 0.0,
+     "mean_hops": 0.6833333333333333
+    },
+    "q75": {
+     "hop2": 1182769,
+     "dead_rate": 0.0,
+     "mean_hops": 0.45
+    }
+   },
+   "ref_hop2": 1011170
+  },
+  "all-minilm:22m": {
+   "counts": {
+    "honor": 1,
+    "purpose": 3,
+    "justice": 4,
+    "mirror": 2,
+    "fan": 3,
+    "silence": 2,
+    "nostalgia": 1,
+    "habit": 2,
+    "duty": 2,
+    "ravine": 1,
+    "ladder": 1,
+    "nail": 1,
+    "mountain": 1,
+    "promise": 1,
+    "glacier": 2,
+    "cave": 1,
+    "sail": 1,
+    "clamp": 1,
+    "hammer": 2,
+    "starboard": 1,
+    "tide": 2,
+    "wrench": 1,
+    "needle": 1,
+    "creek": 1,
+    "spoon": 1,
+    "anchor": 1,
+    "mast": 2,
+    "bucket": 1,
+    "virtue": 1,
+    "mercy": 2,
+    "lagoon": 1,
+    "absence": 1,
+    "chaos": 2,
+    "lighthouse": 1,
+    "truth": 2,
+    "bluff": 2,
+    "stern": 1,
+    "rudder": 1,
+    "brick": 1,
+    "wharf": 1,
+    "harbor": 1,
+    "shovel": 1,
+    "hook": 1,
+    "delta": 1,
+    "storm": 2,
+    "rope": 1
+   },
+   "top10": [
+    [
+     "justice",
+     4
+    ],
+    [
+     "fan",
+     3
+    ],
+    [
+     "purpose",
+     3
+    ],
+    [
+     "bluff",
+     2
+    ],
+    [
+     "chaos",
+     2
+    ],
+    [
+     "duty",
+     2
+    ],
+    [
+     "glacier",
+     2
+    ],
+    [
+     "habit",
+     2
+    ],
+    [
+     "hammer",
+     2
+    ],
+    [
+     "mast",
+     2
+    ]
+   ],
+   "dead_rate": 0.25,
+   "mean_hops": 1.0333333333333334,
+   "distinct": 46,
+   "top10_share": 0.36363636363636365,
+   "top3": [
+    "justice",
+    "fan",
+    "purpose"
+   ],
+   "regime": {
+    "WARM": {
+     "mean_hops": 0.9,
+     "funnel_top3": 0.1
+    },
+    "COLD": {
+     "mean_hops": 1.1666666666666667,
+     "funnel_top3": 0.2
+    }
+   },
+   "hub_domains": {
+    "ABSTRACT": 24,
+    "OBJECT": 18,
+    "LANDSCAPE": 12,
+    "NAUTICAL": 12
+   },
+   "stability": {
+    "S250": {
+     "jaccard": 0.9342105263157895,
+     "lcs": 0.9385964912280701,
+     "route_identical": 0.95,
+     "n_jaccard": 38
+    },
+    "S250+d7": {
+     "jaccard": 0.9342105263157895,
+     "lcs": 0.9385964912280701,
+     "route_identical": 0.95,
+     "n_jaccard": 38
+    },
+    "S250+d13": {
+     "jaccard": 0.9342105263157895,
+     "lcs": 0.9385964912280701,
+     "route_identical": 0.95,
+     "n_jaccard": 38
+    },
+    "S250+d42": {
+     "jaccard": 0.9342105263157895,
+     "lcs": 0.9385964912280701,
+     "route_identical": 0.95,
+     "n_jaccard": 38
+    },
+    "S100": {
+     "jaccard": 0.7235772357723578,
+     "lcs": 0.7459930313588851,
+     "route_identical": 0.7666666666666667,
+     "n_jaccard": 41
+    },
+    "S100+d7": {
+     "jaccard": 0.7235772357723578,
+     "lcs": 0.7459930313588851,
+     "route_identical": 0.7666666666666667,
+     "n_jaccard": 41
+    },
+    "S100+d13": {
+     "jaccard": 0.7235772357723578,
+     "lcs": 0.7459930313588851,
+     "route_identical": 0.7666666666666667,
+     "n_jaccard": 41
+    },
+    "S100+d42": {
+     "jaccard": 0.7235772357723578,
+     "lcs": 0.7459930313588851,
+     "route_identical": 0.7666666666666667,
+     "n_jaccard": 41
+    },
+    "S40": {
+     "jaccard": 0.6016260162601627,
+     "lcs": 0.6240418118466899,
+     "route_identical": 0.6666666666666666,
+     "n_jaccard": 41
+    },
+    "S40+d7": {
+     "jaccard": 0.6016260162601627,
+     "lcs": 0.6240418118466899,
+     "route_identical": 0.6666666666666666,
+     "n_jaccard": 41
+    },
+    "S40+d13": {
+     "jaccard": 0.6016260162601627,
+     "lcs": 0.6240418118466899,
+     "route_identical": 0.6666666666666666,
+     "n_jaccard": 41
+    },
+    "S40+d42": {
+     "jaccard": 0.6016260162601627,
+     "lcs": 0.6240418118466899,
+     "route_identical": 0.6666666666666666,
+     "n_jaccard": 41
+    }
+   },
+   "radius_sweep": {
+    "q25": {
+     "hop2": 1288225,
+     "dead_rate": 0.25,
+     "mean_hops": 1.0333333333333334
+    },
+    "q50": {
+     "hop2": 1426948,
+     "dead_rate": 0.016666666666666666,
+     "mean_hops": 0.7333333333333333
+    },
+    "q75": {
+     "hop2": 1538391,
+     "dead_rate": 0.0,
+     "mean_hops": 0.4166666666666667
+    }
+   },
+   "ref_hop2": 1288225
+  },
+  "bge-m3": {
+   "counts": {
+    "patience": 2,
+    "truth": 3,
+    "envy": 2,
+    "promise": 2,
+    "memory": 2,
+    "beacon": 2,
+    "brick": 3,
+    "pond": 2,
+    "river": 5,
+    "kettle": 2,
+    "limit": 2,
+    "sail": 2,
+    "rigging": 2,
+    "swell": 2,
+    "valley": 1,
+    "lantern": 1,
+    "broom": 1,
+    "hammer": 1,
+    "wrench": 5,
+    "estuary": 1,
+    "canyon": 1,
+    "rope": 1,
+    "candle": 5,
+    "nostalgia": 1,
+    "glacier": 2,
+    "mountain": 1,
+    "chart": 2,
+    "justice": 1,
+    "bucket": 1,
+    "spoon": 1,
+    "chaos": 2,
+    "grief": 3,
+    "rumor": 1,
+    "storm": 1,
+    "delta": 1,
+    "wake": 1,
+    "irony": 1,
+    "anxiety": 1,
+    "inlet": 1,
+    "clamp": 1,
+    "needle": 1
+   },
+   "top10": [
+    [
+     "candle",
+     5
+    ],
+    [
+     "river",
+     5
+    ],
+    [
+     "wrench",
+     5
+    ],
+    [
+     "brick",
+     3
+    ],
+    [
+     "grief",
+     3
+    ],
+    [
+     "truth",
+     3
+    ],
+    [
+     "beacon",
+     2
+    ],
+    [
+     "chaos",
+     2
+    ],
+    [
+     "chart",
+     2
+    ],
+    [
+     "envy",
+     2
+    ]
+   ],
+   "dead_rate": 0.08333333333333333,
+   "mean_hops": 1.2,
+   "distinct": 41,
+   "top10_share": 0.4383561643835616,
+   "top3": [
+    "candle",
+    "river",
+    "wrench"
+   ],
+   "regime": {
+    "WARM": {
+     "mean_hops": 1.1666666666666667,
+     "funnel_top3": 0.2
+    },
+    "COLD": {
+     "mean_hops": 1.2333333333333334,
+     "funnel_top3": 0.3
+    }
+   },
+   "hub_domains": {
+    "ABSTRACT": 23,
+    "NAUTICAL": 11,
+    "OBJECT": 23,
+    "LANDSCAPE": 16
+   },
+   "stability": {
+    "S250": {
+     "jaccard": 0.9086538461538461,
+     "lcs": 0.9115384615384615,
+     "route_identical": 0.9,
+     "n_jaccard": 52
+    },
+    "S250+d7": {
+     "jaccard": 0.9086538461538461,
+     "lcs": 0.9115384615384615,
+     "route_identical": 0.9,
+     "n_jaccard": 52
+    },
+    "S250+d13": {
+     "jaccard": 0.9086538461538461,
+     "lcs": 0.9115384615384615,
+     "route_identical": 0.9,
+     "n_jaccard": 52
+    },
+    "S250+d42": {
+     "jaccard": 0.9086538461538461,
+     "lcs": 0.9115384615384615,
+     "route_identical": 0.9,
+     "n_jaccard": 52
+    },
+    "S100": {
+     "jaccard": 0.8605769230769231,
+     "lcs": 0.8858974358974359,
+     "route_identical": 0.8166666666666667,
+     "n_jaccard": 52
+    },
+    "S100+d7": {
+     "jaccard": 0.8605769230769231,
+     "lcs": 0.8858974358974359,
+     "route_identical": 0.8166666666666667,
+     "n_jaccard": 52
+    },
+    "S100+d13": {
+     "jaccard": 0.8605769230769231,
+     "lcs": 0.8858974358974359,
+     "route_identical": 0.8166666666666667,
+     "n_jaccard": 52
+    },
+    "S100+d42": {
+     "jaccard": 0.8605769230769231,
+     "lcs": 0.8858974358974359,
+     "route_identical": 0.8166666666666667,
+     "n_jaccard": 52
+    },
+    "S40": {
+     "jaccard": 0.6320754716981132,
+     "lcs": 0.6477987421383649,
+     "route_identical": 0.6333333333333333,
+     "n_jaccard": 53
+    },
+    "S40+d7": {
+     "jaccard": 0.6320754716981132,
+     "lcs": 0.6477987421383649,
+     "route_identical": 0.6333333333333333,
+     "n_jaccard": 53
+    },
+    "S40+d13": {
+     "jaccard": 0.6320754716981132,
+     "lcs": 0.6477987421383649,
+     "route_identical": 0.6333333333333333,
+     "n_jaccard": 53
+    },
+    "S40+d42": {
+     "jaccard": 0.6320754716981132,
+     "lcs": 0.6477987421383649,
+     "route_identical": 0.6333333333333333,
+     "n_jaccard": 53
+    }
+   },
+   "radius_sweep": {
+    "q25": {
+     "hop2": 877809,
+     "dead_rate": 0.08333333333333333,
+     "mean_hops": 1.2
+    },
+    "q50": {
+     "hop2": 960671,
+     "dead_rate": 0.0,
+     "mean_hops": 0.7
+    },
+    "q75": {
+     "hop2": 1042288,
+     "dead_rate": 0.0,
+     "mean_hops": 0.35
+    }
+   },
+   "ref_hop2": 877809
+  }
+ },
+ "cross_model": {
+  "nomic-embed-text|all-minilm:22m": {
+   "mean_jaccard": 0.0326797385620915,
+   "null_jaccard": 0.004807692307692308,
+   "lift": 0.02787204625439919,
+   "mean_lcs": 0.0392156862745098,
+   "n_pairs": 51,
+   "domain_seq_lcs": 0.2751633986928105,
+   "domain_seq_null": 0.15157232704402515,
+   "top10_overlap": 1,
+   "top10_union": 19,
+   "rank_corr": -0.4099365163551626,
+   "warm_jaccard": 0.041666666666666664,
+   "cold_jaccard": 0.024691358024691357,
+   "shared_hubs": [
+    "bluff"
+   ]
+  },
+  "nomic-embed-text|bge-m3": {
+   "mean_jaccard": 0.013157894736842105,
+   "null_jaccard": 0.008620689655172414,
+   "lift": 0.004537205081669691,
+   "mean_lcs": 0.01871345029239766,
+   "n_pairs": 57,
+   "domain_seq_lcs": 0.3766081871345029,
+   "domain_seq_null": 0.18988095238095237,
+   "top10_overlap": 2,
+   "top10_union": 18,
+   "rank_corr": -0.39954672857227425,
+   "warm_jaccard": 0.017241379310344827,
+   "cold_jaccard": 0.008928571428571428,
+   "shared_hubs": [
+    "candle",
+    "grief"
+   ]
+  },
+  "all-minilm:22m|bge-m3": {
+   "mean_jaccard": 0.046969696969696974,
+   "null_jaccard": 0.0,
+   "lift": 0.046969696969696974,
+   "mean_lcs": 0.05878787878787879,
+   "n_pairs": 55,
+   "domain_seq_lcs": 0.3127272727272727,
+   "domain_seq_null": 0.0967687074829932,
+   "top10_overlap": 1,
+   "top10_union": 19,
+   "rank_corr": -0.5015101719024997,
+   "warm_jaccard": 0.030864197530864196,
+   "cold_jaccard": 0.0625,
+   "shared_hubs": [
+    "chaos"
+   ]
+  }
+ },
+ "elapsed_s": 43.4
+}

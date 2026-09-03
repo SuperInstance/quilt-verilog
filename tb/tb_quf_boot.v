@@ -194,6 +194,8 @@ module tb_quf_boot;
     reg [15:0] rd;
     integer okw;
     reg ok;
+    integer ncbytes;
+    reg [7:0] cmem [0:65535];
 
     initial begin
         fd = $fopen("tb/run/quf_tb_input.hex", "r");
@@ -216,6 +218,32 @@ module tb_quf_boot;
         end
         $fclose(fd);
         $display("QUF_BOOT_TB: %0d-byte golden image", nbytes);
+    end
+
+    // crc32-digested container (§12.2), for cases 5/6 (tools/quf.py
+    // create --crc32; regen with tools/run_quf_tb.sh)
+    initial begin
+        ncbytes = 0;
+        fd = $fopen("tb/run/quf_crc.hex", "r");
+        if (fd == 0) begin
+            $display("FAIL: cannot open tb/run/quf_crc.hex (run tools/run_quf_tb.sh first)");
+            $finish;
+        end
+        r = $fscanf(fd, "%h", ncbytes);
+        if (r != 1 || ncbytes <= 0 || ncbytes > 65536 || (ncbytes % 2) != 0) begin
+            $display("FAIL: bad crc hex header");
+            $finish;
+        end
+        for (i = 0; i < ncbytes; i = i + 1) begin
+            r = $fscanf(fd, "%h", tmpi);
+            if (r != 1) begin
+                $display("FAIL: crc hex truncated at %0d", i);
+                $finish;
+            end
+            cmem[i] = tmpi[7:0];
+        end
+        $fclose(fd);
+        $display("QUF_BOOT_TB: %0d-byte crc32-digested image", ncbytes);
     end
 
     initial begin
@@ -302,8 +330,39 @@ module tb_quf_boot;
         check(tpw === 5'd6, "c4 epoch latch frozen");
         rddial(4'd5, rd);  check(rd === 16'h5000, "c4 dials unmoved by noise");
 
+// ================= CASE 5: crc32 digest verifies ================
+// container WITH a crc32 KV (§12.2), payload byte-exact -> clean boot.
+// Loads tb/run/quf_crc.hex (tools/quf.py create --crc32); the file is a
+// superset layout-wise, dials/edges/ticks identical to the golden.
+        full_por;
+        for (i = 0; i < ncbytes; i = i + 1)
+            sendbyte(cmem[i]);
+        waitstate(3'd5, 20000, ok);
+        check(ok === 1'b1, "c5 crc32 container reaches RUN");
+        check(err === 8'd0, "c5 crc32 digest accepted");
+        rddial(4'd5, rd);  check(rd === 16'h5000, "c5 dial5 warm value");
+
+// ================= CASE 6: corrupted payload + crc32 = FAIL =====
+// THE digest-blindness closure: same container, one payload byte
+// flipped (last ticks payload byte; the file's align-32 padding is the
+// trailing 20 bytes and is EXCLUDED from the digest) -> loader err 12,
+// fabric never released.
+        full_por;
+        for (i = 0; i < ncbytes; i = i + 1)
+            sendbyte((i == ncbytes - 21) ? (cmem[i] ^ 8'h01) : cmem[i]);
+        waitstate(3'd6, 20000, ok);
+        check(ok === 1'b1, "c6 HOLD_ERR on crc mismatch");
+        check(err === 8'd12, "c6 loader err 12 (crc32 mismatch)");
+        check(rst_out === 1'b0, "c6 fabric held");
+        check(saw_boot_ok === 1'b0, "c6 no boot_ok");
+        // fail-static doctrine (mirrors c3): whether the dialfile retains
+        // the boot image is wrapper reset policy; the guarantee is that
+        // the fabric never RUNS on a digest-mismatched container.
+        rddial(4'd5, rd);  check(rd === 16'h6000 || rd === 16'h5000,
+                                 "c6 corrupted boot never runs");
+
         if (errors == 0)
-            $display("TB-QUF-BOOT PASS: warm-start, corrupt-header fallback, truncation fallback, epoch latch -- all 4 cases");
+            $display("TB-QUF-BOOT PASS: warm-start, corrupt-header fallback, truncation fallback, epoch latch, crc32 digest accept + mismatch reject -- all 6 cases");
         else
             $display("TB-QUF-BOOT FAIL: %0d error(s)", errors);
         $finish;

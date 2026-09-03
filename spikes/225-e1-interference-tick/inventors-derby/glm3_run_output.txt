@@ -1,0 +1,105 @@
+== SELF-CHECK: forks vs stock e1.run (stress: d=12,drift=6,K=4,lat=10) ==
+  PASS all 5 seeds: gate-control and div-kd0 byte-match e1.run
+
+== EXP 1: TRIANGLE PHASE GATE on pulse admission (R1) ==
+  no gate (stock E1)         ev= 10209 debt= 174978 chat=4446 canc= 353 maxE=193 %w= 83.1
+    
+  homog anti P=16/16 f1/2    ev=  5549 debt=  97024 chat=2200 canc=  14 maxE=355 %w= 55.2
+    defer=8687 bothOpen=3000 oneOpen=21000
+  diverse P=13/29 f1/2       ev=  6411 debt= 117357 chat=2697 canc= 204 maxE=325 %w= 60.2
+    defer=7177 bothOpen=7710 oneOpen=11435
+  diverse P=13/29 f1/4       ev=  9051 debt= 155721 chat=3618 canc= 249 maxE=335 %w= 80.5
+    defer=1326 bothOpen=18000 oneOpen=5715
+  diverse P=13/29 f3/4       ev=  4878 debt=  95589 chat=2170 canc=  71 maxE=380 %w= 50.8
+    defer=10509 bothOpen=3135 oneOpen=11440
+  diverse P=11/41 f1/4       ev=  8658 debt= 152878 chat=3530 canc= 195 maxE=264 %w= 78.9
+    defer=1949 bothOpen=16800 oneOpen=6600
+
+== EXP 2: ANNUITY LEDGER — conservation audit of stock E1 (R2) ==
+  [stress] viol=0 pulses=10209 emitted=54702 applied|net|=71953 applied_net=-319
+        annuity amp(+) = 2.055x   amp(-) = 1.860x   asymmetry = +0.195x
+        reached|1|=10204 unit-stick-ticks=26697 cancels=353 cancel-mass=3394
+  [gentle] viol=0 pulses=15406 emitted=48009 applied|net|=63847 applied_net=-349
+        annuity amp(+) = 3.479x   amp(-) = 3.430x   asymmetry = +0.049x
+        reached|1|=15405 unit-stick-ticks=115938 cancels=2600 cancel-mass=16082
+
+== EXP 3: SORTED SWITCHBOARD — N=5 twins, contention budget C=3 (§8) ==
+  admit-all control          ev= 18368 debt= 324322 chat=7414 canc= 945 maxE=281 %w= 68.0
+    fires/twin: [1586.2, 515.6, 195.4, 301.4, 1075.0]
+  -- budget C=3 --
+  sort=mag                   ev= 17337 debt= 307337 chat=7419 canc= 952 maxE=284 %w= 67.8
+    fires/twin: [1570.8, 483.4, 161.8, 235.0, 1016.4]  rejected=1012
+  sort=fair                  ev= 17403 debt= 300751 chat=7484 canc= 933 maxE=289 %w= 67.7
+    fires/twin: [1571.2, 475.0, 158.4, 251.4, 1024.6]  rejected=1003
+  sort=static                ev= 17342 debt= 300720 chat=7438 canc= 954 maxE=348 %w= 68.0
+    fires/twin: [1579.8, 498.4, 188.0, 213.8, 988.4]  rejected=964
+  sort=contend               ev= 17283 debt= 299109 chat=7338 canc= 951 maxE=289 %w= 68.0
+    fires/twin: [1466.8, 525.0, 195.8, 294.6, 974.4]  rejected=989
+  -- budget C=2 --
+  sort=mag                   ev= 16416 debt= 286686 chat=7448 canc= 925 maxE=277 %w= 68.0
+    fires/twin: [1566.4, 458.0, 53.4, 218.4, 987.0]  rejected=2432
+  sort=fair                  ev= 16296 debt= 272278 chat=7419 canc= 984 maxE=284 %w= 68.2
+    fires/twin: [1501.6, 442.4, 117.8, 221.4, 976.0]  rejected=2130
+  sort=static                ev= 16326 debt= 278137 chat=7383 canc= 925 maxE=313 %w= 68.2
+    fires/twin: [1573.4, 493.8, 43.0, 203.4, 951.6]  rejected=2027
+  sort=contend               ev= 16454 debt= 273392 chat=7514 canc= 967 maxE=292 %w= 67.7
+    fires/twin: [1414.4, 444.4, 209.0, 287.2, 935.8]  rejected=2196
+  -- budget C=1 --
+  sort=mag                   ev= 12744 debt= 220754 chat=7628 canc= 799 maxE=232 %w= 69.6
+    fires/twin: [1590.6, 29.8, 35.2, 35.4, 857.8]  rejected=6648
+  sort=fair                  ev= 12962 debt= 205010 chat=7927 canc= 816 maxE=270 %w= 68.0
+    fires/twin: [1267.4, 323.0, 96.8, 131.6, 773.6]  rejected=6288
+  sort=static                ev= 12799 debt= 210818 chat=7694 canc= 807 maxE=327 %w= 69.8
+    fires/twin: [1627.0, 14.6, 34.4, 134.6, 749.2]  rejected=5267
+  sort=contend               ev= 13083 debt= 201496 chat=8084 canc= 849 maxE=271 %w= 67.7
+    fires/twin: [1125.6, 409.4, 173.2, 185.0, 723.4]  rejected=6071
+
+== EXP 4: DIVERSITY-BIASED DECAY — window-flip K_eff (R4) ==
+  kd=-2                      ev= 10245 debt= 176130 chat=4559 canc=1289 maxE=190 %w= 80.4
+    diverse-emissions=7
+  kd=-1                      ev= 10218 debt= 175834 chat=4440 canc= 786 maxE=191 %w= 81.1
+    diverse-emissions=0
+  kd=+0                      ev= 10209 debt= 174978 chat=4446 canc= 353 maxE=193 %w= 83.1
+    diverse-emissions=5
+  kd=+1                      ev= 10073 debt= 172707 chat=4300 canc= 128 maxE=182 %w= 86.3
+    diverse-emissions=0
+  kd=+2                      ev=  9945 debt= 169637 chat=4224 canc=  72 maxE=172 %w= 91.4
+    diverse-emissions=9
+
+== EXP 5: K-AXIS SWEEP on stock e1.run (the R4 accident, decomposed) ==
+  [stress d12/pd3]  (impulse ref: see run below)
+    K=1: %w= 92.9 debt= 184991 maxE= 33 canc=  102 chat= 5059
+    K=2: %w= 91.4 debt= 169541 maxE= 35 canc=   70 chat= 4218
+    K=3: %w= 86.3 debt= 172707 maxE= 38 canc=  128 chat= 4300
+    K=4: %w= 83.1 debt= 174978 maxE= 39 canc=  353 chat= 4446
+    K=5: %w= 81.1 debt= 175834 maxE= 39 canc=  786 chat= 4440
+    K=6: %w= 80.3 debt= 176137 maxE= 39 canc= 1288 chat= 4558
+    K=8: %w= 78.2 debt= 180397 maxE= 39 canc= 1981 chat= 4656
+    impulse: %w= 51.4 debt= 244973 maxE= 61
+  [gentle d6/pd3]  (impulse ref: see run below)
+    K=1: %w= 80.2 debt= 145349 maxE= 31 canc=   34 chat= 9469
+    K=2: %w= 92.1 debt= 113573 maxE= 32 canc=   54 chat= 5976
+    K=3: %w= 85.5 debt= 109411 maxE= 34 canc=  215 chat= 5368
+    K=4: %w= 75.4 debt= 112540 maxE= 35 canc= 1085 chat= 5617
+    K=5: %w= 65.6 debt= 120516 maxE= 36 canc= 1691 chat= 6347
+    K=6: %w= 56.3 debt= 131773 maxE= 38 canc= 2199 chat= 7347
+    K=8: %w= 42.2 debt= 160715 maxE= 37 canc= 2600 chat= 9762
+    impulse: %w= 56.6 debt= 117198 maxE= 53
+  [ledger calm frame drift=3/lat=5, delta=12]
+    impulse d12 (banked calm champ)  %w= 98.0 debt=  55545 maxE= 53
+    intf K=2 d12                     %w= 97.8 debt=  97682 maxE= 32
+    intf K=2 d6 (tight)              %w= 92.1 debt= 113573 maxE= 32
+  [arena stress frame drift=6/lat=10, granite pd4/d16]
+    granite K=5 (banked champ)       %w= 93.2 debt= 132823 maxE= 38
+    granite-short K=2                %w= 94.1 debt= 150968 maxE= 36
+    granite-short K=3                %w= 94.2 debt= 139257 maxE= 39
+
+== EXP 6: SINGLE-PULSE ANNUITY INTEGRALS (floor-halving sign bias) ==
+  K=4 m0=  2:  +2 applies   5 (2.50x)   -2 applies  -5 (2.50x)   bias +0
+  K=4 m0=  5:  +5 applies  11 (2.20x)   -5 applies  -9 (1.80x)   bias +2
+  K=4 m0=  9:  +9 applies  19 (2.11x)   -9 applies -16 (1.78x)   bias +3
+  K=4 m0= 20:  +20 applies  38 (1.90x)   -20 applies -37 (1.85x)   bias +1
+  K=8 m0=  2:  +2 applies   9 (4.50x)   -2 applies  -9 (4.50x)   bias +0
+  K=8 m0=  5:  +5 applies  15 (3.00x)   -5 applies -13 (2.60x)   bias +2
+  K=8 m0=  9:  +9 applies  23 (2.56x)   -9 applies -20 (2.22x)   bias +3
+  K=8 m0= 20:  +20 applies  43 (2.15x)   -20 applies -41 (2.05x)   bias +2

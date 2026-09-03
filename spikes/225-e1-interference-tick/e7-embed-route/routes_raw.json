@@ -1,0 +1,2549 @@
+{
+ "nomic-embed-text": [
+  {
+   "pair": {
+    "a": "silence",
+    "b": "mercy",
+    "regime": "WARM"
+   },
+   "regime": "WARM",
+   "path": [
+    "silence",
+    "grief",
+    "mercy"
+   ],
+   "dead": false
+  },
+  {
+   "pair": {
+    "a": "origin",
+    "b": "virtue",
+    "regime": "WARM"
+   },
+   "regime": "WARM",
+   "path": [
+    "origin",
+    "paradox",
+    "truth",
+    "virtue"
+   ],
+   "dead": false
+  },
+  {
+   "pair": {
+    "a": "mercy",
+    "b": "anxiety",
+    "regime": "WARM"
+   },
+   "regime": "WARM",
+   "path": [
+    "mercy",
+    "grief",
+    "storm",
+    "chaos",
+    "anxiety"
+   ],
+   "dead": false
+  },
+  {
+   "pair": {
+    "a": "patience",
+    "b": "anxiety",
+    "regime": "WARM"
+   },
+   "regime": "WARM",
+   "path": [
+    "patience",
+    "calm",
+    "anxiety"
+   ],
+   "dead": false
+  },
+  {
+   "pair": {
+    "a": "anxiety",
+    "b": "virtue",
+    "regime": "WARM"
+   },
+   "regime": "WARM",
+   "path": [
+    "anxiety",
+    "calm",
+    "tide",
+    "virtue"
+   ],
+   "dead": false
+  },
+  {
+   "pair": {
+    "a": "origin",
+    "b": "honor",
+    "regime": "WARM"
+   },
+   "regime": "WARM",
+   "path": [
+    "origin",
+    "memory",
+    "honor"
+   ],
+   "dead": false
+  },
+  {
+   "pair": {
+    "a": "envy",
+    "b": "chance",
+    "regime": "WARM"
+   },
+   "regime": "WARM",
+   "path": [
+    "envy",
+    "doubt",
+    "chance"
+   ],
+   "dead": false
+  },
+  {
+   "pair": {
+    "a": "silence",
+    "b": "honor",
+    "regime": "WARM"
+   },
+   "regime": "WARM",
+   "path": [
+    "silence",
+    "grief",
+    "honor"
+   ],
+   "dead": false
+  },
+  {
+   "pair": {
+    "a": "meadow",
+    "b": "bluff",
+    "regime": "WARM"
+   },
+   "regime": "WARM",
+   "path": [
+    "meadow",
+    "prairie",
+    "bluff"
+   ],
+   "dead": false
+  },
+  {
+   "pair": {
+    "a": "tundra",
+    "b": "ravine",
+    "regime": "WARM"
+   },
+   "regime": "WARM",
+   "path": [
+    "tundra",
+    "prairie",
+    "ravine"
+   ],
+   "dead": false
+  },
+  {
+   "pair": {
+    "a": "valley",
+    "b": "thicket",
+    "regime": "WARM"
+   },
+   "regime": "WARM",
+   "path": [
+    "valley",
+    "ridge"
+   ],
+   "dead": true
+  },
+  {
+   "pair": {
+    "a": "bluff",
+    "b": "creek",
+    "regime": "WARM"
+   },
+   "regime": "WARM",
+   "path": [
+    "bluff",
+    "river",
+    "creek"
+   ],
+   "dead": false
+  },
+  {
+   "pair": {
+    "a": "river",
+    "b": "pond",
+    "regime": "WARM"
+   },
+   "regime": "WARM",
+   "path": [
+    "river",
+    "pond"
+   ],
+   "dead": false
+  },
+  {
+   "pair": {
+    "a": "cave",
+    "b": "creek",
+    "regime": "WARM"
+   },
+   "regime": "WARM",
+   "path": [
+    "cave",
+    "ravine",
+    "creek"
+   ],
+   "dead": false
+  },
+  {
+   "pair": {
+    "a": "canyon",
+    "b": "tundra",
+    "regime": "WARM"
+   },
+   "regime": "WARM",
+   "path": [
+    "canyon",
+    "mountain",
+    "tundra"
+   ],
+   "dead": false
+  },
+  {
+   "pair": {
+    "a": "lagoon",
+    "b": "inlet",
+    "regime": "WARM"
+   },
+   "regime": "WARM",
+   "path": [
+    "lagoon",
+    "inlet"
+   ],
+   "dead": false
+  },
+  {
+   "pair": {
+    "a": "beacon",
+    "b": "sextant",
+    "regime": "WARM"
+   },
+   "regime": "WARM",
+   "path": [
+    "beacon",
+    "candle",
+    "sextant"
+   ],
+   "dead": false
+  },
+  {
+   "pair": {
+    "a": "anchor",
+    "b": "mooring",
+    "regime": "WARM"
+   },
+   "regime": "WARM",
+   "path": [
+    "anchor",
+    "mooring"
+   ],
+   "dead": false
+  },
+  {
+   "pair": {
+    "a": "hull",
+    "b": "galley",
+    "regime": "WARM"
+   },
+   "regime": "WARM",
+   "path": [
+    "hull",
+    "galley"
+   ],
+   "dead": false
+  },
+  {
+   "pair": {
+    "a": "anchor",
+    "b": "lighthouse",
+    "regime": "WARM"
+   },
+   "regime": "WARM",
+   "path": [
+    "anchor",
+    "lighthouse"
+   ],
+   "dead": false
+  },
+  {
+   "pair": {
+    "a": "buoy",
+    "b": "helm",
+    "regime": "WARM"
+   },
+   "regime": "WARM",
+   "path": [
+    "buoy",
+    "mooring",
+    "helm"
+   ],
+   "dead": false
+  },
+  {
+   "pair": {
+    "a": "sail",
+    "b": "stern",
+    "regime": "WARM"
+   },
+   "regime": "WARM",
+   "path": [
+    "sail",
+    "rudder",
+    "stern"
+   ],
+   "dead": false
+  },
+  {
+   "pair": {
+    "a": "harbor",
+    "b": "buoy",
+    "regime": "WARM"
+   },
+   "regime": "WARM",
+   "path": [
+    "harbor",
+    "buoy"
+   ],
+   "dead": false
+  },
+  {
+   "pair": {
+    "a": "clamp",
+    "b": "hook",
+    "regime": "WARM"
+   },
+   "regime": "WARM",
+   "path": [
+    "clamp",
+    "hook"
+   ],
+   "dead": false
+  },
+  {
+   "pair": {
+    "a": "ladder",
+    "b": "broom",
+    "regime": "WARM"
+   },
+   "regime": "WARM",
+   "path": [
+    "ladder",
+    "chair",
+    "broom"
+   ],
+   "dead": false
+  },
+  {
+   "pair": {
+    "a": "pencil",
+    "b": "battery",
+    "regime": "WARM"
+   },
+   "regime": "WARM",
+   "path": [
+    "pencil"
+   ],
+   "dead": true
+  },
+  {
+   "pair": {
+    "a": "kettle",
+    "b": "clamp",
+    "regime": "WARM"
+   },
+   "regime": "WARM",
+   "path": [
+    "kettle",
+    "spoon",
+    "wrench",
+    "clamp"
+   ],
+   "dead": false
+  },
+  {
+   "pair": {
+    "a": "ladder",
+    "b": "kettle",
+    "regime": "WARM"
+   },
+   "regime": "WARM",
+   "path": [
+    "ladder",
+    "keel",
+    "galley",
+    "kettle"
+   ],
+   "dead": false
+  },
+  {
+   "pair": {
+    "a": "kettle",
+    "b": "shovel",
+    "regime": "WARM"
+   },
+   "regime": "WARM",
+   "path": [
+    "kettle",
+    "spoon",
+    "shovel"
+   ],
+   "dead": false
+  },
+  {
+   "pair": {
+    "a": "nail",
+    "b": "mirror",
+    "regime": "WARM"
+   },
+   "regime": "WARM",
+   "path": [
+    "nail",
+    "pencil",
+    "chair",
+    "mirror"
+   ],
+   "dead": false
+  },
+  {
+   "pair": {
+    "a": "geyser",
+    "b": "fan",
+    "regime": "COLD"
+   },
+   "regime": "COLD",
+   "path": [
+    "geyser",
+    "candle",
+    "blanket"
+   ],
+   "dead": true
+  },
+  {
+   "pair": {
+    "a": "estuary",
+    "b": "tide",
+    "regime": "COLD"
+   },
+   "regime": "COLD",
+   "path": [
+    "estuary",
+    "tide"
+   ],
+   "dead": false
+  },
+  {
+   "pair": {
+    "a": "threshold",
+    "b": "inlet",
+    "regime": "COLD"
+   },
+   "regime": "COLD",
+   "path": [
+    "threshold",
+    "paradox"
+   ],
+   "dead": true
+  },
+  {
+   "pair": {
+    "a": "habit",
+    "b": "rigging",
+    "regime": "COLD"
+   },
+   "regime": "COLD",
+   "path": [
+    "habit"
+   ],
+   "dead": true
+  },
+  {
+   "pair": {
+    "a": "patience",
+    "b": "jar",
+    "regime": "COLD"
+   },
+   "regime": "COLD",
+   "path": [
+    "patience",
+    "limit"
+   ],
+   "dead": true
+  },
+  {
+   "pair": {
+    "a": "ravine",
+    "b": "basket",
+    "regime": "COLD"
+   },
+   "regime": "COLD",
+   "path": [
+    "ravine",
+    "rope",
+    "blanket",
+    "basket"
+   ],
+   "dead": false
+  },
+  {
+   "pair": {
+    "a": "prow",
+    "b": "drum",
+    "regime": "COLD"
+   },
+   "regime": "COLD",
+   "path": [
+    "prow",
+    "swell",
+    "drum"
+   ],
+   "dead": false
+  },
+  {
+   "pair": {
+    "a": "irony",
+    "b": "fjord",
+    "regime": "COLD"
+   },
+   "regime": "COLD",
+   "path": [
+    "irony",
+    "paradox",
+    "mountain",
+    "fjord"
+   ],
+   "dead": false
+  },
+  {
+   "pair": {
+    "a": "mooring",
+    "b": "plank",
+    "regime": "COLD"
+   },
+   "regime": "COLD",
+   "path": [
+    "mooring",
+    "plank"
+   ],
+   "dead": false
+  },
+  {
+   "pair": {
+    "a": "paradox",
+    "b": "chart",
+    "regime": "COLD"
+   },
+   "regime": "COLD",
+   "path": [
+    "paradox",
+    "mountain",
+    "chart"
+   ],
+   "dead": false
+  },
+  {
+   "pair": {
+    "a": "memory",
+    "b": "gorge",
+    "regime": "COLD"
+   },
+   "regime": "COLD",
+   "path": [
+    "memory",
+    "mountain",
+    "gorge"
+   ],
+   "dead": false
+  },
+  {
+   "pair": {
+    "a": "absence",
+    "b": "glacier",
+    "regime": "COLD"
+   },
+   "regime": "COLD",
+   "path": [
+    "absence",
+    "silence",
+    "calm",
+    "mountain",
+    "glacier"
+   ],
+   "dead": false
+  },
+  {
+   "pair": {
+    "a": "anxiety",
+    "b": "ballast",
+    "regime": "COLD"
+   },
+   "regime": "COLD",
+   "path": [
+    "anxiety",
+    "calm",
+    "tide",
+    "ballast"
+   ],
+   "dead": false
+  },
+  {
+   "pair": {
+    "a": "doubt",
+    "b": "hammer",
+    "regime": "COLD"
+   },
+   "regime": "COLD",
+   "path": [
+    "doubt",
+    "silence",
+    "grief",
+    "storm",
+    "hammer"
+   ],
+   "dead": false
+  },
+  {
+   "pair": {
+    "a": "capstan",
+    "b": "pencil",
+    "regime": "COLD"
+   },
+   "regime": "COLD",
+   "path": [
+    "capstan",
+    "bowsprit"
+   ],
+   "dead": true
+  },
+  {
+   "pair": {
+    "a": "purpose",
+    "b": "pond",
+    "regime": "COLD"
+   },
+   "regime": "COLD",
+   "path": [
+    "purpose",
+    "virtue",
+    "tide",
+    "lagoon",
+    "pond"
+   ],
+   "dead": false
+  },
+  {
+   "pair": {
+    "a": "truth",
+    "b": "keel",
+    "regime": "COLD"
+   },
+   "regime": "COLD",
+   "path": [
+    "truth",
+    "bluff",
+    "keel"
+   ],
+   "dead": false
+  },
+  {
+   "pair": {
+    "a": "grief",
+    "b": "starboard",
+    "regime": "COLD"
+   },
+   "regime": "COLD",
+   "path": [
+    "grief",
+    "honor",
+    "stern",
+    "starboard"
+   ],
+   "dead": false
+  },
+  {
+   "pair": {
+    "a": "duty",
+    "b": "valley",
+    "regime": "COLD"
+   },
+   "regime": "COLD",
+   "path": [
+    "duty",
+    "drum",
+    "river",
+    "valley"
+   ],
+   "dead": false
+  },
+  {
+   "pair": {
+    "a": "origin",
+    "b": "summit",
+    "regime": "COLD"
+   },
+   "regime": "COLD",
+   "path": [
+    "origin",
+    "paradox",
+    "mountain",
+    "summit"
+   ],
+   "dead": false
+  },
+  {
+   "pair": {
+    "a": "promise",
+    "b": "sextant",
+    "regime": "COLD"
+   },
+   "regime": "COLD",
+   "path": [
+    "promise",
+    "certainty",
+    "sextant"
+   ],
+   "dead": false
+  },
+  {
+   "pair": {
+    "a": "calm",
+    "b": "dockline",
+    "regime": "COLD"
+   },
+   "regime": "COLD",
+   "path": [
+    "calm",
+    "swell",
+    "mooring",
+    "dockline"
+   ],
+   "dead": false
+  },
+  {
+   "pair": {
+    "a": "justice",
+    "b": "harbor",
+    "regime": "COLD"
+   },
+   "regime": "COLD",
+   "path": [
+    "justice",
+    "duty",
+    "starboard",
+    "harbor"
+   ],
+   "dead": false
+  },
+  {
+   "pair": {
+    "a": "chance",
+    "b": "prairie",
+    "regime": "COLD"
+   },
+   "regime": "COLD",
+   "path": [
+    "chance",
+    "bluff",
+    "prairie"
+   ],
+   "dead": false
+  },
+  {
+   "pair": {
+    "a": "entropy",
+    "b": "ladder",
+    "regime": "COLD"
+   },
+   "regime": "COLD",
+   "path": [
+    "entropy",
+    "paradox",
+    "chair",
+    "ladder"
+   ],
+   "dead": false
+  },
+  {
+   "pair": {
+    "a": "silence",
+    "b": "blanket",
+    "regime": "COLD"
+   },
+   "regime": "COLD",
+   "path": [
+    "silence",
+    "calm",
+    "swell",
+    "blanket"
+   ],
+   "dead": false
+  },
+  {
+   "pair": {
+    "a": "rumor",
+    "b": "brick",
+    "regime": "COLD"
+   },
+   "regime": "COLD",
+   "path": [
+    "rumor",
+    "bluff",
+    "pencil",
+    "brick"
+   ],
+   "dead": false
+  },
+  {
+   "pair": {
+    "a": "envy",
+    "b": "hook",
+    "regime": "COLD"
+   },
+   "regime": "COLD",
+   "path": [
+    "envy",
+    "irony"
+   ],
+   "dead": true
+  },
+  {
+   "pair": {
+    "a": "limit",
+    "b": "nail",
+    "regime": "COLD"
+   },
+   "regime": "COLD",
+   "path": [
+    "limit",
+    "threshold",
+    "plank",
+    "nail"
+   ],
+   "dead": false
+  },
+  {
+   "pair": {
+    "a": "chaos",
+    "b": "wrench",
+    "regime": "COLD"
+   },
+   "regime": "COLD",
+   "path": [
+    "chaos",
+    "justice",
+    "irony"
+   ],
+   "dead": true
+  }
+ ],
+ "all-minilm:22m": [
+  {
+   "pair": {
+    "a": "silence",
+    "b": "mercy",
+    "regime": "WARM"
+   },
+   "regime": "WARM",
+   "path": [
+    "silence",
+    "honor",
+    "mercy"
+   ],
+   "dead": false
+  },
+  {
+   "pair": {
+    "a": "origin",
+    "b": "virtue",
+    "regime": "WARM"
+   },
+   "regime": "WARM",
+   "path": [
+    "origin",
+    "purpose",
+    "justice",
+    "virtue"
+   ],
+   "dead": false
+  },
+  {
+   "pair": {
+    "a": "mercy",
+    "b": "anxiety",
+    "regime": "WARM"
+   },
+   "regime": "WARM",
+   "path": [
+    "mercy",
+    "mirror",
+    "fan",
+    "silence",
+    "anxiety"
+   ],
+   "dead": false
+  },
+  {
+   "pair": {
+    "a": "patience",
+    "b": "anxiety",
+    "regime": "WARM"
+   },
+   "regime": "WARM",
+   "path": [
+    "patience",
+    "anxiety"
+   ],
+   "dead": false
+  },
+  {
+   "pair": {
+    "a": "anxiety",
+    "b": "virtue",
+    "regime": "WARM"
+   },
+   "regime": "WARM",
+   "path": [
+    "anxiety",
+    "nostalgia",
+    "habit",
+    "virtue"
+   ],
+   "dead": false
+  },
+  {
+   "pair": {
+    "a": "origin",
+    "b": "honor",
+    "regime": "WARM"
+   },
+   "regime": "WARM",
+   "path": [
+    "origin",
+    "purpose",
+    "duty",
+    "honor"
+   ],
+   "dead": false
+  },
+  {
+   "pair": {
+    "a": "envy",
+    "b": "chance",
+    "regime": "WARM"
+   },
+   "regime": "WARM",
+   "path": [
+    "envy"
+   ],
+   "dead": true
+  },
+  {
+   "pair": {
+    "a": "silence",
+    "b": "honor",
+    "regime": "WARM"
+   },
+   "regime": "WARM",
+   "path": [
+    "silence",
+    "honor"
+   ],
+   "dead": false
+  },
+  {
+   "pair": {
+    "a": "meadow",
+    "b": "bluff",
+    "regime": "WARM"
+   },
+   "regime": "WARM",
+   "path": [
+    "meadow",
+    "ravine",
+    "ladder",
+    "nail",
+    "bluff"
+   ],
+   "dead": false
+  },
+  {
+   "pair": {
+    "a": "tundra",
+    "b": "ravine",
+    "regime": "WARM"
+   },
+   "regime": "WARM",
+   "path": [
+    "tundra",
+    "mountain",
+    "ravine"
+   ],
+   "dead": false
+  },
+  {
+   "pair": {
+    "a": "valley",
+    "b": "thicket",
+    "regime": "WARM"
+   },
+   "regime": "WARM",
+   "path": [
+    "valley",
+    "ridge"
+   ],
+   "dead": true
+  },
+  {
+   "pair": {
+    "a": "bluff",
+    "b": "creek",
+    "regime": "WARM"
+   },
+   "regime": "WARM",
+   "path": [
+    "bluff",
+    "promise",
+    "glacier",
+    "creek"
+   ],
+   "dead": false
+  },
+  {
+   "pair": {
+    "a": "river",
+    "b": "pond",
+    "regime": "WARM"
+   },
+   "regime": "WARM",
+   "path": [
+    "river",
+    "pond"
+   ],
+   "dead": false
+  },
+  {
+   "pair": {
+    "a": "cave",
+    "b": "creek",
+    "regime": "WARM"
+   },
+   "regime": "WARM",
+   "path": [
+    "cave",
+    "creek"
+   ],
+   "dead": false
+  },
+  {
+   "pair": {
+    "a": "canyon",
+    "b": "tundra",
+    "regime": "WARM"
+   },
+   "regime": "WARM",
+   "path": [
+    "canyon",
+    "glacier",
+    "tundra"
+   ],
+   "dead": false
+  },
+  {
+   "pair": {
+    "a": "lagoon",
+    "b": "inlet",
+    "regime": "WARM"
+   },
+   "regime": "WARM",
+   "path": [
+    "lagoon",
+    "inlet"
+   ],
+   "dead": false
+  },
+  {
+   "pair": {
+    "a": "beacon",
+    "b": "sextant",
+    "regime": "WARM"
+   },
+   "regime": "WARM",
+   "path": [
+    "beacon",
+    "cave",
+    "mountain"
+   ],
+   "dead": true
+  },
+  {
+   "pair": {
+    "a": "anchor",
+    "b": "mooring",
+    "regime": "WARM"
+   },
+   "regime": "WARM",
+   "path": [
+    "anchor",
+    "sail",
+    "mooring"
+   ],
+   "dead": false
+  },
+  {
+   "pair": {
+    "a": "hull",
+    "b": "galley",
+    "regime": "WARM"
+   },
+   "regime": "WARM",
+   "path": [
+    "hull",
+    "galley"
+   ],
+   "dead": false
+  },
+  {
+   "pair": {
+    "a": "anchor",
+    "b": "lighthouse",
+    "regime": "WARM"
+   },
+   "regime": "WARM",
+   "path": [
+    "anchor",
+    "lighthouse"
+   ],
+   "dead": false
+  },
+  {
+   "pair": {
+    "a": "buoy",
+    "b": "helm",
+    "regime": "WARM"
+   },
+   "regime": "WARM",
+   "path": [
+    "buoy",
+    "clamp",
+    "hammer",
+    "helm"
+   ],
+   "dead": false
+  },
+  {
+   "pair": {
+    "a": "sail",
+    "b": "stern",
+    "regime": "WARM"
+   },
+   "regime": "WARM",
+   "path": [
+    "sail",
+    "starboard",
+    "stern"
+   ],
+   "dead": false
+  },
+  {
+   "pair": {
+    "a": "harbor",
+    "b": "buoy",
+    "regime": "WARM"
+   },
+   "regime": "WARM",
+   "path": [
+    "harbor",
+    "tide",
+    "buoy"
+   ],
+   "dead": false
+  },
+  {
+   "pair": {
+    "a": "clamp",
+    "b": "hook",
+    "regime": "WARM"
+   },
+   "regime": "WARM",
+   "path": [
+    "clamp",
+    "hook"
+   ],
+   "dead": false
+  },
+  {
+   "pair": {
+    "a": "ladder",
+    "b": "broom",
+    "regime": "WARM"
+   },
+   "regime": "WARM",
+   "path": [
+    "ladder",
+    "broom"
+   ],
+   "dead": false
+  },
+  {
+   "pair": {
+    "a": "pencil",
+    "b": "battery",
+    "regime": "WARM"
+   },
+   "regime": "WARM",
+   "path": [
+    "pencil",
+    "wrench",
+    "battery"
+   ],
+   "dead": false
+  },
+  {
+   "pair": {
+    "a": "kettle",
+    "b": "clamp",
+    "regime": "WARM"
+   },
+   "regime": "WARM",
+   "path": [
+    "kettle",
+    "needle",
+    "clamp"
+   ],
+   "dead": false
+  },
+  {
+   "pair": {
+    "a": "ladder",
+    "b": "kettle",
+    "regime": "WARM"
+   },
+   "regime": "WARM",
+   "path": [
+    "ladder",
+    "creek",
+    "kettle"
+   ],
+   "dead": false
+  },
+  {
+   "pair": {
+    "a": "kettle",
+    "b": "shovel",
+    "regime": "WARM"
+   },
+   "regime": "WARM",
+   "path": [
+    "kettle",
+    "spoon",
+    "shovel"
+   ],
+   "dead": false
+  },
+  {
+   "pair": {
+    "a": "nail",
+    "b": "mirror",
+    "regime": "WARM"
+   },
+   "regime": "WARM",
+   "path": [
+    "nail",
+    "anchor",
+    "mirror"
+   ],
+   "dead": false
+  },
+  {
+   "pair": {
+    "a": "geyser",
+    "b": "fan",
+    "regime": "COLD"
+   },
+   "regime": "COLD",
+   "path": [
+    "geyser"
+   ],
+   "dead": true
+  },
+  {
+   "pair": {
+    "a": "estuary",
+    "b": "tide",
+    "regime": "COLD"
+   },
+   "regime": "COLD",
+   "path": [
+    "estuary",
+    "tide"
+   ],
+   "dead": false
+  },
+  {
+   "pair": {
+    "a": "threshold",
+    "b": "inlet",
+    "regime": "COLD"
+   },
+   "regime": "COLD",
+   "path": [
+    "threshold",
+    "limit"
+   ],
+   "dead": true
+  },
+  {
+   "pair": {
+    "a": "habit",
+    "b": "rigging",
+    "regime": "COLD"
+   },
+   "regime": "COLD",
+   "path": [
+    "habit",
+    "mast",
+    "rigging"
+   ],
+   "dead": false
+  },
+  {
+   "pair": {
+    "a": "patience",
+    "b": "jar",
+    "regime": "COLD"
+   },
+   "regime": "COLD",
+   "path": [
+    "patience",
+    "justice",
+    "jar"
+   ],
+   "dead": false
+  },
+  {
+   "pair": {
+    "a": "ravine",
+    "b": "basket",
+    "regime": "COLD"
+   },
+   "regime": "COLD",
+   "path": [
+    "ravine",
+    "bucket",
+    "basket"
+   ],
+   "dead": false
+  },
+  {
+   "pair": {
+    "a": "prow",
+    "b": "drum",
+    "regime": "COLD"
+   },
+   "regime": "COLD",
+   "path": [
+    "prow",
+    "chance"
+   ],
+   "dead": true
+  },
+  {
+   "pair": {
+    "a": "irony",
+    "b": "fjord",
+    "regime": "COLD"
+   },
+   "regime": "COLD",
+   "path": [
+    "irony",
+    "virtue",
+    "mercy",
+    "tide",
+    "fjord"
+   ],
+   "dead": false
+  },
+  {
+   "pair": {
+    "a": "mooring",
+    "b": "plank",
+    "regime": "COLD"
+   },
+   "regime": "COLD",
+   "path": [
+    "mooring",
+    "lagoon",
+    "plank"
+   ],
+   "dead": false
+  },
+  {
+   "pair": {
+    "a": "paradox",
+    "b": "chart",
+    "regime": "COLD"
+   },
+   "regime": "COLD",
+   "path": [
+    "paradox",
+    "absence",
+    "silence",
+    "rhythm"
+   ],
+   "dead": true
+  },
+  {
+   "pair": {
+    "a": "memory",
+    "b": "gorge",
+    "regime": "COLD"
+   },
+   "regime": "COLD",
+   "path": [
+    "memory"
+   ],
+   "dead": true
+  },
+  {
+   "pair": {
+    "a": "absence",
+    "b": "glacier",
+    "regime": "COLD"
+   },
+   "regime": "COLD",
+   "path": [
+    "absence",
+    "paradox"
+   ],
+   "dead": true
+  },
+  {
+   "pair": {
+    "a": "anxiety",
+    "b": "ballast",
+    "regime": "COLD"
+   },
+   "regime": "COLD",
+   "path": [
+    "anxiety",
+    "chaos",
+    "justice",
+    "mirror",
+    "lighthouse",
+    "ballast"
+   ],
+   "dead": false
+  },
+  {
+   "pair": {
+    "a": "doubt",
+    "b": "hammer",
+    "regime": "COLD"
+   },
+   "regime": "COLD",
+   "path": [
+    "doubt",
+    "truth",
+    "justice",
+    "mercy",
+    "hammer"
+   ],
+   "dead": false
+  },
+  {
+   "pair": {
+    "a": "capstan",
+    "b": "pencil",
+    "regime": "COLD"
+   },
+   "regime": "COLD",
+   "path": [
+    "capstan"
+   ],
+   "dead": true
+  },
+  {
+   "pair": {
+    "a": "purpose",
+    "b": "pond",
+    "regime": "COLD"
+   },
+   "regime": "COLD",
+   "path": [
+    "purpose",
+    "justice"
+   ],
+   "dead": true
+  },
+  {
+   "pair": {
+    "a": "truth",
+    "b": "keel",
+    "regime": "COLD"
+   },
+   "regime": "COLD",
+   "path": [
+    "truth",
+    "bluff",
+    "stern",
+    "rudder",
+    "keel"
+   ],
+   "dead": false
+  },
+  {
+   "pair": {
+    "a": "grief",
+    "b": "starboard",
+    "regime": "COLD"
+   },
+   "regime": "COLD",
+   "path": [
+    "grief",
+    "fan",
+    "brick",
+    "wharf",
+    "starboard"
+   ],
+   "dead": false
+  },
+  {
+   "pair": {
+    "a": "duty",
+    "b": "valley",
+    "regime": "COLD"
+   },
+   "regime": "COLD",
+   "path": [
+    "duty",
+    "harbor",
+    "valley"
+   ],
+   "dead": false
+  },
+  {
+   "pair": {
+    "a": "origin",
+    "b": "summit",
+    "regime": "COLD"
+   },
+   "regime": "COLD",
+   "path": [
+    "origin",
+    "purpose",
+    "duty",
+    "shovel",
+    "summit"
+   ],
+   "dead": false
+  },
+  {
+   "pair": {
+    "a": "promise",
+    "b": "sextant",
+    "regime": "COLD"
+   },
+   "regime": "COLD",
+   "path": [
+    "promise",
+    "hook",
+    "rope"
+   ],
+   "dead": true
+  },
+  {
+   "pair": {
+    "a": "calm",
+    "b": "dockline",
+    "regime": "COLD"
+   },
+   "regime": "COLD",
+   "path": [
+    "calm",
+    "anxiety"
+   ],
+   "dead": true
+  },
+  {
+   "pair": {
+    "a": "justice",
+    "b": "harbor",
+    "regime": "COLD"
+   },
+   "regime": "COLD",
+   "path": [
+    "justice",
+    "delta",
+    "harbor"
+   ],
+   "dead": false
+  },
+  {
+   "pair": {
+    "a": "chance",
+    "b": "prairie",
+    "regime": "COLD"
+   },
+   "regime": "COLD",
+   "path": [
+    "chance",
+    "prow"
+   ],
+   "dead": true
+  },
+  {
+   "pair": {
+    "a": "entropy",
+    "b": "ladder",
+    "regime": "COLD"
+   },
+   "regime": "COLD",
+   "path": [
+    "entropy",
+    "chaos",
+    "storm",
+    "ladder"
+   ],
+   "dead": false
+  },
+  {
+   "pair": {
+    "a": "silence",
+    "b": "blanket",
+    "regime": "COLD"
+   },
+   "regime": "COLD",
+   "path": [
+    "silence",
+    "fan",
+    "blanket"
+   ],
+   "dead": false
+  },
+  {
+   "pair": {
+    "a": "rumor",
+    "b": "brick",
+    "regime": "COLD"
+   },
+   "regime": "COLD",
+   "path": [
+    "rumor",
+    "truth",
+    "bluff",
+    "brick"
+   ],
+   "dead": false
+  },
+  {
+   "pair": {
+    "a": "envy",
+    "b": "hook",
+    "regime": "COLD"
+   },
+   "regime": "COLD",
+   "path": [
+    "envy",
+    "habit",
+    "mast",
+    "rope",
+    "hook"
+   ],
+   "dead": false
+  },
+  {
+   "pair": {
+    "a": "limit",
+    "b": "nail",
+    "regime": "COLD"
+   },
+   "regime": "COLD",
+   "path": [
+    "limit",
+    "threshold"
+   ],
+   "dead": true
+  },
+  {
+   "pair": {
+    "a": "chaos",
+    "b": "wrench",
+    "regime": "COLD"
+   },
+   "regime": "COLD",
+   "path": [
+    "chaos",
+    "storm",
+    "hammer",
+    "wrench"
+   ],
+   "dead": false
+  }
+ ],
+ "bge-m3": [
+  {
+   "pair": {
+    "a": "silence",
+    "b": "mercy",
+    "regime": "WARM"
+   },
+   "regime": "WARM",
+   "path": [
+    "silence",
+    "patience",
+    "mercy"
+   ],
+   "dead": false
+  },
+  {
+   "pair": {
+    "a": "origin",
+    "b": "virtue",
+    "regime": "WARM"
+   },
+   "regime": "WARM",
+   "path": [
+    "origin",
+    "truth",
+    "virtue"
+   ],
+   "dead": false
+  },
+  {
+   "pair": {
+    "a": "mercy",
+    "b": "anxiety",
+    "regime": "WARM"
+   },
+   "regime": "WARM",
+   "path": [
+    "mercy",
+    "envy",
+    "anxiety"
+   ],
+   "dead": false
+  },
+  {
+   "pair": {
+    "a": "patience",
+    "b": "anxiety",
+    "regime": "WARM"
+   },
+   "regime": "WARM",
+   "path": [
+    "patience",
+    "anxiety"
+   ],
+   "dead": false
+  },
+  {
+   "pair": {
+    "a": "anxiety",
+    "b": "virtue",
+    "regime": "WARM"
+   },
+   "regime": "WARM",
+   "path": [
+    "anxiety",
+    "patience",
+    "virtue"
+   ],
+   "dead": false
+  },
+  {
+   "pair": {
+    "a": "origin",
+    "b": "honor",
+    "regime": "WARM"
+   },
+   "regime": "WARM",
+   "path": [
+    "origin",
+    "truth",
+    "honor"
+   ],
+   "dead": false
+  },
+  {
+   "pair": {
+    "a": "envy",
+    "b": "chance",
+    "regime": "WARM"
+   },
+   "regime": "WARM",
+   "path": [
+    "envy",
+    "promise",
+    "chance"
+   ],
+   "dead": false
+  },
+  {
+   "pair": {
+    "a": "silence",
+    "b": "honor",
+    "regime": "WARM"
+   },
+   "regime": "WARM",
+   "path": [
+    "silence",
+    "memory",
+    "honor"
+   ],
+   "dead": false
+  },
+  {
+   "pair": {
+    "a": "meadow",
+    "b": "bluff",
+    "regime": "WARM"
+   },
+   "regime": "WARM",
+   "path": [
+    "meadow",
+    "beacon",
+    "brick",
+    "bluff"
+   ],
+   "dead": false
+  },
+  {
+   "pair": {
+    "a": "tundra",
+    "b": "ravine",
+    "regime": "WARM"
+   },
+   "regime": "WARM",
+   "path": [
+    "tundra",
+    "pond",
+    "river",
+    "ravine"
+   ],
+   "dead": false
+  },
+  {
+   "pair": {
+    "a": "valley",
+    "b": "thicket",
+    "regime": "WARM"
+   },
+   "regime": "WARM",
+   "path": [
+    "valley",
+    "kettle",
+    "thicket"
+   ],
+   "dead": false
+  },
+  {
+   "pair": {
+    "a": "bluff",
+    "b": "creek",
+    "regime": "WARM"
+   },
+   "regime": "WARM",
+   "path": [
+    "bluff",
+    "brick",
+    "creek"
+   ],
+   "dead": false
+  },
+  {
+   "pair": {
+    "a": "river",
+    "b": "pond",
+    "regime": "WARM"
+   },
+   "regime": "WARM",
+   "path": [
+    "river",
+    "pond"
+   ],
+   "dead": false
+  },
+  {
+   "pair": {
+    "a": "cave",
+    "b": "creek",
+    "regime": "WARM"
+   },
+   "regime": "WARM",
+   "path": [
+    "cave",
+    "creek"
+   ],
+   "dead": false
+  },
+  {
+   "pair": {
+    "a": "canyon",
+    "b": "tundra",
+    "regime": "WARM"
+   },
+   "regime": "WARM",
+   "path": [
+    "canyon",
+    "pond",
+    "tundra"
+   ],
+   "dead": false
+  },
+  {
+   "pair": {
+    "a": "lagoon",
+    "b": "inlet",
+    "regime": "WARM"
+   },
+   "regime": "WARM",
+   "path": [
+    "lagoon",
+    "river",
+    "limit",
+    "inlet"
+   ],
+   "dead": false
+  },
+  {
+   "pair": {
+    "a": "beacon",
+    "b": "sextant",
+    "regime": "WARM"
+   },
+   "regime": "WARM",
+   "path": [
+    "beacon",
+    "candle"
+   ],
+   "dead": true
+  },
+  {
+   "pair": {
+    "a": "anchor",
+    "b": "mooring",
+    "regime": "WARM"
+   },
+   "regime": "WARM",
+   "path": [
+    "anchor",
+    "sail",
+    "rigging",
+    "mooring"
+   ],
+   "dead": false
+  },
+  {
+   "pair": {
+    "a": "hull",
+    "b": "galley",
+    "regime": "WARM"
+   },
+   "regime": "WARM",
+   "path": [
+    "hull",
+    "sail",
+    "swell",
+    "valley",
+    "galley"
+   ],
+   "dead": false
+  },
+  {
+   "pair": {
+    "a": "anchor",
+    "b": "lighthouse",
+    "regime": "WARM"
+   },
+   "regime": "WARM",
+   "path": [
+    "anchor",
+    "lantern",
+    "lighthouse"
+   ],
+   "dead": false
+  },
+  {
+   "pair": {
+    "a": "buoy",
+    "b": "helm",
+    "regime": "WARM"
+   },
+   "regime": "WARM",
+   "path": [
+    "buoy",
+    "broom",
+    "hammer",
+    "helm"
+   ],
+   "dead": false
+  },
+  {
+   "pair": {
+    "a": "sail",
+    "b": "stern",
+    "regime": "WARM"
+   },
+   "regime": "WARM",
+   "path": [
+    "sail",
+    "swell",
+    "wrench",
+    "stern"
+   ],
+   "dead": false
+  },
+  {
+   "pair": {
+    "a": "harbor",
+    "b": "buoy",
+    "regime": "WARM"
+   },
+   "regime": "WARM",
+   "path": [
+    "harbor",
+    "estuary",
+    "canyon",
+    "beacon",
+    "buoy"
+   ],
+   "dead": false
+  },
+  {
+   "pair": {
+    "a": "clamp",
+    "b": "hook",
+    "regime": "WARM"
+   },
+   "regime": "WARM",
+   "path": [
+    "clamp",
+    "rope",
+    "hook"
+   ],
+   "dead": false
+  },
+  {
+   "pair": {
+    "a": "ladder",
+    "b": "broom",
+    "regime": "WARM"
+   },
+   "regime": "WARM",
+   "path": [
+    "ladder",
+    "wrench",
+    "broom"
+   ],
+   "dead": false
+  },
+  {
+   "pair": {
+    "a": "pencil",
+    "b": "battery",
+    "regime": "WARM"
+   },
+   "regime": "WARM",
+   "path": [
+    "pencil",
+    "candle",
+    "battery"
+   ],
+   "dead": false
+  },
+  {
+   "pair": {
+    "a": "kettle",
+    "b": "clamp",
+    "regime": "WARM"
+   },
+   "regime": "WARM",
+   "path": [
+    "kettle",
+    "candle",
+    "clamp"
+   ],
+   "dead": false
+  },
+  {
+   "pair": {
+    "a": "ladder",
+    "b": "kettle",
+    "regime": "WARM"
+   },
+   "regime": "WARM",
+   "path": [
+    "ladder",
+    "kettle"
+   ],
+   "dead": false
+  },
+  {
+   "pair": {
+    "a": "kettle",
+    "b": "shovel",
+    "regime": "WARM"
+   },
+   "regime": "WARM",
+   "path": [
+    "kettle",
+    "shovel"
+   ],
+   "dead": false
+  },
+  {
+   "pair": {
+    "a": "nail",
+    "b": "mirror",
+    "regime": "WARM"
+   },
+   "regime": "WARM",
+   "path": [
+    "nail",
+    "nostalgia",
+    "memory",
+    "mirror"
+   ],
+   "dead": false
+  },
+  {
+   "pair": {
+    "a": "geyser",
+    "b": "fan",
+    "regime": "COLD"
+   },
+   "regime": "COLD",
+   "path": [
+    "geyser",
+    "glacier",
+    "mountain",
+    "chart",
+    "fan"
+   ],
+   "dead": false
+  },
+  {
+   "pair": {
+    "a": "estuary",
+    "b": "tide",
+    "regime": "COLD"
+   },
+   "regime": "COLD",
+   "path": [
+    "estuary",
+    "tide"
+   ],
+   "dead": false
+  },
+  {
+   "pair": {
+    "a": "threshold",
+    "b": "inlet",
+    "regime": "COLD"
+   },
+   "regime": "COLD",
+   "path": [
+    "threshold",
+    "limit",
+    "inlet"
+   ],
+   "dead": false
+  },
+  {
+   "pair": {
+    "a": "habit",
+    "b": "rigging",
+    "regime": "COLD"
+   },
+   "regime": "COLD",
+   "path": [
+    "habit",
+    "brick",
+    "rigging"
+   ],
+   "dead": false
+  },
+  {
+   "pair": {
+    "a": "patience",
+    "b": "jar",
+    "regime": "COLD"
+   },
+   "regime": "COLD",
+   "path": [
+    "patience",
+    "justice",
+    "jar"
+   ],
+   "dead": false
+  },
+  {
+   "pair": {
+    "a": "ravine",
+    "b": "basket",
+    "regime": "COLD"
+   },
+   "regime": "COLD",
+   "path": [
+    "ravine",
+    "wrench",
+    "bucket",
+    "basket"
+   ],
+   "dead": false
+  },
+  {
+   "pair": {
+    "a": "prow",
+    "b": "drum",
+    "regime": "COLD"
+   },
+   "regime": "COLD",
+   "path": [
+    "prow",
+    "spoon",
+    "drum"
+   ],
+   "dead": false
+  },
+  {
+   "pair": {
+    "a": "irony",
+    "b": "fjord",
+    "regime": "COLD"
+   },
+   "regime": "COLD",
+   "path": [
+    "irony",
+    "river",
+    "fjord"
+   ],
+   "dead": false
+  },
+  {
+   "pair": {
+    "a": "mooring",
+    "b": "plank",
+    "regime": "COLD"
+   },
+   "regime": "COLD",
+   "path": [
+    "mooring",
+    "rigging",
+    "wrench",
+    "plank"
+   ],
+   "dead": false
+  },
+  {
+   "pair": {
+    "a": "paradox",
+    "b": "chart",
+    "regime": "COLD"
+   },
+   "regime": "COLD",
+   "path": [
+    "paradox",
+    "chaos",
+    "chart"
+   ],
+   "dead": false
+  },
+  {
+   "pair": {
+    "a": "memory",
+    "b": "gorge",
+    "regime": "COLD"
+   },
+   "regime": "COLD",
+   "path": [
+    "memory",
+    "grief",
+    "glacier",
+    "gorge"
+   ],
+   "dead": false
+  },
+  {
+   "pair": {
+    "a": "absence",
+    "b": "glacier",
+    "regime": "COLD"
+   },
+   "regime": "COLD",
+   "path": [
+    "absence",
+    "grief",
+    "glacier"
+   ],
+   "dead": false
+  },
+  {
+   "pair": {
+    "a": "anxiety",
+    "b": "ballast",
+    "regime": "COLD"
+   },
+   "regime": "COLD",
+   "path": [
+    "anxiety",
+    "chaos",
+    "storm"
+   ],
+   "dead": true
+  },
+  {
+   "pair": {
+    "a": "doubt",
+    "b": "hammer",
+    "regime": "COLD"
+   },
+   "regime": "COLD",
+   "path": [
+    "doubt",
+    "rumor",
+    "storm",
+    "hammer"
+   ],
+   "dead": false
+  },
+  {
+   "pair": {
+    "a": "capstan",
+    "b": "pencil",
+    "regime": "COLD"
+   },
+   "regime": "COLD",
+   "path": [
+    "capstan"
+   ],
+   "dead": true
+  },
+  {
+   "pair": {
+    "a": "purpose",
+    "b": "pond",
+    "regime": "COLD"
+   },
+   "regime": "COLD",
+   "path": [
+    "purpose",
+    "candle",
+    "pond"
+   ],
+   "dead": false
+  },
+  {
+   "pair": {
+    "a": "truth",
+    "b": "keel",
+    "regime": "COLD"
+   },
+   "regime": "COLD",
+   "path": [
+    "truth",
+    "candle",
+    "kettle",
+    "keel"
+   ],
+   "dead": false
+  },
+  {
+   "pair": {
+    "a": "grief",
+    "b": "starboard",
+    "regime": "COLD"
+   },
+   "regime": "COLD",
+   "path": [
+    "grief",
+    "chart",
+    "starboard"
+   ],
+   "dead": false
+  },
+  {
+   "pair": {
+    "a": "duty",
+    "b": "valley",
+    "regime": "COLD"
+   },
+   "regime": "COLD",
+   "path": [
+    "duty",
+    "delta",
+    "valley"
+   ],
+   "dead": false
+  },
+  {
+   "pair": {
+    "a": "origin",
+    "b": "summit",
+    "regime": "COLD"
+   },
+   "regime": "COLD",
+   "path": [
+    "origin",
+    "truth",
+    "summit"
+   ],
+   "dead": false
+  },
+  {
+   "pair": {
+    "a": "promise",
+    "b": "sextant",
+    "regime": "COLD"
+   },
+   "regime": "COLD",
+   "path": [
+    "promise",
+    "envy",
+    "anxiety"
+   ],
+   "dead": true
+  },
+  {
+   "pair": {
+    "a": "calm",
+    "b": "dockline",
+    "regime": "COLD"
+   },
+   "regime": "COLD",
+   "path": [
+    "calm",
+    "wake",
+    "dune"
+   ],
+   "dead": true
+  },
+  {
+   "pair": {
+    "a": "justice",
+    "b": "harbor",
+    "regime": "COLD"
+   },
+   "regime": "COLD",
+   "path": [
+    "justice",
+    "river",
+    "harbor"
+   ],
+   "dead": false
+  },
+  {
+   "pair": {
+    "a": "chance",
+    "b": "prairie",
+    "regime": "COLD"
+   },
+   "regime": "COLD",
+   "path": [
+    "chance",
+    "promise",
+    "prairie"
+   ],
+   "dead": false
+  },
+  {
+   "pair": {
+    "a": "entropy",
+    "b": "ladder",
+    "regime": "COLD"
+   },
+   "regime": "COLD",
+   "path": [
+    "entropy",
+    "irony",
+    "candle",
+    "ladder"
+   ],
+   "dead": false
+  },
+  {
+   "pair": {
+    "a": "silence",
+    "b": "blanket",
+    "regime": "COLD"
+   },
+   "regime": "COLD",
+   "path": [
+    "silence",
+    "anxiety",
+    "inlet",
+    "blanket"
+   ],
+   "dead": false
+  },
+  {
+   "pair": {
+    "a": "rumor",
+    "b": "brick",
+    "regime": "COLD"
+   },
+   "regime": "COLD",
+   "path": [
+    "rumor",
+    "river",
+    "brick"
+   ],
+   "dead": false
+  },
+  {
+   "pair": {
+    "a": "envy",
+    "b": "hook",
+    "regime": "COLD"
+   },
+   "regime": "COLD",
+   "path": [
+    "envy",
+    "wrench",
+    "hook"
+   ],
+   "dead": false
+  },
+  {
+   "pair": {
+    "a": "limit",
+    "b": "nail",
+    "regime": "COLD"
+   },
+   "regime": "COLD",
+   "path": [
+    "limit",
+    "clamp",
+    "needle",
+    "nail"
+   ],
+   "dead": false
+  },
+  {
+   "pair": {
+    "a": "chaos",
+    "b": "wrench",
+    "regime": "COLD"
+   },
+   "regime": "COLD",
+   "path": [
+    "chaos",
+    "grief",
+    "wrench"
+   ],
+   "dead": false
+  }
+ ]
+}

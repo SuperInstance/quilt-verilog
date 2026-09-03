@@ -8,6 +8,8 @@ export PATH=/home/eileen/tools/oss-cad-suite/bin:$PATH
 python3 tools/quf.py selftest
 python3 tools/quf.py create tb/quf_tb.json tb/run/quf_tb_input.quf
 cp tb/run/quf_tb_input.quf.hex tb/run/quf_tb_input.hex
+python3 tools/quf.py create tb/quf_tb.json tb/run/quf_crc.quf --crc32
+cp tb/run/quf_crc.quf.hex tb/run/quf_crc.hex
 
 iverilog -g2005 -o tb/run/quf_tb.vvp \
     rtl/q_uf_loader.v rtl/q_dialfile.v tb/quf_tb.v

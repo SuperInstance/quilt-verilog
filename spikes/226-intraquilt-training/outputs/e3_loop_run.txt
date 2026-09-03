@@ -1,0 +1,60 @@
+round 0 (ungated, shared): true_pm=486.3 corpus=72799
+canary gated_run==run_fabric (resid lists identical): True
+round 1 gated   : true_pm=504.6 skipped=20636
+round 1 control : true_pm=486.3 skipped=0
+round 2 gated   : true_pm=359.2 skipped=69194
+round 2 control : true_pm=486.3 skipped=0
+round 3 gated   : true_pm=341.2 skipped=71043
+round 3 control : true_pm=486.3 skipped=0
+{
+ "gated": [
+  {
+   "round": 0,
+   "true_pm": 486.3,
+   "n_recs": 72799
+  },
+  {
+   "round": 1,
+   "true_pm": 504.6,
+   "skipped": 20636,
+   "n_recs": 34013
+  },
+  {
+   "round": 2,
+   "true_pm": 359.2,
+   "skipped": 69194,
+   "n_recs": 6302
+  },
+  {
+   "round": 3,
+   "true_pm": 341.2,
+   "skipped": 71043,
+   "n_recs": 6204
+  }
+ ],
+ "control": [
+  {
+   "round": 0,
+   "true_pm": 486.3,
+   "n_recs": 72799
+  },
+  {
+   "round": 1,
+   "true_pm": 486.3,
+   "skipped": 0,
+   "n_recs": 52736
+  },
+  {
+   "round": 2,
+   "true_pm": 486.3,
+   "skipped": 0,
+   "n_recs": 52736
+  },
+  {
+   "round": 3,
+   "true_pm": 486.3,
+   "skipped": 0,
+   "n_recs": 52736
+  }
+ ]
+}

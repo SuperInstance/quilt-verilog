@@ -1,0 +1,302 @@
+[
+ {
+  "a": "silence",
+  "b": "mercy",
+  "regime": "WARM"
+ },
+ {
+  "a": "origin",
+  "b": "virtue",
+  "regime": "WARM"
+ },
+ {
+  "a": "mercy",
+  "b": "anxiety",
+  "regime": "WARM"
+ },
+ {
+  "a": "patience",
+  "b": "anxiety",
+  "regime": "WARM"
+ },
+ {
+  "a": "anxiety",
+  "b": "virtue",
+  "regime": "WARM"
+ },
+ {
+  "a": "origin",
+  "b": "honor",
+  "regime": "WARM"
+ },
+ {
+  "a": "envy",
+  "b": "chance",
+  "regime": "WARM"
+ },
+ {
+  "a": "silence",
+  "b": "honor",
+  "regime": "WARM"
+ },
+ {
+  "a": "meadow",
+  "b": "bluff",
+  "regime": "WARM"
+ },
+ {
+  "a": "tundra",
+  "b": "ravine",
+  "regime": "WARM"
+ },
+ {
+  "a": "valley",
+  "b": "thicket",
+  "regime": "WARM"
+ },
+ {
+  "a": "bluff",
+  "b": "creek",
+  "regime": "WARM"
+ },
+ {
+  "a": "river",
+  "b": "pond",
+  "regime": "WARM"
+ },
+ {
+  "a": "cave",
+  "b": "creek",
+  "regime": "WARM"
+ },
+ {
+  "a": "canyon",
+  "b": "tundra",
+  "regime": "WARM"
+ },
+ {
+  "a": "lagoon",
+  "b": "inlet",
+  "regime": "WARM"
+ },
+ {
+  "a": "beacon",
+  "b": "sextant",
+  "regime": "WARM"
+ },
+ {
+  "a": "anchor",
+  "b": "mooring",
+  "regime": "WARM"
+ },
+ {
+  "a": "hull",
+  "b": "galley",
+  "regime": "WARM"
+ },
+ {
+  "a": "anchor",
+  "b": "lighthouse",
+  "regime": "WARM"
+ },
+ {
+  "a": "buoy",
+  "b": "helm",
+  "regime": "WARM"
+ },
+ {
+  "a": "sail",
+  "b": "stern",
+  "regime": "WARM"
+ },
+ {
+  "a": "harbor",
+  "b": "buoy",
+  "regime": "WARM"
+ },
+ {
+  "a": "clamp",
+  "b": "hook",
+  "regime": "WARM"
+ },
+ {
+  "a": "ladder",
+  "b": "broom",
+  "regime": "WARM"
+ },
+ {
+  "a": "pencil",
+  "b": "battery",
+  "regime": "WARM"
+ },
+ {
+  "a": "kettle",
+  "b": "clamp",
+  "regime": "WARM"
+ },
+ {
+  "a": "ladder",
+  "b": "kettle",
+  "regime": "WARM"
+ },
+ {
+  "a": "kettle",
+  "b": "shovel",
+  "regime": "WARM"
+ },
+ {
+  "a": "nail",
+  "b": "mirror",
+  "regime": "WARM"
+ },
+ {
+  "a": "geyser",
+  "b": "fan",
+  "regime": "COLD"
+ },
+ {
+  "a": "estuary",
+  "b": "tide",
+  "regime": "COLD"
+ },
+ {
+  "a": "threshold",
+  "b": "inlet",
+  "regime": "COLD"
+ },
+ {
+  "a": "habit",
+  "b": "rigging",
+  "regime": "COLD"
+ },
+ {
+  "a": "patience",
+  "b": "jar",
+  "regime": "COLD"
+ },
+ {
+  "a": "ravine",
+  "b": "basket",
+  "regime": "COLD"
+ },
+ {
+  "a": "prow",
+  "b": "drum",
+  "regime": "COLD"
+ },
+ {
+  "a": "irony",
+  "b": "fjord",
+  "regime": "COLD"
+ },
+ {
+  "a": "mooring",
+  "b": "plank",
+  "regime": "COLD"
+ },
+ {
+  "a": "paradox",
+  "b": "chart",
+  "regime": "COLD"
+ },
+ {
+  "a": "memory",
+  "b": "gorge",
+  "regime": "COLD"
+ },
+ {
+  "a": "absence",
+  "b": "glacier",
+  "regime": "COLD"
+ },
+ {
+  "a": "anxiety",
+  "b": "ballast",
+  "regime": "COLD"
+ },
+ {
+  "a": "doubt",
+  "b": "hammer",
+  "regime": "COLD"
+ },
+ {
+  "a": "capstan",
+  "b": "pencil",
+  "regime": "COLD"
+ },
+ {
+  "a": "purpose",
+  "b": "pond",
+  "regime": "COLD"
+ },
+ {
+  "a": "truth",
+  "b": "keel",
+  "regime": "COLD"
+ },
+ {
+  "a": "grief",
+  "b": "starboard",
+  "regime": "COLD"
+ },
+ {
+  "a": "duty",
+  "b": "valley",
+  "regime": "COLD"
+ },
+ {
+  "a": "origin",
+  "b": "summit",
+  "regime": "COLD"
+ },
+ {
+  "a": "promise",
+  "b": "sextant",
+  "regime": "COLD"
+ },
+ {
+  "a": "calm",
+  "b": "dockline",
+  "regime": "COLD"
+ },
+ {
+  "a": "justice",
+  "b": "harbor",
+  "regime": "COLD"
+ },
+ {
+  "a": "chance",
+  "b": "prairie",
+  "regime": "COLD"
+ },
+ {
+  "a": "entropy",
+  "b": "ladder",
+  "regime": "COLD"
+ },
+ {
+  "a": "silence",
+  "b": "blanket",
+  "regime": "COLD"
+ },
+ {
+  "a": "rumor",
+  "b": "brick",
+  "regime": "COLD"
+ },
+ {
+  "a": "envy",
+  "b": "hook",
+  "regime": "COLD"
+ },
+ {
+  "a": "limit",
+  "b": "nail",
+  "regime": "COLD"
+ },
+ {
+  "a": "chaos",
+  "b": "wrench",
+  "regime": "COLD"
+ }
+]
