@@ -36,3 +36,9 @@ Ordered queue: RESEARCH-AGENDA §4 O1–O7, then §Q open questions, then wheel 
 - **Verdict:** BOUNDARY BOOKED — %w gate PASSED (adaptive 932‰ vs best static seq-comp-oracle 778‰, +154‰) but debt gate FAILED (57,136 > 32,770 = 60% of best static); NOT promoted to E4. Boundary numbers: κ-detector conflict entry 90 ticks vs 1600-tick dwell (E4.B's 2–4-tick prediction falsified at spec thresholds); the %w win rides a knife-edge off-by-one lag underseat (bursty seq: L̂=9→994‰, L̂=10→336‰ — exact alignment is glitch-coherent and hurts the sequential arm); dial fired 6×/run, compensator does the work. F19 doctrine confirmed in-run (comp converts conflict→calm 191→1000‰; comp-seq > comp-int everywhere). E4 demo arm should pre-load blade+compensator+sequential, κ-dial as slow backstop. Canaries: F19 anchors exact (984/17700/28, 1000‰, blade 5/5); mislabeled-arm self-canary CAUGHT.
 - **Commit:** (this commit)
 - **Headline:** closed loop 932‰ beats every static arm on %w but fails the pre-registered debt gate — boundary booked with the 90-tick detector lag and the L̂±1 knife-edge scar.
+
+## Round 5 — O5 phase-decay multi-seed confirm — 2026-09-03 12:4x AKDT
+- **Item:** O5 (F24 phase-decay coupling vs F16 admission gate at matched duty; 5 seeds × calm/stress × 3 arms)
+- **Verdict:** PROMOTED — stress mean Δ +2.00pp (all seeds +1.3..+2.8, beats published single-seed +1.3), cancels up 5/5; admission gate at identical 4/12 duty destroys residency (−27.8pp stress) — F16 replicated; calm penalty −2.7pp booked (K=8-artifact regime). Phase-decay → e1.py candidate default for stress/conflict; RTL price ~30 LUTs/R1 (phase ctr + refractory cmp + halving mux). Canaries: F24 anchor exact (83.0/68, 84.3/107), mislabeled-arm CAUGHT, double-run byte-identical.
+- **Commit:** (this commit)
+- **Headline:** "touch the decay, not the door" — modulation buys residency, deferral destroys it, at matched duty across 5 seeds.
