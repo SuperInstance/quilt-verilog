@@ -171,11 +171,21 @@ spacing (30 negedges — the `tb_cell_core` test-3 cadence) or with any
 other op (view) interleaved per effect, the same stream is lossless.
 Stage counters localize it loosely: q_flit_pipe in==out (clean); loss
 sits between ring accept and hebb train; every TB send observed
-ri_ready=1 at its sampling negedge. NOT root-caused — could still be a
-protocol artifact of the ad-hoc probe. Next: waveform trace or a formal
-assertion (the cell_core proofs cover the tick-pending ready hole; this
-shape may be uncovered). Until closed: do NOT quote effect counts from
-gapped streams. `tb_act_bias` is immune by construction (view per
+ri_ready=1 at its sampling negedge. **Spacing sweep (IDEATOR nudge, 2026-09-03): GRADED decay, not a
+knee.** Losses at 24-effect streams: gap 4→16/24 lost, 6→13, 8→10,
+10→8, 12→5, 14→3, 16→0 (clean from 16 negedges up; 8 cycles — right at
+the effect-op latency). Per the nudge's own criterion, graded decay =
+queue/hazard bug, NOT an absorption window: the designed absorption
+mechanism is visible backpressure (inbuf skid + ri_ready), and the
+probe observed ri_ready=1 at the accept that then vanished — a silent
+loss under a ready=1 handshake is a conservation-contract violation
+candidate, not rate-limiting to be dialed. Measured hazard envelope:
+burst tolerance boundary ≈ op latency + small margin. Consequences:
+(a) root cause via waveform/formal remains the path (next tick);
+(b) until closed, any consumer driving effects back-to-back inside
+~8 cycles of the previous effect (quilt-deck fast bursts included)
+must space or interleave — the deck's balanced transactions go through
+this same ingress. `tb_act_bias` is immune by construction (view per
 effect + per-checkpoint floor-model equality asserts the stream was
 lossless).
 
