@@ -1,0 +1,206 @@
+== CANARY A: spread=0 byte-identical across all 7 grammar codepaths ==
+  PASS: 12/12 comparisons byte-identical (7 grammars x K{1,2})
+
+== CANARY B: SPIN-4 replay (ladder spread=15, K=1) ==
+  per-seed true_pm got (709, 713, 721, 714, 717) pub (709, 713, 721, 714, 717)
+  events 5791.6 (pub 5792)  debt 106378 (pub 106378)  cancels 4.2 (pub 4, display-rounded)
+  PASS: replay within published numbers
+
+== CANARY C: order-invariance (paired == cohort multiset) ==
+  PASS: paired == cohort byte-identical, both arms, s{15,30}, K{1,2}, 5 seeds (30/30)
+
+== CANARY D: zero-lock ignores nominal spread (zero@15 == zero@30) ==
+  PASS: zero@15 == zero@30 byte-identical (K{1,2}, 5 seeds)
+
+ALL CANARIES: PASS
+
+== EXP 1: DENSIFIED KNEE (ladder, N=6 interference, per-seed permille) ==
+  spread |     lats |        K |       s1 |       s7 |      s42 |    s1999 | s2s60902 |    mean% |   evMean | debtMean |     canc
+      10 | [0, 2, 4, 6, 8, 10] |        1 |      931 |      931 |      940 |      930 |      942 |     93.5 |     3805 |    89075 |        1
+      10 | [0, 2, 4, 6, 8, 10] |        2 |      918 |      891 |      913 |      898 |      867 |     89.7 |     4235 |   103869 |       30
+      12 | [0, 2, 5, 7, 10, 12] |        1 |      953 |      948 |      954 |      952 |      941 |     95.0 |     4114 |    77532 |        3
+      12 | [0, 2, 5, 7, 10, 12] |        2 |      864 |      854 |      854 |      847 |      823 |     84.8 |     5159 |   110314 |       66
+      14 | [0, 3, 6, 8, 11, 14] |        1 |      840 |      845 |      853 |      842 |      840 |     84.4 |     4821 |    87537 |        5
+      14 | [0, 3, 6, 8, 11, 14] |        2 |      730 |      722 |      708 |      727 |      727 |     72.3 |     6300 |   131420 |      100
+      15 | [0, 3, 6, 9, 12, 15] |        1 |      709 |      713 |      721 |      714 |      717 |     71.5 |     5792 |   106378 |        4
+      15 | [0, 3, 6, 9, 12, 15] |        2 |      603 |      623 |      599 |      591 |      586 |     60.0 |     9481 |   259758 |      112
+      16 | [0, 3, 6, 10, 13, 16] |        1 |      632 |      634 |      641 |      632 |      636 |     63.5 |     7015 |   130539 |      154
+      16 | [0, 3, 6, 10, 13, 16] |        2 |      609 |      602 |      595 |      575 |      601 |     59.6 |     8793 |   189516 |      164
+      18 | [0, 4, 7, 11, 14, 18] |        1 |      536 |      528 |      530 |      538 |      526 |     53.2 |     7940 |   150692 |       63
+      18 | [0, 4, 7, 11, 14, 18] |        2 |      540 |      534 |      529 |      535 |      535 |     53.5 |     8994 |   180657 |      132
+      20 | [0, 4, 8, 12, 16, 20] |        1 |      490 |      481 |      497 |      498 |      496 |     49.2 |    10028 |   213323 |      480
+      20 | [0, 4, 8, 12, 16, 20] |        2 |      476 |      479 |      474 |      480 |      475 |     47.7 |    10840 |   228524 |       88
+      22 | [0, 4, 9, 13, 18, 22] |        1 |      430 |      426 |      434 |      428 |      430 |     43.0 |    11212 |   232945 |       56
+      22 | [0, 4, 9, 13, 18, 22] |        2 |      405 |      402 |      414 |      400 |      415 |     40.7 |    12913 |   312216 |       94
+      24 | [0, 5, 10, 14, 19, 24] |        1 |      317 |      312 |      314 |      323 |      317 |     31.7 |    11780 |   247275 |      423
+      24 | [0, 5, 10, 14, 19, 24] |        2 |      366 |      355 |      366 |      355 |      372 |     36.3 |    13036 |   299336 |      109
+
+== EXP 1b: sequential reference (K=1, ladder) ==
+  spread |    mean% |   evMean | debtMean
+      10 |     85.0 |     2317 |    42395
+      12 |     76.9 |     3333 |    60938
+      14 |     65.9 |     3946 |    74289
+      15 |     62.6 |     4109 |    78019
+      16 |     60.7 |     4249 |    80902
+      18 |     64.3 |     4418 |    84985
+      20 |     55.8 |     4566 |    89562
+      22 |     51.2 |     4636 |    91392
+      24 |     52.9 |     4678 |    93966
+
+== EXP 1c: knee localization ==
+  K=1: steepest raw drop 84.4->71.5 over [14,15]; steepest per-spread-unit over [14,15] (12.9pp/unit); 50%-crossing at spread ~= 19.612244897959183
+  K=2: steepest raw drop 84.8->72.3 over [12,14]; steepest per-spread-unit over [14,15] (12.2pp/unit); 50%-crossing at spread ~= 19.197231833910035
+  sequential K=1: 50%-crossing at spread ~= None
+  reference marks: slope-adjusted 2*DELTA crossing = 15 ((8/5)*15=24); raw 2*DELTA = 24
+
+== EXP 2: GRAMMAR SWEEP at fixed total spread (N=6 interference, per-seed permille) ==
+       s |  grammar |     lats |        K |       s1 |       s7 |      s42 |    s1999 | s2s60902 |    mean% |     allW |   evMean | debtMean |     canc |   mShare |   rShare |   sShare
+      15 |   ladder | [0, 3, 6, 9, 12, 15] |        1 |      709 |      713 |      721 |      714 |      717 |     71.5 |     36.4 |     5792 |   106378 |        4 |      350 |      313 |       57
+      15 |   ladder | [0, 3, 6, 9, 12, 15] |        2 |      603 |      623 |      599 |      591 |      586 |     60.0 |     24.9 |     9481 |   259758 |      112 |      565 |      491 |      245
+      15 |   cohort | [0, 0, 0, 15, 15, 15] |        1 |      572 |      572 |      571 |      569 |      573 |     57.1 |     14.0 |    12625 |   299487 |        0 |     1000 |       18 |       11
+      15 |   cohort | [0, 0, 0, 15, 15, 15] |        2 |      423 |      425 |      421 |      388 |      434 |     41.8 |     10.5 |    17158 |   563178 |      160 |     1000 |      599 |      642
+      15 |      tri | [0, 0, 7, 7, 15, 15] |        1 |      642 |      640 |      650 |      648 |      649 |     64.6 |     26.4 |     9165 |   181964 |        3 |     1000 |      194 |      177
+      15 |      tri | [0, 0, 7, 7, 15, 15] |        2 |      585 |      608 |      583 |      582 |      610 |     59.4 |     21.6 |    11610 |   273208 |      103 |     1000 |      430 |      466
+      15 |    quart | [0, 0, 0, 0, 15, 15] |        1 |      625 |      627 |      625 |      629 |      624 |     62.6 |     25.2 |    12145 |   265356 |        1 |     1000 |      118 |      130
+      15 |    quart | [0, 0, 0, 0, 15, 15] |        2 |      570 |      584 |      578 |      518 |      557 |     56.1 |      8.1 |    14997 |   469400 |      209 |     1000 |      479 |      515
+      15 |  outlier | [0, 0, 0, 0, 0, 15] |        1 |      742 |      743 |      753 |      741 |      728 |     74.1 |     24.7 |    11211 |   240604 |        0 |      414 |      457 |      179
+      15 |  outlier | [0, 0, 0, 0, 0, 15] |        2 |      528 |      506 |      514 |      486 |      496 |     50.6 |      9.7 |    15728 |   495895 |       34 |      564 |      542 |      282
+      15 |   paired | [0, 15, 0, 15, 0, 15] |        1 |      572 |      572 |      571 |      569 |      573 |     57.1 |     14.0 |    12625 |   299487 |        0 |     1000 |       18 |       11
+      15 |   paired | [0, 15, 0, 15, 0, 15] |        2 |      423 |      425 |      421 |      388 |      434 |     41.8 |     10.5 |    17158 |   563178 |      160 |     1000 |      599 |      642
+      15 |     zero | [0, 0, 0, 0, 0, 0] |        1 |      791 |      755 |      775 |      780 |      762 |     77.3 |     77.3 |     8756 |   187834 |        0 |     1000 |      694 |      694
+      15 |     zero | [0, 0, 0, 0, 0, 0] |        2 |      523 |      521 |      505 |      453 |      496 |     50.0 |     50.0 |    15133 |   511660 |       17 |     1000 |      547 |      547
+      30 |   ladder | [0, 6, 12, 18, 24, 30] |        1 |      264 |      253 |      266 |      281 |      274 |     26.8 |      4.2 |    14952 |   366275 |       76 |      945 |      532 |      568
+      30 |   ladder | [0, 6, 12, 18, 24, 30] |        2 |      267 |      297 |      300 |      287 |      293 |     28.9 |      2.0 |    16776 |   497142 |       69 |      963 |      609 |      665
+      30 |   cohort | [0, 0, 0, 30, 30, 30] |        1 |      492 |      495 |      500 |      483 |      494 |     49.3 |      6.3 |    14746 |   655994 |        0 |     1000 |      152 |       88
+      30 |   cohort | [0, 0, 0, 30, 30, 30] |        2 |      332 |      322 |      345 |      354 |      312 |     33.3 |      3.5 |    19980 |   787604 |      108 |     1000 |      653 |      792
+      30 |      tri | [0, 0, 15, 15, 30, 30] |        1 |      299 |      280 |      293 |      315 |      325 |     30.2 |      4.1 |    17428 |   479496 |      207 |     1000 |      705 |      841
+      30 |      tri | [0, 0, 15, 15, 30, 30] |        2 |      285 |      307 |      315 |      290 |      313 |     30.2 |      1.7 |    18902 |   627744 |      108 |     1000 |      648 |      891
+      30 |    quart | [0, 0, 0, 0, 30, 30] |        1 |      461 |      468 |      448 |      446 |      449 |     45.4 |      7.3 |    17820 |   584323 |       25 |     1000 |      482 |      675
+      30 |    quart | [0, 0, 0, 0, 30, 30] |        2 |      534 |      557 |      559 |      507 |      515 |     53.4 |      4.1 |    15970 |   668761 |      208 |     1000 |      503 |      547
+      30 |  outlier | [0, 0, 0, 0, 0, 30] |        1 |      530 |      554 |      510 |      544 |      521 |     53.2 |      5.8 |    16157 |   434533 |        0 |      517 |      484 |      170
+      30 |  outlier | [0, 0, 0, 0, 0, 30] |        2 |      497 |      495 |      458 |      414 |      505 |     47.4 |      3.4 |    17232 |   634090 |       61 |      564 |      554 |      263
+      30 |   paired | [0, 30, 0, 30, 0, 30] |        1 |      492 |      495 |      500 |      483 |      494 |     49.3 |      6.3 |    14746 |   655994 |        0 |     1000 |      152 |       88
+      30 |   paired | [0, 30, 0, 30, 0, 30] |        2 |      332 |      322 |      345 |      354 |      312 |     33.3 |      3.5 |    19980 |   787604 |      108 |     1000 |      653 |      792
+      30 |     zero | [0, 0, 0, 0, 0, 0] |        1 |      791 |      755 |      775 |      780 |      762 |     77.3 |     77.3 |     8756 |   187834 |        0 |     1000 |      694 |      694
+      30 |     zero | [0, 0, 0, 0, 0, 0] |        2 |      523 |      521 |      505 |      453 |      496 |     50.0 |     50.0 |    15133 |   511660 |       17 |     1000 |      547 |      547
+
+== EXP 2b: sequential control (K=1, per grammar) ==
+       s |  grammar |    mean% |   evMean | debtMean
+      15 |   ladder |     62.6 |     4109 |    78019
+      15 |   cohort |     56.8 |     4228 |   103160
+      15 |      tri |     65.3 |     4197 |    93072
+      15 |    quart |     56.8 |     4228 |   103160
+      15 |  outlier |     56.8 |     4228 |   103160
+      15 |   paired |     56.8 |     4228 |   103160
+      15 |     zero |    100.0 |      527 |     8429
+      30 |   ladder |     57.6 |     4747 |    98773
+      30 |   cohort |     53.6 |     4500 |   198066
+      30 |      tri |     51.0 |     4706 |   115873
+      30 |    quart |     53.6 |     4500 |   198066
+      30 |  outlier |     53.6 |     4500 |   198066
+      30 |   paired |     53.6 |     4500 |   198066
+      30 |     zero |    100.0 |      527 |     8429
+
+== EXP 2c: grammar effect size at fixed spread (interference) ==
+  s=15 K=1: min cohort 57.1%  max zero 77.3%  spread-of-grammar 20.1pp
+  s=15 K=2: min cohort 41.8%  max ladder 60.0%  spread-of-grammar 18.2pp
+  s=30 K=1: min ladder 26.8%  max zero 77.3%  spread-of-grammar 50.5pp
+  s=30 K=2: min ladder 28.9%  max quart 53.4%  spread-of-grammar 24.6pp
+
+== EXP 3a: chatter stats, named modes (interference, 5-seed means) ==
+    mode |        K |    true% |  ticksEv |   multi2 |    full6 |  refire1 |     sync |   mShare |   rShare |   sShare
+ zero@15 |        1 |     77.3 |     1459 |     1459 |     1459 |     6079 |     1013 |     1000 |      694 |      694
+ zero@15 |        2 |     50.0 |     2522 |     2522 |     2522 |     8293 |     1382 |     1000 |      547 |      547
+paired@15 |        1 |     57.1 |     4168 |     4168 |       40 |      230 |       48 |     1000 |       18 |       11
+paired@15 |        2 |     41.8 |     4322 |     4322 |     1397 |    10303 |     2778 |     1000 |      599 |      642
+cohort@15 |        1 |     57.1 |     4168 |     4168 |       40 |      230 |       48 |     1000 |       18 |       11
+cohort@15 |        2 |     41.8 |     4322 |     4322 |     1397 |    10303 |     2778 |     1000 |      599 |      642
+ladder@15 |        1 |     71.5 |     3783 |     1325 |       62 |     1815 |      217 |      350 |      313 |       57
+ladder@15 |        2 |     60.0 |     3948 |     2233 |      548 |     4662 |      968 |      565 |      491 |      245
+
+== EXP 3b: mechanism excerpts (seed 1) ==
+
+  -- zero-lock K=1 (fully synchronized fires): per-tick log t=1200..1229 (nFired | fired-set | sumPM | maxTrig | residAfter) --
+  t=1200  n=6  [0,1,2,3,4,5]  sumPM=  114  maxTrig=  58  resid= 56
+  t=1201  n=6  [0,1,2,3,4,5]  sumPM= -108  maxTrig=  55  resid= 53
+  t=1202  n=6  [0,1,2,3,4,5]  sumPM=  102  maxTrig=  53  resid= 49
+  t=1203  n=6  [0,1,2,3,4,5]  sumPM=  -90  maxTrig=  46  resid= 44
+  t=1204  n=6  [0,1,2,3,4,5]  sumPM=   90  maxTrig=  46  resid= 44
+  t=1205  n=6  [0,1,2,3,4,5]  sumPM=  -78  maxTrig=  40  resid= 38
+  t=1206  n=6  [0,1,2,3,4,5]  sumPM=   84  maxTrig=  43  resid= 41
+  t=1207  n=6  [0,1,2,3,4,5]  sumPM=  -66  maxTrig=  33  resid= 33
+  t=1208  n=6  [0,1,2,3,4,5]  sumPM=   72  maxTrig=  37  resid= 35
+  t=1209  n=6  [0,1,2,3,4,5]  sumPM=  -54  maxTrig=  29  resid= 25
+  t=1210  n=6  [0,1,2,3,4,5]  sumPM=   48  maxTrig=  24  resid= 24
+  t=1211  n=6  [0,1,2,3,4,5]  sumPM=  -48  maxTrig=  25  resid= 23
+  t=1212  n=6  [0,1,2,3,4,5]  sumPM=   48  maxTrig=  25  resid= 23
+  t=1213  n=6  [0,1,2,3,4,5]  sumPM=  -48  maxTrig=  25  resid= 23
+  t=1214  n=6  [0,1,2,3,4,5]  sumPM=   54  maxTrig=  27  resid= 27
+  t=1215  n=6  [0,1,2,3,4,5]  sumPM=  -48  maxTrig=  24  resid= 24
+  t=1216  n=6  [0,1,2,3,4,5]  sumPM=   54  maxTrig=  27  resid= 27
+  t=1217  n=6  [0,1,2,3,4,5]  sumPM=  -60  maxTrig=  30  resid= 30
+  t=1218  n=6  [0,1,2,3,4,5]  sumPM=   72  maxTrig=  37  resid= 35
+  t=1219  n=6  [0,1,2,3,4,5]  sumPM=  -60  maxTrig=  31  resid= 29
+  t=1220  n=6  [0,1,2,3,4,5]  sumPM=   60  maxTrig=  32  resid= 28
+  t=1221  n=6  [0,1,2,3,4,5]  sumPM=  -54  maxTrig=  27  resid= 27
+  t=1222  n=6  [0,1,2,3,4,5]  sumPM=   54  maxTrig=  27  resid= 27
+  t=1223  n=6  [0,1,2,3,4,5]  sumPM=  -60  maxTrig=  31  resid= 29
+  t=1224  n=6  [0,1,2,3,4,5]  sumPM=   48  maxTrig=  25  resid= 23
+  t=1225  n=6  [0,1,2,3,4,5]  sumPM=  -36  maxTrig=  18  resid= 18
+  t=1226  n=6  [0,1,2,3,4,5]  sumPM=   36  maxTrig=  19  resid= 17
+  t=1227  n=0  [          -]  sumPM=    0  maxTrig=   0  resid=  9
+  t=1228  n=0  [          -]  sumPM=    0  maxTrig=   0  resid=  9
+  t=1229  n=0  [          -]  sumPM=    0  maxTrig=   0  resid=  3
+
+  -- paired-duplicates K=1 (>=2-sensor fires): per-tick log t=1200..1229 (nFired | fired-set | sumPM | maxTrig | residAfter) --
+  t=1200  n=3  [      0,2,4]  sumPM=   27  maxTrig=  28  resid=  1
+  t=1201  n=3  [      1,3,5]  sumPM=  -24  maxTrig=  25  resid= 26
+  t=1202  n=3  [      0,2,4]  sumPM=   24  maxTrig=  26  resid=  2
+  t=1203  n=3  [      1,3,5]  sumPM=  -27  maxTrig=  28  resid= 32
+  t=1204  n=3  [      0,2,4]  sumPM=   33  maxTrig=  34  resid=  1
+  t=1205  n=3  [      1,3,5]  sumPM=  -33  maxTrig=  35  resid= 38
+  t=1206  n=3  [      0,2,4]  sumPM=   42  maxTrig=  43  resid=  1
+  t=1207  n=3  [      1,3,5]  sumPM=  -36  maxTrig=  37  resid= 45
+  t=1208  n=3  [      0,2,4]  sumPM=   48  maxTrig=  49  resid=  1
+  t=1209  n=3  [      1,3,5]  sumPM=  -45  maxTrig=  46  resid= 52
+  t=1210  n=3  [      0,2,4]  sumPM=   51  maxTrig=  51  resid=  0
+  t=1211  n=3  [      1,3,5]  sumPM=  -60  maxTrig=  60  resid= 59
+  t=1212  n=3  [      0,2,4]  sumPM=   60  maxTrig=  61  resid=  1
+  t=1213  n=3  [      1,3,5]  sumPM=  -66  maxTrig=  66  resid= 65
+  t=1214  n=3  [      0,2,4]  sumPM=   69  maxTrig=  69  resid=  0
+  t=1215  n=3  [      1,3,5]  sumPM=  -21  maxTrig=  21  resid= 24
+  t=1216  n=3  [      0,2,4]  sumPM=   27  maxTrig=  27  resid=  0
+  t=1217  n=3  [      1,3,5]  sumPM=  -27  maxTrig=  27  resid= 24
+  t=1218  n=3  [      0,2,4]  sumPM=   30  maxTrig=  31  resid=  1
+  t=1219  n=3  [      1,3,5]  sumPM=  -18  maxTrig=  19  resid= 23
+  t=1220  n=3  [      0,2,4]  sumPM=   24  maxTrig=  26  resid=  2
+  t=1221  n=3  [      1,3,5]  sumPM=  -21  maxTrig=  21  resid= 24
+  t=1222  n=3  [      0,2,4]  sumPM=   24  maxTrig=  24  resid=  0
+  t=1223  n=3  [      1,3,5]  sumPM=  -27  maxTrig=  28  resid= 23
+  t=1224  n=3  [      0,2,4]  sumPM=   18  maxTrig=  19  resid=  1
+  t=1225  n=3  [      1,3,5]  sumPM=  -18  maxTrig=  18  resid= 24
+  t=1226  n=3  [      0,2,4]  sumPM=   24  maxTrig=  25  resid=  1
+  t=1227  n=3  [      1,3,5]  sumPM=  -15  maxTrig=  15  resid= 24
+  t=1228  n=3  [      0,2,4]  sumPM=   24  maxTrig=  24  resid=  0
+  t=1229  n=3  [      1,3,5]  sumPM=  -18  maxTrig=  18  resid= 24
+
+== EXP 3c: echo sign analysis, zero-lock K=1 (does the arm re-fire on its own overshoot?) ==
+  seed         1: event-ticks 1350  consecutive-pairs 936  sign-FLIP 934  sign-SAME 2
+  seed         7: event-ticks 1561  consecutive-pairs 1105  sign-FLIP 1103  sign-SAME 2
+  seed        42: event-ticks 1460  consecutive-pairs 1003  sign-FLIP 1002  sign-SAME 1
+  seed      1999: event-ticks 1380  consecutive-pairs 962  sign-FLIP 960  sign-SAME 2
+  seed  20260902: event-ticks 1546  consecutive-pairs 1060  sign-FLIP 1059  sign-SAME 1
+
+== EXP 3d: do grammar losses correlate with same-tick correlated corrections? (Pearson over 28 sweep configs) ==
+  r(true%, multi-sensor share              ) = -0.329
+  r(true%, same-sensor gap1 refire share   ) = -0.325
+  r(true%, synchronized-refire share       ) = -0.506
+  s=15: r(true%, mshare) = -0.396  (n=14)
+  s=15: r(true%, rshare) = -0.163  (n=14)
+  s=15: r(true%, sshare) = -0.352  (n=14)
+  s=30: r(true%, mshare) = -0.167  (n=14)
+  s=30: r(true%, rshare) = -0.222  (n=14)
+  s=30: r(true%, sshare) = -0.403  (n=14)
+
+== EXP 3e: Spin-1 gap=1 refractory check across the grammar sweep ==
+  runs with same-sensor gap-1 refires: 140/140 (Spin-1 found min-gap 1 in 20/20 runs)
