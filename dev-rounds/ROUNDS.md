@@ -65,4 +65,4 @@ Rule: skip items visibly in flight (check timestamps here + wheel/WHEEL-LOG.md).
 ## Round 9 — Q2 (minimal cofire homeostat) — DISPATCHED 2026-09-03 14:55 AKDT
 - **Item:** Q2 — is there a MINIMAL correction-channel homeostat with a provable no-collapse bound, or does every local no-error-signal rule learn silence? Test cofire v2 charter predicate (predictability-not-agreement, G1'/G2'/G4) + ≤3 minimal variants (refractory window, floor/decay, lagged reference) on the O6 harness.
 - **Lane:** dev_q2_cofire_minimal (zai/glm-5.3, run mode). Deliverable: dev-rounds/ROUND-9-Q2-cofire-minimal.md. Commit + push g3-kinduction mandated.
-- **Verdict:** pending (append on lane completion).
+- **Verdict:** BOOKED — every local no-error-signal rule on the correction channel learns silence. v2 charter predicate + refractory + slow-floor variants ALL FAIL G1'/G2'/G4 (honest best 795‰ vs 800‰ gate; predictability band reached on 0‰ of honest ticks; liar pinned 911‰ only by pinning the honest twin at 4.3). Charter falsifier fired verbatim. Trust-learning family demotes to monitor-only permanently; whistle stays (2.2–4.0×); §3.2 runs selection-only.
