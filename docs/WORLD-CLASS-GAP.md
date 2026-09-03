@@ -81,7 +81,8 @@ art applies).
   dependency the arena's Attack 6 exposed ("it's a scheduler property, not a
   protocol property" — arena-claude, VERDICT §1).
 
-### G3. Feed the PDR invariant back as k-induction assumptions — difficulty: S
+### G3. Feed the PDR invariant back as k-induction assumptions — difficulty: S — **CLOSED 2026-09-02** (see formal/g3-kinduction/README.md: PASS in 10 s, 910/910 named clauses; also fixed the committed PLA's polarity pin and killed the fold-mapping dead end)
+
 - **Field:** standard practice in the IC3/PDR school: use the
   machine-generated invariant as a lemma set for k-induction or as the
   candidate invariant for re-verification (Bradley & Manna,

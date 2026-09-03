@@ -28,6 +28,7 @@ fact; the seconds are context, not claim.
 | `formal/flit_pipe.fly.sby` | BMC 40 | PASS | **74.0 s** | 72 s |
 | `formal/cell_core.tick.sby` | BMC 80 | PASS | not re-run | 215 s |
 | `formal/cell_core.fair.sby` | BMC 80 | PASS | not re-run | 498 s |
+| `formal/g3-kinduction/fabric.conservation.g3-certificate.sby` | prove (k-induction), depth 12, smtbmc boolector | PASS | **10 s** (2026-09-02) | — |
 
 For scale across passes (same proofs, same tree family): iteration-1
 measured 607 / 284 / 102 / 55 / 3 s (fair / tick / fly / conservation /
@@ -45,9 +46,14 @@ original proof-suite runs 919 / 623 / 65 / 40 / 2 s. Every run PASS.
   longer traces — except where the structural worst case is argued to fit
   inside the depth (done per-proof below).
 - **k-induction** (`mode prove`) is unbounded: base case + induction step.
-  A PASS is a proof for all reachable futures, not just a window. Exactly
-  one proof here is k-inductive (`tb/formal/flit_pipe.sby`); the rest are
-  BMC.
+  A PASS is a proof for all reachable futures, not just a window. Two
+  proofs here are k-inductive (`tb/formal/flit_pipe.sby` and, since
+  2026-09-02, the g3 certificate
+  `formal/g3-kinduction/fabric.conservation.g3-certificate.sby`, which
+  closes the G3 gap: fabric.conservation proven unboundedly by plain
+  k-induction over a sticky-guarded netlist plus 910 named
+  machine-mined PDR clauses — engine-independent, no PDR run log; see
+  `formal/g3-kinduction/README.md`); the rest are BMC.
 - **Bounded liveness** is encoded as *assert-within-N*: a shadow countdown
   register arms on an event and the assertion fails if the deadline passes.
   This proves "the deadline holds within the BMC depth", never "eventually"

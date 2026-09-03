@@ -1,0 +1,21 @@
+== full scoring table (both regimes) ==
+strategy                calm %     debt  err    stress %     debt  err
+impulse (baseline)        98.0    55545   53        51.4   244973   61
+hand interference         97.3    81617   35        83.1   174978   39
+granite r1 champion       97.8    87178   35        93.2   132823   38
+granite r2 proposal       96.3    86199   44        72.5   199432   47
+350m r2-v1 proposal       96.1    68519   36        78.2   180397   39
+lfm r1 consensus          97.3    81617   35        83.1   174978   39
+
+== PARETO BANK (per regime) ==
+  calm: impulse (baseline), hand interference, granite r1 champion, 350m r2-v1 proposal, lfm r1 consensus
+  stress: granite r1 champion
+
+== REGIME SPECIALISTS (rank flips) ==
+  impulse (baseline): calm 98.0% vs stress 51.4% — context-dependent logic, bank both scores
+  granite r2 proposal: calm 96.3% vs stress 72.5% — context-dependent logic, bank both scores
+  350m r2-v1 proposal: calm 96.1% vs stress 78.2% — context-dependent logic, bank both scores
+
+== STRUCTURAL BANK (best per mode) ==
+  sequential logic keeper: impulse (baseline) (stress 51.4%)
+  interference logic keeper: granite r1 champion (stress 93.2%)

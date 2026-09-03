@@ -1,0 +1,31 @@
+# G3: sby's model "aig" pipeline verbatim (sby_core.py make_model("aig")),
+# applied to g3_flat_guarded.il, stopping at the processed IL.
+# The output netlist is what write_aiger sees; the PDR invariant dumped
+# from its AIG refers to THIS netlist's latches, so clauses injected as
+# $assume cells into guarded_aig.il resolve against its own wires.
+# (In the committed 854-clause lane the PLA came from a FOLD-retimed
+# net whose latch ordinals had no name mapping -- 246/854 ambiguous,
+# 668/673 unresolvable under trace matching.  No fold here.)
+read_rtlil g3_flat_guarded.il
+async2sync
+formalff -setundef -clk2ff -ff2anyinit -hierarchy
+chformal -cover -remove
+delete */t:$print
+hierarchy -simcheck
+formalff -assume
+flatten
+setundef -undriven -anyseq
+setattr -unset keep
+delete -output
+opt -full
+techmap
+opt -fast
+memory_map -formal
+formalff -clk2ff -ff2anyinit
+simplemap
+dffunmap
+abc -g AND -fast
+opt_clean
+stat
+write_rtlil guarded_aig.il
+write_aiger -I -B -zinit -no-startoffset -map guarded_aig.aim -symbols guarded_aig.aig
