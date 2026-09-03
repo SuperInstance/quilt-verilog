@@ -13,6 +13,7 @@ sys.path.insert(0, ".")
 import e1
 
 OLLAMA = "http://127.0.0.1:11434/api/generate"
+OLLAMA_CHAT = "http://127.0.0.1:11434/api/chat"
 STRESS = dict(delta=None, drift=6, lat2=10)   # delta comes from the model
 SEEDS = (1, 7, 42, 1999, 20260902)
 
@@ -46,29 +47,102 @@ Reply with ONLY a JSON object, no other text:
 {{"K": <int>, "pulse_div": <int>, "delta": <int>, "mode": "<mode>", "reason": "<one sentence>"}}"""
 
 
+def _balanced_objects(text):
+    """String-aware brace scan: (complete {...} spans, start of an unterminated one)."""
+    spans, depth, start, in_str, esc = [], 0, None, False, False
+    for i, ch in enumerate(text):
+        if in_str:
+            if esc:
+                esc = False
+            elif ch == "\\":
+                esc = True
+            elif ch == '"':
+                in_str = False
+        elif ch == '"':
+            in_str = True
+        elif ch == "{":
+            if depth == 0:
+                start = i
+            depth += 1
+        elif ch == "}" and depth:
+            depth -= 1
+            if depth == 0 and start is not None:
+                spans.append(text[start:i + 1])
+                start = None
+    return spans, (start if depth else None)
+
+
+def _salvage_truncated(text):
+    """LFM-2.6B overrun case: reply died mid-object — regex the fields out of the tail."""
+    _, open_at = _balanced_objects(text)
+    if open_at is None:
+        return None
+    frag = text[open_at:]
+    fields = {}
+    for key in ("K", "pulse_div", "delta"):
+        m = re.search(r'"%s"\s*:\s*(-?\d+)' % key, frag)
+        if m:
+            fields[key] = int(m.group(1))
+    if not all(k in fields for k in ("K", "pulse_div", "delta")):
+        return None
+    m = re.search(r'"mode"\s*:\s*"(sequential|interference)', frag)
+    fields["mode"] = m.group(1) if m else "interference"
+    fields["reason"] = "salvaged from truncated response"
+    return fields
+
+
+def parse_response(text):
+    """Contract: (params, None) on success, (None, snippet) on failure.
+
+    Models narrate, nest braces, and truncate at the token cap. Take the last
+    balanced object; if none parses, salvage fields from a truncated tail."""
+    text = re.sub(r"<think>.*?</think>", "", text, flags=re.S)
+    p = None
+    for cand in reversed(_balanced_objects(text)[0]):
+        for fixed in (cand, re.sub(r",\s*([}\]])", r"\1", cand)):
+            try:
+                p = json.loads(fixed)
+                break
+            except json.JSONDecodeError:
+                pass
+        if p is not None:
+            break
+    if not isinstance(p, dict):
+        p = _salvage_truncated(text)
+    if not isinstance(p, dict):
+        return None, text.strip()[:120]
+    p["K"] = max(1, min(16, int(p["K"])))
+    p["pulse_div"] = max(1, min(8, int(p["pulse_div"])))
+    p["delta"] = max(4, min(24, int(p["delta"])))
+    if p["mode"] not in ("sequential", "interference"):
+        p["mode"] = "interference"
+    return p, None
+
+
 def ask(model, prompt):
     try:
         opts = {"temperature": 0.7, "num_predict": 400}
-        if "qwen3" in model.lower():
-            prompt += " /no_think"
+        ml = model.lower()
+        if "qwen3" in ml:
+            # qwen3:8b answers empty via raw generate — its chat template
+            # never renders. /api/chat applies it; think:false stops the
+            # reasoning block from eating the whole token budget.
+            url, payload = OLLAMA_CHAT, {
+                "model": model, "stream": False, "think": False, "options": opts,
+                "messages": [{"role": "user", "content": prompt}]}
+        else:
+            url, payload = OLLAMA, {
+                "model": model, "prompt": prompt, "stream": False, "options": opts}
+            if "2.6b" in ml:
+                # LFM-2.6B narrates past num_predict and truncates the JSON
+                # envelope; JSON-constrained decoding keeps output inside it.
+                payload["format"] = "json"
         out = subprocess.run(
-            ["curl", "-s", OLLAMA, "-d", json.dumps({
-                "model": model, "prompt": prompt, "stream": False,
-                "options": opts})],
+            ["curl", "-s", url, "-d", json.dumps(payload)],
             capture_output=True, text=True, timeout=180)
-        text = json.loads(out.stdout)["response"]
-        text = re.sub(r"<think>.*?</think>", "", text, flags=re.S)
-        # last JSON object wins (models often narrate first)
-        cands = re.findall(r"\{[^{}]*\}", text, re.S)
-        if not cands:
-            return None, text[:120]
-        p = json.loads(cands[-1])
-        p["K"] = max(1, min(16, int(p["K"])))
-        p["pulse_div"] = max(1, min(8, int(p["pulse_div"])))
-        p["delta"] = max(4, min(24, int(p["delta"])))
-        if p["mode"] not in ("sequential", "interference"):
-            p["mode"] = "interference"
-        return p, None
+        data = json.loads(out.stdout)
+        text = data["message"]["content"] if "message" in data else data.get("response", "")
+        return parse_response(text)
     except Exception as ex:
         return None, str(ex)[:120]
 

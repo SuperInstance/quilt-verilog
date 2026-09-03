@@ -215,8 +215,10 @@ def _pack_routing(routing):
 
 def _pack_ticks(ticks, cell_count):
     tpw = int(ticks["tpw"])
-    if not (0 <= tpw < 2 ** 32):
-        raise QufError("tpw out of u32 range")
+    if not (0 <= tpw <= 31):
+        # hardware epoch field is 5 bits (q_boot_gate o_tpw); a larger
+        # tpw would silently latch as tpw&31 in silicon
+        raise QufError("tpw out of range 0..31 (5-bit hw epoch field)")
     phases = list(ticks.get("phases", []))[:cell_count]
     phases += [0] * (cell_count - len(phases))
     out = struct.pack("<I", tpw)
@@ -525,6 +527,12 @@ def verify_bytes(buf, path=""):
     if "ticks" in payload and cc:
         tpw = struct.unpack_from("<I", payload["ticks"], 0)[0]
         tp = hdr.get("tick_period")
+        # tpw > 31: hardware latches tpw&31 (o_tpw is 5 bits), so such a
+        # file boots silicon with a DIFFERENT epoch than the file claims
+        # -- reject even when tick_period is absent (BACKEND-NOTES)
+        if tpw > 31:
+            issues.append("tpw %d exceeds 5-bit hw epoch field "
+                          "(silicon latches tpw&31=%d)" % (tpw, tpw & 31))
         # tpw >= 32 can never equal a u32 tick_period; never materialize
         # 1<<tpw for a corrupt tpw (int->str digit-bomb, fuzz-found)
         if tp is not None and (tpw >= 32 or tp != (1 << tpw)):

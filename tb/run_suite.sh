@@ -56,4 +56,12 @@ fi
 t tb/tb_serfabric.v       tb_serfabric "rtl/q_uf_loader.v rtl/quf_boot.v rtl/q_tick_sched_rt.v rtl/q_boot_gate.v rtl/q_serfabric_top.v"
 t tb/tb_wedge_repro.v     tb_wedge_repro    # silicon-lane regression guard: the commissioning wedge (SILICON-EXPERIMENTS F1) must stay dead
 
+# backend battery: format fuzz, boot-boundary fuzz, differential cosim
+# (cell + fabric), bug regression (~2.5 min; see tools/backend/run_all.sh)
+if bash tools/backend/run_all.sh > /tmp/backend_out 2>&1; then
+  echo "PASS  backend_battery: $(grep -E 'PASS:' /tmp/backend_out | tr '\n' ' ')"
+else
+  echo "FAIL  backend_battery"; grep -E 'FAIL|Error' /tmp/backend_out | head -8; fail=1
+fi
+
 exit $fail
