@@ -60,6 +60,15 @@ differential cosim (Python vs `q_fabric_top`, NCELL=2 — THE-BREAKDOWN §10:
 and the 57-check bug regression bench. Numbers and method:
 `docs/BACKEND-NOTES.md`.
 
+*Fresh-clone note (2026-09-03):* one regression check —
+`rebuild_scale_tsv` cwd independence — parses `synth/yosys_*_n*.log`,
+which are gitignored artifacts of `bash synth/scale.sh`. On a fresh clone
+that check SKIPs with a notice; run the scale sweep once and it counts
+among the 57 again. (Found by re-running `make test` on a pristine
+checkout: the same run also exposed that `tb_quf_boot` ran before the
+golden container hex was generated — suite ordering fixed in
+`tb/run_suite.sh`.)
+
 **Result (2026-08-29, iteration 2): 18/18 PASS** (same tree as iteration 1's
 recorded 18/18).
 

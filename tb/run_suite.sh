@@ -43,6 +43,13 @@ t tb/tb_fabric_smoke.v     tb_fabric_smoke
 t tb/tb_fabric_smoke_v2.v  tb_fabric_smoke_v2
 t tb/tb_judge_consistency.v tb_judge_consistency "rtl/q_uf_loader.v"
 t tb/tb_hebb_pipe.v        tb_hebb_pipe
+# QUF boot TB reads the golden container hex (fuzz-found 2026-09-03: on a
+# fresh clone this didn't exist yet -- the loader lane below used to be the
+# only producer, and it runs AFTER tb_quf_boot). Build it first.
+[ -f tb/run/quf_tb_input.hex ] || {
+  python3 tools/quf.py create tb/quf_tb.json tb/run/quf_tb_input.quf
+  cp tb/run/quf_tb_input.quf.hex tb/run/quf_tb_input.hex
+}
 t tb/tb_quf_boot.v         tb_quf_boot "rtl/q_uf_loader.v rtl/quf_boot.v"
 # QUF loader lane (python golden build -> iverilog)
 if bash tools/run_quf_tb.sh > /tmp/quf_out 2>&1 && grep -q PASS /tmp/quf_out; then

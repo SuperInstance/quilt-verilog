@@ -314,6 +314,14 @@ def t_dial_parity():
 
 def t_scale_tsv():
     print("== rebuild_scale_tsv cwd independence (was: silent empty) ==")
+    import glob as _glob
+    logs = _glob.glob(os.path.join(_ROOT, "synth", "yosys_*_n*.log"))
+    if not logs:
+        # fresh clone: the scale logs are gitignored (built by synth/scale.sh).
+        # Nothing to parse -- SKIP rather than FAIL (fuzz-found 2026-09-03:
+        # fresh clone made the battery red on this check alone).
+        print("  SKIP no synth/yosys_*_n*.log (run `bash synth/scale.sh` once)")
+        return
     r = subprocess.run([PY, os.path.join(_ROOT, "synth",
                                          "rebuild_scale_tsv.py")],
                        capture_output=True, text=True, cwd="/")
