@@ -82,8 +82,9 @@ applied at spike scale.
 ## Next steps
 
 - **E6**: port to the ESP32-S3 .qm runtime (see PORTING-NOTES.md — <1 KiB
-  RAM static, fdiv + 64-bit multiply fine on LX7); then point `reality()`
-  at a real noisy ADC channel with a dyadic-envelope certificate.
+  RAM static, fdiv + 64-bit multiply fine on LX7; opcode mapping in
+  `esp32/e1_qm_port.md`); then point `reality()` at a real noisy ADC
+  channel with a dyadic-envelope certificate.
 - **E4**: field-adaptive Δ from the elephant's κ — calm rooms want impulse
   mode, conflicted rooms want superposition. The mode dial is the
   architecture's beta/gate, in fleet terms.
@@ -95,6 +96,8 @@ applied at spike scale.
 - `py-sweep.csv` / `c-sweep.csv` — 5-seed sweep outputs (post-fix, matching)
 - `DIVERGENCE.md` — the queue-geometry bug, root cause, fix, verification
 - `PORTING-NOTES.md` — ESP32-S3 .qm porting analysis (KimiCode lane)
+- `esp32/e1_qm_port.md` — E6 slice: opcode-mapped .qm port plan (cells,
+  links, tick schedule, pulse ring, dyadic ADC certificate)
 
 Run: `python3 e1.py` · `gcc -O2 -o e1c e1.c && ./e1c` · compare CSVs.
 
@@ -116,8 +119,11 @@ in the Variety Ledger (`ledger.py`).
   stress Pareto member). Impulse is Pareto-optimal in calm — the leaderboard
   "loser" is a banked regime-specialist. 5/6 strategies are Pareto-optimal
   in at least one regime. Variety is not charity; it is data.
-- Known issue: LFM 2.6B narrates past its JSON budget; qwen3:8b returns
-  empty via raw generate (needs chat template). Both excluded, not fixed.
+- Fixed lanes (were excluded): LFM 2.6B narrates past its JSON budget — now
+  JSON-constrained decoding (`format: "json"`) plus a salvage parser
+  (`parse_response`) that recovers fields from truncated envelopes; qwen3:8b
+  returned empty via raw generate — now `/api/chat` with `think: false`
+  (template renders, reasoning block can't eat the token budget).
 
 Files: `arena.py` (tournament, ratchet), `arena-v2.txt` (results),
 `ledger.py` + `ledger-results.txt` (variety ledger), `VARIETY-LEDGER.md`
