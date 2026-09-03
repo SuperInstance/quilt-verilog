@@ -85,9 +85,10 @@ High-D shadowing buys **precision per stored coefficient**, not directions per e
 
 ```
 python3 -u spin13_snap_shadow.py > spin13-output.txt 2>&1   # ~40 s, byte-identical across runs
-python3 -u spin13b_closure.py > spin13b-output.txt 2>&1  # ~50 s, byte-identical across runs
+python3 -u spin13b_closure.py > spin13b-output.txt 2>python3 -u spin13b_closure.py > spin13b-output.txt 2>&1  # ~50 s, byte-identical across runs1  # ~50 s, byte-identical across runs
+python3 -u spin13c_lut.py > spin13c-output.txt 2>python3 -u spin13b_closure.py > spin13b-output.txt 2>&1  # ~50 s, byte-identical across runs1     # ~2.5 min, byte-identical across runs
 ```
-Artifacts: `wheel/spin13_snap_shadow.py`, `wheel/spin13-output.txt`, `wheel/spin13b_closure.py`, `wheel/spin13b-output.txt`, this file.
+Artifacts: `wheel/spin13_snap_shadow.py`, `wheel/spin13-output.txt`, `wheel/spin13b_closure.py`, `wheel/spin13b-output.txt`, `wheel/spin13c_lut.py`, `wheel/spin13c-output.txt`, this file.
 
 ---
 
@@ -104,3 +105,25 @@ Artifacts: `wheel/spin13_snap_shadow.py`, `wheel/spin13-output.txt`, `wheel/spin
 **Context optimality (op duel across 32 golden targets):** loose tolerance → BASE wins; **mid tolerance (1°–0.03°) → BIS_B dominates** (e.g. 23/32 winners at 0.1° eis); **tightest tolerance (≤0.01°) → COMB takes over** (17/32 at 0.003° d=8). Interpretation: balanced bisection is the systematic gap-refiner; deep integer combinations are the extreme-precision Farey engine; the raw dictionary suffices when the target happens to sit near a lattice direction — exactly the "optimizable for a situation depending on what they are relative to" structure.
 
 **Bits-to-precision vs raw budget growth (the honest cost):** every derived node pays 2·log₂(pool) parent bits, so closure trades address bits for precision at ~2× the bit cost of just enlarging the lattice budget (d=4 raw: 0.012° @ 13 bits vs d=4 closure: 0.01° @ 28 bits). Closure wins exactly when the coefficient budget is *capped* (hardware trit-scale coefficients) — it is a precision multiplier at fixed budget, not a bit-efficient replacement for budget growth. Unreached targets at 0.003° (5–20 of 32) mark the sampling frontier of 12k pairs/depth; full closure would close them at further bit cost.
+
+---
+
+# ADDENDUM 2 (SPIN-13c) — LUT REGIME (Casey, experiment 6)
+
+**Claim tested:** "if lookup tables are being created anyway for a set of options for lightning speed, it changes the optimization calculation for reaching an angle precise enough to be within tolerance but absolute in its construction."
+
+**Verdict: CONFIRMED — offline-exhaustive == online-optimal where the lookup key is fine enough, and the optimization collapses from compute-vs-quality to memory-vs-quality.**
+
+**Setup.** Full closure tables (depth ≤ 3) rebuilt with REAL packed bitstring addresses (tag + parent node-ids + coefficient code; op trees re-evaluate exactly — 512-sample canary PASS; per-depth direction totals byte-anchored to SPIN-13b, 4/4 PASS). Lookup key = fixed-point angle, k=16 bits (65,536 buckets of 0.0055°); construction stays exact/bitstring. Per-tolerance dense tables (bucket → min-address-bits node within τ of bucket center; 256 KB each at 32-bit ids) + shared node payload; Pareto single-table variant serving all 8 tolerances ≈ 1.7–1.9 MB.
+
+**(a) LUT vs online search (64 golden targets):** identical results — 64/64 at τ ∈ {10°, 3°, 1°}, 63/64 at 0.3° (one +3-bit quantization suboptimality), 63/63 and 61/63 at 0.1°/0.03°. The only failure mode is the predicted one: bucket-edge targets where the entry optimal for the bucket *center* is out-of-tolerance or suboptimal for the target (1 case at 0.1°, 4 at 0.01°, 7 at 0.003°) and lookup misses in the sampling holes (9–38 of 64 at ≤ 0.01°). Rule: **k must satisfy bucket-width ≪ τ**; at k=16 the LUT is exactly optimal down to τ ≈ 0.03°, and finer keys fix the rest at memory cost.
+
+**(b) Memory curve (eis seed):** depth 1/2/3 → 341 / 6,012 / 32,254 directions at 0.7 / 17 / 120 KB op-tree payload (mean address 15.2 / 21.0 / 29.7 bits); shadow seeds depth-3 ≈ 80k directions ≈ 360 KB payload. Coverage: 100% of buckets to 0.1° (d≥4 arms), 97–99% at 0.01°, 46–75% at 0.003° (sampling holes, not principle).
+
+**(c) Sweet spots — "lightning-speed absolute angle selection at X KB":**
+- **eis depth-2: ~280 KB total (17.7 KB payload + one 256 KB dense table) → 0.016° median, exact absolute constructions, O(1) lookup.**
+- d=8 depth-3: ~620 KB → 0.0013° median (best precision on the board).
+- Raw-budget LUT (no closure): d=4 @ budget 256 = **12.7 KB payload → 0.0148°** — the cheapest bytes for ~0.015°; but matching closure's 0.0013° needs ~64× coefficient budget (r² ≳ 16k, i.e., the cap regime again).
+- Per-query: online = scan N nodes (32k–80k compares) vs LUT = 1 array read; the build is one-time. In Python the break-even is a handful of queries; in hardware the table *is* the deliverable — quality no longer trades against compute at all.
+
+**Bottom line for the wheel:** LUT precomputation does change the optimization exactly as claimed — the trade moves to memory, and the absolute-construction property (every answer an exactly-evaluable op tree over the fixed dictionary) survives quantized lookup keys, provided the key grid is finer than the tightest tolerance served.

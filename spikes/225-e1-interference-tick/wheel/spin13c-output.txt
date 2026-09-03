@@ -1,0 +1,140 @@
+== CANARY: full-suite double-run byte identity: PASS ==
+
+== SPIN-13c LUT REGIME: closure tables, offline-exhaustive vs online ==
+lookup key: fixed-point angle k=16 bits (65536 buckets, 0.00549 deg/bucket);
+construction stays exact bitstring op-trees; only the key quantizes.
+
+== CANARIES ==
+  (anchors: closure totals must equal SPIN-13b; addr self-evaluation)
+  eis-2D           totals [36, 341, 6012, 32254] vs 13b [36, 341, 6012, 32254] : PASS
+  shadow d=4 s=1   totals [350, 4468, 30029, 71995] vs 13b [350, 4468, 30029, 71995] : PASS
+  shadow d=6 s=1   totals [984, 8386, 38121, 82079] vs 13b [984, 8386, 38121, 82079] : PASS
+  shadow d=8 s=1   totals [866, 7830, 37424, 80625] vs 13b [866, 7830, 37424, 80625] : PASS
+  addr op-tree re-evaluation (512 samples, exact): PASS
+
+== (b) MEMORY COST CURVE — per depth (entries = distinct directions;
+    payload counts ALL addressable op-tree records incl. superseded parents) ==
+  arm              | depth |  entries | payloadBytes | meanBits | maxBits
+  eis-2D           |     0 |       36 |           36 |      6.0 |       6
+  eis-2D           |     1 |      341 |          730 |     15.2 |      17
+  eis-2D           |     2 |     6012 |        17013 |     20.9 |      23
+  eis-2D           |     3 |    32254 |       104968 |     29.7 |      31
+  shadow d=4 s=1   |     0 |      350 |          700 |      9.0 |       9
+  shadow d=4 s=1   |     1 |     4468 |        12354 |     20.6 |      23
+  shadow d=4 s=1   |     2 |    30029 |       102244 |     29.7 |      31
+  shadow d=4 s=1   |     3 |    71995 |       194707 |     33.9 |      35
+  shadow d=6 s=1   |     0 |      984 |         1968 |     10.0 |      10
+  shadow d=6 s=1   |     1 |     8386 |        24797 |     23.1 |      25
+  shadow d=6 s=1   |     2 |    38121 |       136767 |     31.8 |      33
+  shadow d=6 s=1   |     3 |    82079 |       219790 |     35.9 |      37
+  shadow d=8 s=1   |     0 |      866 |         1732 |     10.0 |      10
+  shadow d=8 s=1   |     1 |     7830 |        23124 |     23.0 |      25
+  shadow d=8 s=1   |     2 |    37424 |       118376 |     29.8 |      31
+  shadow d=8 s=1   |     3 |    80625 |       216005 |     35.9 |      37
+
+== LUT tables (dense per-tolerance, 32-bit node ids) ==
+  dense table = 65536 buckets x 4B = 256 KB per tolerance; node payload shared.
+
+  eis-2D: coverage per tolerance (holes = buckets with no node within tol):
+    tol= 10.000deg : coverage 100.00%  (65536/65536 buckets)
+    tol=  3.000deg : coverage 100.00%  (65536/65536 buckets)
+    tol=  1.000deg : coverage 100.00%  (65536/65536 buckets)
+    tol=  0.300deg : coverage 100.00%  (65536/65536 buckets)
+    tol=  0.100deg : coverage 100.00%  (65536/65536 buckets)
+    tol=  0.030deg : coverage  98.96%  (64852/65536 buckets)
+    tol=  0.010deg : coverage  87.81%  (57544/65536 buckets)
+    tol=  0.003deg : coverage  46.67%  (30584/65536 buckets)
+    Pareto single-table (all tolerances): 331570 slots, ~1683 KB
+    (a) lookup vs online optimal (64 targets):
+      tol= 10.000: identical 64/64  lookup-miss  0  out-of-tol(via bucket edge)  0  meanDeltaBits +0.00  maxDelta +0
+      tol=  3.000: identical 64/64  lookup-miss  0  out-of-tol(via bucket edge)  0  meanDeltaBits +0.00  maxDelta +0
+      tol=  1.000: identical 64/64  lookup-miss  0  out-of-tol(via bucket edge)  0  meanDeltaBits +0.00  maxDelta +0
+      tol=  0.300: identical 63/64  lookup-miss  0  out-of-tol(via bucket edge)  0  meanDeltaBits +3.00  maxDelta +3
+      tol=  0.100: identical 63/63  lookup-miss  0  out-of-tol(via bucket edge)  1  meanDeltaBits +0.00  maxDelta +0
+      tol=  0.030: identical 61/63  lookup-miss  0  out-of-tol(via bucket edge)  1  meanDeltaBits +0.00  maxDelta +0
+      tol=  0.010: identical 38/51  lookup-miss  9  out-of-tol(via bucket edge)  4  meanDeltaBits +0.00  maxDelta +0
+      tol=  0.003: identical  8/19  lookup-miss 38  out-of-tol(via bucket edge)  7  meanDeltaBits +0.00  maxDelta +0
+
+  shadow d=4 s=1: coverage per tolerance (holes = buckets with no node within tol):
+    tol= 10.000deg : coverage 100.00%  (65536/65536 buckets)
+    tol=  3.000deg : coverage 100.00%  (65536/65536 buckets)
+    tol=  1.000deg : coverage 100.00%  (65536/65536 buckets)
+    tol=  0.300deg : coverage 100.00%  (65536/65536 buckets)
+    tol=  0.100deg : coverage 100.00%  (65536/65536 buckets)
+    tol=  0.030deg : coverage  99.91%  (65480/65536 buckets)
+    tol=  0.010deg : coverage  97.47%  (63881/65536 buckets)
+    tol=  0.003deg : coverage  71.69%  (46981/65536 buckets)
+    Pareto single-table (all tolerances): 364601 slots, ~1844 KB
+    (a) lookup vs online optimal (64 targets):
+      tol= 10.000: identical 64/64  lookup-miss  0  out-of-tol(via bucket edge)  0  meanDeltaBits +0.00  maxDelta +0
+      tol=  3.000: identical 64/64  lookup-miss  0  out-of-tol(via bucket edge)  0  meanDeltaBits +0.00  maxDelta +0
+      tol=  1.000: identical 64/64  lookup-miss  0  out-of-tol(via bucket edge)  0  meanDeltaBits +0.00  maxDelta +0
+      tol=  0.300: identical 62/63  lookup-miss  0  out-of-tol(via bucket edge)  1  meanDeltaBits +11.00  maxDelta +11
+      tol=  0.100: identical 63/63  lookup-miss  0  out-of-tol(via bucket edge)  1  meanDeltaBits +0.00  maxDelta +0
+      tol=  0.030: identical 63/64  lookup-miss  0  out-of-tol(via bucket edge)  0  meanDeltaBits +3.00  maxDelta +3
+      tol=  0.010: identical 52/58  lookup-miss  1  out-of-tol(via bucket edge)  5  meanDeltaBits +11.00  maxDelta +11
+      tol=  0.003: identical 26/38  lookup-miss 17  out-of-tol(via bucket edge)  9  meanDeltaBits +1.67  maxDelta +3
+
+  shadow d=6 s=1: coverage per tolerance (holes = buckets with no node within tol):
+    tol= 10.000deg : coverage 100.00%  (65536/65536 buckets)
+    tol=  3.000deg : coverage 100.00%  (65536/65536 buckets)
+    tol=  1.000deg : coverage 100.00%  (65536/65536 buckets)
+    tol=  0.300deg : coverage 100.00%  (65536/65536 buckets)
+    tol=  0.100deg : coverage 100.00%  (65536/65536 buckets)
+    tol=  0.030deg : coverage  99.91%  (65479/65536 buckets)
+    tol=  0.010deg : coverage  97.99%  (64219/65536 buckets)
+    tol=  0.003deg : coverage  75.10%  (49219/65536 buckets)
+    Pareto single-table (all tolerances): 369688 slots, ~1869 KB
+    (a) lookup vs online optimal (64 targets):
+      tol= 10.000: identical 64/64  lookup-miss  0  out-of-tol(via bucket edge)  0  meanDeltaBits +0.00  maxDelta +0
+      tol=  3.000: identical 64/64  lookup-miss  0  out-of-tol(via bucket edge)  0  meanDeltaBits +0.00  maxDelta +0
+      tol=  1.000: identical 64/64  lookup-miss  0  out-of-tol(via bucket edge)  0  meanDeltaBits +0.00  maxDelta +0
+      tol=  0.300: identical 62/62  lookup-miss  0  out-of-tol(via bucket edge)  2  meanDeltaBits +0.00  maxDelta +0
+      tol=  0.100: identical 64/64  lookup-miss  0  out-of-tol(via bucket edge)  0  meanDeltaBits +0.00  maxDelta +0
+      tol=  0.030: identical 62/64  lookup-miss  0  out-of-tol(via bucket edge)  0  meanDeltaBits +5.50  maxDelta +8
+      tol=  0.010: identical 56/61  lookup-miss  1  out-of-tol(via bucket edge)  2  meanDeltaBits +5.00  maxDelta +9
+      tol=  0.003: identical 22/35  lookup-miss 18  out-of-tol(via bucket edge) 11  meanDeltaBits +3.00  maxDelta +3
+
+  shadow d=8 s=1: coverage per tolerance (holes = buckets with no node within tol):
+    tol= 10.000deg : coverage 100.00%  (65536/65536 buckets)
+    tol=  3.000deg : coverage 100.00%  (65536/65536 buckets)
+    tol=  1.000deg : coverage 100.00%  (65536/65536 buckets)
+    tol=  0.300deg : coverage 100.00%  (65536/65536 buckets)
+    tol=  0.100deg : coverage 100.00%  (65533/65536 buckets)
+    tol=  0.030deg : coverage  99.88%  (65460/65536 buckets)
+    tol=  0.010deg : coverage  97.35%  (63797/65536 buckets)
+    tol=  0.003deg : coverage  73.45%  (48139/65536 buckets)
+    Pareto single-table (all tolerances): 367952 slots, ~1861 KB
+    (a) lookup vs online optimal (64 targets):
+      tol= 10.000: identical 64/64  lookup-miss  0  out-of-tol(via bucket edge)  0  meanDeltaBits +0.00  maxDelta +0
+      tol=  3.000: identical 64/64  lookup-miss  0  out-of-tol(via bucket edge)  0  meanDeltaBits +0.00  maxDelta +0
+      tol=  1.000: identical 64/64  lookup-miss  0  out-of-tol(via bucket edge)  0  meanDeltaBits +0.00  maxDelta +0
+      tol=  0.300: identical 62/62  lookup-miss  0  out-of-tol(via bucket edge)  2  meanDeltaBits +0.00  maxDelta +0
+      tol=  0.100: identical 63/63  lookup-miss  0  out-of-tol(via bucket edge)  1  meanDeltaBits +0.00  maxDelta +0
+      tol=  0.030: identical 63/63  lookup-miss  0  out-of-tol(via bucket edge)  1  meanDeltaBits +0.00  maxDelta +0
+      tol=  0.010: identical 50/60  lookup-miss  0  out-of-tol(via bucket edge)  4  meanDeltaBits +3.00  maxDelta +3
+      tol=  0.003: identical 24/38  lookup-miss 15  out-of-tol(via bucket edge) 11  meanDeltaBits +0.00  maxDelta +0
+
+== (c) SWEET SPOT — lightning-speed absolute angle selection at X KB ==
+  arm              | depth | payload | + 1 dense tau-table | serves (median err deg)
+  eis-2D           |     1 |    730 B |   262874 B total | 0.27608
+  eis-2D           |     2 |  17743 B |   279887 B total | 0.01592
+  eis-2D           |     3 | 122711 B |   384855 B total | 0.00403
+  shadow d=4 s=1   |     1 |  12354 B |   274498 B total | 0.02490
+  shadow d=4 s=1   |     2 | 114598 B |   376742 B total | 0.00403
+  shadow d=4 s=1   |     3 | 309305 B |   571449 B total | 0.00135
+  shadow d=6 s=1   |     1 |  24797 B |   286941 B total | 0.01377
+  shadow d=6 s=1   |     2 | 161564 B |   423708 B total | 0.00358
+  shadow d=6 s=1   |     3 | 381354 B |   643498 B total | 0.00143
+  shadow d=8 s=1   |     1 |  23124 B |   285268 B total | 0.01368
+  shadow d=8 s=1   |     2 | 141500 B |   403644 B total | 0.00364
+  shadow d=8 s=1   |     3 | 357505 B |   619649 B total | 0.00132
+
+  raw-budget LUT comparison (no closure; ids only):
+    eis-2D           budget 256:   564 dirs, ids 10 bits ->  1128 B payload; median err 0.14408 deg
+    shadow d=4 s=1   budget 256:  6326 dirs, ids 13 bits -> 12652 B payload; median err 0.01481 deg
+
+  online search cost per query: scan N nodes (e.g. 32254 nodes for eis depth-3);
+  LUT cost per query: 1 array read. Build once; break-even after a handful
+  of queries in Python terms, and the table IS the deliverable in hardware.
+
