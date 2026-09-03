@@ -28,3 +28,11 @@ Ordered queue: RESEARCH-AGENDA §4 O1–O7, then §Q open questions, then wheel 
 - **Verdict:** PARTIAL-REFUTE / KNEE RELOCATED — ±5 fails the ≥99% gate at K=2 stress (97.5%); adopt **±7 (4-bit)** as ESP32/.qm default (≥99.2% retention in all 8 K×regime cells). Z₃ debt inversion persists 8/8 (stays sampling gear). Scar: F23's impulse anchor was single-seed; interference rows exact.
 - **Commit:** (this commit)
 - **Headline:** "±7 is the floor" — only cap ≥99% everywhere; K=1 stress retention at ±5 is 88.7%.
+
+---
+
+## Round 4 — O4 regime motion (closed loop) — 2026-09-03 ~12:3x AKDT
+- **Item:** O4 (lag blade → compensation → REGIME-META κ-detector → mode dial vs 6 static arms; calm→conflict→bursty mid-stream shifts, charter §3.2; 4800 ticks × 5 seeds)
+- **Verdict:** BOUNDARY BOOKED — %w gate PASSED (adaptive 932‰ vs best static seq-comp-oracle 778‰, +154‰) but debt gate FAILED (57,136 > 32,770 = 60% of best static); NOT promoted to E4. Boundary numbers: κ-detector conflict entry 90 ticks vs 1600-tick dwell (E4.B's 2–4-tick prediction falsified at spec thresholds); the %w win rides a knife-edge off-by-one lag underseat (bursty seq: L̂=9→994‰, L̂=10→336‰ — exact alignment is glitch-coherent and hurts the sequential arm); dial fired 6×/run, compensator does the work. F19 doctrine confirmed in-run (comp converts conflict→calm 191→1000‰; comp-seq > comp-int everywhere). E4 demo arm should pre-load blade+compensator+sequential, κ-dial as slow backstop. Canaries: F19 anchors exact (984/17700/28, 1000‰, blade 5/5); mislabeled-arm self-canary CAUGHT.
+- **Commit:** (this commit)
+- **Headline:** closed loop 932‰ beats every static arm on %w but fails the pre-registered debt gate — boundary booked with the 90-tick detector lag and the L̂±1 knife-edge scar.
