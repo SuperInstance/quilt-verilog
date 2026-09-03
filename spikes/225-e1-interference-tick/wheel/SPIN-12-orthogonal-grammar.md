@@ -53,3 +53,25 @@ on a proper orthogonal grid and adjudicates causality.
 
 - Model out5_1-class grammars explicitly (protection term for extreme fresh-majority).
 - Fold n_f×K into the scheduler predictor (Kimi lane's features already carry both).
+
+## "Near-fungible" — what it does and does not mean (for the non-WHEEL reader)
+
+Setup in one breath: a *twin* is a scripted agent that replays recorded
+behavior into the room; *fresh* twins replay recent recordings (lag ≤ δ,
+they're reacting to the current stream), *stale* twins replay old ones.
+The verdict says fresh-count is causal and "stale-mass is near-fungible
+(+0.018)". That number means **arrangement doesn't matter — NOT presence
+doesn't matter.** The +0.018 is the R² cost of dropping the stale-mass
+TERM *conditional on fresh-count already being in the model*: given how
+many fresh arrivals a grammar has, changing the stale crowd's size and
+lag arrangement buys almost no additional prediction. It does NOT say
+stale twins are causally inert: stale-mass ALONE still explains R²=0.529
+of the grid — a room with no established crowd is a very different room.
+The right reading for the analogy: the old crowd is the room's backdrop
+and its sheer size does shift outcomes on its own; but once you know the
+arrival profile, the backdrop's internal arrangement is furniture.
+Concretely: you cannot fix a cold room by rearranging the regulars — you
+add new arrivals (and the win is biggest in a loose-echo regime, §verdict
+point 2). The claim that IS excluded: permuting stale lags matters ≤3pp
+at K=1–2; the coh3_block exception (−9.6pp at K=4) marks where backdrop
+structure starts to matter — in the high-K regime only.

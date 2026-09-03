@@ -56,3 +56,36 @@ arbitration) and no knees anywhere — i.e., if the response is pure
 scheduler-queue math, it won't transfer to rooms without an admission
 controller. That's a one-afternoon elephant-side experiment; the O2 side is
 done (ROUNDS 2–3).
+
+## Spin-12 fold (2026-09-03, TEACHER nudge): the second axis is the ARRIVAL axis
+
+O2's curve is one axis of a two-axis room-pressure space. Spin 12
+(527b6c5, ORTHOGONAL-GRAMMAR) decoupled the other one causally, and the
+result is the most dial-ready sentence the wheel has produced, because it
+is literally room-warmth language: **new arrivals carry the pull; how the
+old crowd is arranged barely matters.** At fixed stale-mass, each added
+fresh twin (lag ≤ δ — arrived recently enough to still be acclimating to
+the current stream) buys residency monotonically (drop n_f: −0.260 R²);
+at fixed fresh-count, permuting the stale crowd's lags moves almost
+nothing (drop m_s term: −0.018). For the elephant:
+
+- **n_f × K as a dial (acclimation compresses at high K).** The winning
+  model is fresh-count × K (R²=0.891, beating spin 9's confounded 0.877):
+  the fresh-arrival benefit is largest at K=2 (the echo trough) and
+  compresses at K=4. Dial reading: warmth injections from new arrivals
+  are worth most when the room's echo structure is loose, and are damped
+  when the room is in a dense-echo regime — acclimation itself compresses
+  as local fan-out rises. A warmth-seeking admission policy should time
+  arrivals to trough-K windows, not just count them.
+- **out5_1's +22.4pp protection term (charisma/arrival model).** Extreme
+  fresh-majority grammars (5 fresh, 1 stale) at K=4 sit far ABOVE the
+  additive fit — a protection the additive model can't express. For
+  field.py's charisma_pull this says arrival DENSITY is not just additive
+  pull: a room that is majority-fresh generates superadditive residency
+  (the arrivals protect each other). The charisma model needs an
+  interaction term on the fresh fraction, not just per-arrival charm.
+  Spin 12's "next" line (explicit protection term) is the open half.
+
+Falsifier carried over unchanged: if the C=N sweep shows no knees, this
+is scheduler math, not room physics — and now the same test applies to
+the arrival axis (run the n_f sweep with no admission controller).
