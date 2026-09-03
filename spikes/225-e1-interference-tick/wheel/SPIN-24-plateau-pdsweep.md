@@ -85,3 +85,104 @@ zero cell = zero7.)
 2. Script + run + raw output (spin24-output.txt).
 3. Book: crossing-count table per pd, plateau wall ratios, verdicts, scars,
    follow-up, one WHEEL-LOG line.
+
+---
+
+## RESULTS (booked after the run; elapsed 107 s; all canaries PASS)
+
+Canaries 3/3 PASS: spread=0 byte-identity (never == θ1.1 == dual-run sha);
+ladder@15 K=1 = 71.5 EXACT; plateau K=2 tax = **36.7pp, byte-equal to
+SPIN-23's booking** — the surprise reproduces.
+
+### (a) Crossing-count table per pd (N≤7 twins; band (1−1/pd, 1+1/pd])
+
+| pd | in-band crossings | verdict (pre-registered rule) | note |
+|----|--------------------|-------------------------------|------|
+| 1 | 2 (nf=2@θ1.0, nf=3@θ2.0) | one-level — 0.00pp spread across the WHOLE 200-setting dial | every nf pile-up (≥2 of 7) already fires together; gate bit changes nothing |
+| 2 | 2 (nf=4@θ1.0, nf=5@θ1.5) | **MULTI-LEVEL** (53.6pp @ kcoh5@15, t100 51 vs 150) | delta dominated by the WALL bit (nf=5); the nf=4 sub-crossing is NOT shown live by the bestpair search (scar 3) |
+| 3 | 2 (nf=6@θ1.0, nf=7@θ1.33) | **MULTI-LEVEL — genuinely two-level** (7.9pp @ kcoh5@15: 82.5 @ t100∈[67..99] vs 74.6 @ [100..133]) | BOTH crossings live: nf=7 rescues step5/zero7 (SPIN-22's bit); nf=6 adds +7.9pp on kcoh5@15. The two t100 halves are each internally FLAT (67..99 and 100..133 constant) — the gate is exactly 2 bits at pd=3 |
+| 4 | 0 (wall nf=9 > N=7) | one-level (band empty, 0.00pp) | gate cannot reach its wall; band inert |
+| 5–8 | 0 | one-level (0.00pp) | same; only sub-θ1.0 chatter crossings remain, all below band |
+
+**Answer to (a): YES — the gate is genuinely two-level, but ONLY at pd=3
+(and nominally pd=2), and the second level is the SUB-1.0 dial SPIN-16
+called the "missing dial": the nf=2pd (θ=1.0-floor) crossing.** SPIN-22's
+"one level" held only for the θ>1 half-band it swept. For pd≥4 with N=7
+twins the band is EMPTY — the wall leaves the reachable nf set and the gate
+dial goes totally flat (0.00pp across every in-band setting).
+
+PREDICTION P-a ("sub-1.0 side is behaviorally dead at every pd") is
+**FALSIFIED** at pd=3: admitting nf=6 pile-ups improves kcoh5@15 by +7.9pp
+(74.6 → 82.5). Verified arithmetic: both band halves are internally
+constant, so this is a real second level, not noise (3-seed means; the two
+halves differ by construction only in whether nf=6 admits).
+
+### (b) Plateau wall vs pd (zero grammar, K=2, seeds {1,7,42})
+
+Pre-registered fit (ref−10pp, smallest N) FLAGS every pd — but inspection
+shows the flag is the FIT's fault, not the wall's (scar 2): the pre-wall
+decay is gradual (pd=3: N4 82.0 → N5 67.2 → N6 28.8), so "ref−10pp" fires
+on the shoulder, and at pd=6/8 it even fires on the N=1 startup transient
+(85.3 vs ref 98.3). The DIVERGENCE edge (pct → <5, resid blows up) is:
+
+| pd | last healthy N | first collapsed N (pct) | 2pd+1 | ratio |
+|----|----------------|--------------------------|-------|-------|
+| 1 | 2 (12.8) | 3 (0.6) | 3 | 1.000 |
+| 2 | 4 (33.3) | 5 (0.6) | 5 | 1.000 |
+| 3 | 6 (28.8) | 7 (0.7) | 7 | 1.000 |
+| 4 | 8 (28.9) | 9 (0.7) | 9 | 1.000 |
+| 6 | 12 (34.3) | 13 (1.6) | 13 | 1.000 |
+| 8 | 16 (32.9) | 17 (1.0) | 17 | 1.000 |
+
+**Answer to (b): the co-fire law m = N/(2pd+1) ≈ 1 prices the plateau wall
+EXACTLY — first collapsed N = 2pd+1 at all six pd, ratios 1.000 (0 flags
+under the honest edge fit), wall strictly increasing 3→5→7→9→13→17.**
+Zero slope does not move the wall. The pre-registered fit rule is booked as
+falsified (it flagged all six pd); the divergence-edge reading is POST-HOC
+and flagged as such — but it is not a fit, it is an exact integer equality
+six-for-six, hard to explain away.
+
+PREDICTION P-b ("ratio 1.00, all inside band") is **RIGHT in substance**
+under the edge reading and **WRONG under the pre-registered fit** — booked
+honestly as a rule-design failure, not a physics failure. Also notable: the
+approach to the wall is a decaying SHOULDER (m→1 from below prices in
+gradually: 97.9→82.0→67.2→28.8→0.7 at pd=3), so the SPIN-23 plateau tax
+(36.7pp) and the wall law are the same object: the K=2 regime bleeds
+continuously as N/(2pd+1) → 1 and cliffs exactly at 1.
+
+### Prediction scorecard
+- P-a one-level everywhere — **WRONG** (two-level at pd=3, +7.9pp live
+  second crossing; nominal multi at pd=2 via the wall bit).
+- P-b wall at m≈1 — **RIGHT in substance** (edge = 2pd+1 six-for-six),
+  **WRONG under the pre-registered fit rule** (all six flagged).
+
+### Scars
+1. **SPIN-22's scar was half-right for the wrong reason:** it said the
+   θ dial is a phantom at pd=3 — true only of the θ>1 half. The full band
+   (1−1/pd, 1+1/pd] has TWO flat halves at pd=3 separated at t100=100.
+   Any future θ study must sweep across θ=1, not just (1, 1+1/pd).
+2. **ref−10pp "wall fit" is unusable when the pre-wall shoulder decays
+   gradually** (and catastrophic when the max sits mid-sweep, as at pd=6/8
+   where N=1's startup transient read as "collapsed"). Divergence edge
+   (pct<5 after blow-up) is the honest statistic; booked post-hoc, flagged.
+3. **bestpair search does not isolate WHICH crossing drives a MULTI-LEVEL
+   verdict.** At pd=2 the 53.6pp delta is the wall bit (nf=5); whether the
+   nf=4 crossing is independently live on any anchor is unresolved by this
+   design (needs a pairwise-adjacent-threshold test). Book pd=2's verdict
+   as rule-technical, pd=3's as genuine.
+4. N=7-twin ceiling: for pd≥4 the gate's wall leaves the reachable nf set
+   and the whole question goes inert — crossing maps are only meaningful
+   for pd ≤ (N−1)/2.
+
+### Follow-up
+- Adjacent-threshold pairwise test (t100 = c vs c+1 for every crossing) to
+  isolate per-crossing causal effect — settles pd=2's nf=4 crossing and
+  gives a clean "causal level count" per pd.
+- The +7.9pp nf=6 level at pd=3 is a NEW dial setting for healthy N=6
+  grammars (kcoh5 family): sweep t100 ∈ [67..99] × K on healthy anchors;
+  candidate best-practice θ for embedded = ~0.8·pd-side rather than 1.1.
+- Plateau shoulder: fit pct vs m=N/(2pd+1) across all pd; if the collapse
+  curve is a single function of m, the SPIN-23 tax and the wall unify as
+  one law of m.
+
+Status: **COMPLETE.** Committed+pushed g3-kinduction. WHEEL-LOG appended.
