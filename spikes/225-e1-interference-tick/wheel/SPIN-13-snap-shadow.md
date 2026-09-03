@@ -88,7 +88,7 @@ python3 -u spin13_snap_shadow.py > spin13-output.txt 2>&1   # ~40 s, byte-identi
 python3 -u spin13b_closure.py > spin13b-output.txt 2>python3 -u spin13b_closure.py > spin13b-output.txt 2>&1  # ~50 s, byte-identical across runs1  # ~50 s, byte-identical across runs
 python3 -u spin13c_lut.py > spin13c-output.txt 2>python3 -u spin13b_closure.py > spin13b-output.txt 2>&1  # ~50 s, byte-identical across runs1     # ~2.5 min, byte-identical across runs
 ```
-Artifacts: `wheel/spin13_snap_shadow.py`, `wheel/spin13-output.txt`, `wheel/spin13b_closure.py`, `wheel/spin13b-output.txt`, `wheel/spin13c_lut.py`, `wheel/spin13c-output.txt`, this file.
+Artifacts: `wheel/anglekit.py` (shared toolkit), `wheel/spin13_snap_shadow.py`, `wheel/spin13-output.txt`, `wheel/spin13b_closure.py`, `wheel/spin13b-output.txt`, `wheel/spin13c_lut.py`, `wheel/spin13c-output.txt`, `wheel/spin13d_apps.py`, `wheel/spin13d-output.txt`, this file.
 
 ---
 
@@ -127,3 +127,28 @@ Artifacts: `wheel/spin13_snap_shadow.py`, `wheel/spin13-output.txt`, `wheel/spin
 - Per-query: online = scan N nodes (32k–80k compares) vs LUT = 1 array read; the build is one-time. In Python the break-even is a handful of queries; in hardware the table *is* the deliverable — quality no longer trades against compute at all.
 
 **Bottom line for the wheel:** LUT precomputation does change the optimization exactly as claimed — the trade moves to memory, and the absolute-construction property (every answer an exactly-evaluable op tree over the fixed dictionary) survives quantized lookup keys, provided the key grid is finer than the tightest tolerance served.
+
+---
+
+# ADDENDUM 3 (SPIN-13d) — THE DESIGN CONTRACT: `anglekit.py` (Casey)
+
+**"Let the engineer decide the tolerance but the mechanic refine the assembly for the application with his toolkit that everyone else has."**
+
+The deliverable is now shaped as a division of labor, implemented in **`wheel/anglekit.py`** (shared toolkit, common property) and demonstrated in `wheel/spin13d_apps.py`:
+
+- **ENGINEER (spec layer) owns tolerance + application fit.** Tolerance is a per-application parameter, *always* caller-supplied — `select(lut, target, tolerance)` — and never baked into the toolkit. The engineer also picks the seed lattice, closure depth, and lookup-key resolution.
+- **MECHANIC (application layer) owns refinement.** `select()` returns the minimal-bit exact construction within the engineer's tolerance; when the table has a sampling hole, the mechanic hand-applies the *shared* refinement ops — `bisect_n`, `bisect_b` (exact integer norm-balanced), `combine` — starting from `bracket(target)`, the two adjacent table directions. Identical tools for every application.
+- **TOOLKIT is common property:** integer-only exact core (Z[√3] frame, primitive lattice renorm, packed bitstring op-tree addresses that re-evaluate exactly), per-tolerance dense fast path with bucket-edge guard, self-contained deterministic builds (fixed LCG), `stats()` for table economics.
+
+**Demonstration — same toolkit, same 36-direction Eisenstein seed set, two engineer specs:**
+
+| | App A: FINEWIRE spline | App B: PILOT heading |
+|---|---|---|
+| engineer tolerance | 0.01° | 3.0° |
+| closure depth | 3 (32,254 entries, 120 KB payload) | 1 (341 entries, 0.75 KB payload) |
+| result | median err 0.00099°, max 0.0056°, ~20-bit mean constructions, exact 16-direction B-spline tangents | median err 1.31°, max 2.55°, 9.3 bits/leg, O(1) dense lookups |
+| mechanic role | filled the one table hole (edge @130°: shared `bisect_b` on brackets → 0.0014°, within spec) | none needed — depth-1 table covers 3° everywhere |
+
+Both applications met spec (**all selections within the engineer's tolerance**), with a 20× spread in construction cost driven entirely by the tolerance parameter — the contract working as intended.
+
+Canaries: closure totals anchored to SPIN-13b (PASS), `select` == independent exhaustive reference across both tables × both tolerances (64 checks PASS), exact 30° balanced bisection (PASS), full double-run + external byte identity (PASS). Scar: the first version failed double-run identity — the shared LCG stream wasn't reset per table build; fixed by making every `build_table` self-contained.
