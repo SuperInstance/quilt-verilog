@@ -12,7 +12,7 @@ a soft core, or an FPGA load identically. This page states what exists
 and what is verified, matter-of-fact; the deep docs (map below) carry the
 rest of the story.
 
-> **From the captain:** Big data says the optimal monofilament is √8 mm ≈ 2.83. The fisherman rigs 3 mm — a sliver of catch-rate traded for durability, and it's on the shelf instead of a custom order. This is why we reach for Pythagorean shapes. A big cloud-cluster can customize everything to enough floating points for tolerance; the easy way is to snap to the constructible, available, exactly-representable part and let the tolerance absorb the difference. The engineer decides the tolerance; the mechanic refines the assembly with the toolkit everyone has. This fabric is built the easy way: integer lattices, snapped angles, standard parts all the way down.
+> **From the captain:** The data says the perfect monofilament is √8 mm — 2.83, repeating forever. The fisherman rigs 3. It's on the shelf, it survives the rocks, and it loses nothing you'll notice. That gap between perfect and available is where engineering lives. So we reach for Pythagorean shapes: the angles you can build exactly, the parts already in the bin, the numbers that terminate. A cloud cluster can chase the floating-point optimum. This fabric does it the easy way — integer lattices, snapped directions, standard parts all the way down. The engineer sets the tolerance. The mechanic fits the assembly. The fish doesn't care how many digits you had.
 
 ## What is verified, in one table
 
