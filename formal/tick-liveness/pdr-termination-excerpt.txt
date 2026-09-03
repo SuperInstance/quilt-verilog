@@ -1,0 +1,4 @@
+Invariant F[106] : 8743 clauses with 0 flops (out of 361) (cex = 0, ave = 44.67)
+Verification of invariant with 8743 clauses was successful.  Time =     0.45 sec
+Property proved.  Time =   400.04 sec
+SBY 17:15:53 [formal/cell_core.tick.prove] engine_0: Proved output 1 in frame 3 (converged).
