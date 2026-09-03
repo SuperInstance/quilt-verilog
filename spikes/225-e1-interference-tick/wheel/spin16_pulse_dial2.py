@@ -551,6 +551,121 @@ def exp3(theta_star):
     return tab
 
 
+# ---------------------------------------------------------------- post-hoc
+def exp2b(theta_c):
+    print(f"\n== EXP 2b (POST-HOC, corrective): step5 gate rows at theta_c={theta_c}"
+          " — registered theta* rule-as-written picked 2.0 via guard-prefix"
+          " inflation on never-open diverged arms; theta_c = largest CLEAN"
+          " (non-diverged, full-window) selection (1.05 and 1.1 are"
+          " behaviorally identical at pd=3 and pd=6) ==")
+    lats = ladder_step(30, 5)
+    tab = {}
+    for d in (12, 24):
+        print(f"\n  --- delta={d} ---")
+        for comp in ("off", "gate", "MC-A"):
+            vals = []
+            for k in (1, 2, 4):
+                if comp == "off":
+                    c = mcell(lats, 3, K=k, delta=d)
+                elif comp == "MC-A":
+                    c = mcell(lats, 3, K=k, delta=d, mc=1)
+                else:
+                    c = gcell(lats, 3, K=k, delta=d, gate=theta_c)
+                nat = mean([within_pm(r["resid"], d) for r in c["rs"]]) / 10
+                vals.append((c["m"], nat, c["div"]))
+                tab[(d, comp, k)] = vals[-1]
+            cells = []
+            for m, nat, dv in vals:
+                s = f"{m:5.1f}" + (f"({nat:5.1f})" if d == 24 else "")
+                if dv:
+                    s += "D"
+                cells.append(f"{s:>13}")
+            print(f"  step5 {comp:>5} | " + " | ".join(cells))
+    v = [tab[(12, "gate", k)][0] for k in (1, 2, 4)]
+    print(f"\n  step5 gate K-trough (K2 < min(K1,K4)): "
+          f"{v[1] < min(v[0], v[2])} [{v[0]:.1f},{v[1]:.1f},{v[2]:.1f}]")
+    print(f"  step5 gate K-interaction (K4-K1): "
+          f"{tab[(12, 'gate', 4)][0] - tab[(12, 'gate', 1)][0]:+.1f}")
+    print(f"  R1(a) at theta_c, delta=12 K=1: {tab[(12, 'gate', 1)][0]:.1f} "
+          f"({'PASS' if tab[(12, 'gate', 1)][0] >= 9.0 else 'FAIL'} vs >= 9.0)")
+
+
+def exp3b(theta_c):
+    print(f"\n== EXP 3b (POST-HOC, corrective): composition grid re-run at"
+          f" theta_c={theta_c} (registered exp-3 ran at contaminated"
+          f" theta*=2.0; base/AS arms there were clean and are re-run here"
+          f" for a self-contained table) ==")
+    grams = (
+        ("step5", ladder_step(30, 5), None),
+        ("kcoh1w7", [0] * 6 + [30], [0, 1, 2, 3, 4, 5, 30]),
+        ("cohort37", [0, 0, 0, 30, 30, 30, 30], [0, 1, 2, 27, 28, 29, 30]),
+        ("zero7", [0] * 7, [0, 1, 2, 3, 4, 5, 6]),
+    )
+    tab = {}
+    for name, blats, alats in grams:
+        if alats is None:
+            alats = blats
+        for k in (1, 2):
+            b = gcell(blats, K=k, gate="never")
+            a = gcell(alats, K=k, gate="never")
+            g = gcell(blats, K=k, gate=theta_c)
+            j = gcell(alats, K=k, gate=theta_c)
+            tab[(name, k)] = (b, a, g, j)
+            print(f"  {name:>8} K={k}: base {show(b)}  AS {show(a)}"
+                  f"  gate {show(g)}  AS+gate {show(j)}"
+                  f"  gOpen {g['gopen']:8.1f}->{j['gopen']:8.1f}")
+    print("\n  P16a residual criteria applied post-hoc (for the record;")
+    print("  the registered verdict is the exp-3 one above):")
+    nq = 0
+    for key in sorted(tab):
+        b, a, g, j = tab[key]
+        ga, gg = a["m"] - b["m"], g["m"] - b["m"]
+        if ga >= 5.0 and gg >= 5.0:
+            nq += 1
+            r = j["m"] - max(a["m"], g["m"])
+            print(f"   {key[0]:>8} K={key[1]}: gains AS {ga:+6.1f} gate {gg:+6.1f}"
+                  f" -> residual {r:+6.1f}")
+        else:
+            print(f"   {key[0]:>8} K={key[1]}: gains AS {ga:+6.1f} gate {gg:+6.1f}"
+                  f" — not qualifying")
+    if nq == 0:
+        print("   still NO qualifying cells (AS gain < 5pp everywhere).")
+    print("\n  PARTITION THEOREM (structural, explains both grids): for every")
+    print("  theta > 1 the gate opens only at nf >= 2pd+1 — supra-wall")
+    print("  pile-ups; AS measurably rescues only sub-wall grammars (exp 3:")
+    print("  AS gains +0.0..+2.6pp on all four supra-wall grammars, every")
+    print("  arm still diverged). The knobs' domains are DISJOINT: the gate")
+    print("  IS the wall law implemented as a scheduler. AS x gate")
+    print("  composition is neither super- nor subadditive on this fabric —")
+    print("  it is undefined (domain partition), which is why no cell can")
+    print("  qualify.")
+
+
+def posthoc():
+    print("\n" + "=" * 70)
+    print("POST-HOC CORRECTIVE ADDENDUM — appended after the registered run;")
+    print("registered sections above are byte-untouched.")
+    print("- ARTIFACT: numeric-theta arms that never open still carry the")
+    print("  spin-11 memory guard -> they bail at |e|>1e12 and their true12")
+    print("  is a PREFIX statistic (step5 15.3, wall6 18.1), inflated vs")
+    print("  full-window mc=0 numbers (0.3, 2.3). Divergence flags stayed")
+    print("  honest (all D).")
+    print("- CONSEQUENCE: the registered theta* rule-as-written selected")
+    print("  theta*=2.0 (a never-open theta) because 15.3>=9 and 18.1>=5")
+    print("  on prefix stats -> exp 2's step5-gate rows and exp 3's")
+    print("  gate/AS+gate arms ran with a closed gate under guard.")
+    print("- CORRECTION (post-hoc, labeled): theta_c = 1.1, the largest")
+    print("  theta whose step5 (36.9) and wall6 (23.9) legs are non-diverged")
+    print("  full-window measurements; 1.05 and 1.1 are behaviorally")
+    print("  identical at pd=3 and pd=6 (integer gate arithmetic).")
+    print("- P16b stays booked FAIL as registered: the no-rescue band")
+    print("  (true12 <= 3.0) was broken by the same prefix artifact, though")
+    print("  its divergence-flag legs were correct; the theta-coverage LAW")
+    print("  itself (open iff theta < 1+1/pd) is behaviorally confirmed.")
+    exp2b(1.1)
+    exp3b(1.1)
+
+
 def main():
     print(__doc__)
     print("=" * 70)
@@ -558,6 +673,9 @@ def main():
           " — harness run, -u, no pipes")
     if "--canaries" in sys.argv:
         canaries()
+        return
+    if "--posthoc" in sys.argv:
+        posthoc()
         return
     if not canaries():
         print("CANARY FAIL — aborting")

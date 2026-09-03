@@ -1,0 +1,409 @@
+SPIN 16 — SPOKE: PULSE-DIAL II: ADAPTIVE (ECHO-GATED) COMPENSATION
+(proposal-dispatched by SPIN-11-pulse-dial.md's Next section; no LCG pick
+consumed). Files: spin16_pulse_dial2.py (this), spin16-output.txt (raw),
+SPIN-16-pulse-dial2.md (report). Fabric: spin11_pulse_dial.run_fabric_mc
+reused verbatim for off / MC-A arms; the new runner run_fabric_gate is an
+exact copy of its interference loop with ONE added per-tick gate at the
+emission line (gate="never" is byte-identical to mc=0; gate="always" is
+byte-identical to mc=1 / MC-A).
+
+MECHANISM (Spin 11's pd=12 lesson): blanket compensation is a trade — it
+rescues wall casualties (step5/N=7: 0.3 -> 8.8 at delta=12 K=1) but hurts
+healthy grammars (kcoh5 53.2 -> 37.6). The wall law says divergence needs
+the echo factor |1 - N/pd| materially > 1. ADAPTIVE IDEA: compensate only
+the events whose CONCURRENT echo factor exceeds a threshold:
+    gate opens at tick t iff nf(t) > 0 and |1 - nf/pd| > theta_g
+where nf = number of triggering twins THIS tick — an in-loop observable
+(the scheduler counts simultaneous triggers; no future information).
+Integer arithmetic: 100*|pd-nf| > round(100*theta)*pd. When open, that
+tick's emissions take the MC-A division (//min(nf,pd)); when closed they
+emit the raw fabric pulse |e|//pd. Memory guard carried over from spin-11
+verbatim (bail at any |e| > 10^12) for every gate mode except "never".
+
+=====================================================================
+PRE-REGISTERED PREDICTIONS — in this committed docstring BEFORE any run.
+Every endpoint pinned to eval window EV=12 (true12 = within_pm(resid,12)),
+the spin-8 saturation-scar convention, regardless of delta.
+
+R1 (SPIN-11's registered Next-section prediction, tested verbatim):
+    echo-gated compensation at pd=3, delta=12, K=1:
+    (a) step5/N=7 [0,5,10,15,20,25,30] true12 >= 9.0
+    (b) kcoh5@30 [0,0,0,0,0,30]        true12 >= 50.0
+    Leg (b) is structural: N=6=2pd at pd=3 => concurrent factor <= 1.0
+    < theta for every theta > 1 => the gate provably never opens (byte-
+    proven by canary CE). Leg (a) is the live test: blanket MC-A gave
+    8.8; the gate leaves mid-size (nf <= 2pd) corrective shoves
+    uncompensated, worth >= +0.2pp over MC-A if R1(a) passes.
+
+P16b (EXP 1 calibration, secondary): theta-coverage law — the gate opens
+    at a 2pd+1 wall iff theta < 1 + 1/pd, i.e. pd < 1/(theta-1). Sweep
+    prediction at the pd=6 wall cell ladder(30,13) (2pd+1=13, echo factor
+    7/6 ~ 1.167), delta=12, K=1: theta in {1.05, 1.1} rescue (true12
+    >= 5.0); theta in {1.25, 1.5, 2.0} do NOT (cell stays diverged,
+    true12 <= 3.0). Coverage table: 1.05 -> pd<=19, 1.1 -> pd<=9,
+    1.25 -> pd<=3, 1.5 -> pd<=1, 2.0 -> none.
+
+theta* selection rule (pre-registered; used by EXP 2/3): the LARGEST
+    theta in the sweep satisfying BOTH R1(a) (step5 >= 9.0 at delta=12
+    K=1) AND P16b's rescue leg (wall6 >= 5.0); if none satisfies both,
+    argmax of step5 rescue at delta=12 K=1, flagged REGISTERED-GATE-MISS.
+
+P16a (THE new quantitative prediction for EXP 3, registered in this
+    commit BEFORE the exp-3 run; one prediction, one falsifier): AS x
+    gate composition on N=7 supra-wall grammars {step5 [0,5,10,15,20,25,30]
+    (AS no-op control), kcoh1w7 [0]*6+[30], cohort37 [0,0,0,30,30,30,30],
+    zero7 [0]*7} at pd=3, delta=12, K in {1,2}, arms {base, AS-exact,
+    gate@theta*, AS-exact + gate@theta*}: in every cell where BOTH single
+    knobs beat base by >= +5.0pp (true12),
+        residual := joint - max(single_AS, single_gate) lies in [-2.0, +2.0]
+    (additive, NOT superadditive). Pre-registered mechanism: substrate
+    coupling — AS decorrelates firing times and thereby STARVES the
+    nf >= 2pd+1 pile-ups the gate feeds on; witness: gate-open ticks under
+    AS+gate <= 10% of gate-alone's in qualifying cells (and if the joint
+    gate never opens, the joint run is byte-identical to AS-alone).
+    FALSIFIER: any qualifying cell with residual >= +2.1 (superadditive:
+    spin-14's orthogonal-channel law extends to the gate — knob-physics
+    channels, phase vs amplitude, would be doing the work) or <= -2.1
+    (destructive competition). Basis: spin-14 found superadditivity only
+    for orthogonal FAILURE channels; the gate and AS attack the same
+    failure substrate (the synchronized pile-up) even though their knob
+    physics differ.
+
+Embedded wall-law probe (unregistered observation, EXP 3 base arm): zero7
+    uncompensated tests whether N > 2pd divergence survives at span 6
+    (spin-8/11 measured the wall only on spread-30 ladders); zero6=77.3
+    is the N=2pd anchor.
+
+Canaries (mandatory, abort on fail):
+  CA: spin-11 replay via run_fabric_mc(mc=0), EV=12: step6/N=6 26.8,
+      step5/N=7 0.3, step1/N=31 0.1, kcoh5@30 53.2.
+  CB: spread=0 codepath identity by N-group, separately for gate modes
+      {never, always, 1.05, 1.25} (spin-11 canary B extended to the gate).
+  CC: gate="never" == run_fabric_mc(mc=0) full-dict, 8 configs.
+  CD: gate="always" == run_fabric_mc(mc=1) full-dict, 8 configs.
+  CE: structural inertness: gate in {1.05, 1.25} == mc=0 full-dict for
+      every N=6 pd=3 panel grammar (plus one K=4 and one delta=24 probe)
+      — the byte-level guarantee behind R1(b).
+
+Integer-only in-loop (gate comparison included: 100*|pd-nf| > theta100*pd);
+floats only in display. Seeds {1,7,42,1999,20260902}, 4800 ticks,
+delta=12 unless stated, drift=6, pd=3 unless stated. Run with -u, no pipes.
+
+======================================================================
+SPIN 16 — PULSE-DIAL II: ADAPTIVE (ECHO-GATED) COMPENSATION — harness run, -u, no pipes
+== CANARY CA: spin-11 replay via run_fabric_mc(mc=0) (EV=12) ==
+  step6/N=6 K=1    got  26.8  pub  26.8  OK
+  step5/N=7 K=1    got   0.3  pub   0.3  OK
+  step1/N=31 K=1   got   0.1  pub   0.1  OK
+  kcoh5@30 K=1     got  53.2  pub  53.2  OK
+
+== CANARY CB: spread=0 codepath identity by N-group, per gate mode ==
+  gate=never: PASS (12 codepaths, 2 N-groups)
+  gate=always: PASS (12 codepaths, 2 N-groups)
+  gate=1.05: PASS (12 codepaths, 2 N-groups)
+  gate=1.25: PASS (12 codepaths, 2 N-groups)
+
+== CANARY CC: gate='never' == run_fabric_mc(mc=0), full-dict ==
+  PASS: 8 configs full-dict identical
+
+== CANARY CD: gate='always' == run_fabric_mc(mc=1), full-dict ==
+  PASS: 8 configs full-dict identical
+
+== CANARY CE: structural N=6/pd=3 inertness: gate {1.05,1.25} == mc=0, full-dict ==
+  PASS: 5 grammars x 2 thetas + K4/d24 probes, full-dict (R1(b) structural guarantee)
+
+CANARIES: PASS
+
+== EXP 1: theta calibration — registered endpoints + pd=6 wall ==
+
+  --- step5 N=7 pd=3 (rescue endpoint): lats=[0, 5, 10, 15, 20, 25, 30] ---
+  off      0.3D   (spin-11 pub 0.3)   MC-A   8.8    (spin-11 pub 8.8)
+  th=1.05  36.9    gOpen/cell    448.4   compTw    3138.8   ev    20883
+  th=1.1   36.9    gOpen/cell    448.4   compTw    3138.8   ev    20883
+  th=1.25  36.9    gOpen/cell    448.4   compTw    3138.8   ev    20883
+  th=1.5   15.3D   gOpen/cell      0.0   compTw       0.0   ev      661
+  th=2.0   15.3D   gOpen/cell      0.0   compTw       0.0   ev      661
+
+  --- kcoh5@30 pd=3 (health endpoint): lats=[0, 0, 0, 0, 0, 30] ---
+  off     53.2    (spin-11 pub 53.2)   MC-A  37.6    (spin-11 pub 37.6)
+  th=1.05  53.2    gOpen/cell      0.0   compTw       0.0   ev    16157
+  th=1.1   53.2    gOpen/cell      0.0   compTw       0.0   ev    16157
+  th=1.25  53.2    gOpen/cell      0.0   compTw       0.0   ev    16157
+  th=1.5   53.2    gOpen/cell      0.0   compTw       0.0   ev    16157
+  th=2.0   53.2    gOpen/cell      0.0   compTw       0.0   ev    16157
+
+  --- ladder30x13 pd=6 (wall probe): lats=[0, 2, 5, 8, 10, 12, 15, 18, 20, 22, 25, 28, 30] ---
+  off      2.3D   (spin-11 pub 2.3)   MC-A   8.1    (spin-11 pub 8.1)
+  th=1.05  23.9    gOpen/cell     46.2   compTw     600.6   ev    30023
+  th=1.1   23.9    gOpen/cell     46.2   compTw     600.6   ev    30023
+  th=1.25  18.1D   gOpen/cell      0.0   compTw       0.0   ev     4869
+  th=1.5   18.1D   gOpen/cell      0.0   compTw       0.0   ev     4869
+  th=2.0   18.1D   gOpen/cell      0.0   compTw       0.0   ev     4869
+
+  theta-coverage law (gate opens at 2pd+1 wall iff theta < 1+1/pd):
+   theta=1.05: opens at 2pd+1 wall for pd <= 19
+   theta=1.1 : opens at 2pd+1 wall for pd <= 9
+   theta=1.25: opens at 2pd+1 wall for pd <= 3
+   theta=1.5 : opens at 2pd+1 wall for pd <= 1
+   theta=2.0 : opens at 2pd+1 wall for pd <= 0
+
+  theta* = 2.0
+  R1(a) step5 gate@th* d12 K1 = 15.3 (>= 9.0: PASS)
+  R1(b) kcoh5 gate@th* d12 K1 = 53.2 (>= 50.0: PASS)  [structural: gate provably inert at N=6=2pd, canary CE]
+  P16b th=1.05 wall6 = 23.9  [rescue]
+  P16b th=1.1  wall6 = 23.9  [rescue]
+  P16b th=1.25 wall6 = 18.1D  [no-rescue]
+  P16b th=1.5  wall6 = 18.1D  [no-rescue]
+  P16b th=2.0  wall6 = 18.1D  [no-rescue]
+  P16b (theta-coverage at pd=6 wall): FAIL
+
+== EXP 2: panel {kcoh5,kcoh1,ladder,cohort,step5/N=7,zero} x comp {off, gate@2.0, MC-A} x delta {12,24} x K {1,2,4}  (pd=3; true12 EV=12; native window in parens at delta=24) ==
+
+  --- delta=12 ---
+   grammar     comp |           K=1           K=2           K=4
+     kcoh5      off |          53.2 |          47.4 |          66.6
+     kcoh5 gate=off |          53.2 |          47.4 |          66.6
+     kcoh5     MC-A |          37.6 |          47.7 |          52.7
+     kcoh1      off |          13.2 |          18.2 |           9.6
+     kcoh1 gate=off |          13.2 |          18.2 |           9.6
+     kcoh1     MC-A |          12.1 |          12.7 |          10.5
+    ladder      off |          26.8 |          28.9 |          12.8
+    ladder gate=off |          26.8 |          28.9 |          12.8
+    ladder     MC-A |           9.5 |          10.6 |          11.9
+    cohort      off |          49.3 |          33.3 |          21.7
+    cohort gate=off |          49.3 |          33.3 |          21.7
+    cohort     MC-A |          11.4 |          13.5 |          15.0
+     step5      off |          0.3D |          0.4D |          17.9
+     step5     gate |         15.3D |          5.8D |          17.9
+              gOpen |           0.0 |           0.0 |           0.0
+     step5     MC-A |           8.8 |          10.1 |          12.5
+      zero      off |          77.3 |          50.0 |          73.9
+      zero gate=off |          77.3 |          50.0 |          73.9
+      zero     MC-A |          99.6 |          99.5 |          82.3
+
+  --- delta=24 ---
+   grammar     comp |           K=1           K=2           K=4
+     kcoh5      off |   30.9( 81.5) |   28.2( 59.4) |   43.1( 76.8)
+     kcoh5 gate=off |   30.9( 81.5) |   28.2( 59.4) |   43.1( 76.8)
+     kcoh5     MC-A |   13.7( 73.5) |   22.7( 77.4) |   22.1( 78.3)
+     kcoh1      off |   11.9( 53.3) |   19.7( 41.0) |   19.6( 42.8)
+     kcoh1 gate=off |   11.9( 53.3) |   19.7( 41.0) |   19.6( 42.8)
+     kcoh1     MC-A |    8.0( 66.7) |   12.7( 58.6) |   12.5( 60.0)
+    ladder      off |   11.7( 69.2) |   17.7( 66.4) |   12.7( 68.9)
+    ladder gate=off |   11.7( 69.2) |   17.7( 66.4) |   12.7( 68.9)
+    ladder     MC-A |    9.2( 64.5) |   11.1( 64.1) |   12.5( 65.6)
+    cohort      off |   49.3( 57.2) |   21.4( 50.6) |   28.5( 61.1)
+    cohort gate=off |   49.3( 57.2) |   21.4( 50.6) |   28.5( 61.1)
+    cohort     MC-A |    8.8( 70.7) |   11.3( 69.2) |   13.9( 69.3)
+     step5      off |   0.8(  3.8)D |   1.3(  3.8)D |   13.2( 69.2)
+     step5     gate |  11.2( 54.0)D |  11.5( 32.4)D |   13.2( 69.2)
+              gOpen |           0.0 |           0.0 |           0.0
+     step5     MC-A |    9.1( 64.7) |   11.2( 64.1) |   12.7( 65.4)
+      zero      off |   42.2( 85.7) |   37.9( 59.9) |   48.5( 84.8)
+      zero gate=off |   42.2( 85.7) |   37.9( 59.9) |   48.5( 84.8)
+      zero     MC-A |   40.8(100.0) |   56.5(100.0) |   65.8( 99.9)
+
+  R1 registered endpoints (delta=12, K=1, gate@th*): step5 15.3 (PASS vs >=9.0) ; kcoh5 53.2 (PASS vs >=50.0)
+
+  K=2 trough check (K2 < min(K1,K4)) at delta=12:
+      kcoh5:  off T[53.2,47.4,66.6]  gate T[53.2,47.4,66.6]  MC-A -[37.6,47.7,52.7]  (gate==off structural)
+      kcoh1:  off -[13.2,18.2,9.6]  gate -[13.2,18.2,9.6]  MC-A -[12.1,12.7,10.5]  (gate==off structural)
+     ladder:  off -[26.8,28.9,12.8]  gate -[26.8,28.9,12.8]  MC-A -[9.5,10.6,11.9]  (gate==off structural)
+     cohort:  off -[49.3,33.3,21.7]  gate -[49.3,33.3,21.7]  MC-A -[11.4,13.5,15.0]  (gate==off structural)
+      step5:  off -[0.3,0.4,17.9]  gate T[15.3,5.8,17.9]  MC-A -[8.8,10.1,12.5]
+       zero:  off T[77.3,50.0,73.9]  gate T[77.3,50.0,73.9]  MC-A -[99.6,99.5,82.3]  (gate==off structural)
+
+  comp x K interaction (K4-K1, delta=12):
+      kcoh5: off  +13.4  gate  +13.4  MC-A  +15.1  gate==off (structural)
+      kcoh1: off   -3.6  gate   -3.6  MC-A   -1.6  gate==off (structural)
+     ladder: off  -14.0  gate  -14.0  MC-A   +2.4  gate==off (structural)
+     cohort: off  -27.5  gate  -27.5  MC-A   +3.6  gate==off (structural)
+      step5: off  +17.6  gate   +2.6  MC-A   +3.6
+       zero: off   -3.4  gate   -3.4  MC-A  -17.3  gate==off (structural)
+
+== EXP 3: AS x gate@2.0 composition — N=7 supra-wall grammars, pd=3, delta=12, K in {1,2} (P16a pre-registered) ==
+     step5 K=1: base   0.3D  AS   0.3D  gate  15.3D  AS+gate  15.3D  gOpen      0.0->     0.0 STARVED-but-not-AS?!
+     step5 K=2: base   0.4D  AS   0.4D  gate   5.8D  AS+gate   5.8D  gOpen      0.0->     0.0 STARVED-but-not-AS?!
+   kcoh1w7 K=1: base   0.2D  AS   0.3D  gate  10.7D  AS+gate  17.0D  gOpen      0.0->     0.0 STARVED-but-not-AS?!
+   kcoh1w7 K=2: base   0.3D  AS   0.5D  gate   4.9D  AS+gate   7.4D  gOpen      0.0->     0.0 STARVED-but-not-AS?!
+  cohort37 K=1: base   0.3D  AS   0.4D  gate  15.8D  AS+gate  17.3D  gOpen      0.0->     0.0 STARVED-but-not-AS?!
+  cohort37 K=2: base   0.4D  AS   0.3D  gate   5.9D  AS+gate   5.0D  gOpen      0.0->     0.0 STARVED-but-not-AS?!
+     zero7 K=1: base   0.4D  AS   3.0D  gate  18.6D  AS+gate  61.1D  gOpen      0.0->     0.0 STARVED-but-not-AS?!
+     zero7 K=2: base   0.4D  AS   1.3D  gate   6.1D  AS+gate  16.9D  gOpen      0.0->     0.0 STARVED-but-not-AS?!
+
+  P16a residual analysis (qualify: BOTH singles >= base + 5.0):
+   cohort37 K=1: gains AS   +0.1 gate  +15.5 — not qualifying
+   cohort37 K=2: gains AS   -0.1 gate   +5.5 — not qualifying
+    kcoh1w7 K=1: gains AS   +0.2 gate  +10.5 — not qualifying
+    kcoh1w7 K=2: gains AS   +0.2 gate   +4.6 — not qualifying
+      step5 K=1: gains AS   +0.0 gate  +15.0 — not qualifying
+      step5 K=2: gains AS   +0.0 gate   +5.4 — not qualifying
+      zero7 K=1: gains AS   +2.6 gate  +18.2 — not qualifying
+      zero7 K=2: gains AS   +0.9 gate   +5.7 — not qualifying
+   NO qualifying cells — P16a untestable on this grid (booked)
+  wall-law probe: zero7 base K=1 = 0.4D — N>2pd at span 6 diverges (wall survives low spread)
+  wall-law probe: zero7 base K=2 = 0.4D — N>2pd at span 6 diverges (wall survives low spread)
+
+LCG ritual: proposal-dispatched spin (SPIN-11's Next proposal) — no pick consumed; ledger head 486256185; next selection reference: 486256185 -> 1062517886 -> mod 10 = 6
+SPIN 16 — SPOKE: PULSE-DIAL II: ADAPTIVE (ECHO-GATED) COMPENSATION
+(proposal-dispatched by SPIN-11-pulse-dial.md's Next section; no LCG pick
+consumed). Files: spin16_pulse_dial2.py (this), spin16-output.txt (raw),
+SPIN-16-pulse-dial2.md (report). Fabric: spin11_pulse_dial.run_fabric_mc
+reused verbatim for off / MC-A arms; the new runner run_fabric_gate is an
+exact copy of its interference loop with ONE added per-tick gate at the
+emission line (gate="never" is byte-identical to mc=0; gate="always" is
+byte-identical to mc=1 / MC-A).
+
+MECHANISM (Spin 11's pd=12 lesson): blanket compensation is a trade — it
+rescues wall casualties (step5/N=7: 0.3 -> 8.8 at delta=12 K=1) but hurts
+healthy grammars (kcoh5 53.2 -> 37.6). The wall law says divergence needs
+the echo factor |1 - N/pd| materially > 1. ADAPTIVE IDEA: compensate only
+the events whose CONCURRENT echo factor exceeds a threshold:
+    gate opens at tick t iff nf(t) > 0 and |1 - nf/pd| > theta_g
+where nf = number of triggering twins THIS tick — an in-loop observable
+(the scheduler counts simultaneous triggers; no future information).
+Integer arithmetic: 100*|pd-nf| > round(100*theta)*pd. When open, that
+tick's emissions take the MC-A division (//min(nf,pd)); when closed they
+emit the raw fabric pulse |e|//pd. Memory guard carried over from spin-11
+verbatim (bail at any |e| > 10^12) for every gate mode except "never".
+
+=====================================================================
+PRE-REGISTERED PREDICTIONS — in this committed docstring BEFORE any run.
+Every endpoint pinned to eval window EV=12 (true12 = within_pm(resid,12)),
+the spin-8 saturation-scar convention, regardless of delta.
+
+R1 (SPIN-11's registered Next-section prediction, tested verbatim):
+    echo-gated compensation at pd=3, delta=12, K=1:
+    (a) step5/N=7 [0,5,10,15,20,25,30] true12 >= 9.0
+    (b) kcoh5@30 [0,0,0,0,0,30]        true12 >= 50.0
+    Leg (b) is structural: N=6=2pd at pd=3 => concurrent factor <= 1.0
+    < theta for every theta > 1 => the gate provably never opens (byte-
+    proven by canary CE). Leg (a) is the live test: blanket MC-A gave
+    8.8; the gate leaves mid-size (nf <= 2pd) corrective shoves
+    uncompensated, worth >= +0.2pp over MC-A if R1(a) passes.
+
+P16b (EXP 1 calibration, secondary): theta-coverage law — the gate opens
+    at a 2pd+1 wall iff theta < 1 + 1/pd, i.e. pd < 1/(theta-1). Sweep
+    prediction at the pd=6 wall cell ladder(30,13) (2pd+1=13, echo factor
+    7/6 ~ 1.167), delta=12, K=1: theta in {1.05, 1.1} rescue (true12
+    >= 5.0); theta in {1.25, 1.5, 2.0} do NOT (cell stays diverged,
+    true12 <= 3.0). Coverage table: 1.05 -> pd<=19, 1.1 -> pd<=9,
+    1.25 -> pd<=3, 1.5 -> pd<=1, 2.0 -> none.
+
+theta* selection rule (pre-registered; used by EXP 2/3): the LARGEST
+    theta in the sweep satisfying BOTH R1(a) (step5 >= 9.0 at delta=12
+    K=1) AND P16b's rescue leg (wall6 >= 5.0); if none satisfies both,
+    argmax of step5 rescue at delta=12 K=1, flagged REGISTERED-GATE-MISS.
+
+P16a (THE new quantitative prediction for EXP 3, registered in this
+    commit BEFORE the exp-3 run; one prediction, one falsifier): AS x
+    gate composition on N=7 supra-wall grammars {step5 [0,5,10,15,20,25,30]
+    (AS no-op control), kcoh1w7 [0]*6+[30], cohort37 [0,0,0,30,30,30,30],
+    zero7 [0]*7} at pd=3, delta=12, K in {1,2}, arms {base, AS-exact,
+    gate@theta*, AS-exact + gate@theta*}: in every cell where BOTH single
+    knobs beat base by >= +5.0pp (true12),
+        residual := joint - max(single_AS, single_gate) lies in [-2.0, +2.0]
+    (additive, NOT superadditive). Pre-registered mechanism: substrate
+    coupling — AS decorrelates firing times and thereby STARVES the
+    nf >= 2pd+1 pile-ups the gate feeds on; witness: gate-open ticks under
+    AS+gate <= 10% of gate-alone's in qualifying cells (and if the joint
+    gate never opens, the joint run is byte-identical to AS-alone).
+    FALSIFIER: any qualifying cell with residual >= +2.1 (superadditive:
+    spin-14's orthogonal-channel law extends to the gate — knob-physics
+    channels, phase vs amplitude, would be doing the work) or <= -2.1
+    (destructive competition). Basis: spin-14 found superadditivity only
+    for orthogonal FAILURE channels; the gate and AS attack the same
+    failure substrate (the synchronized pile-up) even though their knob
+    physics differ.
+
+Embedded wall-law probe (unregistered observation, EXP 3 base arm): zero7
+    uncompensated tests whether N > 2pd divergence survives at span 6
+    (spin-8/11 measured the wall only on spread-30 ladders); zero6=77.3
+    is the N=2pd anchor.
+
+Canaries (mandatory, abort on fail):
+  CA: spin-11 replay via run_fabric_mc(mc=0), EV=12: step6/N=6 26.8,
+      step5/N=7 0.3, step1/N=31 0.1, kcoh5@30 53.2.
+  CB: spread=0 codepath identity by N-group, separately for gate modes
+      {never, always, 1.05, 1.25} (spin-11 canary B extended to the gate).
+  CC: gate="never" == run_fabric_mc(mc=0) full-dict, 8 configs.
+  CD: gate="always" == run_fabric_mc(mc=1) full-dict, 8 configs.
+  CE: structural inertness: gate in {1.05, 1.25} == mc=0 full-dict for
+      every N=6 pd=3 panel grammar (plus one K=4 and one delta=24 probe)
+      — the byte-level guarantee behind R1(b).
+
+Integer-only in-loop (gate comparison included: 100*|pd-nf| > theta100*pd);
+floats only in display. Seeds {1,7,42,1999,20260902}, 4800 ticks,
+delta=12 unless stated, drift=6, pd=3 unless stated. Run with -u, no pipes.
+
+======================================================================
+SPIN 16 — PULSE-DIAL II: ADAPTIVE (ECHO-GATED) COMPENSATION — harness run, -u, no pipes
+
+======================================================================
+POST-HOC CORRECTIVE ADDENDUM — appended after the registered run;
+registered sections above are byte-untouched.
+- ARTIFACT: numeric-theta arms that never open still carry the
+  spin-11 memory guard -> they bail at |e|>1e12 and their true12
+  is a PREFIX statistic (step5 15.3, wall6 18.1), inflated vs
+  full-window mc=0 numbers (0.3, 2.3). Divergence flags stayed
+  honest (all D).
+- CONSEQUENCE: the registered theta* rule-as-written selected
+  theta*=2.0 (a never-open theta) because 15.3>=9 and 18.1>=5
+  on prefix stats -> exp 2's step5-gate rows and exp 3's
+  gate/AS+gate arms ran with a closed gate under guard.
+- CORRECTION (post-hoc, labeled): theta_c = 1.1, the largest
+  theta whose step5 (36.9) and wall6 (23.9) legs are non-diverged
+  full-window measurements; 1.05 and 1.1 are behaviorally
+  identical at pd=3 and pd=6 (integer gate arithmetic).
+- P16b stays booked FAIL as registered: the no-rescue band
+  (true12 <= 3.0) was broken by the same prefix artifact, though
+  its divergence-flag legs were correct; the theta-coverage LAW
+  itself (open iff theta < 1+1/pd) is behaviorally confirmed.
+
+== EXP 2b (POST-HOC, corrective): step5 gate rows at theta_c=1.1 — registered theta* rule-as-written picked 2.0 via guard-prefix inflation on never-open diverged arms; theta_c = largest CLEAN (non-diverged, full-window) selection (1.05 and 1.1 are behaviorally identical at pd=3 and pd=6) ==
+
+  --- delta=12 ---
+  step5   off |          0.3D |          0.4D |          17.9
+  step5  gate |          36.9 |          30.8 |          17.7
+  step5  MC-A |           8.8 |          10.1 |          12.5
+
+  --- delta=24 ---
+  step5   off |   0.8(  3.8)D |   1.3(  3.8)D |   13.2( 69.2)
+  step5  gate |   12.0( 67.9) |   21.1( 65.2) |   13.2( 69.2)
+  step5  MC-A |    9.1( 64.7) |   11.2( 64.1) |   12.7( 65.4)
+
+  step5 gate K-trough (K2 < min(K1,K4)): False [36.9,30.8,17.7]
+  step5 gate K-interaction (K4-K1): -19.2
+  R1(a) at theta_c, delta=12 K=1: 36.9 (PASS vs >= 9.0)
+
+== EXP 3b (POST-HOC, corrective): composition grid re-run at theta_c=1.1 (registered exp-3 ran at contaminated theta*=2.0; base/AS arms there were clean and are re-run here for a self-contained table) ==
+     step5 K=1: base   0.3D  AS   0.3D  gate  36.9   AS+gate  36.9   gOpen    448.4->   448.4
+     step5 K=2: base   0.4D  AS   0.4D  gate  30.8   AS+gate  30.8   gOpen    527.0->   527.0
+   kcoh1w7 K=1: base   0.2D  AS   0.3D  gate  50.7   AS+gate  34.4   gOpen   2775.8->  1208.8
+   kcoh1w7 K=2: base   0.3D  AS   0.5D  gate  40.7   AS+gate  41.3   gOpen   2663.6->  1555.8
+  cohort37 K=1: base   0.3D  AS   0.4D  gate  34.6   AS+gate  41.6   gOpen   1819.8->  1032.2
+  cohort37 K=2: base   0.4D  AS   0.3D  gate  23.6   AS+gate  27.2   gOpen   2838.0->  1970.0
+     zero7 K=1: base   0.4D  AS   3.0D  gate  99.8   AS+gate  97.7   gOpen    942.0->    71.8
+     zero7 K=2: base   0.4D  AS   1.3D  gate  99.4   AS+gate  94.0   gOpen    581.2->   155.4
+
+  P16a residual criteria applied post-hoc (for the record;
+  the registered verdict is the exp-3 one above):
+   cohort37 K=1: gains AS   +0.1 gate  +34.3 — not qualifying
+   cohort37 K=2: gains AS   -0.1 gate  +23.2 — not qualifying
+    kcoh1w7 K=1: gains AS   +0.2 gate  +50.6 — not qualifying
+    kcoh1w7 K=2: gains AS   +0.2 gate  +40.4 — not qualifying
+      step5 K=1: gains AS   +0.0 gate  +36.5 — not qualifying
+      step5 K=2: gains AS   +0.0 gate  +30.5 — not qualifying
+      zero7 K=1: gains AS   +2.6 gate  +99.3 — not qualifying
+      zero7 K=2: gains AS   +0.9 gate  +99.0 — not qualifying
+   still NO qualifying cells (AS gain < 5pp everywhere).
+
+  PARTITION THEOREM (structural, explains both grids): for every
+  theta > 1 the gate opens only at nf >= 2pd+1 — supra-wall
+  pile-ups; AS measurably rescues only sub-wall grammars (exp 3:
+  AS gains +0.0..+2.6pp on all four supra-wall grammars, every
+  arm still diverged). The knobs' domains are DISJOINT: the gate
+  IS the wall law implemented as a scheduler. AS x gate
+  composition is neither super- nor subadditive on this fabric —
+  it is undefined (domain partition), which is why no cell can
+  qualify.
