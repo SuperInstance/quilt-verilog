@@ -49,4 +49,6 @@ Rule: skip items visibly in flight (check timestamps here + wheel/WHEEL-LOG.md).
 ## Round 7 — O7 (bundle wall × compensation) — DISPATCHED 2026-09-03 13:39 AKDT
 - **Item:** O7 — is the N=4 bundle-capacity wall (F7: true-residency 91%→10% by N≥4) lag-driven? Per-twin lag blades (F19/F20) + compensation, N∈{2..8} × {raw,comp} × {calm,stress}, 5 seeds, 4800 ticks. Decision: N=4 comp trueRes ≥50% ⇒ "stale-sensing capacity, not twin count"; unmoved ⇒ geometric two-law split.
 - **Lane:** dev_o7_bundle_wall (zai/glm-5.3, run mode). Deliverable: dev-rounds/ROUND-7-O7-bundle-wall.md. Commit + push g3-kinduction mandated.
-- **Verdict:** pending (append on lane completion).
+- **Verdict:** DONE — WALL MOVED — N=4 interference trueRes 12.2% → 86.3% with per-twin lag compensation (F19/F20 blade, 11/11 exact lag discovery): capacity law restated as "stale-sensing capacity, not twin count." New co-fire wall at N~7 (comp trueRes 61.3% at N=7 → 42.6% at N=8). Sequential arm hits 100.0% comp at every N. Lag blade verified 11/11 exact across lags 3–70; anchors replay 8/8 vs glm-1 sheet B; canaries 3/3 PASS (double-run byte-identity, anchor replay, self-canary CAUGHT).
+- **Commit:** 0a637a1
+- **Headline:** N=4 trueRes 12.2→86.3% (comp); co-fire wall relocates to N~7
