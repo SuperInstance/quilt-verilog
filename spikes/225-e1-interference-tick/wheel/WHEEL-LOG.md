@@ -87,5 +87,13 @@
   - Serendipity: 3-point knee-δ scaling (onset ≈12/15/>14 at δ=10/12/14) → knee ≈ 1.2–1.25·δ — slope-adjusted knee law confirmed across δ; booked for novel lane N3.
   - 2/2 canaries PASS (wiring byte-identity 10/10; Spin-5 replay exact incl. events/debt). Scars booked: nested-model R² must be scored at prediction granularity (first-run F3 bug); local features need BOTH grid neighbors measured (SPIN-5's 2-point bump reading inverted).
 - **New spoke proposed:** ORTHOGONAL-GRAMMAR (fresh × stale-mass decoupled grid + intra-stale coherence axis; knee-Δ densification δ∈{6,9,18,24}).
+
+## SPIN-11-ADVERSARY (dispatched 2026-09-03 07:42 AKDT)
+- **Spoke:** ADVERSARY (spoke 2, LCG: 368800899 → 1508029952 → 1508029952 mod 10 = 2) · lane: wheel_spin11_adversary (zai/glm-5.3, run mode)
+- **Prior-lane verdicts:** SPIN-8 MIXED, SPIN-9 MIXED, SPIN-10 VALIDATED-as-knob (all recorded above). No lane in flight at dispatch.
+- **Brief:** N=6 ladder @ spread=15, K∈{1,2}, seeds 1/7/42/1999/20260902, exactly one adversary twin (honest=5): (a) LIAR sign-flip — contained to cohort share + caught by delivery identity? (b) FREE-RIDER — ledger closure delta = unpaid tolls? (c) JAMMER — no worse than booked zero-lock anchor? (d) MUTE — linear drop, no cascade? Canaries: adversary=none byte-match + SPIN-5 replay (zero@15 77.3, ladder@15 ~71.5).
+- **Dispatch status:** IN FLIGHT (one lane max — held). Deliverable: wheel/SPIN-11-adversary.md.
+- **Verdict:** pending (record in next spin's log entry when lane completes).
+- **LCG state after this advance: 1508029952** (next spin continues from here).
 - **LCG advance: 2035015474 → 368800899 → mod 10 = 9 (SILICON next).**
 - 2026-09-03 kimi-predictor lane (g3-kinduction): LEARNED-PREDICTOR SCHEDULER — VALIDATED (narrow): logreg on [in-flight, mean-lag, stale-mass, K] (ladder grid, seeds 1/7/42) deployed as fixed-point integer per-tick spread scheduler; held-out grammars (cohort 3+3, outlier, kcoh5) x seeds {1999,20260902}: mean gain +5.7pp vs static15 / +16.2pp vs static30, zero regressions; mechanism = cohort-K=2 rescue 41.1->75.2% via spread 15->8 parking; K=1 scheduler inert (scar); canaries 3/3 (sequential byte-identical, harness byte-identical 32/32, spin-5 replay 709/713/721/714/717 exact). Files: wheel/kimi-predictor/ (kimi_predictor.py, REPORT.md, run-output.txt, results.json).
