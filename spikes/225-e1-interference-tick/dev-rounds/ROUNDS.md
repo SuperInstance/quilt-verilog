@@ -120,3 +120,10 @@ Ordered queue: RESEARCH-AGENDA §4 O1–O7, then §Q open questions, then wheel 
 - **Verdict: FLAT-ALL.** K=2 walls ≤4 through Δ=48 in every pd cell (pd=2→3, pd=3→4, zero Δ-dependence over 6× Δ range; F2 predicts 6 at Δ=48 — dead). K-line booked as a TRUE PHASE BOUNDARY: single-stream (K=1, pd-stratified, wall 4→6 at pd 2→3) vs multi-stream (K≥2, Δ-blind, 1-seat pd offset). K=1-only pd-stratified model stands, now Δ-resolved to 48. Canaries all PASS (C1 octave 2/3/4 exact; C2 r22 4/4 exact; C3 byte-identity; C4 mislabeled-arm CAUGHT). Harness note: r22's pd-grid had pulse_div inert (hard-coded 3); r23 passes pd through — the r22 pd-axis is effectively a pd=3 replicate set, flagged.
 - **Next rung (named):** K=1 seating at drift-matched grid — does the K=1 pd=3 wall (6, Δ-flat at drift=3) re-acquire Δ-growth at drift=6 (round-21 SPIN-32 6/9/none)? Two-knob (pd,drift) vs Δ-range artifact.
 - **Headline:** K=2 never crosses — walls 3/4 flat to Δ=48; K=1 is the only pd-stratified world.
+
+## Round 24 — K=1 seating at drift-matched grid — DONE (pre-reg cd09969)
+- **Item:** Round 23's named rung — does the K=1 pd=3 comp-wall (6, Δ-flat at drift=3) re-acquire Δ-growth at drift=6? Two-knob (pd,drift) object vs Δ-range artifact of round-21's narrow Δ∈{8..16} grid. Grid: K=1 × pd=3 × drift{3,6} × Δ{8,16,32,48} × N 2..13, comp arm, calm.
+- **Verdict: DRIFT-ARTIFACT.** Wall = 6 in ALL 8 cells (drift×Δ) — zero seat motion, no Δ-trend at either drift. Round-21's pd-ladder (6/9/11/None at drift=6) is NOT a Δ artifact: those are the (pd,drift) seats themselves, Δ-blind. K=1 pd-stratified model booked as two-knob (pd,drift) with Δ-flat walls; r23's Δ-blindness extended to drift=6 (6× Δ range, both drifts). Canaries: C1 byte-identity PASS, C2 r23 K=1 anchors 6/6 exact, C3 mislabel CAUGHT.
+- **Next rung (named):** drift-axis law — is the (pd,drift) seat field a product law pd·drift or separable? Sweep drift{3,6,12} × pd{2..6} at Δ=16, K=1, comp arm.
+- **Commit:** 6b4f715 (pre-reg cd09969)
+- **Headline:** wall=6 everywhere — drift 3→6 moves nothing; K=1 walls are (pd,drift) seats, Δ-blind to 48 at both drifts.
