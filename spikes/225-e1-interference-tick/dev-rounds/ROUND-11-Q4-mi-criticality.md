@@ -187,3 +187,30 @@ operating point, not a universality-class transition point.
    instrument for the dichotomy.
 3. e1 scar: the "or 1" pulse floor is a binary-reproduction amplifier on lattices —
    flag in PORTING-NOTES.md before any RTL port of the pulse rule to multi-site fabrics.
+
+## DEVIL teeth (nudge 2026-09-03, `q4_mi_pgrid.py`) — SPLIT VERDICT
+
+Both teeth executed on the winner (v2): fine p-grid {1,2,3,5,7,10}/1e4
+(1.5 impossible under the integer contract; 2 and 5 bracket the old
+argmax), and a 3+2 seed split ({1,7,42} fit / {1999,20260902} held out).
+
+**(1) p\* = 3/10000 does NOT survive the denser grid.** Full-seed
+fine-grid argmax: group Z = {d1: [2,1,3], d2: [2,2,2], d3: [3,3,2]},
+group D = {d1: [3,2,2], d2: [1,1,2], d3: [2,2,1]} — the peak moves to
+p=2 in most cells and to p=1 in several. The round-11 headline location
+was a coarse-grid artifact, exactly as the fragility scar predicted.
+
+**(2) The PHENOMENON is out-of-sample real.** Held-out half: R1
+(interior argmax) passes in all 3 d for group Z and 2/3 for group D;
+peak heights hold or rise (Z held-out d=3: 173/151/133 mb vs fit
+138/133/133); R3 passes in 3 of 4 d×half cells (Z-fit fails 2/3 d —
+small-half noise on a 3-seed half). The interior MI peak exists on new
+seeds; the existence claim graduates. The LOCATION claim does not.
+
+**Correction to the capacity table:** the actuator recommendation is
+demoted from "argmax p = 3e-4" to "noise-rate band p ∈ [1,3]×10⁻⁴,
+grid pitch ±1e-4, argmax unresolved"; the round-11 headline reads
+"model falsified, amendment shows out-of-sample interior peak, peak
+LOCATION unresolved at current grid/seed budget". Graduating p\* to a
+located finding needs a denser grid near the band plus more seeds —
+tabled for a future round, not claimed here.
