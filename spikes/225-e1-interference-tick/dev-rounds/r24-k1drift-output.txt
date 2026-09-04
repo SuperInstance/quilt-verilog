@@ -1,0 +1,29 @@
+== R24 k1 drift-matched start 00:52:59 ==
+K=1 pd=3 drift=(3, 6) delta=(8, 16, 32, 48) N=(2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13) seeds=(1, 7, 42, 1999, 20260902) ticks=4800 comp arm calm
+C1 double-run byte-identity (pd=3 drift=6 d=8): PASS
+C2 replay K=1 pd=2 d= 8 drift=3: wall=4 (want 4) OK [  15s]
+C2 replay K=1 pd=2 d=16 drift=3: wall=4 (want 4) OK [  21s]
+C2 replay K=1 pd=2 d=32 drift=3: wall=4 (want 4) OK [  26s]
+C2 replay K=1 pd=3 d= 8 drift=3: wall=6 (want 6) OK [  30s]
+C2 replay K=1 pd=3 d=16 drift=3: wall=6 (want 6) OK [  35s]
+C2 replay K=1 pd=3 d=32 drift=3: wall=6 (want 6) OK [  39s]
+C2 r23 K=1 anchor replay: PASS
+C3 anchor raw=68.0 sort=69.6 (want 68.0/69.6) anchor=PASS; mislabeled(sort->'raw')=69.6 vs 68.0 -> CAUGHT
+C3: PASS
+
+canary gate: ALL PASS
+K=1 pd=3 drift=3 d= 8: wall=6 [  43s]
+K=1 pd=3 drift=3 d=16: wall=6 [  48s]
+K=1 pd=3 drift=3 d=32: wall=6 [  52s]
+K=1 pd=3 drift=3 d=48: wall=6 [  56s]
+K=1 pd=3 drift=6 d= 8: wall=6 [  60s]
+K=1 pd=3 drift=6 d=16: wall=6 [  64s]
+K=1 pd=3 drift=6 d=32: wall=6 [  69s]
+K=1 pd=3 drift=6 d=48: wall=6 [  73s]
+
+-- verdict (pre-registered rule, frozen) --
+walls drift=3: [6, 6, 6, 6]  drift=6: [6, 6, 6, 6] (delta (8, 16, 32, 48))
+drift=3 flat=True; drift=6 monotone_growth=0 seats
+VERDICT: DRIFT-ARTIFACT -- drift=6 wall flat (moves <=1 seat across delta, no monotone trend); r23's delta-blindness extends to drift=6; two-knob (pd,drift) object with delta-flat walls at each seat
+
+done in 73s

@@ -44,4 +44,22 @@ Let wall(drift, Δ) be the K=1 pd=3 comp wall.
 
 ## Verdict
 
-(to be filled after the run)
+**DRIFT-ARTIFACT** (all canaries PASS: C1 byte-identity, C2 r23 K=1 anchors
+6/6 exact, C3 mislabel CAUGHT).
+
+K=1 pd=3 comp wall = **6 in all 8 cells** — drift∈{3,6} × Δ∈{8,16,32,48},
+zero seats of motion, no Δ-trend at either drift. The wall re-seated at the
+same 6 under drift=6 as under drift=3; Δ does not re-enter the K=1 world at
+any drift tested. Round 21's pd-ladder (6/9/11/None at pd 3/4/5/6, drift=6,
+Δ∈{8..16}) is therefore NOT a Δ-range artifact of its narrow grid — the
+walls it saw are the (pd,drift) seats themselves, Δ-blind. Booking: the K=1
+pd-stratified model is a **two-knob (pd,drift) object with Δ-flat walls** at
+each seat, extending r23's Δ-blindness (there at drift=3) to drift=6. Δ now
+measured inert for K=1 pd=3 across 6× Δ range at both drift values.
+
+Next probe (named): the drift axis itself — is the (pd,drift) seat field a
+function of pd·drift (product law) or separable? Sweep drift∈{3,6,12} ×
+pd∈{2..6} at Δ=16, K=1, comp arm.
+
+Output: r24-k1drift-output.txt. Pre-reg commit cd09969; this verdict
+committed after the run per protocol.
