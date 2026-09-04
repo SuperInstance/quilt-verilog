@@ -63,3 +63,30 @@ The clean 2Δ law is **dead permanently**: fixing the slope at exactly 2 gives r
 **Where does α ≈ 1.19 come from?** Remaining free parameters in the geometry: drift (6) and band amplitude (A=200). Two-arm spoke: (i) drift sweep {2, 6, 10} at Δ=12, slope 1.6 — if α moves with drift, α = 1 + f(drift/Δ) and a floor of drift=0 (α→1?) restores 2Δ; (ii) band-amplitude sweep A ∈ {100, 200, 400} at fixed Δ=12 — tests whether α carries band dependence (SPIN-27 already suspected "geometry (band + Δ + drift)"). ~120 fabric runs, same harness, delta/drift/band all already parametrized. Either α collapses to 1 at drift→0 (the 2Δ law returns with drift as its violator) or α is a genuine fabric constant and the law is C = 2.38·Δ, full stop.
 
 Status: **COMPLETE.** Not committed or pushed (per brief). WHEEL-LOG.md not appended (cron lane's job). No sub-lanes spawned.
+
+## EXPERT adjudication (nudge 2026-09-03, `spin29_adjudicator.py`) — α IS pd/Δ-coupled: cell reading, not a law
+
+Both proposed one-leg adjudicators ran before any 2D sweep (~4 s, 5-seed
+means, everything else verbatim; pre-registered deviation: spread sweep
+widened DOWN to 4 for Δ≤8 legs — vindicated, Δ=4's crossing s*=6.7 sits
+below the old sweep start).
+
+**Leg 1 — pd column @ Δ=12:** pd=3 replay α=1.172 (anchor digit-exact);
+pd=6 α=0.977 (**−17%**, past the 15% gate); pd=2 NO CROSSING (pct
+collapses to <3% everywhere — N=6 > 2pd+1 wall, destructive regime:
+tracking fails at every spread, α undefined). **α is pd-coupled**, with
+regime structure, not a knob shift.
+
+**Leg 2 — downward Δ @ pd=3, drift=6:** α = 1.172 (12) → 1.247 (8) →
+1.292 (6) → 1.336 (4) — monotone rise as Δ approaches/below drift. The
+spin-29 "α wobble" (1.247→1.17→flat) was the tail of this trend, and the
+affine intercept (1.35) separates exactly where EXPERT predicted:
+Δ ≲ drift. **Parsimony claim amended:** α≈1.19 is a plateau reading
+valid for Δ ≥ ~2·drift region of the grid, not a universal constant.
+
+**VERDICT:** α=1.19 is a CELL reading (pd=3, Δ≥8). The planned drift+band
+sweep must source itself in **pd×Δ** — at minimum with regime guards
+(pd ≤ N/2 wall check; Δ ≥ drift flag on every cell) — before any
+"C = 2.38·Δ" line is quoted as a law. C=2.381·Δ stands as an empirical
+fit WITHIN the adjudicated cell; the law-hunting spoke continues with
+pd as a first-class axis.
