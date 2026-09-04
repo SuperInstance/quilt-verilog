@@ -94,3 +94,88 @@ Integer-only contract: masks, matrices, all τ_k, L/U bounds — integers. Seeds
 
 ---
 *(Results appended below after the run — nothing above this line changes.)*
+
+---
+
+## PART 2 — RESULTS (run 2026-09-03 20:50 AKDT, after PART 1 frozen at commit 7ad7f76)
+
+Harness: `r18_spectra.py` (pure Python, exact ints; τ_k = Tr(M^k) and σ_k = Σ(M^k)_ij²
+exact to k = 288; ρ̂ = σ_K^{1/2K} with rigorous bracket ρ ∈ [ρ̂/N^{1/2K}, ρ̂]). Raw dump:
+`r18-spectra-output.txt` (416,602 bytes, includes full τ/σ series). Runtime 22 s.
+
+### Canaries
+
+- **C1 double-run byte-identity: PASS** — two full runs sha256-identical
+  (`dccfc78b…47ec`), both written to disk and compared.
+- **C2 round-13 anchor replay: PASS** — `q6_barbieri.py` rerun reproduces
+  `q6-barbieri-output.txt` byte-identically.
+- **C3 trace identity: PASS** — τ_1 = N·c_e exactly, every matrix.
+- **C4 Z analytic cross-check: FAIL as written, PASS in bracket form** — the as-written
+  10⁻³ relative threshold is tighter than the estimator's known N^{1/2K} inflation
+  (0.55% at the worst cell, ρ=2, N=24); the corrected bracket check (analytic integer ∈
+  [ρ̂/N^{1/2K}, ρ̂]) passes 90/90 cells. Threshold bug in the canary, not the harness.
+- **C5 ARM A structural theorem: PASS** — ρ = 7 bracketed exactly in all 18 cells.
+- **C6 mislabeled-group self-canary: PASS** — Z/D constructor swap detected
+  (LABEL-SWAP DETECTED) via the C4 identity failing on the mislabeled row.
+
+### Main findings (ARM B, all exact)
+
+Every spectral radius on the entire grid is an **exact integer with a closed form**,
+verified against the rigorous bracket in **all 90 cells, zero violations**:
+
+- **T1: ρ(ℤ_n) = |c_e| + |c_r + c_s|** — the ℤ_n update operator degenerates to a scaled
+  permutation: r⁻¹ and s preimages coincide at v−1 under the round-13 wiring.
+- **T2: ρ(D_n) = ρ(ℤ_n×ℤ₂) = |c_e| + |c_r| + |c_s|** — both saturate their Gershgorin row
+  sum through 1-dimensional characters (both abelianizations are ℤ₂×ℤ₂ with χ(r), χ(s)
+  independently ±1, enough to phase-align any coefficient signs).
+
+Consequences, per cell: D vs P gap ≤ 2×10⁻⁴ everywhere (≤ Δ_null in all 30 cells);
+Z separates exactly when c_r, c_s have opposite signs (seeds 7 and 1999: integer gaps
+2 and 4, all 6 m-values), never when aligned. Separating cells 12/30, null 18/30,
+degenerate 0; ordering is forced (Z ≤ D = P by the triangle inequality) — trivially
+"consistent", informationally empty.
+
+Secondary observation (below the pre-registered axis, booked as observation only): D and
+P are **not** fully isospectral at directed masks — σ_K(D)/σ_K(P) = 0.9857 at m=16,
+seed 7 (subleading-eigenvalue differences; converges to 1 as the gap to ρ dominates).
+The D-vs-P structure exists but lives strictly below ρ.
+
+### Verdict (pre-registered rule, part 4, then mechanism)
+
+**MIXED by the letter** — separation exists (12/30 cells ≥ Δ_sep) but in only 2/5 seeds
+(rule 1 requires ≥ 3/5); not all-null (rule 2 requires ≥ 4/6 null cells per cell column);
+0 degenerate. No headline dichotomy claim is licensed.
+
+**Mechanism upgrade, exact: the ρ route to the Barbieri dichotomy is CLOSED for this
+trio — provably, at any 3-entry affine mask, not merely at this grid.** The separation
+the rule saw is a wiring artifact (T1's preimage collision), and the D/P tie is forced by
+abelianization saturation (T2). Since ℤ_n, D_n and ℤ_n×ℤ₂ all have 1-dimensional
+characters rich enough to align any mask signs, no 3-entry mask's spectral radius can
+encode anything but |c|-combinations — group typing is invisible to ρ here. Round 13's
+disposition prediction ("exact spectra sidestep the quantization floor") is confirmed in
+the sense that the floor is gone; what the exact instrument now shows is that the quantity
+it measures exactly cannot carry the dichotomy.
+
+### Scars / limitations
+
+- **E1 — estimator phase bias, caught by C5.** The pre-registered ρ̂ = |τ_K|^{1/K} is
+  biased down up to 0.6% by dominant-eigenvalue phase rotation (complex spectra under
+  directed masks); C5 failed spuriously on the first build, which is how it was caught.
+  Replaced by σ_k = Σ(M^k)_ij² (phase-immune, exact, monotone); thresholds and decision
+  structure untouched. Amended honestly, post-hoc, canary-forced.
+- **E2 — canary threshold bug (C4)** — see above; bracket form is the correct check.
+- **E3 — Z wiring degeneracy** is a property of the round-13 neighbor convention carried
+  over verbatim (r = +1, s = −1 on ℤ_n), not of the group; a symmetrized-Z rerun would
+  give Z = |c_e|+|c_r|+|c_s| too and eliminate even the artifact separation.
+- **E4 — τ_k full-sequence axis unexplored** — the D≠P σ-ratio shows sub-ρ structure
+  exists; the trace-sequence / full-eigenvalue-multiset axis is the honest next rung if
+  Seam B is pursued, per the round-13 disposition.
+
+### Disposition
+
+Seam B ρ-route closed by exact negative theorem (T1/T2, 90/90). Group-typing gate for
+the Lattice primitive remains ungated; if Seam B continues, the instrument must move to
+full spectra (trace sequences, eigenvalue multiplicities) or beyond 3-entry masks —
+spectral radius alone is provably dead for this trio.
+
+— Round 18 lane (dev_r18_rollier_baetens, zai/glm-5.3), 2026-09-03, Riker's deck timezone.

@@ -7,6 +7,13 @@
 - **Commit:** a02a84b (pre-registration) · 83703b4 (verdict)
 - **Headline:** %w 800‰ @ debt 13,211 vs gates 932‰/32,770 — first arm under the debt gate; gates a+b+c jointly infeasible (chase 929‰/L̂+1→315‰ vs suppress 541‰/13.2k).
 
+## Round 18 — Seam B Rollier–Baetens exact spectra — 2026-09-03 21:0x AKDT
+- **Item:** exact affine-CA spectra / cyclic trace powers on ℤ_n vs D_n vs ℤ_n×ℤ₂ (round-13 disposition's next rung; re-run of lost round-15 lane). Pre-registered rule committed before any numbers (7ad7f76).
+- **Verdict:** MIXED (letter) / **ρ-ROUTE CLOSED by exact negative theorem** — every spectral radius on the grid is an exact integer closed form: ρ(ℤ_n) = |ce|+|cr+cs| (preimage-collision degeneracy), ρ(D_n) = ρ(ℤ_n×ℤ₂) = |ce|+|cr|+|cs| (abelianization saturation), verified against rigorous brackets in 90/90 cells. D vs P gap ≤ 2e-4 everywhere; Z "separation" (seeds 7/1999, integer gaps 2 and 4) is a wiring artifact. No 3-entry mask ρ can carry the virtually-ℤ dichotomy — group typing invisible to spectral radius for this trio, provably. Sub-ρ structure exists (σ_K(D)/σ_K(P)=0.9857 at m=16 seed 7) — full-spectrum axis is the next rung if Seam B continues. Canaries: C1 double-run byte-identical, C2 round-13 anchor replay exact, C3/C5/C6 PASS, C4 threshold bug booked (bracket form 90/90). Estimator phase bias caught by C5 on first build (scar E1) — replaced by phase-immune σ_k, exact ints to k=288.
+- **Commit:** 7ad7f76 (pre-reg) + this verdict commit
+- **Headline:** ρ(ℤ_n)=|ce|+|cr+cs|, ρ(D_n)=ρ(P)=|ce|+|cr|+|cs| exactly — spectral radius provably cannot encode the Barbieri group typing for virtually-cyclic trios.
+
+
 Format per block: round #, item, verdict, commit hash, headline number.
 Ordered queue: RESEARCH-AGENDA §4 O1–O7, then §Q open questions, then wheel spokes round-robin.
 
