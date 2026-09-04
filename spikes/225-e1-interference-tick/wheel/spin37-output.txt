@@ -1,0 +1,122 @@
+SPIN 37, SPOKE: ADVERSARY — SUB-1.0 DEFLATION-DODGE vs THE θ-GATE.
+Pre-registered docstring, committed BEFORE any run. Continuation of
+SPIN-35 (wheel/SPIN-35-adversary.md): the θ>1 half of the gate was
+one-directional (inflate can open, deflate inert — byte-proven). The
+booked scar: at θ*<1 an honest gate OPENS on pile-up ticks (nf=6=2pd:
+|3-6|=3 > 0.9*3=2.7), so a deflating twin can DODGE compensation that
+honest twins would have received.
+
+HYPOTHESIS (pre-registered):
+  H1: at gate θ*=0.90, a deflating minority twin (twin 5, otherwise
+      honest, declared nf = emitted nf - 1 whenever it triggers) can
+      dodge or slip the gate and shift collective residency > 5pp vs
+      the honest twin at the same θ* (correct null: same fabric, same
+      gate, no lie).
+  H0: deflation remains inert for ALL θ (0.90 / 1.00 / 1.10), or any
+      residency shift is <= 5pp.
+
+  Secondary (S1): D5 (declared-vs-emitted pulse count per tick) still
+  flags every lied tick, zero false positives on honest arms.
+  Secondary (S2): ledger/debt closure stays exactly 0 under every arm.
+
+ARMS:
+  A1 anchor-continuity: replay SPIN-35 nf_inflate at θ*=1.10 and
+     reproduce the published table (ladder K1 -0.4 / K2 +6.4;
+     kcoh5 K1 +7.9 / K2 +17.3 vs gate-off honest-none; tol ±0.2pp).
+  A2 deflation at θ*=0.90 (nf_deflate, twin 5) on ladder@15 + kcoh5@15,
+     K in {1,2}. Baselines BOTH gate-off honest-none (SPIN-35
+     convention) and honest twin at θ*=0.90 (registered null; H1
+     evaluated against the latter).
+  A3 both-direction twin at boundary θ*=1.00: declared nf pushed away
+     from pd (nf+1 if nf<=pd else nf-1) — tests whether adaptive
+     lying gains beyond pure inflate at the boundary where the two
+     regimes meet.
+
+PRE-REGISTERED DECISION RULE (fixed before running):
+  A1 PASS iff all four published inflate cells reproduce ±0.2pp.
+  A2 H1 CONFIRMED iff any deflation cell shifts residency > 5.0pp vs
+     the honest-θ*=0.90 twin baseline (either direction), or gOpen for
+     the deflating twin < honest gOpen on any grammar (a dodge:
+     honest gate opens, liar's declared value closes it). H0 confirmed
+     otherwise (all shifts <= 5pp and no dodge).
+  A3 PASS (boundary inert for deflate half) iff both-direction at
+     1.00 shift <= pure-inflate-at-1.00 shift + 0.2pp in every cell.
+  S1 PASS iff nfmis > 0 in every seed of every lying arm and nfmis == 0
+     in every honest arm.
+  S2 PASS iff |closureΔ| < 1 everywhere.
+  VERDICT: VALIDATED(H1) if A2 shows >5pp shift or a dodge with a
+     >5pp shift... -- stated plainly: report VALIDATED if H1 holds
+     (shift > 5pp), FALSIFIED if deflation inert at 0.90 AND shifts
+     <= 5pp, MIXED if a dodge occurs but shift <= 5pp, INCONCLUSIVE if
+     canaries or A1 fail (no anchor continuity).
+
+CANARIES (mandatory, abort on fail; reuse SPIN-35 set):
+  Ca: adv=none gate=off byte-matches exp_glm1.run_fabric (8 configs)
+      + SPIN-5 anchors zero@15 K1 77.3/8756/187834, ladder@15 K1
+      71.5/5792/106378.
+  Cb: gate="never" (t100=10**9) == gate="off" full-dict equivalence,
+      and honest gate 1.10 == gate=off on N=6 grammars {ladder@15,
+      kcoh5@15, zero@15} (structural CE, SPIN-35 Cb2 continuity).
+  Cc: double-run determinism (same dict twice, 4 configs, includes
+      θ*=0.90 arms).
+
+Config: N=6, ladder@15 [0,3,6,9,12,15] / kcoh5@15 [0,0,0,0,0,15];
+K in {1,2}; pd=3, delta=12, drift=6; ticks 4800; seeds
+{1,7,42,1999,20260902}; ADV = twin 5; θ* in {0.90, 1.00, 1.10};
+integer-only in-loop; floats display-only. Run with -u, no pipes.
+
+======================================================================
+SPIN 37 — ADVERSARY — SUB-1.0 DEFLATION-DODGE — harness run, -u, no pipes
+== CANARY Ca: adv=none gate=off byte-matches exp_glm1.run_fabric ==
+  PASS: 8/8 full-dict byte-identical (extra keys gopen/gcomp)
+
+== CANARY Ca2: SPIN-5 anchor replay (5-seed means) ==
+  zero@15 K=1: 77.3% ev 8756 debt 187834 (want 77.3/8756/187834) -> PASS
+  ladder@15 K=1: 71.5% ev 5792 debt 106378 (want 71.5/5792/106378) -> PASS
+
+== CANARY Cb: gate contract identities ==
+  Cb1 gate=never == gate=off full-dict (4 adv modes); gate=1.10 == off for honest+deflate: PASS
+  Cb2 honest gate 1.10 == off (adv=none, 3 grammars x K{1,2}): PASS
+
+== CANARY Cc: double-run determinism ==
+  Cc double-run: PASS (4 configs)
+
+CANARIES: PASS
+
+== ARM A1: SPIN-35 anchor-continuity — nf_inflate @ θ*=1.10 ==
+  grammar |         K |     mean% |     base% |     shift | pub-shift |       dOK
+ladder@15 |         1 |      71.1 |      71.5 |    -0.4pp |    -0.4pp |        OK
+ladder@15 |         2 |      66.5 |      60.0 |    +6.4pp |    +6.4pp |        OK
+ kcoh5@15 |         1 |      82.1 |      74.1 |    +7.9pp |    +7.9pp |        OK
+ kcoh5@15 |         2 |      67.9 |      50.6 |   +17.3pp |   +17.3pp |        OK
+  ARM A1: PASS
+
+== ARM A2: nf_deflate @ θ*=0.90 — the sub-1.0 dodge test ==
+  grammar |         K |     mean% | off-base% | honest90-base% | shift-vs-h90 | gOpen-liar | gOpen-honest |     gComp |     nfMis |  closureΔ
+ladder@15 |         1 |      71.5 |      71.5 |      71.1 |    +0.4pp |      1067 |        75 |         0 |      1547 |         0
+ladder@15 |         2 |      60.0 |      60.0 |      66.5 |    -6.4pp |       793 |        86 |         0 |      2085 |         0
+ kcoh5@15 |         1 |      74.1 |      74.1 |      82.1 |    -7.9pp |      2365 |       343 |         0 |      2835 |         0
+ kcoh5@15 |         2 |      50.6 |      50.6 |      67.9 |   -17.3pp |      1910 |       679 |         0 |      3365 |         0
+  dodge (liar gOpen < honest gOpen): no
+  H1 (>5pp shift vs honest-0.90 baseline): CONFIRMED
+  S1 D5: PASS  S2 closure: PASS
+  S1 honest false-positives: 0 (honest arms carry no adv dict)
+
+== ARM A3: nf_both @ boundary θ*=1.00 vs pure inflate ==
+  grammar |         K |     both% | shift-off |     gOpen |     nfMis |  closureΔ | vs-inflate
+ladder@15 |         1 |      71.5 |    +0.0pp |         0 |      1547 |         0 | -0.4pp EXCEEDS
+ladder@15 |         2 |      60.0 |    +0.0pp |         0 |      2085 |         0 | +6.4pp OK
+ kcoh5@15 |         1 |      74.1 |    +0.0pp |         0 |      2835 |         0 | +7.9pp OK
+ kcoh5@15 |         2 |      50.6 |    +0.0pp |         0 |      3365 |         0 | +17.3pp OK
+  ARM A3: FAIL  S1: PASS  S2: PASS
+
+  PRE-REGISTERED VERDICT: VALIDATED (H1: deflation dodge shifts residency > 5pp)
+  (A1=P dodge=N S1=P S2=P)
+
+== POST-HOC FORENSIC (seed 1): compensation suppression under nf_deflate @ 0.90 ==
+  grammar |         K |     hOpen |     hComp |     lOpen |     lComp | dynamics==gate-off
+ladder@15 |         1 |        74 |       444 |      1060 |         0 |      True
+ladder@15 |         2 |        94 |       564 |       777 |         0 |      True
+ kcoh5@15 |         1 |       328 |      1968 |      2345 |         0 |      True
+ kcoh5@15 |         2 |       680 |      4080 |      1949 |         0 |      True
+(lOpen high but degenerate: declared=0 opens compensate nothing, neff=0)

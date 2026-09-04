@@ -1,0 +1,73 @@
+SPIN-40 METROLOGY pd x delta interaction grid — 2026-09-04 01:43:20
+config: N=6 ladder, slope 1.6 spec (200/125), K=1, spreads=[8, 10, 12, 14, 16, 18, 20, 22, 24, 26, 28, 30, 32, 34, 36, 38, 40], grid pd[3, 4, 5, 6] x delta[8, 10, 12, 16, 20], seeds=(1, 7, 42, 1999, 20260902), ticks=4800, drift=6
+PREREG H1: alpha = a - b·pd - c·(d-12) plane, max|resid|<=0.03; FALSIFY if resid>0.03 anywhere or no plane fits. Bilinear cross-term fit is exploratory only.
+PREREG H2: delta-slope m(pd) monotone in pd, pd_flip=-m0/m1 stated; FALSIFY if per-seed bootstrap (5 replicates) shows the m-sign flip is not majority-stable. No-crossing cells excluded, never extrapolated.
+== CANARY a: wiring byte-identity dyn_run vs run_fabric (pd x delta corners) ==
+  PASS: 16 configs byte-identical
+
+== CANARY b: R0 anchors at delta=12 pd=3 (5-seed means) ==
+  ladder15 K=1: pct=71.48 (71.5)  ev=5791.6 (5792)  debt=106378.4 (106378)  -> PASS
+  zero    K=1: pct=77.26 (77.3)  ev=8756.4 (8756)  debt=187833.6 (187834)  -> PASS
+
+== CANARY c: SPIN-31 replay at delta=12 (s*~=17.9 tol 1.0; alpha within 0.01 of booked 1.096/1.012/0.977) ==
+  pd=3 : s*=17.6 (want ~17.9 tol 1.0)  -> PASS
+  pd=4: alpha=1.096 (booked 1.096, brief 1.119)  -> PASS
+  pd=5: alpha=1.012 (booked 1.012, brief 1.052)  -> PASS
+  pd=6: alpha=0.977 (booked 0.977, brief 0.985)  -> PASS
+
+== CANARY d: determinism (dual runs, grid corners) ==
+  PASS: 12 dual runs byte-identical
+
+ALL CANARIES: PASS
+
+== GRID: pd x delta, slope 1.6, K=1, s* and C and alpha ==
+ pd   d     8    10    12    14    16    18    20    22    24    26    28    30    32    34    36    38    40   s*      C   alpha
+  3   8  99.5  71.9  52.5  41.8  37.2  29.3  26.1  21.2  14.4  16.0  14.8  13.4  12.2  10.4  10.3   8.7   8.8   12.5   20.0  1.247
+  3  10  99.9  99.9  73.5  57.0  46.7  38.3  30.9  30.5  23.6  25.6  18.0  15.4  16.1  13.2  13.6  11.3  11.4   15.4   24.6  1.228
+  3  12 100.0 100.0 100.0  85.8  60.0  47.3  42.5  38.4  28.0  34.4  26.8  22.6  20.6  15.4  19.2  13.0  13.5   17.6   28.1  1.172
+  3  16 100.0 100.0 100.0 100.0 100.0  90.5  68.3  56.4  48.1  46.5  38.4  35.8  35.7  25.3  32.5  24.1  24.1   23.5   37.7  1.177
+  3  20 100.0 100.0 100.0 100.0 100.0 100.0 100.0  94.0  76.5  62.0  54.5  49.2  49.3  39.7  42.9  33.9  32.7   29.7   47.5  1.188
+  4   8  91.0  69.6  25.1   7.3   7.3   6.7   6.9   6.7   6.7   6.8   6.8   6.7   6.7   6.6   7.0   6.8   6.5   10.9   17.4  1.088
+  4  10  98.8  98.5  93.1  38.6  30.4   9.0   9.0   8.9   8.5   8.7   8.4   8.3   8.4   8.4   8.6   8.5   8.5   13.6   21.7  1.087
+  4  12 100.0 100.0 100.0  91.8  57.4  24.4  19.0  11.8  11.1  10.9  10.6  10.1  10.0   9.8  10.0   9.9  10.0   16.4   26.3  1.096
+  4  16 100.0 100.0 100.0 100.0 100.0  93.3  68.2  49.5  27.3  26.4  15.3  15.1  15.1  14.4  14.0  13.9  13.5   21.9   35.1  1.097
+  4  20 100.0 100.0 100.0 100.0 100.0  99.3  99.4  99.2  79.1  59.8  38.5  30.6  32.7  19.7  19.3  18.7  18.7   26.9   43.1  1.077
+  5   8  71.3  55.9   7.3   7.1   7.2   6.8   6.7   6.6   6.5   7.1   6.8   6.7   6.5   6.2   6.7   6.5   6.7   10.2   16.4  1.024
+  5  10  92.1  82.9  71.0  20.7  10.3   8.7   8.8   8.5   8.4   8.7   8.6   8.2   8.0   8.2   8.5   8.5   8.2   12.8   20.5  1.027
+  5  12  98.8  96.2  91.5  69.5  36.3  11.3  11.1  11.0  10.6  10.6  10.2  10.0  10.1   9.8  10.1   9.8   9.8   15.2   24.3  1.012
+  5  16 100.0 100.0 100.0  95.1  94.8  82.7  64.0  31.4  15.5  15.1  14.8  14.7  14.8  14.4  13.8  13.4  13.4   20.9   33.4  1.043
+  5  20 100.0 100.0 100.0 100.0 100.0  95.9  95.6  94.9  78.5  54.0  28.7  21.8  19.5  19.2  18.7  18.7  18.5   26.3   42.1  1.053
+  6   8  52.5  44.7  11.1   7.0   6.9   6.6   6.4   6.7   6.5   7.1   6.8   6.6   6.6   6.3   6.4   6.6   6.5    8.6   13.8  0.864
+  6  10  70.3  63.5  56.2  23.7   9.0   8.6   8.9   8.6   8.4   8.4   8.4   8.3   8.1   8.3   8.5   8.4   8.0   12.4   19.8  0.991
+  6  12  87.1  77.2  71.6  58.2  33.2  10.8  10.7  10.6  10.3  10.4   9.9  10.1  10.1   9.8  10.1   9.7   9.6   14.7   23.4  0.977
+  6  16  98.9  97.6  94.7  80.2  79.3  70.6  51.3  24.3  15.1  14.6  14.4  14.5  14.4  13.9  13.7  13.3  13.4   20.1   32.1  1.005
+  6  20 100.0 100.0 100.0  95.4  95.4  87.2  86.8  85.8  73.6  43.8  21.3  19.5  18.9  18.3  18.5  18.1  18.0   25.6   40.9  1.023
+
+== ANALYSIS (decision rules pre-registered in header) ==
+  crossing cells: 20/20
+-- H1: plane alpha = a - b·pd - c·(delta-12) --
+  fit: alpha = 1.408 - 0.075·pd - -0.002·(delta-12)
+  max|resid| = 0.0878 (gate 0.03) -> H1 FALSIFIED
+    worst: pd=6 d=8 alpha=0.864 resid=-0.0878
+    worst: pd=3 d=8 alpha=1.247 resid=+0.0706
+    worst: pd=6 d=20 alpha=1.023 resid=+0.0495
+  [exploratory, cannot rescue H1] bilinear: alpha = 1.434 + -0.081·pd + -0.020·(d-12) + 0.0048·pd·(d-12)  max|resid|=0.0582 (also fails)
+-- H2: delta-slope m(pd) and the sign-flip boundary --
+  m(pd=3) = -0.00484/delta (col max|resid| 0.0364, n=5)
+  m(pd=4) = -0.00062/delta (col max|resid| 0.0099, n=5)
+  m(pd=5) = +0.00271/delta (col max|resid| 0.0169, n=5)
+  m(pd=6) = +0.01009/delta (col max|resid| 0.0554, n=5)
+  m(pd) fit: m = -0.01982 +0.00481·pd  monotone
+  pd_flip = -m0/m1 = 4.12   [H2 formula: pd_flip = 0.0198/0.0048]
+  -- bootstrap by seed (5 single-seed replicates) --
+    seed 1: m(3)=-0.0041  m(4)=-0.0006  m(5)=+0.0024  m(6)=+0.0087  -> flip (m(lo)<0<m(hi))
+    seed 7: m(3)=-0.0051  m(4)=-0.0006  m(5)=+0.0025  m(6)=+0.0094  -> flip (m(lo)<0<m(hi))
+    seed 42: m(3)=-0.0053  m(4)=-0.0006  m(5)=+0.0030  m(6)=+0.0114  -> flip (m(lo)<0<m(hi))
+    seed 1999: m(3)=-0.0033  m(4)=-0.0008  m(5)=+0.0027  m(6)=+0.0101  -> flip (m(lo)<0<m(hi))
+    seed 20260902: m(3)=-0.0059  m(4)=-0.0005  m(5)=+0.0029  m(6)=+0.0110  -> flip (m(lo)<0<m(hi))
+  flip sign-stable in 5/5 seed replicates (majority gate: >= 3/5)
+
+VERDICT H1: FALSIFIED
+VERDICT H2: VALIDATED
+
+DONE. elapsed 18 s

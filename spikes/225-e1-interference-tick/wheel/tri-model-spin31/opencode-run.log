@@ -1,0 +1,230 @@
+[0m
+> build · glm-5.3
+[0m
+[0m→ [0mRead SPIN-31-metrology-pdlaw.md
+[0m→ [0mRead SPIN-30-drift-band.md
+[0m
+[0m$ [0mls -la
+total 1432
+drwxrwxr-x 8 eileen eileen  4096 Sep  3 18:50 .
+drwxrwxr-x 9 eileen eileen  4096 Sep  3 18:36 ..
+-rw-rw-r-- 1 eileen eileen  6379 Sep  3 18:36 SPIN-1-METROLOGY.md
+-rw-rw-r-- 1 eileen eileen 10847 Sep  3 18:36 SPIN-10-phase-scheduling.md
+-rw-rw-r-- 1 eileen eileen  2605 Sep  3 18:36 SPIN-11-EXP4-mixed-pd.md
+-rw-rw-r-- 1 eileen eileen 10685 Sep  3 18:36 SPIN-11-adversary.md
+-rw-rw-r-- 1 eileen eileen  4000 Sep  3 18:36 SPIN-11-pulse-dial.md
+-rw-rw-r-- 1 eileen eileen  4788 Sep  3 18:36 SPIN-12-orthogonal-grammar.md
+-rw-rw-r-- 1 eileen eileen 20501 Sep  3 18:36 SPIN-13-snap-shadow.md
+-rw-rw-r-- 1 eileen eileen  7860 Sep  3 18:36 SPIN-14-coupling.md
+-rw-rw-r-- 1 eileen eileen  6084 Sep  3 18:36 SPIN-15-conservation.md
+-rw-rw-r-- 1 eileen eileen  9074 Sep  3 18:36 SPIN-16-pulse-dial2.md
+-rw-rw-r-- 1 eileen eileen  6646 Sep  3 18:36 SPIN-16-regime.md
+-rw-rw-r-- 1 eileen eileen  8849 Sep  3 18:36 SPIN-17-regime-tax.md
+-rw-rw-r-- 1 eileen eileen  8404 Sep  3 18:36 SPIN-18-coupling.md
+-rw-rw-r-- 1 eileen eileen  7585 Sep  3 18:36 SPIN-19-rtl-honesty.md
+-rw-rw-r-- 1 eileen eileen 17202 Sep  3 18:36 SPIN-20-questions.md
+-rw-rw-r-- 1 eileen eileen  8414 Sep  3 18:36 SPIN-21-reality-variation.md
+-rw-rw-r-- 1 eileen eileen  7281 Sep  3 18:36 SPIN-22-dequant.md
+-rw-rw-r-- 1 eileen eileen  7591 Sep  3 18:36 SPIN-22-quantized-scheduler.md
+-rw-rw-r-- 1 eileen eileen  8642 Sep  3 18:36 SPIN-23-taxonomy-traceswap.md
+-rw-rw-r-- 1 eileen eileen 11016 Sep  3 18:36 SPIN-24-plateau-pdsweep.md
+-rw-rw-r-- 1 eileen eileen  8922 Sep  3 18:36 SPIN-25-threshold-causal.md
+-rw-rw-r-- 1 eileen eileen  5030 Sep  3 18:36 SPIN-26-wallbit-eligibility.md
+-rw-rw-r-- 1 eileen eileen  5623 Sep  3 18:36 SPIN-27-metrology.md
+-rw-rw-r-- 1 eileen eileen  6201 Sep  3 18:36 SPIN-28-regime.md
+-rw-rw-r-- 1 eileen eileen  7634 Sep  3 18:36 SPIN-29-metrology-cdelta.md
+-rw-rw-r-- 1 eileen eileen  6611 Sep  3 18:36 SPIN-3-topology.md
+-rw-rw-r-- 1 eileen eileen  6959 Sep  3 18:36 SPIN-30-dequant.md
+-rw-rw-r-- 1 eileen eileen  6132 Sep  3 18:36 SPIN-30-drift-band.md
+-rw-rw-r-- 1 eileen eileen  6407 Sep  3 18:46 SPIN-31-metrology-pdlaw.md
+-rw-rw-r-- 1 eileen eileen  6108 Sep  3 18:36 SPIN-4-metrology.md
+-rw-rw-r-- 1 eileen eileen 13036 Sep  3 18:36 SPIN-5-pattern-grammar.md
+-rw-rw-r-- 1 eileen eileen  7380 Sep  3 18:36 SPIN-6-topology.md
+-rw-rw-r-- 1 eileen eileen 12318 Sep  3 18:36 SPIN-8-coherence-radius.md
+-rw-rw-r-- 1 eileen eileen 13138 Sep  3 18:36 SPIN-9-grammar-law.md
+-rw-rw-r-- 1 eileen eileen 14895 Sep  3 18:36 SPIN-dequant-2.md
+-rw-rw-r-- 1 eileen eileen 22920 Sep  3 18:36 THEORY-grammar-phase.md
+-rw-rw-r-- 1 eileen eileen 63813 Sep  3 18:43 WHEEL-LOG.md
+-rw-rw-r-- 1 eileen eileen  3074 Sep  3 18:36 WHEEL-OF-DISCOVERY.md
+drwxrwxr-x 2 eileen eileen  4096 Sep  3 18:45 __pycache__
+-rw-rw-r-- 1 eileen eileen 17064 Sep  3 18:36 anglekit.py
+drwxrwxr-x 3 eileen eileen  4096 Sep  3 18:36 kimi-predictor
+drwxrwxr-x 2 eileen eileen  4096 Sep  3 18:36 knee-meta
+drwxrwxr-x 3 eileen eileen  4096 Sep  3 18:36 novel
+drwxrwxr-x 2 eileen eileen  4096 Sep  3 18:36 nq1-fabric-twin
+-rw-rw-r-- 1 eileen eileen 15922 Sep  3 18:36 spin10-output.txt
+-rw-rw-r-- 1 eileen eileen 15266 Sep  3 18:36 spin10_phase_scheduling.py
+-rw-rw-r-- 1 eileen eileen   700 Sep  3 18:36 spin11-exp4-output.txt
+-rw-rw-r-- 1 eileen eileen  9510 Sep  3 18:36 spin11-output.txt
+-rw-rw-r-- 1 eileen eileen 16578 Sep  3 18:36 spin11_adversary.py
+-rw-rw-r-- 1 eileen eileen 28868 Sep  3 18:36 spin11_pulse_dial.py
+-rw-rw-r-- 1 eileen eileen 30708 Sep  3 18:36 spin12-output.txt
+-rw-rw-r-- 1 eileen eileen 14204 Sep  3 18:36 spin12_conservation.py
+-rw-rw-r-- 1 eileen eileen 22051 Sep  3 18:36 spin12_orthogonal_grammar.py
+-rw-rw-r-- 1 eileen eileen 12858 Sep  3 18:36 spin13-output.txt
+-rw-rw-r-- 1 eileen eileen 26573 Sep  3 18:36 spin13_snap_shadow.py
+-rw-rw-r-- 1 eileen eileen  6277 Sep  3 18:36 spin13b-output.txt
+-rw-rw-r-- 1 eileen eileen 15437 Sep  3 18:36 spin13b_closure.py
+-rw-rw-r-- 1 eileen eileen 10257 Sep  3 18:36 spin13c-output.txt
+-rw-rw-r-- 1 eileen eileen 18007 Sep  3 18:36 spin13c_lut.py
+-rw-rw-r-- 1 eileen eileen  1565 Sep  3 18:36 spin13d-output.txt
+-rw-rw-r-- 1 eileen eileen  8458 Sep  3 18:36 spin13d_apps.py
+-rw-rw-r-- 1 eileen eileen  3305 Sep  3 18:36 spin13e-output.txt
+-rw-rw-r-- 1 eileen eileen  9052 Sep  3 18:36 spin13e_cost.py
+-rw-rw-r-- 1 eileen eileen  9624 Sep  3 18:36 spin14-output.txt
+-rw-rw-r-- 1 eileen eileen  9072 Sep  3 18:36 spin14_coupling.py
+-rw-rw-r-- 1 eileen eileen  7664 Sep  3 18:36 spin15-output.txt
+-rw-rw-r-- 1 eileen eileen 14292 Sep  3 18:36 spin15_conservation.py
+-rw-rw-r-- 1 eileen eileen 24870 Sep  3 18:36 spin16-output.txt
+-rw-rw-r-- 1 eileen eileen 32066 Sep  3 18:36 spin16_pulse_dial2.py
+-rw-rw-r-- 1 eileen eileen 15490 Sep  3 18:36 spin16_regime.py
+-rw-rw-r-- 1 eileen eileen  6824 Sep  3 18:36 spin17-output.txt
+-rw-rw-r-- 1 eileen eileen 13955 Sep  3 18:36 spin17_regime_tax.py
+-rw-rw-r-- 1 eileen eileen  8044 Sep  3 18:36 spin18-output.txt
+-rw-rw-r-- 1 eileen eileen 12889 Sep  3 18:36 spin18_coupling.py
+-rw-rw-r-- 1 eileen eileen 10692 Sep  3 18:36 spin19_rtl_honesty.py
+-rw-rw-r-- 1 eileen eileen  5429 Sep  3 18:36 spin1_metrology.py
+-rw-rw-r-- 1 eileen eileen  6514 Sep  3 18:36 spin21-output.txt
+-rw-rw-r-- 1 eileen eileen 15585 Sep  3 18:36 spin21_reality_variation.py
+-rw-rw-r-- 1 eileen eileen  3726 Sep  3 18:36 spin22-output.txt
+-rw-rw-r-- 1 eileen eileen 14449 Sep  3 18:36 spin22_dequant.py
+-rw-rw-r-- 1 eileen eileen  5285 Sep  3 18:36 spin22_quantized_scheduler.py
+-rw-rw-r-- 1 eileen eileen  2905 Sep  3 18:36 spin23-output.txt
+-rw-rw-r-- 1 eileen eileen 10791 Sep  3 18:36 spin23_taxonomy_traceswap.py
+-rw-rw-r-- 1 eileen eileen  9228 Sep  3 18:36 spin24-output.txt
+-rw-rw-r-- 1 eileen eileen 11285 Sep  3 18:36 spin24_plateau_pdsweep.py
+-rw-rw-r-- 1 eileen eileen  1892 Sep  3 18:36 spin25-output.txt
+-rw-rw-r-- 1 eileen eileen 10359 Sep  3 18:36 spin25_threshold_causal.py
+-rw-rw-r-- 1 eileen eileen  1417 Sep  3 18:36 spin26-output.txt
+-rw-rw-r-- 1 eileen eileen  6014 Sep  3 18:36 spin26_wallbit_eligibility.py
+-rw-rw-r-- 1 eileen eileen  3610 Sep  3 18:36 spin27-output.txt
+-rw-rw-r-- 1 eileen eileen 13238 Sep  3 18:36 spin27_metrology.py
+-rw-rw-r-- 1 eileen eileen  3144 Sep  3 18:36 spin28-output.txt
+-rw-rw-r-- 1 eileen eileen 14825 Sep  3 18:36 spin28_regime.py
+-rw-rw-r-- 1 eileen eileen  2979 Sep  3 18:36 spin29-output.txt
+-rw-rw-r-- 1 eileen eileen  3222 Sep  3 18:36 spin29_adjudicator.py
+-rw-rw-r-- 1 eileen eileen 13970 Sep  3 18:36 spin29_metrology_cdelta.py
+-rw-rw-r-- 1 eileen eileen  2836 Sep  3 18:36 spin30-dequant-output.txt
+-rw-rw-r-- 1 eileen eileen  4562 Sep  3 18:36 spin30-output.txt
+-rw-rw-r-- 1 eileen eileen 11241 Sep  3 18:36 spin30_dequant.py
+-rw-rw-r-- 1 eileen eileen 13957 Sep  3 18:36 spin30_drift_band_sweep.py
+-rw-rw-r-- 1 eileen eileen  3011 Sep  3 18:46 spin31-output.txt
+-rw-rw-r-- 1 eileen eileen 13043 Sep  3 18:45 spin31_metrology_pdlaw.py
+-rw-rw-r-- 1 eileen eileen  6931 Sep  3 18:36 spin4-output.txt
+-rw-rw-r-- 1 eileen eileen  6347 Sep  3 18:36 spin4_metrology.py
+-rw-rw-r-- 1 eileen eileen 18082 Sep  3 18:36 spin5-output.txt
+-rw-rw-r-- 1 eileen eileen 19285 Sep  3 18:36 spin5_pattern_grammar.py
+-rw-rw-r-- 1 eileen eileen  6195 Sep  3 18:36 spin6_topology.py
+-rw-rw-r-- 1 eileen eileen 14160 Sep  3 18:36 spin8-output.txt
+-rw-rw-r-- 1 eileen eileen  9839 Sep  3 18:36 spin8_coherence_radius.py
+-rw-rw-r-- 1 eileen eileen  3905 Sep  3 18:36 spin8_diag.py
+-rw-rw-r-- 1 eileen eileen 25607 Sep  3 18:36 spin9-output.txt
+-rw-rw-r-- 1 eileen eileen 25117 Sep  3 18:36 spin9_grammar_law.py
+-rw-rw-r-- 1 eileen eileen 25284 Sep  3 18:36 spin_dequant2.py
+drwxrwxr-x 2 eileen eileen  4096 Sep  3 18:52 tri-model-spin31
+[0m
+[0m✱ [0mGlob "tri-model-spin31/*"[90m 3 matches[0m
+[0m→ [0mRead spin31-output.txt
+[0m✱ [0mGrep "crossing|interp|seed|noise|floor|0\.5"[90m in spin31_metrology_pdlaw.py · 100 matches[0m
+[0m✱ [0mGrep "1\.247|Δ=8|delta=8|noise|±0\.5|floor|adjudic"[90m in SPIN-29-metrology-cdelta.md · 100 matches[0m
+[0m✱ [0mGrep "noise|±0\.5|floor|0\.03|interp"[90m in SPIN-27-metrology.md · 100 matches[0m
+Verifying the imported cross-vintage number (α=1.247 at pd=3/Δ=8) and the noise-floor provenance in SPIN-29:
+I've reviewed both spins plus the raw outputs. Computing my own regression diagnostics from the primary tables (Leg 1/2 of spin31-output.txt + the imported SPIN-29 Δ=8 cell) before writing the verdict:
+[0m
+[0m$ [0mpython3 - <<'EOF'
+import itertools
+# primary cells: (pd, delta, alpha, source)
+cells = [(3,8,1.247,'spin29'),(3,12,1.172,'spin31'),(4,12,1.096,'spin31'),
+         (5,12,1.012,'spin31'),(6,8,0.864,'spin31'),(6,12,0.977,'spin31'),(6,16,1.005,'spin31')]
+
+def ols(pts, vars):
+    n=len(vars); k=len(pts)
+    import statistics
+    # build X, y
+    X=[[f(pd,d) for f in vars] for pd,d,a,_ in pts]
+    y=[a for _,_,a,_ in pts]
+    # normal equations
+    m=len(vars)
+    A=[[sum(X[r][i]*X[r][j] for r in range(k)) for j in range(m)] for i in range(m)]
+    b=[sum(X[r][i]*y[r] for r in range(k)) for i in range(m)]
+    # gauss
+    for i in range(m):
+        p=max(range(i,m),key=lambda r:abs(A[r][i])); A[i],A[p]=A[p],A[i]; b[i],b[p]=b[p],b[i]
+        for r in range(i+1,m):
+            f=A[r][i]/A[i][i]
+            for c in range(i,m): A[r][c]-=f*A[i][c]
+            b[r]-=f*b[i]
+    coef=[0]*m
+    for i in reversed(range(m)):
+        coef[i]=(b[i]-sum(A[i][j]*coef[j] for j in range(i+1,m)))/A[i][i]
+    resid=[y[r]-sum(coef[j]*X[r][j] for j in range(m)) for r in range(k)]
+    return coef, resid
+
+# bilinear on alpha
+vars=[lambda p,d:1, lambda p,d:p, lambda p,d:d, lambda p,d:p*d]
+coef,res = ols(cells, vars)
+print("bilinear alpha ~ 1+pd+d+pd*d (7 cells):")
+print("  a=%.4f b=%.4f c=%.4f d=%+.4f  maxres=%.4f"%(coef[0],coef[1],coef[2],coef[3],max(abs(r) for r in res)))
+for (p,d,a,s),r in zip(cells,res): print("   (%d,%2d) meas=%.3f fit=%.4f resid=%+.4f [%s]"%(p,d,a,a-r,r,s))
+
+# interior-only (exclude delta==8): 5 cells, 4 params -> 1 dof
+ci=[c for c in cells if c[1]!=8]
+co2,r2=ols(ci,vars)
+print("interior-only (d>=12, 5 cells): d=%+.4f maxres=%.4f"%(co2[3],max(abs(r) for r in r2)))
+for (p,d,a,s),r in zip(ci,r2): print("   (%d,%2d) resid=%+.4f"%(p,d,r))
+
+# pd-slopes at each delta (2-point)
+print("slope_pd@D8  = %.4f (cross-vintage: uses spin29 1.247)"%((0.864-1.247)/3))
+print("slope_pd@D12 = %.4f"%((0.977-1.172)/3))
+# implied d
+print("implied d = (slope12-slope8)/4 = %+.4f"%((( 0.977-1.172)/3-(0.864-1.247)/3)/4))
+
+# D-gate sensitivity
+a8,a12,a16=0.864,0.977,1.005
+print("D spread all3 = %.1f%%"% (100*(a16-a8)/((a8+a12+a16)/3)))
+print("D spread excl D8 = %.1f%%"%(100*(a16-a12)/((a12+a16)/2)))
+
+# noise floor scaling
+for D in (8,12,16):
+    print("alpha noise @D=%d (0.5 in C): %.4f ; alpha-quantum (spread step 2): %.4f"%(D,1.6*0.5/(2*D),2*1.6/(2*D)))
+# pd=6/D=8 crossing sensitivity: bracket (8,52.5)->(10,44.7), slope 3.9pp/unit
+print("pd6 D8: 2pp curve noise -> s* shift %.2f -> C shift %.2f -> alpha shift %.4f"%(2/3.9,1.6*2/3.9,1.6*2/3.9/16))
+# extrapolation test pd=7
+print("alpha(7) linear pred = %.4f ; saturation pred ~ %.3f"%(1.365-0.067*7, 0.977-0.020))
+EOF
+bilinear alpha ~ 1+pd+d+pd*d (7 cells):
+  a=2.0687 b=-0.2222 c=-0.0564 d=+0.0123  maxres=0.0302
+   (3, 8) meas=1.247 fit=1.2470 resid=+0.0000 [spin29]
+   (3,12) meas=1.172 fit=1.1695 resid=+0.0025 [spin31]
+   (4,12) meas=1.096 fit=1.0953 resid=+0.0007 [spin31]
+   (5,12) meas=1.012 fit=1.0210 resid=-0.0090 [spin31]
+   (6, 8) meas=0.864 fit=0.8763 resid=-0.0123 [spin31]
+   (6,12) meas=0.977 fit=0.9468 resid=+0.0302 [spin31]
+   (6,16) meas=1.005 fit=1.0172 resid=-0.0122 [spin31]
+interior-only (d>=12, 5 cells): d=+0.0441 maxres=0.0188
+   (3,12) resid=+0.0074
+   (4,12) resid=-0.0017
+   (5,12) resid=-0.0188
+   (6,12) resid=+0.0131
+   (6,16) resid=+0.0000
+slope_pd@D8  = -0.1277 (cross-vintage: uses spin29 1.247)
+slope_pd@D12 = -0.0650
+implied d = (slope12-slope8)/4 = +0.0157
+D spread all3 = 14.9%
+D spread excl D8 = 2.8%
+alpha noise @D=8 (0.5 in C): 0.0500 ; alpha-quantum (spread step 2): 0.2000
+alpha noise @D=12 (0.5 in C): 0.0333 ; alpha-quantum (spread step 2): 0.1333
+alpha noise @D=16 (0.5 in C): 0.0250 ; alpha-quantum (spread step 2): 0.1000
+pd6 D8: 2pp curve noise -> s* shift 0.51 -> C shift 0.82 -> alpha shift 0.0513
+alpha(7) linear pred = 0.8960 ; saturation pred ~ 0.957
+[0m
+Diagnostics computed. My independent fit confirms `d = +0.0123` (sign opposite to SPIN-31's pre-registration note), max resid +0.030 at (6,12), and D-gate collapse 14.9% → 2.8% without the Δ=8 cell. Writing the review:
+[0m← [0mWrite tri-model-spin31/opencode.md
+Wrote file successfully.
+[0m
+Review written to `tri-model-spin31/opencode.md`. Key findings:
+
+- **(a)** L PASS is a chord, not a law — the 0.03 gate sits below the ±0.033 per-cell noise floor, interpolation bracket widths vary 12.7→33.2 pp across pd arms (unmodeled systematic in the residuals), and the entire α range spans ~1.5 quantization steps; anchors/byte-identity don't cover pd=4/5, and canary c's ±1.5 C tolerance is 2× the gate it guards.
+- **(b)** WLS on cell-level α, terms {1, pd, Δ, pd·Δ}, weights ∝ Δ² with ×4 variance inflation at Δ=8; my 7-cell refit gives **d = +0.0123, sign positive — SPIN-31's "pin d<0" is an arithmetic erratum** that would mis-score the next spoke (∂α/∂Δ = −0.019 at pd=3 vs +0.018 at pd=6 forces d>0).
+- **(c)** 5 new cells + one pd=7 extrapolation leg (~360 runs), kill bands ±0.033 interior / ±0.050 at Δ=8 (advisory), three ratio-degenerate pairs give a free formal kill of f(pd/Δ), plus in-vintage re-measurement of (3,8).
+- **(d)** The (6,8) cell: knee in the leftmost sweep bracket, latency-starved zone, no >50% plateau, ±0.05 α uncertainty larger than the effect it anchors — excluding it collapses D from 14.9% FAIL to 2.8% PASS; the headline coupling claim lives or dies on that one cell.

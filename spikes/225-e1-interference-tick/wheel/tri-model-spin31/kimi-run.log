@@ -1,0 +1,151 @@
+kimi version 0.39.1
+• Let me read the two files.I need to write an analysis to tri-model-spin31/kimi.md. I'm the spatial/structural-math reviewer. Let me think carefully.
+
+  Key data:
+
+  SPIN-31 (Δ=12, drift=6, A=200, K=1, slope 1.6, N=6):
+  - pd=3: s*=17.6, C=28.1, α=1.172
+  - pd=4: s*=16.4, C=26.3, α=1.096
+  - pd=5: s*=15.2, C=24.3, α=1.012
+  - pd=6: s*=14.7, C=23.4, α=0.977
+  - Fit α(pd)=1.365−0.067·pd, max resid 0.019
+
+  Δ-replication at pd=6: Δ=8: α=0.864; Δ=12: 0.977; Δ=16: 1.005. Spread 14.8% > 10% gate → D FAIL.
+  At pd=3: α rises as Δ shrinks (Δ=8: 1.247 vs Δ=12: 1.172). At pd=6 α falls as Δ shrinks. Sign flip of cross-coupling.
+
+  SPIN-30 (pd=3, Δ=12): drift×A grid; α ≈ 1.19 base at A=96, ~1.14 at A=200; A=96 corner blows up with drift: α = 1.190/1.323/1.398 at drift 0/6/10. Ignition when band amplitude ≲ 8×drift (A/drift ≲ 8? Actually 96/10=9.6 "ticks of band per unit drift"... the criterion: A ≲ 8·drift roughly, or drift wander fraction of band width). Wait — A is band amplitude (ramp amplitude), band width = 2A? Bands [353,449] → width 96? Actually BAND_LO 353, A=96 → band [353,449], width 96. So A is the band width, ramp amplitude. The ignition criterion: band ≲ 8×drift... 96/10=9.6. Hmm, drift=6: 96/6=16, and it ignites at drift=6 already (α=1.323). Hmm, "≲ 8×drift" would mean 96/6=16 not ≤8... but the blow-up is at drift 6 and 10. At drift 2, 96/2=48 no blow up. So boundary somewhere between drift 2 and 6 at A=96: A/drift between 16 and 48... they say "≲ 8×drift" — maybe the criterion is drift×ticks? Eh, quoting: "drift×small-band interaction that only ignites when band amplitude ≲ 8×drift… i.e. … (A=96, drift 10: 96/10 = 9.6)". Slightly loose but fine.
+
+  Now my four tasks:
+
+  (a) Is α(pd)=1.365−0.067·pd a real law or a chord through unknown curvature? Cheapest endpoint curvature test.
+
+  Analysis: 4 points, residuals ≤0.019 — but the points are quantized: C = s*·1.6 where s* comes from interpolated 50% crossing on a spread grid with step 2, ±0.5 noise floor. Δα per unit pd ≈ 0.067 vs noise: α noise = 1.6·0.5/(2Δ) = 0.8/24 ≈ 0.033. So the per-step slope (0.067) is only ~2 noise floors; the linear fit residual 0.019 is BELOW the single-point noise 0.033, which means the fit can't distinguish line from mild curvature — residual gate 0.03 < noise 0.033, so "L PASS" is nearly vacuous. A chord through unknown curvature: with 4 points and per-point noise comparable to the gate, curvature of magnitude up to ~ noise level is undetectable. Cheapest endpoint curvature test: measure α at pd=7 (one new endpoint) — but wait, does pd=7 cross? pd=2 has no crossing (N=6 co-fire wall); pd=7 presumably fine. If the line is real, α(7) = 1.365−0.469 = 0.896 (predicted). Extrapolation test: one new endpoint leg, 12 spread points × 5 seeds = 60 runs, cheapest possible. Predict α(7)=0.896 ± 0.03; if measured deviates by >2·noise (0.066), curvature is real. Alternative cheaper: reuse interior spacing — but endpoints are the highest-leverage for curvature detection. Actually a cheaper discriminator: second-difference of existing 4 points: α3−2α4+α5 = 1.172−2.192+1.012 = −0.008; α4−2α5+α6 = 1.096−2.024+0.977 = 0.049. Second differences inconsistent sign, magnitude ~ noise → no curvature detectable within existing data; must buy a new point. Endpoint extension (pd=7) doubles the lever arm vs. refining interior. Also note the saturation test already fired marginally: |α6−α5|=0.0346 < 0.5|α4−α3|=0.0377 → the LAST interval slope (0.0346) is barely half the first (0.0752)... actually |α4−α3| = 0.076, |α6−α5| = 0.035. Per-interval slopes: 0.076, 0.084, 0.035. The last interval dropped by half — that's a hint of convex curvature (saturating) at the pd=6 end, though within noise. So answer: it's a chord, unproven as a law; cheapest test = single pd=7 leg at Δ=12 (60 runs), kill if |α7_measured − 0.896| > 0.066. Also could test pd=6 at finer spread grid? No — endpoint extension is the curvature test. Also note: α is measured on quantized s* grid (step 2 in spread → ΔC = 3.2 → Δα = 0.133 quantization), interpolation smooths but the underlying crossing statistic is stair-cased; four α values spaced ~0.08 apart are sub-quantization apart — wait, α spacing is 0.076-0.084, but raw C quantization is 3.2/24 = 0.133 in α units. The measured α values are NOT multiples of that quantum (interpolation across seeds), but each cell's α is a mean of 5 seeds each interpolated — the apparent smoothness partly comes from averaging, not from the law. Good point for the structural-math view.
+
+  Actually careful: is the linearity "real"? The second difference sign inconsistency and the last-interval halving both say: at this noise level, α(pd) at Δ=12 is consistent with linear but also with mild convex saturation. Declare: chord, not law, until pd=7 lands on the line.
+
+  (b) Physical mechanism for the pd×Δ sign flip, consistent with interference tick, band, slope 1.6, K=1; and implied closed form.
+
+  Let me think about the fabric geometry. N=6 ladder, K=1 (one correction quantum?), slope 1.6, tolerance Δ, phase dial pd (ticks between ladder co-fires? pd = pulse dial — the ladder fires every pd ticks?). SPIN-16 pulse-dial... pd is the pulse-dial period. The interference tick: with N=6 nodes and co-fire period pd, there's an echo structure |1 − N/pd| mentioned in the file. The correction happens when the signal crosses the tolerance band edge; the spread needed for crossing (knee s*) sets C = slope·s*.
+
+  Sign flip observation: at pd=3, α rises as Δ shrinks (Δ=8: 1.247 vs 12: 1.172); at pd=6, α falls as Δ shrinks (Δ=8: 0.864 vs 12: 0.977). So ∂α/∂Δ changes sign between pd=3 and pd=6. Bilinear cross-term d·pd·Δ with d<0 gives ∂α/∂Δ = c + d·pd: sign flips at pd = −c/d. Fitting existing 7 cells: α values: (3,8)=1.247, (3,12)=1.172, (6,8)=0.864, (6,12)=0.977, (6,16)=1.005, plus (4,12)=1.096, (5,12)=1.012.
+
+  From pd=3 column: ∂α/∂Δ ≈ (1.172−1.247)/4 = −0.0188 per Δ unit (negative slope in Δ... wait α falls as Δ rises → ∂α/∂Δ < 0 at pd=3). From pd=6 column: (1.005−0.864)/8 = +0.0176 (positive). So c + 3d = −0.0188, c + 6d = +0.0176 → 3d = 0.0364 → d = +0.0121?? Wait that gives d>0. Hmm. ∂α/∂Δ = c + d·pd. At pd=3: −0.0188; at pd=6: +0.0176. Difference: 3d = 0.0364 → d = +0.012, c = −0.055. But SPIN-31 says "the sign flip demands the d·pd·Δ cross term; today's 7 measured cells already pin d<0". Let me recheck. Hmm, sign conventions: maybe they fit C not α. C = α·2Δ. Let me just check what d sign is needed.
+
+  Actually wait, let me recompute. At pd=3: Δ=8→α=1.247, Δ=12→α=1.172. So as Δ increases, α decreases. ∂α/∂Δ(pd=3) ≈ −0.019. At pd=6: Δ=8→0.864, Δ=12→0.977, Δ=16→1.005. As Δ increases, α increases: ∂α/∂Δ(pd=6) ≈ +0.018. So ∂α/∂Δ goes from negative to positive as pd increases: d = ∂²α/∂pd∂Δ > 0. So d should be POSITIVE, not negative as the file claims? Let me double-check the file's claim "pin d<0". Hmm.
+
+  Bilinear: α = a + b·pd + c·Δ + d·pd·Δ. Fit with 7 points. Let's do least squares roughly. Points:
+  (pd,Δ,α): (3,8,1.247),(3,12,1.172),(4,12,1.096),(5,12,1.012),(6,8,0.864),(6,12,0.977),(6,16,1.005).
+
+  Center pd̄ = (3+3+4+5+6+6+6)/7 = 33/7 ≈ 4.714; Δ̄ = (8+12+12+12+8+12+16)/7 = 80/7 ≈ 11.43.
+
+  Let me just solve using four corners-ish. Use α(3,·) slope in Δ: −0.01875. α(6,·) slope in Δ using 8,12,16: linear fit slope = (Σ(Δ−12)(α−ᾱ))/(Σ(Δ−12)²): deviations Δ: −4,0,4; α: 0.864,0.977,1.005, mean=0.9487. Numerator: −4(0.864−0.9487)+0+4(1.005−0.9487) = −4(−0.0847)+4(0.0563)=0.3387+0.2253=0.564; denominator 32 → slope 0.0176. So cross derivative d ≈ (0.0176−(−0.0188))/3 = +0.0121. Positive.
+
+  So d>0. The file says d<0 — that appears to be an error in SPIN-31, OR they define the cross term with opposite sign convention, or they fit C = (...)·2Δ where the effective cross term in C... In C: C = a·2Δ + b·pd·2Δ + c·2Δ² + d·pd·2Δ². The dominant scaling makes signs messy. Anyway, as a reviewer I should catch this: the sign flip requires d·pd·Δ with ∂α/∂Δ flipping sign → since ∂α/∂Δ increases with pd, d > 0 (in α = a + b·pd + c·Δ + d·pd·Δ). Actually wait — maybe I should double check with a full least squares rather than two-point estimates. Let me do it numerically later, maybe with python. That's a good concrete reviewer contribution: compute the bilinear fit from the 7 cells and report d's sign. Let me do that.
+
+  Physical mechanism. The fabric: N=6 ladder, co-fire every pd ticks (pulse dial), interference tick when ladder nodes align — the |1 − N/pd| echo. K=1: single quanta corrections. Slope 1.6: signal rises 1.6 per tick in ramp phase. The 50% residency knee s*: spread needed so the walker (with spread s) crosses the tolerance ±Δ band half the time. C = 1.6·s* is the "cost."
+
+  Structural picture: the ladder's corrective clicks arrive every pd ticks; between corrections the signal drifts/rises at slope 1.6, so uncorrected excursion per inter-click interval ≈ 1.6·pd/N? With N=6 nodes sharing, per-node share. The tolerance Δ defines the capture band: correction fires when excursion exceeds Δ. The ratio that matters: excursion-per-period vs. band: r = (slope·pd/N)/Δ = 1.6·pd/(6Δ) = 0.2667·pd/Δ. At pd=3,Δ=8: r = 0.1; pd=3,Δ=12: 0.0667; pd=6,Δ=8: 0.2; pd=6,Δ=12: 0.133; pd=6,Δ=16: 0.1.
+
+  Hmm interesting — check ratio law α = f(pd/Δ): pd/Δ: (3,8)=0.375, (3,12)=0.25, (4,12)=0.333, (5,12)=0.4167, (6,8)=0.75, (6,12)=0.5, (6,16)=0.375. Note (3,8) and (6,16) share pd/Δ=0.375 but α = 1.247 vs 1.005 — refuted, as SPIN-31 noted. And α at fixed pd/Δ=0.375 differs by 0.24. So ratio law dead.
+
+  What about the echo |1 − N/pd|? N=6: pd=3 → |1−2|=1; pd=6 → |1−1|=0; pd=4 → 0.5; pd=5 → 0.2. So the echo term E = |1 − 6/pd|: pd=3:1.0, pd=4:0.5, pd=5:0.2, pd=6:0. Hmm — α decreases as E decreases at Δ=12: α: 1.172, 1.096, 1.012, 0.977. Δα vs ΔE: from pd=3→6, E drops 1.0, α drops 0.195. Not linear in E (E gaps 0.5,0.3,0.2; α gaps 0.076,0.084,0.035). Meh.
+
+  Mechanism proposal: the sign flip comes from which side of the interference-tick resonance the cell sits on. The ladder of N=6 co-fires every pd ticks; the pattern repeats with period pd, and node phases modulo the tick create a standing interference pattern. The tolerance band Δ gates corrections. Two regimes:
+  - pd < N (pd=3,4,5): nodes can't all fire within one dial period — the ladder "aliases"; corrections arrive in bursts separated by gaps. Shrinking Δ catches excursions earlier within a burst → but the burst structure means the marginal spread is spent fighting the intra-burst overshoot, so α rises as Δ shrinks (efficiency worsens: the knee is governed by burst overshoot ∝ slope·pd, not Δ).
+  - pd ≥ N (pd=6): one full ladder cycle fits inside the dial period; the tick is a clean comb. Shrinking Δ then just tightens the capture window in a regime where corrections are evenly spaced — efficiency improves (α falls) because the comb samples the ramp more uniformly.
+
+  The crossover at pd = N = 6... but the flip happens between pd=3 and pd=6, i.e., crossover somewhere in between; the data pin ∂α/∂Δ = 0 at pd ≈ 4.7 (from c + d·pd = 0 with c=−0.055, d=0.0121 → pd* = 4.55). Hmm, near N−1=5 or so? Or N·(something). Actually the interference tick for a ladder of N with dial pd has period lcm(N,pd)/N... The alias structure: nodes fire at ticks congruent to positions mod pd; with N=6, pd=3: each node fires twice per... The co-fire wall: pd=2 gives no crossing (N=6 wall). Resonance when pd divides N or N divides pd.
+
+  Closed form implied: α(pd,Δ) = a + b·pd + c·Δ + d·pd·Δ — bilinear with d>0 — equivalently α = α₀ + b·(pd − pd*)·(1 + (d/b)·Δ) ... or factor form: α = a + (b + d·Δ)·(pd − pd*) where pd* = −c/d is the flip locus. Cleaner: the flip says ∂α/∂Δ = d·(pd − pd*), pd* ≈ 4.5–5. So α(pd,Δ) = α_ref + b·(pd−pd0) + d·(pd − pd*)·(Δ − Δ*). The mechanism: corrective click density is 1/pd; capture window is Δ/slope ticks wide. The number of interference-tick nodes inside one capture window: m = N·Δ/(slope·pd·?) ... Let me think: in one dial period pd, the ramp rises 1.6·pd; per node, 1.6·pd/N. Capture window Δ holds n_w = Δ/(1.6·pd/N) = N·Δ/(1.6·pd) node-quanta. pd=3,Δ=8: 6·8/4.8 = 10; pd=3,Δ=12: 15; pd=6,Δ=8: 5; pd=6,Δ=12: 7.5; pd=6,Δ=16: 10. Interesting — n_w = NΔ/(slope·pd). Hmm, does α correlate with n_w? α: 1.247@10, 1.172@15, 0.864@5, 0.977@7.5, 1.005@10. Not monotone (n_w=10 gives 1.247 and 1.005). Dead too — consistent with ratio law death since n_w ∝ Δ/pd.
+
+  OK, so the honest structural claim: no single-ratio collapse works; the interaction is bilinear with positive cross-term and flip locus pd* ≈ 4.6 ± . The physical story: two competing penalties — (i) intra-period overshoot ∝ slope·pd/N (grows with pd, penalizes large pd, and is INDEPENDENT of Δ → contributes to b<0... wait α decreases with pd, so larger pd is MORE efficient. Hmm. So larger pd (slower dial) lowers α. And larger Δ raises α at high pd but lowers α at low pd.
+
+  Alternative framing — quantization interference: s* is measured on a stair; the knee is where residency crosses 50%. Residency is governed by the fraction of ticks the walker spends inside the band. Corrections quantize the excursion to clicks of size... K=1. The click rate needed to hold a ramp of slope 1.6 within Δ: clicks must arrive at rate ≥ slope/Δ per tick = 1.6/Δ. The ladder supplies N/pd clicks per tick = 6/pd. Balance: 6/pd vs 1.6/Δ → supply/demand ratio = 6Δ/(1.6·pd) = 3.75·Δ/pd. pd=3,Δ=8: 10; pd=6,Δ=8: 5; etc. When supply ≫ demand, corrections overshoot (each click is quantum K=1 but needed increment is fractional) → wasted spread → α inflated. When supply ≈ demand, efficient. Overshoot penalty per click ≈ (supply−demand)/supply... The α excess over 1: α−1: 0.247, 0.172, 0.096, 0.012, −0.136?, ... α<1 at pd=6,Δ=8 (0.864) — the 2Δ law over-predicts there! So at pd=6 Δ=8 the knee is INSIDE 2Δ. Interesting.
+
+  Given my role (spatial/structural math), I should propose: the cross term is the signature of a hyperbolic (saddle) surface α(pd,Δ) — the data sit on a ruled surface, and the physical origin is the product of two rates: click supply rate N/pd and band demand rate slope/Δ. Efficiency depends on their ratio AND on the absolute tick quantization (interference tick = discrete aliasing of the two combs). The closed form: bilinear in (pd, Δ) is the rank-1 bilinear approximation of α = Φ(NΔ/(slope·pd)) + quantization ripple; since ratio-collapse is refuted, the leading separable-free form is α = a + b·pd + c·Δ + d·pd·Δ with d>0, flip locus pd* = −c/d ≈ 4.5.
+
+  Mechanism consistent with interference tick/band/slope 1.6/K=1: The tick comb (period pd) and the band edge crossing comb (period Δ/1.6 ticks — time for ramp to cross the tolerance) beat against each other. Beat period = lcm or 1/|1/pd − 1.6/Δ|... Δ/1.6: Δ=8→5 ticks, Δ=12→7.5, Δ=16→10. pd=3 vs 5,7.5,10; pd=6 vs 5,7.5,10. When pd < Δ/1.6 (tick faster than band crossing): pd=3 vs Δ=8: 3<5 ✓; pd=6 vs Δ=8: 6>5. So the flip locus in the (pd,Δ) plane is the line pd = Δ/1.6, i.e. pd/Δ = 1/1.6 = 0.625! Check: (3,8): 0.375 < 0.625; (3,12): 0.25 <; (6,8): 0.75 >; (6,12): 0.5 <; hmm (6,12): 0.5 < 0.625 but pd=6 column shows ∂α/∂Δ>0 at Δ=12... The flip locus is pd*≈4.5-5 at Δ≈12; pd/Δ = 4.6/12 = 0.38. Hmm, not 0.625. Try pd = Δ/slope·(something): if the relevant comb is the per-node click spacing pd/N... eh.
+
+  Alternatively the flip line: ∂α/∂Δ = 0 → from bilinear, pd* = −c/d. Data only pin it near 4.5–5. Could also be Δ-dependent in truth. Don't overclaim: state the bilinear fit numbers, note d>0 (correcting SPIN-31's "d<0" — need to verify by actually fitting!), give flip locus, propose mechanism: two-comb beat where the sign of ∂α/∂Δ is set by whether the dial tick or the band-crossing tick is the faster clock, with crossover when the ladder can complete a full N-cycle within one band-residence window.
+
+  Hmm, wait — actually let me reconsider the sign. SPIN-31 says "the sign flip demands the d·pd·Δ cross term; today's 7 measured cells already pin d<0". Let me actually fit. I'll run a quick least squares in python. If d>0, I flag it as an arithmetic error in the report — that's exactly what an independent reviewer should do.
+
+  Let me also reconsider: maybe they meant the fit in terms of C or in terms of (pd, 2Δ), or they fit α = a + b·pd + c·Δ + d·pd·Δ and got d<0 somehow? Let me just compute.
+
+  (c) Minimal 2D grid pd 3..6 × Δ 8/12/16 with pre-registered kill bands. 12 cells, 4 of which exist: (3,8) α=1.247 [from spin-29 leg], (3,12)=1.172, (4,12)=1.096, (5,12)=1.012, (6,8)=0.864, (6,12)=0.977, (6,16)=1.005 — actually 7 of 12 exist! New cells needed: (3,16), (4,8), (4,16), (5,8), (5,16) — 5 new legs = 5×12 spread pts×5 seeds×2(determinism)... ~300 runs. Pre-register: bilinear kill band — fit bilinear on all 12; kill if max|resid| > 0.03 (matching SPIN-31's gate) or if d's CI straddles 0; ratio-law kill (already refuted, keep as formal gate): |(3,16) vs (4,?)... ratio matches within grid: pd/Δ equal pairs in grid: (3,12)&(4,16): 0.25; (4,8)&(6,12): 0.5; (3,8)&(6,16): 0.375. Nice — the grid has three ratio-degenerate pairs, so ratio law gets a formal three-pair kill test: kill f(pd/Δ) if any pair differs by > 2 noise floors (0.066). Bilinear predictions for the 5 new cells must be pre-registered with kill bands ±0.03 around predicted α. I should compute the bilinear fit from the 7 existing cells and give predicted values + kill bands for the 5 new cells. That's concrete and very "structural math". Also flag Δ=8 contamination (Δ≈drift=6 floor) — pre-register that Δ=8 cells carry widened bands (±0.05?) or drop to advisory.
+
+  Let me compute the bilinear least-squares fit from the 7 cells and predict the 5 missing cells. 7 points, 4 params — doable.
+
+  (d) SPIN-30 connection: does α(pd,Δ) explain the A=96×drift ignition corner? SPIN-30 varied drift and band amplitude A at fixed pd=3, Δ=12. The pd-law says nothing about drift directly — but note SPIN-31's Δ=8 cells sit near Δ≈drift=6 floor, contamination. The ignition corner: when drift wander over one dial period ≈ band fraction: drift·pd vs A? At A=96, drift=6: drift accumulates 6/tick? Drift wander per band-crossing time (A/slope = 60 ticks): 6·60 = 360 ≫ A — no. The report's own reading: interaction ignites when band amplitude ≲ 8×drift... A/drift ≲ 8–16. Is this the same physics as the pd×Δ coupling? Common structural thread: both are ratio-of-timescales effects. pd×Δ flip locus ≈ when dial period ≈ band-crossing time/something. A×drift ignition ≈ when drift accumulation over the ramp period ≈ band width. Both say: α is not a constant but a function of dimensionless time ratios — the 2Δ law assumed scale separation that fails when any two clocks become comparable. But: SPIN-30's corner is at pd=3,Δ=12 fixed — varying drift/A. The pd×Δ surface at pd=3,Δ=12 gives α=1.172 at drift=6,A=200 — consistent with SPIN-30's 1.172 at (drift6,A200) ✓ (matches, same cell, good cross-check!). And SPIN-30's (0,200): 1.142 — so drift shifts α by +0.03 at A=200. The pd-law baseline was measured at drift=6. So the two surfaces intersect at that cell — consistent. Does α(pd,Δ) explain the corner? No — the corner is drift×band physics, a THIRD and FOURTH knob; the pd×Δ surface is drift-6-conditional. But structural unification hypothesis: α = F of dimensionless ratios (pd·slope/Δ, drift·T_band/A, ...). The ignition corner and the sign flip are both breakdowns of the constant-α approximation at clock-commensurability boundaries, but they're separate axes: α(pd,Δ) cannot explain the A=96 corner because that corner lives entirely at pd=3,Δ=12 where α(pd,Δ) is a single point. Separate physics, same meta-law: α depends on whichever pair of fabric clocks approaches commensurability. Also note: A=96 ignition criterion A≲8·drift ⟺ drift ≥ A/8 = 12... at drift 10: yes; drift 6: 96/6=16 — ignited anyway (α 1.323). Hmm, the boundary is fuzzy; SPIN-30 admitted post-hoc. Can I connect pd? Drift wander between ladder clicks: drift·pd ticks·... drift rate 6 per tick? If drift is per-tick velocity 6?? That seems huge vs slope 1.6. Actually "drift=6" — maybe drift velocity 6 units/tick? Then uncorrected drift excursion per dial period = 6·pd = 18 at pd=3; vs band A=96: fraction 0.19; vs tolerance Δ=12: 1.5×. Hmm — drift·pd vs Δ: at pd=3, drift·pd = 18 > Δ=12! So every dial period, drift alone exceeds the tolerance — the ladder MUST fire every period just to hold drift. Interesting but speculative; Δ=8 < 18 too. This might be the actual "Δ≈drift contamination" mechanism: the relevant ratio is drift·pd/Δ. At pd=3: 18/Δ: Δ=8→2.25, 12→1.5, 16→1.125. At pd=6: 36/Δ: 4.5, 3, 2.25. Hmm α doesn't collapse on that either (α(3,8)=1.247 @2.25 vs α(6,16)=1.005 @2.25). Dead as collapse, fine.
+
+  For SPIN-30 corner: drift·(A/slope) vs A? Ramp period T = A/1.6 = 60 ticks at A=96; drift wander over T = 6·60 = 360 ≫ 96. That would ignite everywhere at drift 6, but A=200/400 don't ignite. So it's relative: drift·T/A = drift/slope = 6/1.6 = 3.75 — A-independent! Dead. What about drift vs slope·(band/tick)? The report's own A/drift ≲ 8–16. With drift as per-tick rate, A/drift = ticks for drift to cross the band = "drift crossing time". Ignition when drift crossing time ≲ 8–16 ticks ≈ comparable to... the knee s* = 17.6! Or the band residence time. So: ignition when drift crosses the band faster than the spread-knee timescale — the drift clock overtakes the spread clock. Consistent with my "clock commensurability" meta-story.
+
+  Now (a) cheapest endpoint curvature test. I said: add pd=7 at Δ=12 (single leg, 60 runs), predict α(7)=0.896±0.033, kill the line if |dev|>0.066. But wait — is pd=7 valid? pd=2 no crossing (co-fire wall); pd>N? pd=7 > N=6: full cycle fits in period — should cross. Cheapest test alternatives: (i) reuse Δ=16 at pd=3,4,5 — no that tests Δ-coupling not pd-curvature. (ii) finer spread grid at one interior pd to shrink noise — doesn't test curvature. Endpoint extension is right: curvature shows maximally at extrapolation. Also: the marginal saturation signal (last interval slope 0.035 vs first 0.076) predicts α(7) ≈ 0.977−0.02 ≈ 0.96 under saturation vs 0.896 under linearity — separation 0.06 ≈ 2 noise floors. Marginal but cheapest. Alternatively pd=8: linear predicts 0.829, saturation predicts ~0.94 — separation 0.11, cleaner; cost same (one leg). pd=7 vs 8: pd=8 gives better discrimination for same cost. But farther from anchored range... pd=8 with N=6: fine. Recommend pd=8 actually? Hmm — "cheapest endpoint curvature test": one leg either way; pd=8 maximizes signal. But risk: if some new wall appears at large pd (like pd=2 wall), the test confounds. Compromise: pd=7 primary. I'll recommend pd=7 (adjacent extrapolation, 60 runs, pre-registered kill |α7−0.896|>0.066) and note pd=8 as the stronger-lever variant if pd=7 lands ambiguous.
+
+  Also note for (a): the linear fit's residual gate (0.03) is below the single-cell noise (±0.033 from ±0.5 s* floor → 1.6·0.5/24); a line can pass a gate tighter than the noise only because averaging 5 seeds shrinks the mean's σ; fine, but the point stands that curvature of order the noise is invisible. Second differences of the 4 points: −0.008 and +0.049 — inconsistent sign ⇒ no measurable curvature interior; all curvature leverage is at extrapolation. Verdict: chord, not law.
+
+  Now let me compute the bilinear fit numerically. 7 points, 4 unknowns, least squares. I'll do it with python quickly.
+
+  Also compute ratio-degenerate pairs and bilinear predictions for the 5 missing cells with kill bands.
+
+  Let me run python.
+
+  Points: (pd, Δ, α):
+  (3,8,1.247), (3,12,1.172), (4,12,1.096), (5,12,1.012), (6,8,0.864), (6,12,0.977), (6,16,1.005).
+
+  Fit α = a + b·pd + c·Δ + d·pd·Δ.
+
+  Then predictions: (3,16), (4,8), (4,16), (5,8), (5,16).
+
+  Also residuals on the 7.
+
+  Let me also double check the ratio pairs in the grid: pd/Δ:
+  (3,12)=0.25 & (4,16)=0.25 ✓ both in grid.
+  (4,8)=0.5 & (6,12)=0.5 ✓.
+  (3,8)=0.375 & (6,16)=0.375 ✓.
+  Great, three ratio-degenerate pairs, each with one missing cell — so the 5 new cells include all three ratio-test completions. 
+
+  Also (6,8)=0.75 and (3,4)? not in grid. Fine.
+
+  Now run the fit.
+
+• Read both. Let me fit the bilinear form on the 7 existing cells before writing — the sign of the cross term matters.fit: alpha = 2.0688 + -0.2223*pd + -0.0564*D + 0.01233*pd*D
+  pd=3 D=8: meas 1.247 fit 1.2470 resid -0.0000
+  pd=3 D=12: meas 1.172 fit 1.1695 resid +0.0025
+  pd=4 D=12: meas 1.096 fit 1.0952 resid +0.0008
+  pd=5 D=12: meas 1.012 fit 1.0210 resid -0.0090
+  pd=6 D=8: meas 0.864 fit 0.8762 resid -0.0122
+  pd=6 D=12: meas 0.977 fit 0.9467 resid +0.0303
+  pd=6 D=16: meas 1.005 fit 1.0172 resid -0.0122
+max|resid| = 0.0303
+flip locus pd* = -c/d = 4.571
+predictions for missing cells:
+  pd=3 D=16: pred alpha = 1.0920
+  pd=4 D=8: pred alpha = 1.1234
+  pd=4 D=16: pred alpha = 1.0671
+  pd=5 D=8: pred alpha = 0.9998
+  pd=5 D=16: pred alpha = 1.0422
+2nd diffs @D=12: -0.00800000000000023 0.049000000000000044
+alpha noise per cell: 0.03333333333333333  alpha quantum (spread step 2): 0.13333333333333333
+linear law preds: pd=7: 0.8959999999999999  pd=8: 0.829
+ratio pairs: (3,12)/(4,16)=0.25, (4,8)/(6,12)=0.5, (3,8)/(6,16)=0.375
+
+
+• The fit confirms d = +0.0123 > 0, contradicting SPIN-31's claim "today's 7 measured cells already pin d<0". Flag that.
+
+  Note: (3,8)=1.247 is from spin-29 adjudicator leg 2 (as cited in SPIN-31). Fine.
+
+  Now write tri-model-spin31/kimi.md. Surgical concision, markdown. Cover (a)-(d).
+
+• The fit confirms a discrepancy worth flagging: the cross term comes out **positive** (d = +0.0123), not negative as SPIN-31 states. Writing the review now.
+
+• Done. Summarize key findings.
+
+• Analysis written to `tri-model-spin31/kimi.md`. Key findings:
+
+  - **(a)** The pd-line is a **chord, not a law**: the 0.03 residual gate sits below the ±0.033 per-cell noise, interior second differences (−0.008, +0.049) carry no signal, and the terminal slope already halved (0.076→0.035). Cheapest curvature test: one pd=7 leg (~60 runs), kill the line if α₇ misses 0.896 by >0.066; pd=8 as the stronger lever if ambiguous.
+  - **(b)** Refit the bilinear on the 7 published cells: **d = +0.0123, positive — SPIN-31's "d<0" claim is a sign error** (the mechanism survives; the convention doesn't). Flip locus pd\* ≈ 4.6. Proposed mechanism: two-comb beat between the dial clock and the band-traversal clock (Δ/1.6 ticks), with K=1 quantization making overshoot dominate when the dial outruns the band and capture efficiency dominate when it doesn't.
+  - **(c)** 5 new legs complete the 12-cell grid (~300 runs), with pre-registered predictions and kill bands per cell (Δ=8 column widened to ±0.05, advisory); the grid contains exactly 3 ratio-degenerate pairs, so f(pd/Δ) gets a formal kill for free — one pair (3,8)/(6,16) is already split by 0.242.
+  - **(d)** The A=96×drift corner is **separate physics** — it lives entirely at the single point (pd=3, Δ=12) where α(pd,Δ) has no freedom. But both effects share one meta-law: α departs from constant only at **clock-commensurability boundaries** (dial↔band, drift↔band, Δ↔drift). Cross-check passed: SPIN-30's (drift=6, A=200) α=1.172 matches SPIN-31's anchor digit-for-digit.
+
+To resume this session: kimi -r session_42b9a41d-dfc4-499f-b488-720e6dfdfa3f

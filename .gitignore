@@ -11,3 +11,5 @@ tools/edgebench/chipmatrix_runs/gpt2-onnx/
 cosim/obj/
 cosim/out/
 cosim/vlt/
+cosim/obj34/
+cosim/out36/

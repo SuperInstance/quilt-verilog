@@ -1,0 +1,128 @@
+SPIN 39, SPOKE 2: ADVERSARY — MIXED-STRATEGY EVASION vs θ-GATE + D5.
+Pre-registered docstring, written BEFORE any run. Continuation of
+SPIN-35 (θ-gate holds vs classic adversaries; D5 emitted-pulse-vs-
+declared-nf audit, 0 false positives) and SPIN-37 (deflation NOT inert
+below θ=1: at θ*=0.90 a deflating twin suppresses honest compensation
+up to -17.3pp; A3 boundary FAIL: nf_both at θ*=1.00 beats pure-inflate
+in 1/4 cells — ladder K1 leak).
+
+OPEN QUESTIONS THIS SPIN ATTACKS:
+  (1) the A3 θ*=1.00 boundary leak — artifact or real?
+  (2) D5 detector integrity under adversarial pressure — can a
+      manipulator evade or false-flag D5?
+
+HYPOTHESIS (pre-registered):
+  H1: a mixed-strategy twin (alternating inflate/deflate per trigger
+      tick, or an LCG-random inflate/deflate coin, or an exactly-2pd
+      pile-up impersonator: declared nf = 2*PD exactly — the SPIN-16
+      serendipity point where the gate is provably blind: |PD-2PD|=PD
+      and 100*PD > tc*PD iff tc<100, so the gate NEVER opens at any
+      θ*>=1.00) evades the θ-gate AND the D5 audit in at least one
+      grammar x K cell (>5pp unflagged residency shift). "Unflagged"
+      = the arm's residency shift exceeds 5pp while its lied-tick
+      count (D5 hits) is ZERO, i.e. the manipulation never declares a
+      mismatch. FALSIFY H1 if every mixed-strategy shift >5pp carries
+      D5 flags (nfmis > 0 in every seed).
+  H2: the SPIN-37 A3 boundary leak (nf_both beats pure-inflate at
+      θ*=1.00, ladder@15 K=1) is a boundary artifact: narrow in θ*,
+      gone by θ*=0.95 and θ*=1.05 (nf_both shift <= pure-inflate
+      shift + 0.2pp at both).
+
+ARMS:
+  A  mixed twin at θ*=1.10 on {ladder@15, kcoh5@15} x K in {1,2}:
+     nf_alt (alternate inflate/deflate per trigger tick, phase from a
+     dedicated LCG), nf_rnd (LCG coin per trigger tick).
+  B  exactly-2pd impersonator at θ*=1.10 (nf_2pd: declared = 2*PD
+     whenever ADV triggers; gate provably closed there), same 4 cells.
+  C  θ* boundary sweep {0.90, 0.95, 1.00, 1.05, 1.10} with the
+     SPIN-37 nf_both twin, ladder@15 K=1, vs pure nf_inflate at each
+     θ* and vs gate-off honest null.
+
+PRE-REGISTERED DECISION RULE (fixed before running):
+  H1 VALIDATED   iff some arm A/B cell shifts residency >5.0pp vs the
+                 gate-off honest null (== honest @1.10 by Cb2) AND
+                 that arm records nfmis == 0 across all seeds
+                 (unflagged). Otherwise H1 FALSIFIED (with the
+                 observed shift table + flag counts as evidence).
+  H2 VALIDATED   iff at BOTH θ*=0.95 and θ*=1.05 on ladder@15 K=1:
+                 shift(nf_both) <= shift(nf_inflate) + 0.2pp.
+                 FALSIFIED if nf_both beats inflate by >0.2pp at
+                 either shoulder.
+  S1 (D5 under pressure) PASS iff nfmis > 0 in every seed of every
+     lying arm A/B/C, and honest arms structurally carry 0 false
+     positives (no adv dict) — plus honest@θ* full-dict identity to
+     gate-off (Cb2) doubles as the false-negative/positive contract.
+  S2 closure PASS iff |mass - sum|emissions|| < 1 everywhere.
+  VERDICT: report per-hypothesis VALIDATED/FALSIFIED; INCONCLUSIVE if
+  any canary fails.
+
+CANARIES (mandatory, abort on fail; SPIN-35/37 set):
+  Ca: adv=none gate=off byte-matches exp_glm1.run_fabric (8 configs)
+      + SPIN-5 anchors zero@15 K1 77.3/8756/187834, ladder@15 K1
+      71.5/5792/106378.
+  Cc1: SPIN-35 inflate replay @θ*=1.10: ladder K2 +6.4pp, kcoh5 K1
+      +7.9pp (tol ±0.2pp).
+  Cb: gate=never == gate=off full-dict for ALL modes (incl. new
+      mixed/2pd modes — a never-open gate cannot see a lie), and
+      honest gate 1.10 == gate=off on {ladder,kcoh5,zero} x K{1,2}.
+  Cc: double-run determinism (same dict twice, 5 configs incl. mixed
+      and 2pd arms).
+
+Config: N=6, ladder@15 [0,3,6,9,12,15] / kcoh5@15 [0,0,0,0,0,15];
+K in {1,2}; pd=3, delta=12, drift=6; ticks 4800; seeds
+{1,7,42,1999,20260902}; ADV = twin 5; θ* per arm; integer-only
+in-loop; floats display-only. Run with -u, no pipes.
+
+======================================================================
+SPIN 39 — ADVERSARY — MIXED-STRATEGY EVASION + D5 INTEGRITY — harness run, -u, no pipes
+== CANARY Ca: adv=none gate=off byte-matches exp_glm1.run_fabric ==
+  PASS: 8/8 full-dict byte-identical (extra keys gopen/gcomp)
+
+== CANARY Ca2: SPIN-5 anchor replay (5-seed means) ==
+  zero@15 K=1: 77.3% ev 8756 debt 187834 (want 77.3/8756/187834) -> PASS
+  ladder@15 K=1: 71.5% ev 5792 debt 106378 (want 71.5/5792/106378) -> PASS
+
+== CANARY Cc1: SPIN-35 inflate replay @ θ*=1.10 ==
+  ladder@15 K=2: shift +6.4pp (want +6.4) -> PASS
+  kcoh5@15 K=1: shift +7.9pp (want +7.9) -> PASS
+
+== CANARY Cb: gate contract identities ==
+  Cb1 gate=never == gate=off full-dict (all 7 modes): PASS
+  Cb2 honest gate 1.10 == off (adv=none, 3 grammars x K{1,2}): PASS
+
+== CANARY Cc: double-run determinism ==
+  Cc double-run: PASS (5 configs)
+
+CANARIES: PASS
+
+== ARMS A+B: mixed twin @ θ*=1.10 (vs gate-off honest null) ==
+   (honest @1.10 == gate=off by Cb2, so the null is exact)
+     mode |   grammar |         K |     mean% |     null% |     shift |     gOpen |     gComp | nfMis/seed |  closureΔ
+   nf_alt | ladder@15 |         1 |      71.5 |      71.5 |    +0.0pp |        22 |       131 |       5/5 |         0
+   nf_alt | ladder@15 |         2 |       4.2 |      60.0 |   -55.8pp |      2251 |     13506 |       5/5 |         0
+   nf_alt |  kcoh5@15 |         1 |      81.4 |      74.1 |    +7.3pp |       156 |       937 |       5/5 |         0
+   nf_alt |  kcoh5@15 |         2 |       0.5 |      50.6 |   -50.1pp |      2380 |     14282 |       5/5 |         0
+   nf_rnd | ladder@15 |         1 |      71.5 |      71.5 |    +0.0pp |        22 |       132 |       5/5 |         0
+   nf_rnd | ladder@15 |         2 |       5.0 |      60.0 |   -55.1pp |      2228 |     13366 |       5/5 |         0
+   nf_rnd |  kcoh5@15 |         1 |      81.4 |      74.1 |    +7.3pp |       156 |       938 |       5/5 |         0
+   nf_rnd |  kcoh5@15 |         2 |       0.8 |      50.6 |   -49.8pp |      2373 |     14236 |       5/5 |         0
+   nf_2pd | ladder@15 |         1 |      71.5 |      71.5 |    +0.0pp |         0 |         0 |       5/5 |         0
+   nf_2pd | ladder@15 |         2 |      60.0 |      60.0 |    +0.0pp |         0 |         0 |       5/5 |         0
+   nf_2pd |  kcoh5@15 |         1 |      74.1 |      74.1 |    +0.0pp |         0 |         0 |       5/5 |         0
+   nf_2pd |  kcoh5@15 |         2 |      50.6 |      50.6 |    +0.0pp |         0 |         0 |       5/5 |         0
+  D5 honest false-positives: 0 (honest arms carry no adv dict)
+  H1 (a >5pp UNFLAGGED shift): FALSIFIED (every lied tick is D5-flagged)
+
+== ARM C: θ* boundary sweep, nf_both vs nf_inflate, ladder@15 K=1 ==
+       θ* |     both% | shift-off |  inflate% | shift-off | both-inflate | gOpen-b/i |     nfMis |  closureΔ
+     0.90 |      71.5 |    +0.0pp |      70.7 |    -0.8pp |    +0.8pp |     0/132 |      1547 |         0
+     0.95 |      71.5 |    +0.0pp |      70.7 |    -0.8pp |    +0.8pp |     0/132 |      1547 |         0
+     1.00 |      71.5 |    +0.0pp |      71.1 |    -0.4pp |    +0.4pp |      0/75 |      1547 |         0
+     1.05 |      71.5 |    +0.0pp |      71.1 |    -0.4pp |    +0.4pp |      0/75 |      1547 |         0
+     1.10 |      71.5 |    +0.0pp |      71.1 |    -0.4pp |    +0.4pp |      0/75 |      1547 |         0
+  H2 (leak narrow: both <= inflate+0.2pp at 0.95 AND 1.05): FALSIFIED
+
+  PRE-REGISTERED VERDICT:
+    H1 (mixed/2pd evasion): FALSIFIED
+    H2 (boundary artifact): FALSIFIED
+    S1 D5-under-pressure: PASS  S2 closure: PASS
