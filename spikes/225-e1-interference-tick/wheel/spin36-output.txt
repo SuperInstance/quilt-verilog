@@ -1,0 +1,25 @@
+== SPIN-36 SILICON: synthesize the PW=41 fabric (SPIN-34 next rung) ==
+pre-reg: H1 clean synth (0 CHECK problems, no latches); H2 theta-marginal within +/-15% of LUT4 886 / CARRY 268 AND PW=41 theta total <= PW=48 theta total
+== canary c: patched RTL sizes GUARD wide: PASS
+== canary a: RTL replay vs published anchors ==
+  pw48_kcoh5_gate_s1.txt: byte==spin34 True; sha 5621c4c1e813ab32 expect 5621c4c1e813ab32 OK
+  double-run byte-identical: True
+  pw41_step5_gate_s1.txt: byte==spin34 True; sha 6680a395fa140ad3 expect 6680a395fa140ad3 OK
+  double-run byte-identical: True
+== canary b: Python anchor kcoh5_gate s1 ==
+  py sha 5621c4c1e813ab32 expect 5621c4c1e813ab32 OK
+== canaries ALL PASS
+== yosys 0.47+22 iCE40 synth (spin36_synth_top, PW-param wrapper) ==
+  pw48_never (PW=48 GMODE=0): LUT4=16914 DFF=309 CARRY=12566 | CHECK problems=0 dlatch=0 warnings(unique-ish)=18
+  pw48_theta (PW=48 GMODE=2): LUT4=17259 DFF=309 CARRY=12876 | CHECK problems=0 dlatch=0 warnings(unique-ish)=18
+  pw41_never (PW=41 GMODE=0): LUT4=13263 DFF=288 CARRY=9630 | CHECK problems=0 dlatch=0 warnings(unique-ish)=18
+  pw41_theta (PW=41 GMODE=2): LUT4=13374 DFF=288 CARRY=9785 | CHECK problems=0 dlatch=0 warnings(unique-ish)=18
+H1 (clean synth at PW=41): PASS
+  PW=48 marginal re-measured: LUT4 345 (SPIN-19: 886) CARRY 310 (SPIN-19: 268)
+  PW=41 marginal: LUT4 111 CARRY 155
+  dMarginal vs SPIN-19 anchor: dLUT4 -88% dCARRY -43%
+  theta TOTAL: PW48 17259 -> PW41 13374 LUT4 (-23%), CARRY -25% -> drop-or-hold PASS
+H2a (marginal within +/-15%): FAIL
+H2b (PW41 theta total <= PW48): PASS
+VERDICT: MIXED
+HEADLINE: dMarginal LUT4 -88% CARRY -43%; theta-arm total LUT4 -23% CARRY -25% (PW41 vs PW48)
