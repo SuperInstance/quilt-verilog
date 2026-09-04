@@ -121,10 +121,9 @@ def main():
     # ---- C4: mislabeled-arm self-canary at round-2 anchor cell ----
     # round-2 anchor: N=5 stress default (delta=12 K=4 pd=3), raw=68.0 sort=69.6
     lats = lats_for(5)
-    laghat = [discover_lag(L) for L in lats]
     p = dict(K=4, drift=6, delta=12, pulse_div=3)
     raw5 = sum(run_sw(sd, C=5, lats=lats, **p)["pct"] for sd in SEEDS) / len(SEEDS)
-    sort5 = sum(run_sw_comp(sd, key="mag", C=1, lats=lats, laghat=laghat, **p)["pct"]
+    sort5 = sum(run_sw(sd, key="mag", C=1, lats=lats, **p)["pct"]
                 for sd in SEEDS) / len(SEEDS)
     ok_anchor = abs(raw5 - 68.0) <= 0.05 and abs(sort5 - 69.6) <= 0.05
     caught = ok_anchor and not (abs(sort5 - 68.0) <= 0.05)

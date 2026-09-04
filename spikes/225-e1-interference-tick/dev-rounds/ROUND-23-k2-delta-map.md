@@ -45,3 +45,62 @@ Seeds 1/7/42/1999/20260902 fixed. No floats in verdict computation (walls are in
 **Deliverable.** This file (PART 1 → run → PART 2), r23_k2deltamap.py, raw output
 r23-k2deltamap-output.txt. Commit+push to g3-kinduction (Casey override); other lanes'
 uncommitted files (wheel/WHEEL-LOG.md, cosim/*) untouched.
+
+---
+
+## PART 2 — RESULT (run 00:25–00:28 AKDT 2026-09-04; canaries ALL PASS)
+
+**VERDICT: FLAT-ALL.** K=2 walls stay ≤ 4 through Δ=48 in all pd cells — no crossing at
+any Δ, not even intermediate growth. The K-line is a **true phase boundary** between the
+single-stream world (K=1) and the multi-stream world (K≥2); only K=1 needs a
+pd-stratified model. Booked.
+
+### The map (comp arm, calm family, 5 seeds, N∈{2..13}, 4800 ticks)
+
+| Δ | K=2 pd=2 | K=2 pd=3 | F2(Δ/2) ref | K=1 pd=2 ctrl | K=1 pd=3 ctrl |
+|---|---|---|---|---|---|
+| 8  | 3 | 4 | 4 | 4 | 6 |
+| 12 | 3 | 4 | 4 | — | — |
+| 16 | 3 | 4 | 4 | 4 | 6 |
+| 20 | 3 | 4 | 4 | — | — |
+| 24 | 3 | 4 | 4 | — | — |
+| 32 | 3 | 4 | 5 | 4 | 6 |
+| 48 | 3 | 4 | 6 | — | — |
+
+- **K=2 is not just flat — it is flat in BOTH pd cells simultaneously** (pd=2 → wall 3,
+  pd=3 → wall 4, constant across a 6× range of Δ). At Δ=48 F2 predicts 6; measured 3/4.
+  The quarter-power F2 is dead at K=2 at every Δ tested. Round 22's surprise sharpens:
+  not only is the Δ=12 grid structureless at K≥2, K=2 carries **zero Δ-dependence** in
+  the comp wall over Δ ∈ [8,48].
+- **pd is the only knob that moves the K=2 wall, and by exactly one seat** (3 vs 4).
+  No Δ×pd interaction anywhere in the K=2 grid (7Δ × 2pd, every cell monotone-flat).
+- **K=1 controls confirm the other side of the boundary**: pd-stratification appears at
+  K=1 (pd=2 → 4, pd=3 → 6, flat in Δ at drift=3) and vanishes at K=2. The two worlds:
+  K=1 = pd-stratified, Δ-flat-at-drift=3 (round 21's SPIN-32 seating showed Δ-growth at
+  drift=6); K≥2 = everything collapses to a 1-seat pd offset, wall 3–4.
+
+### Canaries (all pass, gate opens the verdict)
+
+- C1 round-21 octave replays (pd=3 calm K=8): walls 2/3/4 **exact PASS**
+- C2 round-22 K=2 replays (pd=3, Δ=8/16): 4/4 **exact PASS**
+- C3 double-run byte-identity (K=2, pd=3, Δ=48 full cell): **PASS**
+- C4 mislabeled-arm self-canary: anchor 68.0/69.6 PASS; sort-as-raw 69.6 vs 68.0 → **CAUGHT**
+- (First build attempt had C4 wired to the comp arm by mistake — anchor FAIL, gate
+  held, no verdict emitted; fixed to the r20 reference arm. No numbers from the failed
+  build entered the verdict.)
+
+### Booking
+
+- **K-line is a phase boundary**: single-stream (K=1) vs multi-stream (K≥2). The
+  interference-threshold mechanism story (killed in round 22) stays dead; the successor
+  reading is cruder and stronger: with ≥2 concurrent pulse streams the comp wall is
+  pinned at 3–4 by stream interference itself, Δ-blind; with exactly one stream the
+  wall floats with pd (4→6 at pd 2→3) — pulse-geometry (division granularity) becomes
+  load-bearing only when there is no second stream to absorb it.
+- **K=1-only pd-stratified model stands** (round-22 conclusion now Δ-resolved to 48).
+- Next rung (named): K=1 seating table at drift-matched grid — does the K=1 pd=3 wall
+  (6 at drift=3, Δ-flat) re-acquire Δ-growth at drift=6 as round-21 SPIN-32 (6/9/none)
+  suggested? If yes, the K=1 model is (pd, drift)-two-knob; if no, drift=6's round-21
+  seating was Δ=range artifact.
+
+Raw: `r23-k2deltamap-output.txt` (149 s; 20 grid cells + 5 canary/replay cells).

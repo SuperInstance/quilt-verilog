@@ -1,0 +1,43 @@
+== R23 k2 delta-map start 00:25:29 ==
+K=2 deltas=(8, 12, 16, 20, 24, 32, 48) pd=(2, 3) N=(2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13) seeds=(1, 7, 42, 1999, 20260902) ticks=4800 comp arm calm
+F2 ref (K=2): {8: 4, 12: 4, 16: 4, 20: 4, 24: 4, 32: 5, 48: 6}
+C1 replay pd=3 calm K=8 r=1: wall=2 (want 2) [   8s]
+C1 replay pd=3 calm K=8 r=2: wall=3 (want 3) [  16s]
+C1 replay pd=3 calm K=8 r=6: wall=4 (want 4) [  24s]
+C1 octave replays: PASS
+C2 replay K=2 pd=3 d=8: wall=4 (want 4) [  28s]
+C2 replay K=2 pd=3 d=16: wall=4 (want 4) [  32s]
+C2 r22 replays: PASS
+C3 double-run byte-identity (K=2 pd=3 d=48): PASS
+C4 anchor raw=68.0 sort=69.6 (want 68.0/69.6) anchor=PASS; mislabeled(sort->'raw')=69.6 vs 68.0 -> CAUGHT
+C4: PASS
+
+canary gate: ALL PASS
+K=2 pd=2 d= 8: wall=3 F2=4 [  47s]
+K=2 pd=2 d=12: wall=3 F2=4 [  54s]
+K=2 pd=2 d=16: wall=3 F2=4 [  61s]
+K=2 pd=2 d=20: wall=3 F2=4 [  68s]
+K=2 pd=2 d=24: wall=3 F2=4 [  74s]
+K=2 pd=2 d=32: wall=3 F2=5 [  81s]
+K=2 pd=2 d=48: wall=3 F2=6 [  88s]
+K=2 pd=3 d= 8: wall=4 F2=4 [  92s]
+K=2 pd=3 d=12: wall=4 F2=4 [  96s]
+K=2 pd=3 d=16: wall=4 F2=4 [ 100s]
+K=2 pd=3 d=20: wall=4 F2=4 [ 105s]
+K=2 pd=3 d=24: wall=4 F2=4 [ 109s]
+K=2 pd=3 d=32: wall=4 F2=5 [ 113s]
+K=2 pd=3 d=48: wall=4 F2=6 [ 117s]
+
+-- K=1 controls (drift=3) --
+K=1 pd=2 d= 8: wall=4 [ 123s]
+K=1 pd=2 d=16: wall=4 [ 129s]
+K=1 pd=2 d=32: wall=4 [ 135s]
+K=1 pd=3 d= 8: wall=6 [ 140s]
+K=1 pd=3 d=16: wall=6 [ 144s]
+K=1 pd=3 d=32: wall=6 [ 149s]
+
+-- verdict (pre-registered rule, frozen) --
+K=2 walls by delta: d8=[3, 4] d12=[3, 4] d16=[3, 4] d20=[3, 4] d24=[3, 4] d32=[3, 4] d48=[3, 4] (lists=[pd2,pd3])
+VERDICT: FLAT-ALL -- K=2 walls <= 4 through delta=48 in all pd cells; K-line is a TRUE PHASE BOUNDARY between single- and multi-stream worlds; K=1-only pd-stratified model stands
+
+done in 149s
