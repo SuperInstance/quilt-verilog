@@ -48,7 +48,7 @@ you consume it with the same valid/ready handshake.
 
 ## 1. Build and run the fabric
 
-**Toolchain**: stock [oss-cad-suite](https://github.com/YosysHQ/oss-cad-suite-builds)
+**Toolchain**: stock [oss-cad-suite](https://github.com/YosysHQ/oss-cad-suite-build)
 (Icarus 13.0, Yosys 0.47+, SymbiYosys, boolector, nextpnr-ice40). The
 root Makefile pins `/home/eileen/tools/oss-cad-suite/bin`; override
 with `make OSSCAD=/path/to/bin <target>`.

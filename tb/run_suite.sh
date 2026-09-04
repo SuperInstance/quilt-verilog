@@ -46,9 +46,11 @@ t tb/tb_hebb_pipe.v        tb_hebb_pipe
 # QUF boot TB reads the golden container hex (fuzz-found 2026-09-03: on a
 # fresh clone this didn't exist yet -- the loader lane below used to be the
 # only producer, and it runs AFTER tb_quf_boot). Build it first.
-[ -f tb/run/quf_tb_input.hex ] || {
+[ -f tb/run/quf_tb_input.hex ] && [ -f tb/run/quf_crc.hex ] || {
   python3 tools/quf.py create tb/quf_tb.json tb/run/quf_tb_input.quf
   cp tb/run/quf_tb_input.quf.hex tb/run/quf_tb_input.hex
+  python3 tools/quf.py create tb/quf_tb.json tb/run/quf_crc.quf --crc32
+  cp tb/run/quf_crc.quf.hex tb/run/quf_crc.hex
 }
 t tb/tb_quf_boot.v         tb_quf_boot "rtl/q_uf_loader.v rtl/quf_boot.v"
 t tb/tb_q_tern_dice.v      tb_q_tern_dice "rtl/q_tern_dice.v"

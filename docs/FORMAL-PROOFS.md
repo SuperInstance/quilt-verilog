@@ -26,9 +26,9 @@ fact; the seconds are context, not claim.
 | `tb/formal/flit_pipe.sby` | prove (k-induction), depth 15 | PASS | **0.34 s** | <1 s |
 | `formal/fabric.conservation.sby` | BMC 55 | PASS | **35.9 s** | 38 s |
 | `formal/flit_pipe.fly.sby` | BMC 40 | PASS | **74.0 s** | 72 s |
-| `formal/cell_core.tick.sby` | BMC 80 | PASS | not re-run | 215 s |
+| `formal/cell_core.tick.sby` | BMC 80 → 105 (2026-08-30, 4dd8195) | PASS | not re-run | 215 s |
 | `formal/cell_core.tick.prove.sby` | prove (PDR), depth 130 | PASS | **747 s** (2026-09-03) | — |
-| `formal/cell_core.fair.sby` | BMC 80 | PASS | not re-run | 498 s |
+| `formal/cell_core.fair.sby` | BMC 80 → 130 (2026-08-30, 4dd8195) | PASS | not re-run | 498 s |
 | `formal/g3-kinduction/fabric.conservation.g3-certificate.sby` | prove (k-induction), depth 12, smtbmc boolector | PASS | **10 s** (2026-09-02) | — |
 
 For scale across passes (same proofs, same tree family): iteration-1

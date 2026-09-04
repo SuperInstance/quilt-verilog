@@ -21,9 +21,9 @@ measured and recorded in the doc cited. Nothing here is aspirational.
 
 | lane | command | result | where |
 |---|---|---|---|
-| RTL simulation | `make test` | **18/18 PASS** (✓ re-run 2026-08-30) | [docs/VERIFICATION.md](docs/VERIFICATION.md) |
+| RTL simulation | `make test` | **21/21 PASS** (✓ re-run 2026-09-03, audit r13; was 18/18 as of 2026-08-30 — grew with q_tern_dice, q_snaplog/q_whistle, crc32-boot lanes) | [docs/VERIFICATION.md](docs/VERIFICATION.md) |
 | Behavioral model | `make sim` | **34/34 OK** (✓ re-run 2026-08-30) | [docs/VERIFICATION.md](docs/VERIFICATION.md) |
-| Formal proofs | `make formal` | **6/6 PASS** — 5 BMC + 1 k-induction (last full run 2026-08-29) | [docs/FORMAL-PROOFS.md](docs/FORMAL-PROOFS.md) |
+| Formal proofs | `make formal` | **6/6 PASS** — 5 BMC + 1 k-induction (last full run 2026-08-29, at then-depths tick 80 / fair 80; ⚠ audit r13 2026-09-03: depths since raised to 105/130 and no completed run at the new fair depth is on record — committed snapshot 6e59409 shows fair INCOMPLETE@85, and the r13 re-run exceeded 18 min of solver time at step 87) | [docs/FORMAL-PROOFS.md](docs/FORMAL-PROOFS.md) |
 | iCE40 synth + PnR | `make synth && make pnr` | HX8K-CT256: **7,596/7,680 LC (98%), 44.43 MHz post-route @ 12 MHz target, 135,100-byte bitstream** (2026-08-29) | [docs/SYNTHESIS-RESULTS.md](docs/SYNTHESIS-RESULTS.md) |
 | Smallest device | — | UP5K sg48, 1 cell: 80.1% LC, 37 IO, **16.78 MHz post-route** (2026-08-29) | [docs/SYNTHESIS-RESULTS.md](docs/SYNTHESIS-RESULTS.md) |
 | ECP5 ladder | — | LFE5U-25F: **8 cells @ 63.7 MHz**; real 12F: 4 cells (2026-08-29) | [docs/SYNTHESIS-RESULTS.md](docs/SYNTHESIS-RESULTS.md) |
@@ -149,7 +149,7 @@ deadlines, op-response bounds — is stated in plain mathematics in
 
 ## Layout
 
-- `rtl/` — 18 modules (17 fabric + `live_canon.v`, the Phase 251 Live Canon): the winning architecture as built (the truth)
+- `rtl/` — 21 modules (17 fabric + `live_canon.v` the Phase 251 Live Canon + `q_tern_dice.v`, `q_snaplog.v`, `q_whistle.v` — count corrected from 18 in audit r13, 2026-09-03): the winning architecture as built (the truth)
 - `tb/` — testbenches, the suite runner, formal harnesses
 - `sim/` — behavioral Python prototypes over the same QUF the RTL loads
 - `formal/` — machine-checked invariants (SymbiYosys)
@@ -250,7 +250,7 @@ with the others via QUF (the Quilt Universal Format, defined in
 
 | Substrate | Repo | Language | QUF test |
 |---|---|---|---|
-| Silicon (this repo) | [quilt-verilog](https://github.com/SuperInstance/quilt-verilog) | Verilog-2005 | native (18/18 RTL + 6/6 sby) |
+| Silicon (this repo) | [quilt-verilog](https://github.com/SuperInstance/quilt-verilog) | Verilog-2005 | native (21/21 RTL + 6/6 sby) |
 | C kernel | [quilt-c](https://github.com/SuperInstance/quilt-c) | C99 | 49 QUF conformance tests |
 | Rust no_std | [quilt-rust](https://github.com/SuperInstance/quilt-rust) | Rust 2021 | 8 QUF tests |
 | Python (time.cell) | [quilt-timesfm](https://github.com/SuperInstance/quilt-timesfm) | Python 3.8+ | native |

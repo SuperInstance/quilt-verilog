@@ -36,7 +36,7 @@ FORMAL_SBY := formal/cell_core.fair.sby formal/cell_core.tick.sby \
 
 all: test sim formal synth pnr
 
-## test — RTL testbench suite (iverilog). Expect 18/18 PASS.
+## test — RTL testbench suite (iverilog). Expect 21/21 PASS (audit r13 2026-09-03; 18/18 before tern_dice/snaplog/whistle/crc32 lanes).
 test:
 	@$(call GUARD,iverilog)
 	bash tb/run_suite.sh

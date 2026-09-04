@@ -93,16 +93,16 @@ any number here. Summary:
 | `flit_pipe.fly.sby` | FIFO safety + value integrity (no loss/dup/reorder) | BMC 40 | PASS |
 | `fabric.conservation.sby` | 2-cell ledger conservation, no silent drops | BMC 55 PASS; **UNBOUNDED PASS 2026-08-30 via `mode prove` + `abc pdr` (25.9 s, frame 9, `fabric.conservation.pdr.sby`) — cite engine+mode, a bare smtbmc prove does NOT close this property** | PASS |
 | `echo_gate.dyadic.sby` | dyadic octave bracket, PRIORITY, MONO, ZEROABSORB | BMC 25 | PASS |
-| `cell_core.tick.sby` | tick suppression + service deadlines under flood | BMC 80 | PASS |
-| `cell_core.fair.sby` | op-response bounds I1a/I1b/I2 | BMC 80 | PASS |
+| `cell_core.tick.sby` | tick suppression + service deadlines under flood | BMC 80 → **105** (raised 2026-08-30, 4dd8195) | PASS |
+| `cell_core.fair.sby` | op-response bounds I1a/I1b/I2 | BMC 80 → **130** (raised 2026-08-30, 4dd8195) | PASS |
 | `tb/formal/flit_pipe.sby` | k-inductive re-prove of pipe invariants | prove, depth 15 | PASS |
 
 Measured on this machine, iteration 2 (2026-08-29, `make formal` re-run):
 
 | proof | verdict | measured wall time (iter 2) |
 |---|---|---|
-| `cell_core.fair.sby` (BMC 80) | PASS | 498 s |
-| `cell_core.tick.sby` (BMC 80) | PASS | 215 s |
+| `cell_core.fair.sby` (BMC 80; depth since raised to 130) | PASS | 498 s |
+| `cell_core.tick.sby` (BMC 80; depth since raised to 105) | PASS | 215 s |
 | `flit_pipe.fly.sby` (BMC 40) | PASS | 72 s |
 | `fabric.conservation.sby` (BMC 55) | PASS | 38 s — plus UNBOUNDED `mode prove` + `abc pdr` PASS 28 s wall (2026-08-30) |
 | `echo_gate.dyadic.sby` (BMC 25) | PASS | 3 s |
@@ -182,3 +182,5 @@ post-placement estimate) — PASS at 12 MHz. The committed bitstream
 | 2026-08-29 | 1 | suite + python + 6 proofs + PnR through UP5K | 18/18, 34/34, 6×PASS, 16.78 MHz post-route fmax (17.36 post-place) |
 | 2026-08-29 | 2 | `make test/sim/synth` + `make formal` (all six re-run) | 18/18, 34/34, 6×PASS, yosys exit 0 — one-command front door verified |
 | 2026-08-29 | audit (independent) | suite + python + 5×sby + full PnR both tops (UP5K serf, HX8K k4b4a8e1) + icepack; README/VERIFICATION numbers re-measured and corrected | 18/18, 34/34, 5×PASS (fly 82 s, cons 42 s, dyadic 3 s, tick 249 s, fair 605 s), 16.78 / 43.36 MHz post-route |
+| 2026-08-30 | snapshot 6e59409 | deterministic verdict snapshot from sby workdirs | tick PASS@79, dyadic PASS@24, conservation PASS@54, fly PASS@39 — **fair INCOMPLETE@85** (depths had been raised to 105/130 by 4dd8195 same day; no completed fair run at depth 130 is on record as of 2026-09-03) |
+| 2026-09-03 | audit r13 (fresh clone) | suite re-run after fixing fresh-clone tb_quf_boot (new crc32 lane needs `tb/run/quf_crc.hex` pre-built) + python sim + link sweep | 21/21, 34/34, 0 FAIL — pre-fix fresh clone was 20/21 (tb_quf_boot FAIL: missing quf_crc.hex) |
