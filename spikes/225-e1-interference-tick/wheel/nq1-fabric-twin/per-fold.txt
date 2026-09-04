@@ -1,0 +1,5 @@
+fold 0: median=24.35  law(r=1,m=1)=14.09  ridge-linear=34.75  ridge-linear+rm (NQ-2)=33.98  ridge-quad=9.26
+fold 1: median=23.29  law(r=1,m=1)=14.81  ridge-linear=32.45  ridge-linear+rm (NQ-2)=32.98  ridge-quad=10.28
+fold 2: median=23.50  law(r=1,m=1)=15.52  ridge-linear=35.38  ridge-linear+rm (NQ-2)=35.29  ridge-quad=7.61
+fold 3: median=23.60  law(r=1,m=1)=15.75  ridge-linear=34.36  ridge-linear+rm (NQ-2)=34.76  ridge-quad=9.44
+fold 4: median=23.94  law(r=1,m=1)=14.43  ridge-linear=34.79  ridge-linear+rm (NQ-2)=34.68  ridge-quad=8.64

@@ -1,0 +1,25 @@
+NQ-1 fabric-twin — 5-fold CV (seed 1, rows shuffled once), metric = |error| in pp
+n rows = 171   folds = 5   lambda = 10.0 (ridge)
+
+model                        MAE pp  RMSE pp      R2
+median                        23.74    26.82  -0.001
+law(r=1,m=1)                  14.91    18.10   0.544
+ridge-linear                  34.35    36.20  -0.824
+ridge-linear+rm (NQ-2)        34.34    36.12  -0.815
+ridge-quad                     9.05    11.87   0.804
+
+PASS check (pre-reg: learned beats law by >2pp on held-out): linear margin = -19.43pp, quad margin = +5.87pp
+per-config: quad beats law on 105/171 held-out configs; by >2pp each on 97
+  fold 0: law MAE 14.09  quad MAE 9.26  linear MAE 34.75
+  fold 1: law MAE 14.81  quad MAE 10.28  linear MAE 32.45
+  fold 2: law MAE 15.52  quad MAE 7.61  linear MAE 35.38
+  fold 3: law MAE 15.75  quad MAE 9.44  linear MAE 34.36
+  fold 4: law MAE 14.43  quad MAE 8.64  linear MAE 34.79
+
+NQ-2 rider: RSS drop adding r,m to ridge-linear = 0.5% (pass bar >50%) -> FAIL
+(collinearity note: in this corpus sigma, delta constant -> r == span/15 exactly; corr(span, r) = 1.0000; m = N/(2pd+1) is a genuine interaction)
+sensitivity lambda=1: ridge-linear MAE = 34.39pp
+sensitivity lambda=100: ridge-linear MAE = 34.20pp
+
+D2 knee mini-test (SPIN-21 knee relocation, n=7, R3 sigma=0 law n/a excluded):
+  law (knee=2D/sigma) MAE = 2.17 ticks; LOO linear twin MAE = 2.88 ticks (n=6, below trainable bar)
