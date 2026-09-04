@@ -1,0 +1,91 @@
+SPIN-38 CONSERVATION — Fri Sep  4 08:19:06 UTC 2026
+hypothesis + decision rule pre-registered in script header (unchanged at run time)
+== CANARY (a): wiring byte-identity vs exp_glm1.run_fabric ==
+   8 configs INCLUDING escalated parameters (this spin's region)
+  identical: outlier@30 K=1 seed=1 {'drift': 96, 'delta': 6}
+  identical: outlier@30 K=2 seed=42 {'drift': 96, 'delta': 6}
+  identical: outlier@30 K=1 seed=1 {'drift': 768, 'delta': 1}
+  identical: outlier@30 K=2 seed=42 {'drift': 768, 'delta': 1}
+  identical: outlier@30 K=1 seed=7 {'drift': 0, 'delta': 12}
+  identical: ladder@15 K=1 seed=1 {'drift': 6, 'delta': 12}
+  identical: zero K=2 seed=42 {'drift': 384, 'delta': 12}
+  identical: outlier@30 K=1 seed=1999 {'drift': 192, 'delta': 12}
+  PASS: 8/8 configs
+
+== CANARY (b): SPIN-11 anchor replays (default drift=6 delta=12)
+  zero@15   K=1: 77.3% (want 77.3)  ev 8756 (want 8756)  debt 187834 (want 187834)  -> PASS
+  ladder@15 K=1: 71.5% (want 71.5)  ev 5792 (want 5792)  debt 106378 (want 106378)  -> PASS
+
+== CANARY (c): SPIN-15 drift=384 debt/ev ~9202 replay @4800t ==
+  ladder@30 K=1 drift=384: debt/ev 9202.3  (SPIN-15 anchor; want 9202.4 +-5% -> PASS)
+  outlier@30 K=1 drift=384: debt/ev 9181.9  (outlier@30, recorded)
+
+== CANARY (d): double-run determinism (>=4 configs) ==
+  cfg0 K=1 seed=1 {'drift': 0, 'delta': 1}: byte-identical
+  cfg1 K=2 seed=42 {'drift': 768, 'delta': 6}: byte-identical
+  cfg2 K=1 seed=7 {'drift': 384, 'delta': 12}: byte-identical
+  cfg3 K=2 seed=1999 {'drift': 96, 'delta': 6}: byte-identical
+  PASS: 4/4
+
+ALL CANARIES: PASS
+
+== ARMS: outlier@30, 38400 ticks (8x), pd=3, seeds (1, 7, 42, 1999, 20260902)
+drift | delta | K | resid% | events | debt | debt/ev | evap/ev | w1->w8 debt-rate | IDs
+    0 |     1 | 1 |   9.5 |    223977 |     3153361 |      14.1 |   0.160 |   391581->  394540 (r 1.01) | 4/4
+    0 |     1 | 2 |   4.2 |    219202 |     4826799 |      22.0 |   0.093 |   601109->  603670 (r 1.00) | 4/4
+    0 |     6 | 1 |  47.1 |    139899 |     3235697 |      23.1 |   0.222 |   400837->  404980 (r 1.01) | 4/4
+    0 |     6 | 2 |  48.7 |    139146 |     3147392 |      22.6 |   0.127 |   391912->  393640 (r 1.00) | 4/4
+    0 |    12 | 1 |  55.8 |    122293 |     3062560 |      25.0 |   0.218 |   378480->  383440 (r 1.01) | 4/4
+    0 |    12 | 2 |  51.4 |    130159 |     3919907 |      30.1 |   0.351 |   479127->  491540 (r 1.03) | 4/4
+   96 |     1 | 1 |   0.2 |    229979 |   162950332 |     708.5 |   0.231 | 19070279->17270003 (r 0.91) | 4/4
+   96 |     1 | 2 |   0.0 |    230244 |   604320979 |    2624.7 |   0.328 | 46358862->85889407 (r 1.85) | 4/4
+   96 |     6 | 1 |   0.8 |    228380 |   163239485 |     714.8 |   0.232 | 18973837->17268356 (r 0.91) | 4/4
+   96 |     6 | 2 |   0.2 |    229806 |   605726641 |    2635.8 |   0.328 | 46617744->86228820 (r 1.85) | 4/4
+   96 |    12 | 1 |   1.8 |    226460 |   163619722 |     722.5 |   0.231 | 19142490->17331193 (r 0.91) | 4/4
+   96 |    12 | 2 |   0.4 |    229295 |   603301024 |    2631.1 |   0.328 | 46458927->85080492 (r 1.83) | 4/4
+  192 |     1 | 1 |   0.0 |    230271 |   695889160 |    3022.0 |   0.259 | 74246419->74546008 (r 1.00) | 4/4
+  192 |     1 | 2 |   0.0 |    230356 |  1485423090 |    6448.4 |   0.332 | 106265494->152307325 (r 1.43) | 4/4
+  192 |     6 | 1 |   0.2 |    229843 |   695792265 |    3027.2 |   0.260 | 74263678->74409445 (r 1.00) | 4/4
+  192 |     6 | 2 |   0.0 |    230201 |  1485151736 |    6451.5 |   0.332 | 106147385->151813573 (r 1.43) | 4/4
+  192 |    12 | 1 |   0.4 |    229431 |   696172731 |    3034.3 |   0.259 | 74372992->74596837 (r 1.00) | 4/4
+  192 |    12 | 2 |   0.1 |    230023 |  1484325726 |    6452.9 |   0.332 | 105704647->152060904 (r 1.44) | 4/4
+  384 |     1 | 1 |   0.0 |    230386 |  2957293645 |   12836.2 |   0.234 | 264079167->312481326 (r 1.18) | 4/4
+  384 |     1 | 2 |   0.0 |    230372 |  3034904599 |   13173.9 |   0.326 | 145497946->487163473 (r 3.35) | 4/4
+  384 |     6 | 1 |   0.0 |    230298 |  2957174678 |   12840.6 |   0.235 | 264135258->312515146 (r 1.18) | 4/4
+  384 |     6 | 2 |   0.0 |    230309 |  3035234624 |   13179.0 |   0.327 | 145670454->486583195 (r 3.34) | 4/4
+  384 |    12 | 1 |   0.0 |    230233 |  2957555821 |   12845.9 |   0.235 | 264030225->312370595 (r 1.18) | 4/4
+  384 |    12 | 2 |   0.0 |    230240 |  3034509174 |   13179.7 |   0.327 | 145489766->487041103 (r 3.35) | 4/4
+  768 |     1 | 1 |   0.0 |    230394 |  6617083389 |   28720.8 |   0.333 | 381177041->660180509 (r 1.73) | 4/4
+  768 |     1 | 2 |   0.0 |    230393 |  8752129685 |   37987.9 |   0.311 | 447422179->1983588015 (r 4.43) | 4/4
+  768 |     6 | 1 |   0.0 |    230368 |  6616976504 |   28723.5 |   0.333 | 381281532->660101196 (r 1.73) | 4/4
+  768 |     6 | 2 |   0.0 |    230360 |  8748341070 |   37976.9 |   0.311 | 447348409->1983011611 (r 4.43) | 4/4
+  768 |    12 | 1 |   0.0 |    230327 |  6617426221 |   28730.5 |   0.332 | 381181257->660158143 (r 1.73) | 4/4
+  768 |    12 | 2 |   0.0 |    230315 |  8753843942 |   38008.1 |   0.311 | 447137059->1984373760 (r 4.44) | 4/4
+
+== PRE-REGISTERED DECISION RULE APPLICATION ==
+  H1a (linear drift scaling, ratio [0.8,1.25] x>=2/3 doublings): BREAKS
+    delta=1 K=1: mono=True ratios=['4.27', '4.25', '2.24'] -> VIOLATION
+    delta=1 K=2: mono=True ratios=['2.46', '2.04', '2.88'] -> VIOLATION
+    delta=6 K=1: mono=True ratios=['4.26', '4.25', '2.24'] -> VIOLATION
+    delta=6 K=2: mono=True ratios=['2.45', '2.04', '2.88'] -> VIOLATION
+    delta=12 K=1: mono=True ratios=['4.25', '4.25', '2.24'] -> VIOLATION
+    delta=12 K=2: mono=True ratios=['2.46', '2.04', '2.88'] -> VIOLATION
+  H1b drift=0 K=1: debt by delta ['3153361', '3235697', '3062560'] -> ok
+  H1b drift=0 K=2: debt by delta ['4826799', '3147392', '3919907'] -> NON-MONOTONE (>10% zig-zag)
+  H1b drift=96 K=1: debt by delta ['162950332', '163239485', '163619722'] -> ok
+  H1b drift=96 K=2: debt by delta ['604320979', '605726641', '603301024'] -> ok
+  H1b drift=192 K=1: debt by delta ['695889160', '695792265', '696172731'] -> ok
+  H1b drift=192 K=2: debt by delta ['1485423090', '1485151736', '1484325726'] -> ok
+  H1b drift=384 K=1: debt by delta ['2957293645', '2957174678', '2957555821'] -> ok
+  H1b drift=384 K=2: debt by delta ['3034904599', '3035234624', '3034509174'] -> ok
+  H1b drift=768 K=1: debt by delta ['6617083389', '6616976504', '6617426221'] -> ok
+  H1b drift=768 K=2: debt by delta ['8752129685', '8748341070', '8753843942'] -> ok
+  H1b (monotone-in-delta with consistent direction): BREAKS
+  H1c (cap reached: last/first window rate < 0.5 in >= half of delta<=6 cells): 0/20 -> BREAKS
+  H1d (evap/event in [0.17,0.30]): observed [0.093, 0.351] -> BREAKS
+  H1e (closure/mass identities every run): HOLDS
+
+  VERDICT (pre-registered rule): FALSIFIED
+   (basis: linear in-window growth everywhere — no cap)
+
+DONE. elapsed 44 s

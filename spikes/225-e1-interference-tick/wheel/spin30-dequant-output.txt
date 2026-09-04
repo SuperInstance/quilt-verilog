@@ -1,0 +1,62 @@
+SPIN-30 dequant Zeno probe — pid 4275, 3.14.4
+== CANARY a: wiring byte-identity dyn_run_q(never,sh=0) vs run_fabric ==
+  PASS: 12 configs byte-identical
+
+== CANARY b: anchors (run_fabric 5-seed means) ==
+  zero       K=1: pct   77.3 (want 77.3)  debt 187834 (want 187834)  ev 8756 (want 8756)  -> PASS
+  ladder@15  K=1: pct   71.5 (want 71.5)  debt 106378 (want 106378)  ev 5792 (want 5792)  -> PASS
+
+== CANARY c: structural no-op q=12 (sh=0) == M=never ==
+  PASS: 4 configs full-resid identical
+
+== CANARY d: determinism (quantized cells, run twice) ==
+  PASS: 2 dual runs byte-identical
+
+CANARY GATE: ALL PASS
+
+== PANEL: pct (5-seed mean) per grammar x K x q x M ==
+   grid: q6->step16  q8->step4  q12->step1(no-op); M=None never
+
+-- zero  K=1 --
+   q\M      M=1      M=4     M=16     M=64   M=None
+   q=6     77.3     77.3     77.3     77.3     77.3
+   q=8     77.3     77.3     77.3     77.3     77.3
+  q=12     77.3     77.3     77.3     77.3     77.3
+-- zero  K=2 --
+   q\M      M=1      M=4     M=16     M=64   M=None
+   q=6      8.5     30.0     53.5     51.3     50.0
+   q=8      1.3     34.6     46.8     49.5     50.0
+  q=12     50.0     50.0     50.0     50.0     50.0
+-- kcoh5@15  K=1 --
+   q\M      M=1      M=4     M=16     M=64   M=None
+   q=6     74.1     74.1     74.1     74.1     74.1
+   q=8     74.1     74.1     74.1     74.1     74.1
+  q=12     74.1     74.1     74.1     74.1     74.1
+-- kcoh5@15  K=2 --
+   q\M      M=1      M=4     M=16     M=64   M=None
+   q=6     12.9     16.9     46.3     48.2     50.6
+   q=8      0.8     27.1     45.3     48.6     50.6
+  q=12     50.6     50.6     50.6     50.6     50.6
+
+== DECOHERENCE COSTS (pp vs M=never) ==
+   grammar  K   q      M=1      M=4     M=16     M=64   M=None
+      zero  1   6      0.0      0.0      0.0      0.0      0.0
+      zero  1   8      0.0      0.0      0.0      0.0      0.0
+      zero  1  12      0.0      0.0      0.0      0.0      0.0
+      zero  2   6     41.5     20.0     -3.5     -1.4      0.0
+      zero  2   8     48.7     15.4      3.2      0.4      0.0
+      zero  2  12      0.0      0.0      0.0      0.0      0.0
+  kcoh5@15  1   6      0.0      0.0      0.0      0.0      0.0
+  kcoh5@15  1   8      0.0      0.0      0.0      0.0      0.0
+  kcoh5@15  1  12      0.0      0.0      0.0      0.0      0.0
+  kcoh5@15  2   6     37.7     33.7      4.3      2.4      0.0
+  kcoh5@15  2   8     49.8     23.5      5.3      2.0      0.0
+  kcoh5@15  2  12      0.0      0.0      0.0      0.0      0.0
+
+PRIMARY cell: zero K=1 q=8 M=1  cost = 0.0pp
+PRE-REGISTERED rule: <=5.0 VALIDATED (Zeno-inert, within-tick averaging holds);
+                   >10.0 FALSIFIED (cross-tick wave memory supported); else MIXED.
+-> VERDICT: VALIDATED
+secondary kcoh5@15 K=1 q=8 M=1 cost = 0.0pp
+
+head: verdict VALIDATED, primary cost 0.0pp, secondary 0.0pp

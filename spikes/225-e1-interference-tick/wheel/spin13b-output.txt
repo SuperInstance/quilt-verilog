@@ -1,0 +1,93 @@
+== CANARY: full-suite double-run byte identity: PASS ==
+
+== SPIN-13b SNAP-SHADOW ADDENDUM: BISECTION-COMBINATION CLOSURE ==
+integer-only core; ops: BIS_N prim(u+v), BIS_B prim(l*u+m*v) with
+l^2|u|^2 ~ m^2|v|^2 exact-integer balance, COMB prim(a*u+b*v);
+seeds = SPIN-13 budget-16 (norm^2<=16) direction sets; pairs/depth=12000
+
+== CANARIES ==
+  bisB((2,0),(1,1)) == (3,1) @ exactly 30deg: PASS (naive equal: True)
+  bisN(u,u) == u idempotence (primitive u): PASS
+  opposite-direction op rejected (zero vector): PASS
+  eis seed set == independent direct enumeration (36 dirs): PASS
+
+== (1)+(2) PLETHORA & PRECISION LADDER (cumulative distinct directions) ==
+  arm              | depth |   new  |  total | minGap     | medGap    | meanBits(new)
+  eis-2D           |     0 |     -- |     36 |     5.2087 |   10.8934 |      --
+  eis-2D           |     1 |    305 |    341 |   0.193448 |  0.787563 |   15.2
+  eis-2D           |     2 |   5671 |   6012 |   0.002143 |  0.048058 |   20.9
+  eis-2D           |     3 |  26242 |  32254 |   0.000116 |  0.008470 |   29.7
+                     (invalid zero-vector ops rejected: 700)
+  shadow d=4 s=1   |     0 |     -- |    350 |     0.2363 |    0.7876 |      --
+  shadow d=4 s=1   |     1 |   4118 |   4468 |   0.002393 |  0.062402 |   20.6
+  shadow d=4 s=1   |     2 |  25561 |  30029 |   0.000176 |  0.008921 |   29.7
+  shadow d=4 s=1   |     3 |  41966 |  71995 |   0.000011 |  0.003506 |   33.9
+                     (invalid zero-vector ops rejected: 245)
+  shadow d=6 s=1   |     0 |     -- |    984 |     0.0653 |    0.2571 |      --
+  shadow d=6 s=1   |     1 |   7402 |   8386 |   0.001114 |  0.032398 |   23.1
+  shadow d=6 s=1   |     2 |  29735 |  38121 |   0.000036 |  0.006748 |   31.8
+  shadow d=6 s=1   |     3 |  43958 |  82079 |   0.000011 |  0.003027 |   35.9
+                     (invalid zero-vector ops rejected: 10)
+  shadow d=8 s=1   |     0 |     -- |    866 |     0.0691 |    0.2876 |      --
+  shadow d=8 s=1   |     1 |   6964 |   7830 |   0.000776 |  0.033302 |   23.0
+  shadow d=8 s=1   |     2 |  29594 |  37424 |   0.000043 |  0.006675 |   29.8
+  shadow d=8 s=1   |     3 |  43201 |  80625 |   0.000011 |  0.002997 |   35.9
+                     (invalid zero-vector ops rejected: 90)
+
+== (3) BITS-TO-PRECISION — minimal bit-string hitting tolerance ==
+  (32 golden targets; medBits = median min address bits; X = unreached;
+   winner op = which op created the minimal-bit node)
+  eis-2D:
+    tol= 10.000deg : medBits=6 unreached= 0  winners BASE/BIS_N/BIS_B/COMB = 32/0/0/0
+    tol=  3.000deg : medBits=6 unreached= 0  winners BASE/BIS_N/BIS_B/COMB = 19/7/6/0
+    tol=  1.000deg : medBits=14 unreached= 0  winners BASE/BIS_N/BIS_B/COMB = 5/4/22/1
+    tol=  0.300deg : medBits=17 unreached= 0  winners BASE/BIS_N/BIS_B/COMB = 2/7/19/4
+    tol=  0.100deg : medBits=20 unreached= 0  winners BASE/BIS_N/BIS_B/COMB = 1/7/23/1
+    tol=  0.030deg : medBits=20 unreached= 0  winners BASE/BIS_N/BIS_B/COMB = 0/8/17/7
+    tol=  0.010deg : medBits=28 unreached= 5  winners BASE/BIS_N/BIS_B/COMB = 0/2/12/13
+    tol=  0.003deg : medBits=31 unreached=20  winners BASE/BIS_N/BIS_B/COMB = 0/1/1/10
+  shadow d=4 s=1:
+    tol= 10.000deg : medBits=9 unreached= 0  winners BASE/BIS_N/BIS_B/COMB = 32/0/0/0
+    tol=  3.000deg : medBits=9 unreached= 0  winners BASE/BIS_N/BIS_B/COMB = 32/0/0/0
+    tol=  1.000deg : medBits=9 unreached= 0  winners BASE/BIS_N/BIS_B/COMB = 31/0/1/0
+    tol=  0.300deg : medBits=9 unreached= 0  winners BASE/BIS_N/BIS_B/COMB = 21/5/6/0
+    tol=  0.100deg : medBits=20 unreached= 0  winners BASE/BIS_N/BIS_B/COMB = 7/5/20/0
+    tol=  0.030deg : medBits=23 unreached= 0  winners BASE/BIS_N/BIS_B/COMB = 1/9/19/3
+    tol=  0.010deg : medBits=28 unreached= 1  winners BASE/BIS_N/BIS_B/COMB = 1/8/12/10
+    tol=  0.003deg : medBits=31 unreached=12  winners BASE/BIS_N/BIS_B/COMB = 0/4/8/8
+  shadow d=6 s=1:
+    tol= 10.000deg : medBits=10 unreached= 0  winners BASE/BIS_N/BIS_B/COMB = 32/0/0/0
+    tol=  3.000deg : medBits=10 unreached= 0  winners BASE/BIS_N/BIS_B/COMB = 32/0/0/0
+    tol=  1.000deg : medBits=10 unreached= 0  winners BASE/BIS_N/BIS_B/COMB = 31/0/1/0
+    tol=  0.300deg : medBits=10 unreached= 0  winners BASE/BIS_N/BIS_B/COMB = 30/0/2/0
+    tol=  0.100deg : medBits=10 unreached= 0  winners BASE/BIS_N/BIS_B/COMB = 20/2/10/0
+    tol=  0.030deg : medBits=22 unreached= 0  winners BASE/BIS_N/BIS_B/COMB = 7/2/17/6
+    tol=  0.010deg : medBits=30 unreached= 0  winners BASE/BIS_N/BIS_B/COMB = 1/7/13/11
+    tol=  0.003deg : medBits=33 unreached= 7  winners BASE/BIS_N/BIS_B/COMB = 0/5/11/9
+  shadow d=8 s=1:
+    tol= 10.000deg : medBits=10 unreached= 0  winners BASE/BIS_N/BIS_B/COMB = 32/0/0/0
+    tol=  3.000deg : medBits=10 unreached= 0  winners BASE/BIS_N/BIS_B/COMB = 32/0/0/0
+    tol=  1.000deg : medBits=10 unreached= 0  winners BASE/BIS_N/BIS_B/COMB = 31/0/1/0
+    tol=  0.300deg : medBits=10 unreached= 0  winners BASE/BIS_N/BIS_B/COMB = 30/0/2/0
+    tol=  0.100deg : medBits=22 unreached= 0  winners BASE/BIS_N/BIS_B/COMB = 15/3/12/2
+    tol=  0.030deg : medBits=22 unreached= 0  winners BASE/BIS_N/BIS_B/COMB = 5/5/18/4
+    tol=  0.010deg : medBits=28 unreached= 0  winners BASE/BIS_N/BIS_B/COMB = 1/5/14/12
+    tol=  0.003deg : medBits=31 unreached= 7  winners BASE/BIS_N/BIS_B/COMB = 0/3/5/17
+
+== RAW BUDGET-GROWTH BASELINES (no closure; bits = ceil(log2(#dirs))) ==
+  arm                 | budget |  dirs  | bits | medErr(32 targets)
+  eis-2D             |     16 |     36 |    6 |   2.50776 deg
+  eis-2D             |     64 |    144 |    8 |   0.95893 deg
+  eis-2D             |    256 |    564 |   10 |   0.12073 deg
+  shadow d=4 s=1     |     16 |    350 |    9 |   0.20599 deg
+  shadow d=4 s=1     |     64 |   1550 |   11 |   0.06904 deg
+  shadow d=4 s=1     |    256 |   6326 |   13 |   0.01168 deg
+  shadow d=6 s=1     |     16 |    984 |   10 |   0.07442 deg
+  shadow d=8 s=1     |     16 |    866 |   10 |   0.10231 deg
+
+== VERDICT INPUTS ==
+  eis: base 36 dirs -> closure total 32254 dirs (895.9x plethora),
+  eis: median target err base 2.5078 deg -> closure 0.004576 deg (548x)
+  tol 0.100deg: eis-closure medBits=20 (unreached 0) | d8-closure medBits=22 (unreached 0)
+  tol 0.010deg: eis-closure medBits=28 (unreached 5) | d8-closure medBits=28 (unreached 0)
+

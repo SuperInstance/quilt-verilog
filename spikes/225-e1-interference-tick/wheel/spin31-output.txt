@@ -1,0 +1,46 @@
+SPIN-31 METROLOGY pd-law — 2026-09-03 18:45:55
+config: N=6 ladder, slope 1.6 spec (200/125), K=1, spreads=[8, 10, 12, 14, 16, 18, 20, 22, 24, 26, 28, 30], pd sweep (3, 4, 5, 6) @ delta=12, pd=6 delta-repl (8, 12, 16), seeds=(1, 7, 42, 1999, 20260902), ticks=4800, drift=6. pd=2 skipped (no crossing booked, spin-29 adj.)
+PREDICTION (pre-registered): alpha(pd)=a+b·pd LINEAR (1.172 -> 0.977 across pd 3..6, DECREASING); C=beta·2·delta·g(pd).
+RULE: VALIDATE iff linearity(max|resid|<=0.03) AND monotone-decreasing AND pd=6 delta-spread <=10%; FALSIFY if nonlinear AND saturating (|a6-a5| <= 0.5|a4-a3|); else MIXED/INCONCLUSIVE.
+== CANARY a: wiring byte-identity dyn_run vs run_fabric (pd=3 AND pd=6 legs) ==
+  PASS: 16 configs byte-identical
+
+== CANARY b: R0 anchors at delta=12 pd=3 (5-seed means) ==
+  ladder15 K=1: pct=71.48 (71.5)  ev=5791.6 (5792)  debt=106378.4 (106378)  -> PASS
+  zero    K=1: pct=77.26 (77.3)  ev=8756.4 (8756)  debt=187833.6 (187834)  -> PASS
+
+== CANARY c: delta=12 pd=3 replay s*~=17.9, C~=28.6 ==
+  curve: 100.0 100.0 100.0 85.8 60.0 47.3 42.5 38.4 28.0 34.4 26.8 22.6
+  s*=17.6 (want ~17.9 tol 1.0)  C=28.1 (want ~28.6 tol 1.5)  -> PASS
+
+== CANARY d: determinism (dual runs, pd=4 and pd=6 cells) ==
+  PASS: 6 dual runs byte-identical
+
+ALL CANARIES: PASS
+
+== LEG 1: pd sweep {3,4,5,6} at delta=12, slope 1.6, K=1 ==
+  pd     8    10    12    14    16    18    20    22    24    26    28    30   s*      C   alpha   predC
+   3 100.0 100.0 100.0  85.8  60.0  47.3  42.5  38.4  28.0  34.4  26.8  22.6   17.6   28.1  1.172    28.1
+   4 100.0 100.0 100.0  91.8  57.4  24.4  19.0  11.8  11.1  10.9  10.6  10.1   16.4   26.3  1.096    26.6
+   5  98.8  96.2  91.5  69.5  36.3  11.3  11.1  11.0  10.6  10.6  10.2  10.0   15.2   24.3  1.012    25.0
+   6  87.1  77.2  71.6  58.2  33.2  10.8  10.7  10.6  10.3  10.4   9.9  10.1   14.7   23.4  0.977    23.4
+
+== LEG 2: delta replication at pd=6 (alpha delta-stability) ==
+ delta     8    10    12    14    16    18    20    22    24    26    28    30   s*      C   alpha   predC
+     8  52.5  44.7  11.1   7.0   6.9   6.6   6.4   6.7   6.5   7.1   6.8   6.6    8.6   13.8  0.864    15.6
+    12  87.1  77.2  71.6  58.2  33.2  10.8  10.7  10.6  10.3  10.4   9.9  10.1   14.7   23.4  0.977    23.4
+    16  98.9  97.6  94.7  80.2  79.3  70.6  51.3  24.3  15.1  14.6  14.4  14.5   20.1   32.1  1.005    31.3
+
+== ANALYSIS (decision rule pre-registered in header) ==
+  pd=3: s*= 17.6  C= 28.1  alpha=1.172
+  pd=4: s*= 16.4  C= 26.3  alpha=1.096
+  pd=5: s*= 15.2  C= 24.3  alpha=1.012
+  pd=6: s*= 14.7  C= 23.4  alpha=0.977
+  fit: alpha = 1.365 -0.0670·pd   max|resid|=0.0192 (gate 0.03) -> L PASS
+  monotone: dec=True inc=False slope b=-0.0670 (pre-predicted DECREASING) -> S PASS
+  saturation test: |a6-a5|=0.0346 vs 0.5·|a4-a3|=0.0377 -> SATURATING
+  -- delta-stability at pd=6 (gate 10% of mean alpha) --
+  alpha(pd=6): d8=0.864  d12=0.977  d16=1.005  spread=14.8% -> D FAIL
+VERDICT: MIXED (pd-law linear but delta-coupled)
+
+DONE. elapsed 5 s

@@ -1,0 +1,31 @@
+SPIN-26 WALL-BIT-ONLY ELIGIBILITY SWEEP — 2026-09-03 15:15:28
+panel seeds (1, 7, 42); ticks 4800; pd=3; delta/drift 12/6; EV=12
+== CANARY 1: spread=0 byte-identity, kcoh5@0 gate modes ==
+  never==theta1.1==dual-run shas: PASS
+
+== CANARY 2: ladder@15 K=1 = 71.5 exact (5-seed, R0) ==
+  got 71.5  want 71.5  PASS
+
+== CANARY 3: SPIN-25 toggle table reproduces (t100=99 IN vs 100 OUT) ==
+  kcoh5@15  IN(99)= 82.5 OUT(100)= 74.6 delta= +7.9pp
+  ladder30  IN(99)= 24.7 OUT(100)= 26.1 delta= -1.4pp
+  (rule: kcoh5 >= +5, ladder30 <= -1)  PASS
+
+ALL CANARIES: PASS
+
+== STEP 1: sha distinctness of t100 in {100,105,110,120,133} ==
+  distinct behavioral classes: 1
+    class 0: t100=[100, 105, 110, 120, 133]  sha-prefix=ec41f65b0cc9edf3
+
+== STEP 2/3: panel + gate==never byte-compare, per distinct class ==
+    class 0 (rep t100=100, members [100, 105, 110, 120, 133]): rescue=+33.4pp
+      kcoh5@15= 74.6(nv  74.6) ladder30= 26.1(nv  26.1) zero7= 99.8(nv   0.1) step5K1= 36.9(nv   0.3) step5K2= 30.6(nv   0.4)
+      byte-identical to never @ kcoh5@15: YES
+      byte-identical to never @ ladder30: YES
+      byte-identical to never @ zero7: NO
+      ELIGIBLE-EMBEDDED: NO (rule: healthy byte-identity AND rescue >= +33pp)
+
+== VERDICTS (exact, per t100) ==
+  t100 members [100, 105, 110, 120, 133]: eligible=N rescue=+33.4pp healthy-byte-ident={'zero7'}
+  VERDICT: wall bit NOT eligible-embedded — booked
+DONE. elapsed 3 s

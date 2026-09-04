@@ -1,0 +1,147 @@
+SPIN 35, SPOKE: ADVERSARY — ADVERSARY x ECHO-GATE INTERACTION.
+Pre-registered docstring, committed BEFORE any run.
+
+HYPOTHESIS (pre-registered): the θ-gate (integer test
+100*|pd - nf| > t100*pd, compensate that tick's emissions iff open)
+does NOT create a new adversarial surface. A compensated-compensation
+adversary — a twin that lies about its concurrent-trigger count nf to
+force the gate open (x2 inflation) or to dodge compensation (÷2
+deflation) — cannot gain residency leverage or evade delivery identity
+vs its honest-adversary baseline (SPIN-11 anchors).
+
+STRUCTURAL FACT (SPIN-16 CE, byte-proven): on any N=6 grammar at pd=3,
+an HONEST gate at θ>1 never opens (max |pd-nf| = 3, 3*t100 <= 330 =
+110*3 for t100<=110; need |pd-nf| > 3.3, i.e. nf >= 7 > N). So honest
+θ*=1.10 arms must be byte-identical to gate-off on every N=6 grammar.
+The ONLY way the θ=1.10 gate ever opens on this fabric is a LIE:
+nf_inflate pushing a declared nf=6 tick to 7 = 2pd+1.
+
+PRE-REGISTERED DECISION RULE (fixed before running):
+  Arm R (replay, gate off): PASS iff SPIN-11 anchors reproduce on
+    ladder@15: tp/ev/debt per SPIN-11 EXP1 table (±0.2pp tp, rounded
+    ev/debt), freerider dynamics byte-identical to none (resid/cflags/
+    events/emissions equal; mass differs by exactly unpaid), liar
+    honestLocal 14.8 (K1) / 16.4 (K2) ±0.2, jammer 26.0/27.9 ±0.2,
+    mute 95.6/89.0 ±0.2.
+  Arm G (four adversaries, honest gate θ*=1.10, ladder@15 AND
+    kcoh5@15): PASS iff byte-identical to gate-off (structural inert-
+    ness extends under adversaries: nf honest <= N = 6 = 2pd < 2pd+1)
+    — detection metrics and residency unchanged, shift 0pp.
+  Arm N (nf adversary, gate θ*=1.10, twin 5 otherwise honest):
+    nf_inflate: declared nf counts twin 5's trigger twice.
+    nf_deflate: declared nf drops twin 5's trigger (x2 -> round to +1;
+      ÷2 of one trigger -> 0). Both still emit + pay toll honestly.
+    PASS iff:
+      (i)  residency shift vs gate-off honest-none <= 5.0pp (no
+           leverage; damage may exist but is bounded inside the rule);
+      (ii) D5 declared-vs-emitted mismatch flags EXACTLY the lied
+           ticks (0 false negatives, 0 false positives on honest arms);
+      (iii) ledger closure delta == 0 exactly (toll on trigger error,
+           not on gated pulse) and band/peer detectors stay 0.
+  VERDICT: VALIDATED iff R and G and N all PASS. FALSIFIED if gated
+    detection is weaker than ungated (any D1-D4 flag count drops under
+    the honest gate without a byte-identity excuse) or any residency
+    shift > 5pp vs its SPIN-11 anchor. MIXED otherwise-partial.
+    Note pre-booked: deflate at θ*=1.10 is structurally inert (can
+    only close an already-closed gate) — expected byte-identical to
+    honest; the sub-1.0 half where deflation bites is SPIN-24/25
+    territory, out of scope here (booked as scar, not tested).
+
+CANARIES (mandatory, abort on fail):
+  Ca: adv=none gate=off byte-matches exp_glm1.run_fabric (8 configs)
+      + SPIN-5 anchors zero@15 K1 77.3/8756/187834, ladder@15 K1
+      71.5/5792/106378 (±0.2pp, rounded ev/debt).
+  Cb: gate="never"-equivalent: my runner gate=off == spin11.run_adv
+      full-dict; and gate=1.10 == gate=off full-dict for adv=none on
+      N=6 grammars {ladder@15, kcoh5@15, zero@15} (structural CE).
+  Cc: double-run determinism (same dict twice, 4 configs).
+
+Config: N=6, ladder@15 [0,3,6,9,12,15] / kcoh5@15 [0,0,0,0,0,15] /
+zero@15 [0]*6; K in {1,2}; pd=3, delta=12, drift=6; ticks 4800;
+seeds {1,7,42,1999,20260902}; ADV = twin 5; θ*=1.10 (t100=110);
+integer-only in-loop; floats display-only. Run with -u, no pipes.
+
+======================================================================
+SPIN 35 — ADVERSARY x ECHO-GATE — harness run, -u, no pipes
+== CANARY Ca: adv=none gate=off byte-matches exp_glm1.run_fabric ==
+  PASS: 8/8 full-dict byte-identical (extra keys gopen/gcomp)
+
+== CANARY Ca2: SPIN-5 anchor replay (5-seed means) ==
+  zero@15 K=1: 77.3% ev 8756 debt 187834 (want 77.3/8756/187834) -> PASS
+  ladder@15 K=1: 71.5% ev 5792 debt 106378 (want 71.5/5792/106378) -> PASS
+
+== CANARY Cb: gate contract identities ==
+  Cb1 gate=off == spin11.run_adv: PASS (5 adv modes, full-dict)
+  Cb2 gate=1.10 == off (adv=none, 3 grammars x K{1,2}): PASS
+
+== CANARY Cc: double-run determinism ==
+  Cc double-run: PASS (4 configs)
+
+CANARIES: PASS
+
+jam amplitude (honest max |pulse|, 5-seed baseline) = 28
+
+== ARM R: SPIN-11 replay, gate=off, ladder@15 (jam_amp=28) ==
+     mode |         K |     mean% |        ev |      debt |      chat |    maxRes |    anchor |       dOK
+     none |         1 |      71.5 |      5792 |    106378 |      3282 |        59 |      71.5 |        OK
+     none |         2 |      60.0 |      9481 |    259758 |      3526 |        98 |      60.0 |        OK
+    liar K=1: honestLocal 14.8 (anchor 14.8) OK
+     liar |         1 |      13.2 |     25413 |   7505059 |      4799 |       368 |      13.2 |        OK
+    liar K=2: honestLocal 16.4 (anchor 16.4) OK
+     liar |         2 |      12.6 |     25080 |   7564970 |      4799 |       570 |      12.6 |        OK
+    freerider K=1: dynamics byte-identical to none=True; closureΔ=-27249 unpaid=27249 (anchor 27249) exact-match=True
+freerider |         1 |      71.5 |      5792 |     79129 |      3282 |        59 |      71.5 |        OK
+    freerider K=2: dynamics byte-identical to none=True; closureΔ=-53343 unpaid=53343 (anchor 53343) exact-match=True
+freerider |         2 |      60.0 |      9481 |    206415 |      3526 |        98 |      60.0 |        OK
+    jammer K=1: honestLocal 27.3 (anchor 27.3) OK
+   jammer |         1 |      26.0 |     21992 |    559780 |      4799 |        40 |      26.0 |        OK
+    jammer K=2: honestLocal 27.6 (anchor 27.6) OK
+   jammer |         2 |      27.9 |     22074 |    572221 |      4799 |        58 |      27.9 |        OK
+    mute K=1: honestLocal 96.6 (anchor 96.6) OK
+     mute |         1 |      95.6 |      3339 |     58106 |      1371 |        45 |      95.6 |        OK
+    mute K=2: honestLocal 92.0 (anchor 92.0) OK
+     mute |         2 |      89.0 |      3685 |     68328 |      1475 |        54 |      89.0 |        OK
+  ARM R: PASS
+
+== ARM G: four adversaries x honest gate θ*=1.10 x {ladder@15, kcoh5@15}, byte-identity + detection ==
+  20/20 cells byte-identical (gate never opens honestly on N=6): PASS
+  grammar |      mode |         K |  bandViol |  peerViol |  deadViol |    unpaid |  closureΔ | honestLocal%
+ladder@15 |      liar |         1 |      4800 |      4800 |         0 |         0 |         0 |      14.8
+ladder@15 |      liar |         2 |      4800 |      4800 |         0 |         0 |         0 |      16.4
+ladder@15 | freerider |         1 |         0 |         0 |         0 |     27249 |    -27249 |      90.7
+ladder@15 | freerider |         2 |         0 |         0 |         0 |     53343 |    -53343 |      74.2
+ladder@15 |    jammer |         1 |         0 |         0 |      1863 |         0 |         0 |      27.3
+ladder@15 |    jammer |         2 |         0 |         0 |      1846 |         0 |         0 |      27.6
+ladder@15 |      mute |         1 |         0 |         0 |         0 |         0 |         0 |      96.6
+ladder@15 |      mute |         2 |         0 |         0 |         0 |         0 |         0 |      92.0
+ kcoh5@15 |      liar |         1 |      4800 |      4800 |         0 |         0 |         0 |      16.5
+ kcoh5@15 |      liar |         2 |      4800 |      4800 |         0 |         0 |         0 |      17.8
+ kcoh5@15 | freerider |         1 |         0 |         0 |         0 |     74113 |    -74113 |      74.1
+ kcoh5@15 | freerider |         2 |         0 |         0 |         0 |    114293 |   -114293 |      50.6
+ kcoh5@15 |    jammer |         1 |         0 |         0 |      1725 |         0 |         0 |      31.6
+ kcoh5@15 |    jammer |         2 |         0 |         0 |      1769 |         0 |         0 |      30.6
+ kcoh5@15 |      mute |         1 |         0 |         0 |         0 |         0 |         0 |      99.1
+ kcoh5@15 |      mute |         2 |         0 |         0 |         0 |         0 |         0 |      76.0
+  ARM G: PASS
+
+== ARM N: nf adversary x gate θ*=1.10 (twin 5, otherwise honest) ==
+  grammar |      mode |         K |     mean% |     base% |     shift |     gOpen |     gComp |     nfMis |  bandViol |  peerViol |  closureΔ |    maxRes
+ladder@15 | nf_inflate |         1 |      71.1 |      71.5 |    -0.4pp |        75 |       451 |      1550 |         0 |         0 |         0 |        55
+    -> leverage<=5pp OK; D5 flags 1550 lied ticks (OK); closure/band/peer clean (OK)
+ladder@15 | nf_inflate |         2 |      66.5 |      60.0 |    +6.4pp |        86 |       516 |      1770 |         0 |         0 |         0 |        78
+    -> leverage<=5pp VIOLATION; D5 flags 1770 lied ticks (OK); closure/band/peer clean (OK)
+ladder@15 | nf_deflate |         1 |      71.5 |      71.5 |    +0.0pp |         0 |         0 |      1547 |         0 |         0 |         0 |        59
+    -> leverage<=5pp OK; D5 flags 1547 lied ticks (OK); closure/band/peer clean (OK); deflate structurally inert (gate never opens)
+ladder@15 | nf_deflate |         2 |      60.0 |      60.0 |    +0.0pp |         0 |         0 |      2085 |         0 |         0 |         0 |        98
+    -> leverage<=5pp OK; D5 flags 2085 lied ticks (OK); closure/band/peer clean (OK); deflate structurally inert (gate never opens)
+ kcoh5@15 | nf_inflate |         1 |      82.1 |      74.1 |    +7.9pp |       343 |      2057 |      2967 |         0 |         0 |         0 |        31
+    -> leverage<=5pp VIOLATION; D5 flags 2967 lied ticks (OK); closure/band/peer clean (OK)
+ kcoh5@15 | nf_inflate |         2 |      67.9 |      50.6 |   +17.3pp |       679 |      4074 |      3149 |         0 |         0 |         0 |        51
+    -> leverage<=5pp VIOLATION; D5 flags 3149 lied ticks (OK); closure/band/peer clean (OK)
+ kcoh5@15 | nf_deflate |         1 |      74.1 |      74.1 |    +0.0pp |         0 |         0 |      2835 |         0 |         0 |         0 |        73
+    -> leverage<=5pp OK; D5 flags 2835 lied ticks (OK); closure/band/peer clean (OK); deflate structurally inert (gate never opens)
+ kcoh5@15 | nf_deflate |         2 |      50.6 |      50.6 |    +0.0pp |         0 |         0 |      3365 |         0 |         0 |         0 |       117
+    -> leverage<=5pp OK; D5 flags 3365 lied ticks (OK); closure/band/peer clean (OK); deflate structurally inert (gate never opens)
+  ARM N: FAIL
+
+  PRE-REGISTERED VERDICT: MIXED (R=P G=P N=F)

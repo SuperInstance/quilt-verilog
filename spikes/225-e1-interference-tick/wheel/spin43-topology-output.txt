@@ -1,0 +1,85 @@
+SPIN-43 topology variance-channel law — pid 9242, 3.14.4
+== CANARY a: harness import byte-identity vs spin42_conservation.py ==
+  PASS: 12 never-arms triple-identical + 24 measurement arms (resid+ledger) identical
+
+== CANARY b: anchors (run_fabric 5-seed means) ==
+  zero       K=1: pct   77.3 (want 77.3)  debt 187834 (want 187834)  ev 8756 (want 8756)  -> PASS
+  ladder@15  K=1: pct   71.5 (want 71.5)  debt 106378 (want 106378)  ev 5792 (want 5792)  -> PASS
+
+== CANARY c: SPIN-42 replays (imported sp42.dyn_run_sto) ==
+  zero K=2 q=8 M=1: 49.3 vs never 50.0 -> cost 0.7pp (want 0.7)  -> PASS
+  zero K=2 q=6 M=1: 28.9 vs never 50.0 -> cost 21.0pp (want 21.0)  -> PASS
+
+== CANARY d: gate=never == mc=0 ==
+  PASS: 6 arms created=deleted=0, 0 draws, ledger assert-live
+
+== CANARY e: determinism (two cells, run twice) ==
+  PASS: 2 dual runs byte-identical (resid, events, ledger incl. instruments)
+
+CANARY GATE: ALL PASS
+
+== PANEL: unbiased stochastic observer, M=1, 5-seed means ==
+   cost = pct(never anchor) - pct(M=1); rho = sqrt(noise_energy)/live_mass; noise = noise_energy per run
+
+-- zero  K=1 --
+  q step   never     M=1    cost      rho       noise     del     cre    drift
+  5   32    77.3    77.3     0.0   0.0305      818490   25532   25666      133
+  6   16    77.3    77.3     0.0   0.0197      342925   21424   21416       -8
+  7    8    77.3    77.3     0.0   0.0114      113956   14243   14246        4
+  8    4    77.3    77.3     0.0   0.0055       27090    6784    6757      -27
+-- zero  K=2 --
+  q step   never     M=1    cost      rho       noise     del     cre    drift
+  5   32    50.0     5.4    44.6   0.0009     8594418  246124  281123    34999
+  6   16    50.0    28.9    21.0   0.0035     1616398   99649  103008     3358
+  7    8    50.0    44.0     5.9   0.0038      351017   43291   44501     1210
+  8    4    50.0    49.3     0.7   0.0023       77509   19367   19424       57
+-- ladder@15  K=1 --
+  q step   never     M=1    cost      rho       noise     del     cre    drift
+  5   32    71.5    71.5     0.0   0.0413      473712   14825   14656     -168
+  6   16    71.5    71.5     0.0   0.0273      207136   12964   12876      -88
+  7    8    71.5    71.5     0.0   0.0165       75717    9463    9410      -53
+  8    4    71.5    71.5     0.0   0.0084       19351    4845    4851        6
+-- ladder@15  K=2 --
+  q step   never     M=1    cost      rho       noise     del     cre    drift
+  5   32    60.0     2.6    57.4   0.0006     8558325  249400  275306    25906
+  6   16    60.0    15.0    45.1   0.0018     1857071  115780  117203     1422
+  7    8    60.0    27.9    32.1   0.0023      411985   51824   51552     -273
+  8    4    60.0    55.2     4.8   0.0031       56874   14194   14216       22
+-- kcoh5@15  K=1 --
+  q step   never     M=1    cost      rho       noise     del     cre    drift
+  5   32    74.1    74.1     0.0   0.0270     1054328   32900   32882      -18
+  6   16    74.1    74.1     0.0   0.0176      445218   27823   27882       59
+  7    8    74.1    74.1     0.0   0.0102      150343   18739   18828       89
+  8    4    74.1    74.1     0.0   0.0048       33516    8379    8378       -1
+-- kcoh5@15  K=2 --
+  q step   never     M=1    cost      rho       noise     del     cre    drift
+  5   32    50.6     2.2    48.4   0.0004     8523432  252496  273095    20598
+  6   16    50.6    16.1    34.5   0.0024     1920879  118681  121949     3268
+  7    8    50.6    31.2    19.4   0.0027      422436   53153   52609     -543
+  8    4    50.6    46.4     4.2   0.0021       86039   21549   21461      -88
+
+== H1: single collapse curve cost ~ h(rho), shared across grammars ==
+   leave-one-grammar-out nearest-rho prediction; eps = 5.0pp; pooled Spearman(cost,rho) >= 0.90 required
+  kcoh5@15   q=5 rho=0.0004 cost= 48.4 LOO-pred= 57.4 resid=  -9.0  >EPS
+  ladder@15  q=5 rho=0.0006 cost= 57.4 LOO-pred= 48.4 resid=  +9.0  >EPS
+  zero       q=5 rho=0.0009 cost= 44.6 LOO-pred= 57.4 resid= -12.8  >EPS
+  ladder@15  q=6 rho=0.0018 cost= 45.1 LOO-pred=  4.2 resid= +40.8  >EPS
+  kcoh5@15   q=8 rho=0.0021 cost=  4.2 LOO-pred=  0.7 resid=  +3.5
+  zero       q=8 rho=0.0023 cost=  0.7 LOO-pred= 32.1 resid= -31.4  >EPS
+  ladder@15  q=7 rho=0.0023 cost= 32.1 LOO-pred=  0.7 resid= +31.4  >EPS
+  kcoh5@15   q=6 rho=0.0024 cost= 34.5 LOO-pred= 32.1 resid=  +2.3
+  kcoh5@15   q=7 rho=0.0027 cost= 19.4 LOO-pred=  4.8 resid= +14.5  >EPS
+  ladder@15  q=8 rho=0.0031 cost=  4.8 LOO-pred= 19.4 resid= -14.5  >EPS
+  zero       q=6 rho=0.0035 cost= 21.0 LOO-pred=  4.8 resid= +16.2  >EPS
+  zero       q=7 rho=0.0038 cost=  5.9 LOO-pred=  4.8 resid=  +1.1
+  pooled Spearman(cost, rho) = -0.608 (need >= 0.90); max |LOO residual| = 40.8pp (need <= 5.0); drift-closed (<10% of created): False
+-> H1 VERDICT: MIXED
+
+== H2: q=6 (step 16) cost monotone in noise magnitude, K=2 ==
+  zero       cost  21.0pp  noise 1.616e+06  rho 0.0035
+  ladder@15  cost  45.1pp  noise 1.857e+06  rho 0.0018
+  kcoh5@15   cost  34.5pp  noise 1.921e+06  rho 0.0024
+  monotone in noise_energy: False; monotone in rho: False
+-> H2 VERDICT: FALSIFIED
+
+head: H1 MIXED (maxLOO 40.8pp, rho -0.608), H2 FALSIFIED

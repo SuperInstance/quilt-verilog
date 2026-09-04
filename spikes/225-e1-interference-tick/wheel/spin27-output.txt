@@ -1,0 +1,58 @@
+SPIN-27 METROLOGY slope-law knee — 2026-09-03 15:53:13
+config: N=6 ladder, spreads=[8, 10, 12, 14, 16, 18, 20, 22, 24, 26, 28, 30], K=1(+2), seeds=(1, 7, 42, 1999, 20260902), ticks=4800, delta=12, drift=6, pd=3
+PREDICTION (pre-registered): s* * slope ~ 24 +/- 2; FALSIFY if product varies > 30% or knee slope-independent.
+
+== TRACE FINGERPRINTS (from SPEC) ==
+  s0.8-T250    period=500 band=[353,553] spec-slope=200/250=0.800
+  s1.2-T167    period=334 band=[353,553] spec-slope=200/167=1.198
+  s1.6-T125    period=250 band=[353,553] spec-slope=200/125=1.600
+  s2.0-T100    period=200 band=[353,553] spec-slope=200/100=2.000
+  s2.4-T83     period=166 band=[353,553] spec-slope=200/83=2.410
+== CANARY a: wiring byte-identity dyn_run(R0) vs run_fabric ==
+  PASS: 16 configs byte-identical
+
+== CANARY b: R0 anchors (5-seed means) ==
+  ladder15 K=1: pct=71.48 (71.5)  ev=5791.6 (5792)  debt=106378.4 (106378)  -> PASS
+  zero    K=1: pct=77.26 (77.3)  debt=187833.6 (187834)  -> PASS
+
+== CANARY c: ramp144 replay of SPIN-21 knee-20 anchor ==
+  curve: 99.9 100.0 100.0 95.1 84.5 79.6 75.5 58.5 48.6 46.7 38.6 36.6
+  knee(argmax-drop)=20 (want 20)  50%x=23.7 (want 23.7 tol 2.0)  -> PASS
+
+== CANARY d: determinism (each arm twice, byte-identical) ==
+  PASS: 36 dual runs byte-identical
+
+ALL CANARIES: PASS
+
+== PANEL: ladder spread sweep {8..30}, 5-seed mean % ==
+          K=1 (primary)                |  K=2 (secondary)
+       trace     8    10    12    14    16    18    20    22    24    26    28    30  50%x     8    10    12    14    16    18    20    22    24    26    28    30  50%x
+   s0.8-T250  99.8  99.9 100.0 100.0 100.0  99.9 100.0 100.0 100.0  97.8  83.6  66.4      —  89.9  91.8  95.9  96.4  95.9  96.0  94.9  92.8  88.9  78.2  69.9  61.7      —
+   s1.2-T167 100.0 100.0 100.0 100.0 100.0  95.1  68.3  55.6  47.9  44.1  38.3  35.2   23.5  94.7  96.2  95.2  95.0  88.2  76.6  63.4  54.2  48.1  44.1  39.7  36.9   23.4
+   s1.6-T125 100.0 100.0 100.0  85.8  60.0  47.3  42.5  38.4  28.0  34.4  26.8  22.6   17.6  96.4  96.2  89.1  73.8  58.0  49.3  43.5  38.8  33.9  33.2  28.1  26.3   17.8
+   s2.0-T100 100.0 100.0  68.2  53.9  45.2  35.1  29.4  28.2  19.4  24.3  16.2  16.6   14.9  96.3  88.3  65.2  52.3  44.4  38.3  35.1  29.9  25.9  25.9  22.0  21.2   14.6
+    s2.4-T83 100.0  72.3  51.9  39.5  38.9  28.3  23.5  19.9  13.7  17.9  12.7  12.8   12.3  92.0  67.4  49.8  40.9  37.0  29.8  27.5  24.5  20.9  21.8  18.3  16.5   12.0
+
+== ANALYSIS (decision rule pre-registered in header) ==
+-- headline: s* * slope per trace (predict 24 +/- 2; FALSIFY if range > 30% of 24) --
+  s0.8-T250: no 50% crossing on K=1 — INCONCLUSIVE arm
+  s1.2-T167: spec slope 200/167=1.198  s*=23.5  s**slope=28.1  (pred 24; |dev|=4.1)
+  s1.6-T125: spec slope 200/125=1.600  s*=17.6  s**slope=28.1  (pred 24; |dev|=4.1)
+  s2.0-T100: spec slope 200/100=2.000  s*=14.9  s**slope=29.8  (pred 24; |dev|=5.8)
+  s2.4-T83: spec slope 200/83=2.410  s*=12.3  s**slope=29.6  (pred 24; |dev|=5.6)
+  product range 1.70 (7% of 24) -> MIXED
+  s* range 12.3..23.5 -> slope-DEPENDENT (law alive)
+-- secondary K=2 crossing --
+  s0.8-T250: no crossing (K=2)
+  s1.2-T167: s*2=23.4  s*2*slope=28.0
+  s1.6-T125: s*2=17.8  s*2*slope=28.6
+  s2.0-T100: s*2=14.6  s*2*slope=29.2
+  s2.4-T83: s*2=12.0  s*2*slope=28.9
+
+VERDICT: MIXED
+DONE. elapsed 9 s
+
+== POST-HOC PROBE (labeled: NOT pre-registered; s0.8 had no crossing in 8..30) ==
+s0.8-T250 K=1 spreads 32/34/36/38 (5-seed means): 57.0 / 51.64 / 46.92 / 41.1
+interpolated 50% crossing = 34.7  ->  s* * slope = 34.7 * 0.800 = 27.8
+consistent with the C~28.6 constant of the other four slopes.

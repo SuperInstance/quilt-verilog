@@ -1,0 +1,67 @@
+SPIN-30 METROLOGY drift x band sweep @ d=12 — 2026-09-03 18:19:48
+config: N=6 ladder, slope 1.6 spec, spreads 8..40, drifts=(0, 2, 6, 10), amps=(96, 200, 400), K=1, seeds=(1, 7, 42, 1999, 20260902), ticks=4800, pd=3, delta=12, BAND_LO=353
+PRE-REGISTERED: H1 alpha->1 at drift=0 (2Δ returns); H2 alpha const ~1.19 across all 12 arms; else MIXED.
+
+== TRACE FINGERPRINTS (from SPEC) ==
+  A= 96: period=120 band=[353,449] spec-slope=96/60=1.600
+  A=200: period=250 band=[353,553] spec-slope=200/125=1.600
+  A=400: period=500 band=[353,753] spec-slope=400/250=1.600
+== CANARY a: wiring byte-identity dyn_run(R0,d12) vs run_fabric ==
+  PASS: 16 configs byte-identical
+
+== CANARY b: R0 anchors at delta=12 (5-seed means) ==
+  ladder15 K=1: pct=71.48 (71.5)  ev=5791.6 (5792)  debt=106378.4 (106378)  -> PASS
+  zero    K=1: pct=77.26 (77.3)  debt=187833.6 (187834)  -> PASS
+
+== CANARY c: d12 slope-1.6 baseline replay of SPIN-29 (s*=17.6, C=28.1; STOP if C!=28.1+-1.0) ==
+  curve: 100.0 100.0 100.0 85.8 60.0 47.3 42.5 38.4 28.0 34.4 26.8 22.6 20.6 15.4 19.2 13.0 13.5
+  s*=17.6 (want 17.6 tol 1.0)  C=28.1 (want 28.1 tol 1.0)  -> PASS
+
+== CANARY d: determinism (30 dual runs, arms sample) ==
+  PASS: 12 dual runs byte-identical
+
+ALL CANARIES: PASS
+
+== PANEL: 12 arms (drift x band) at d=12, slope 1.6 spec, 5-seed mean %, spread 8..40 ==
+-- band amplitude A=96 (t_up=60, spec slope 96/60=1.600) --
+ drift     8    10    12    14    16    18    20    22    24    26    28    30    32    34    36    38    40  50%x     C
+     0 100.0 100.0 100.0 100.0  70.0  48.3  61.6  45.1  23.4  58.3  21.7  21.7  25.1  20.1  25.1  21.7  23.3   17.8    28.5
+     2 100.0 100.0 100.0  92.4  65.4  48.8  45.8  44.6  29.5  39.5  27.2  24.9  21.7  20.3  23.4  22.0  22.2   17.9    28.6
+     6  99.9 100.0 100.0  87.9  65.0  54.2  49.6  46.5  37.7  42.0  35.1  31.2  29.1  24.7  27.5  22.6  22.8   19.8    31.7
+    10  98.2  99.3  98.3  80.5  62.9  55.8  51.6  48.3  42.2  42.6  38.4  35.3  33.2  29.3  30.5  26.3  26.4   21.0    33.6
+-- band amplitude A=200 (t_up=125, spec slope 200/125=1.600) --
+ drift     8    10    12    14    16    18    20    22    24    26    28    30    32    34    36    38    40  50%x     C
+     0 100.0 100.0 100.0 100.0  64.8  38.5  55.3  36.1  12.2  54.5   9.8  10.6  12.3   9.8  13.1  11.4   7.6   17.1    27.4
+     2 100.0 100.0 100.0  91.2  60.0  40.4  36.7  36.5  17.9  28.8  14.5  12.4  11.2  10.0  11.6  10.8  11.1   17.0    27.2
+     6 100.0 100.0 100.0  85.8  60.0  47.3  42.5  38.4  28.0  34.4  26.8  22.6  20.6  15.4  19.2  13.0  13.5   17.6    28.1
+    10  98.8  99.6  98.4  78.7  57.6  49.5  44.5  40.9  34.4  35.6  31.2  28.6  26.7  22.5  24.2  20.6  20.4   17.9    28.6
+-- band amplitude A=400 (t_up=250, spec slope 400/250=1.600) --
+ drift     8    10    12    14    16    18    20    22    24    26    28    30    32    34    36    38    40  50%x     C
+     0 100.0 100.0 100.0 100.0  62.5  34.6  52.9  33.8   5.9  52.1   5.5   5.5   6.3   5.1   6.3   5.5   5.8   16.9    27.0
+     2 100.0 100.0 100.0  90.4  57.4  36.4  32.7  32.4  12.2  24.6   9.2   6.9   6.1   5.1   6.0   5.6   5.6   16.7    26.7
+     6 100.0 100.0 100.0  85.3  57.5  44.3  39.5  34.7  23.9  30.4  23.0  19.2  16.6  11.2  15.2   9.3   9.4   17.1    27.4
+    10  99.1  99.6  98.6  76.9  55.6  46.9  41.6  37.6  30.6  32.2  28.0  25.2  23.3  19.4  21.1  17.5  17.2   17.3    27.6
+
+== ANALYSIS (decision rules pre-registered in header) ==
+-- headline: C(drift,A) = s*·slope, alpha = C/(2·12) --
+  drift= 0 A= 96: s*=  17.8  C=  28.5  alpha=1.190
+  drift= 0 A=200: s*=  17.1  C=  27.4  alpha=1.142
+  drift= 0 A=400: s*=  16.9  C=  27.0  alpha=1.126
+  drift= 2 A= 96: s*=  17.9  C=  28.6  alpha=1.190
+  drift= 2 A=200: s*=  17.0  C=  27.2  alpha=1.135
+  drift= 2 A=400: s*=  16.7  C=  26.7  alpha=1.114
+  drift= 6 A= 96: s*=  19.8  C=  31.7  alpha=1.323
+  drift= 6 A=200: s*=  17.6  C=  28.1  alpha=1.172
+  drift= 6 A=400: s*=  17.1  C=  27.4  alpha=1.143
+  drift=10 A= 96: s*=  21.0  C=  33.6  alpha=1.398
+  drift=10 A=200: s*=  17.9  C=  28.6  alpha=1.192
+  drift=10 A=400: s*=  17.3  C=  27.6  alpha=1.152
+  alpha(d0,A200) = 1.142 (H1 needs within 15% of 1.000)
+  alpha range across drift @A200 = 4.9% (H1 needs >15%)
+  alpha range across ALL 12 arms = 23.9% (H2 needs <=15%)
+  fit C = 27.22 + 0.138·drift  (2Δ law would be intercept 24.0, slope 0)
+  fit alpha = 1 + 0.8540·(drift/12): implies C(0)= 24.0? reported intercept 27.22
+  fit C = 45.20 + -2.112·log2(A) @drift=6 (maxres=0.94, const-law resid spread 4.32; noise ~0.5)
+VERDICT: MIXED
+
+DONE. elapsed 10 s

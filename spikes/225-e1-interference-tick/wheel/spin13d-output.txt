@@ -1,0 +1,33 @@
+== CANARY: full-suite double-run byte identity: PASS ==
+
+== SPIN-13d: ENGINEER/Mechanic/Toolkit contract demo ==
+toolkit: anglekit.py | tolerance ALWAYS caller-supplied
+
+== CANARIES ==
+  closure totals == SPIN-13b anchor [36, 341, 6012, 32254]: PASS (got [36, 341, 6012, 32254])
+  bisect_b((2,0),(1,1)) == (3,1) @ exactly 30 deg: PASS
+  select == exhaustive reference (64 checks, 2 tables x 2 tolerances): PASS
+
+== SHARED TOOLKIT, TWO ENGINEER SPECS ==
+  A FINEWIRE spline: tolerance 0.010 deg (engineer), depth 3, 32254 entries, payload 122747 B
+  B PILOT heading: tolerance 3.000 deg (engineer), depth 1, 341 entries, payload 766 B
+
+== APP A: FINEWIRE spline builder (engineer tol 0.010 deg) ==
+    edge @  130.000 deg: table MISS -> mechanic bisect_b(u,v) -> err 0.00140 deg (within tol)
+  edges=9  table-miss=1  medianErr=0.00099 deg  maxErr=0.00561 deg  totalBits=183
+  exact B-spline tangents: 16 distinct directions
+  all within engineer tolerance: YES
+
+== APP B: PILOT heading selector (engineer tol 3.00 deg) ==
+  headings=12  medianErr=1.3125 deg  maxErr=2.9784 deg  totalBits=112 (mean 9.3/leg)
+  all within engineer tolerance: YES
+
+== CONTRACT SUMMARY ==
+  same toolkit, same seed set (36 Eisenstein directions):
+  - engineer A demanded 0.01 deg -> mechanic works at depth 3,
+    ~30-bit constructions, hand-refinement fills table holes;
+  - engineer B demanded 3.0 deg -> depth-1 table suffices,
+    ~6-15-bit constructions, O(1) dense lookups;
+  - refinement ops are identical shared tools in both apps;
+  - tolerance never lives inside the toolkit.
+

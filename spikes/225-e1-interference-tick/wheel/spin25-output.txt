@@ -1,0 +1,38 @@
+SPIN-25 THRESHOLD CAUSAL + BEST-THETA — 2026-09-03 15:12:54
+panel seeds (1, 7, 42); ticks 4800; pd=3; delta/drift 12/6; EV=12
+== CANARY 1: spread=0 byte-identity, kcoh5@0 gate modes ==
+  never==theta1.1==dual-run shas: PASS
+
+== CANARY 2: ladder@15 K=1 = 71.5 exact (5-seed, R0) ==
+  got 71.5  want 71.5  PASS
+
+== CANARY 3: plateau K=2 tax >= 36pp at SPIN-23 anchor ==
+  TWmean tax = 36.7pp (booked 36.7) PASS
+
+ALL CANARIES: PASS
+
+== PART A: nf=6-only toggle at pd=3, K=1 (t100=99 IN vs 100 OUT) ==
+arithmetic: at pd=3 other nf thresholds: nf1,nf5<=66; nf2,nf4<=33; nf7<=133 -> 99 vs 100 differ ONLY in nf=6.
+  kcoh5@15  [target ]  OUT(100)= 74.6  IN(99)= 82.5  delta= +7.9pp  arm-sha-identical=N
+  ladder30  [healthy]  OUT(100)= 26.1  IN(99)= 24.7  delta= -1.4pp  arm-sha-identical=N
+  zero7     [healthy]  OUT(100)= 99.8  IN(99)= 99.8  delta= +0.0pp  arm-sha-identical=Y
+
+  kcoh5@15 delta +7.9pp -> reproduces booked +7.9: YES (rule: >= +5pp)
+  healthy anchors (ladder30, zero7): LEVEL COSTS — SEE TABLE
+  PART A VERDICT: NOT healthy-inert / not causal — booked
+
+== PART B: t100 sweep {67,75,80,85,90,95,99} — sha distinctness FIRST ==
+  distinct behavioral classes: 1
+    class 0: t100=[67, 75, 80, 85, 90, 95, 99]  sha-prefix=763dec3502aade29
+  (matches PREDICTION P-b: admission set {nf6,nf7} identical across [67,99])
+
+  -- panel pct per distinct class (pd=3, seeds {1,7,42}) --
+    class 0 (rep t100=67): rescue=+33.2pp eligible=N  kcoh5@15= 82.5(nv  74.6) ladder30= 24.7(nv  26.1) step5K1= 36.3(nv   0.3) step5K2= 30.8(nv   0.4) zero7= 99.8(nv   0.1)
+
+  NO eligible class — booked as failure of embedded rule
+
+SUMMARY: (a) causal=True healthy-inert=False  (b) classes=1 best=None
+DONE. elapsed 4 s
+ROBUSTNESS ladder30 5-seed: OUT=26.8 IN=25.4 delta=-1.34pp
+ROBUSTNESS ladder30 3-seed: OUT=26.1 IN=24.7 delta=-1.40pp
+ROBUSTNESS kcoh5@15 5-seed: OUT=74.1 IN=82.1 delta=+7.94pp

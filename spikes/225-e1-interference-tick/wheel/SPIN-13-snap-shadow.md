@@ -85,5 +85,89 @@ High-D shadowing buys **precision per stored coefficient**, not directions per e
 
 ```
 python3 -u spin13_snap_shadow.py > spin13-output.txt 2>&1   # ~40 s, byte-identical across runs
+python3 -u spin13b_closure.py > spin13b-output.txt 2>python3 -u spin13b_closure.py > spin13b-output.txt 2>&1  # ~50 s, byte-identical across runs1  # ~50 s, byte-identical across runs
+python3 -u spin13c_lut.py > spin13c-output.txt 2>python3 -u spin13b_closure.py > spin13b-output.txt 2>&1  # ~50 s, byte-identical across runs1     # ~2.5 min, byte-identical across runs
 ```
-Artifacts: `wheel/spin13_snap_shadow.py`, `wheel/spin13-output.txt`, this file.
+Artifacts: `wheel/anglekit.py` (shared toolkit), `wheel/spin13_snap_shadow.py`, `wheel/spin13-output.txt`, `wheel/spin13b_closure.py`, `wheel/spin13b-output.txt`, `wheel/spin13c_lut.py`, `wheel/spin13c-output.txt`, `wheel/spin13d_apps.py`, `wheel/spin13d-output.txt`, `wheel/spin13e_cost.py`, `wheel/spin13e-output.txt`, this file.
+
+---
+
+# ADDENDUM (SPIN-13b) — BISECTION-COMBINATION CLOSURE (Casey, same day)
+
+**Claim tested:** "snapped angles themselves can be bisected and combined for a plethora of absolute precision with a finite number of bits to explain, each optimizable for a situation depending on what they are relative to."
+
+**Verdict: CONFIRMED with two sharp caveats.** Closure is a massive precision multiplier under a fixed coefficient cap (eis: 36 → 32,254 exact directions, median gap 10.89° → 0.0085° = **1,285×**, min gap **45,000×** finer; target error 2.51° → 0.0046° = **548×**), and the context-optimality structure is real and clean. But (1) per *address bit*, raw budget growth beats closure (eis raw @ budget 256 reaches 0.12° in **10 bits** vs closure 0.1° in **20 bits**), and (2) closure largely **erases the dimension advantage** — the plain 2D Eisenstein seed, once closed, matches or beats the d=8 shadow seed per bit (0.1°: eis-closure 20 bits vs d8-closure 22).
+
+**Ops (integer-only, lattice renorm, no trig):** BIS_N = prim(u+v); BIS_B = prim(λu+μv) with λ²‖u‖² ≈ μ²‖v‖² chosen by exact integer norm comparison (true arc-midpoint balancing; canary: bisB of the 0° and 60° Eisenstein directions = (3,1) at **exactly 30°**); COMB = prim(αu+βv), α,β ∈ {±1,±2}. Address = op tag + two parent indices (+3 coef bits). Deterministic LCG pair sampling (12k pairs/depth, 3 depths, random/adjacent/new×random mix). Canaries 5/5 PASS incl. zero-vector rejection and double-run + external byte identity.
+
+**Plethora & ladder (eis seed, cumulative):** depth 1/2/3 → 341 / 6,012 / 32,254 directions at mean 15.2/20.9/29.7 bits for the new nodes; min gap 0.193° → 0.00214° → 0.000116° (≈90× then 18× per depth — **faster than 2⁻ᵈᵉᵖᵗʰ**, because combination Farey-density dominates, not pure halving); median gap shrinks ~6–16× per depth. Shadow seeds start richer (d=6: 984 dirs, 0.257° median) and saturate similarly (~82k dirs, 0.003° median at depth 3).
+
+**Context optimality (op duel across 32 golden targets):** loose tolerance → BASE wins; **mid tolerance (1°–0.03°) → BIS_B dominates** (e.g. 23/32 winners at 0.1° eis); **tightest tolerance (≤0.01°) → COMB takes over** (17/32 at 0.003° d=8). Interpretation: balanced bisection is the systematic gap-refiner; deep integer combinations are the extreme-precision Farey engine; the raw dictionary suffices when the target happens to sit near a lattice direction — exactly the "optimizable for a situation depending on what they are relative to" structure.
+
+**Bits-to-precision vs raw budget growth (the honest cost):** every derived node pays 2·log₂(pool) parent bits, so closure trades address bits for precision at ~2× the bit cost of just enlarging the lattice budget (d=4 raw: 0.012° @ 13 bits vs d=4 closure: 0.01° @ 28 bits). Closure wins exactly when the coefficient budget is *capped* (hardware trit-scale coefficients) — it is a precision multiplier at fixed budget, not a bit-efficient replacement for budget growth. Unreached targets at 0.003° (5–20 of 32) mark the sampling frontier of 12k pairs/depth; full closure would close them at further bit cost.
+
+---
+
+# ADDENDUM 2 (SPIN-13c) — LUT REGIME (Casey, experiment 6)
+
+**Claim tested:** "if lookup tables are being created anyway for a set of options for lightning speed, it changes the optimization calculation for reaching an angle precise enough to be within tolerance but absolute in its construction."
+
+**Verdict: CONFIRMED — offline-exhaustive == online-optimal where the lookup key is fine enough, and the optimization collapses from compute-vs-quality to memory-vs-quality.**
+
+**Setup.** Full closure tables (depth ≤ 3) rebuilt with REAL packed bitstring addresses (tag + parent node-ids + coefficient code; op trees re-evaluate exactly — 512-sample canary PASS; per-depth direction totals byte-anchored to SPIN-13b, 4/4 PASS). Lookup key = fixed-point angle, k=16 bits (65,536 buckets of 0.0055°); construction stays exact/bitstring. Per-tolerance dense tables (bucket → min-address-bits node within τ of bucket center; 256 KB each at 32-bit ids) + shared node payload; Pareto single-table variant serving all 8 tolerances ≈ 1.7–1.9 MB.
+
+**(a) LUT vs online search (64 golden targets):** identical results — 64/64 at τ ∈ {10°, 3°, 1°}, 63/64 at 0.3° (one +3-bit quantization suboptimality), 63/63 and 61/63 at 0.1°/0.03°. The only failure mode is the predicted one: bucket-edge targets where the entry optimal for the bucket *center* is out-of-tolerance or suboptimal for the target (1 case at 0.1°, 4 at 0.01°, 7 at 0.003°) and lookup misses in the sampling holes (9–38 of 64 at ≤ 0.01°). Rule: **k must satisfy bucket-width ≪ τ**; at k=16 the LUT is exactly optimal down to τ ≈ 0.03°, and finer keys fix the rest at memory cost.
+
+**(b) Memory curve (eis seed):** depth 1/2/3 → 341 / 6,012 / 32,254 directions at 0.7 / 17 / 120 KB op-tree payload (mean address 15.2 / 21.0 / 29.7 bits); shadow seeds depth-3 ≈ 80k directions ≈ 360 KB payload. Coverage: 100% of buckets to 0.1° (d≥4 arms), 97–99% at 0.01°, 46–75% at 0.003° (sampling holes, not principle).
+
+**(c) Sweet spots — "lightning-speed absolute angle selection at X KB":**
+- **eis depth-2: ~280 KB total (17.7 KB payload + one 256 KB dense table) → 0.016° median, exact absolute constructions, O(1) lookup.**
+- d=8 depth-3: ~620 KB → 0.0013° median (best precision on the board).
+- Raw-budget LUT (no closure): d=4 @ budget 256 = **12.7 KB payload → 0.0148°** — the cheapest bytes for ~0.015°; but matching closure's 0.0013° needs ~64× coefficient budget (r² ≳ 16k, i.e., the cap regime again).
+- Per-query: online = scan N nodes (32k–80k compares) vs LUT = 1 array read; the build is one-time. In Python the break-even is a handful of queries; in hardware the table *is* the deliverable — quality no longer trades against compute at all.
+
+**Bottom line for the wheel:** LUT precomputation does change the optimization exactly as claimed — the trade moves to memory, and the absolute-construction property (every answer an exactly-evaluable op tree over the fixed dictionary) survives quantized lookup keys, provided the key grid is finer than the tightest tolerance served.
+
+---
+
+# ADDENDUM 3 (SPIN-13d) — THE DESIGN CONTRACT: `anglekit.py` (Casey)
+
+**"Let the engineer decide the tolerance but the mechanic refine the assembly for the application with his toolkit that everyone else has."**
+
+The deliverable is now shaped as a division of labor, implemented in **`wheel/anglekit.py`** (shared toolkit, common property) and demonstrated in `wheel/spin13d_apps.py`:
+
+- **ENGINEER (spec layer) owns tolerance + application fit.** Tolerance is a per-application parameter, *always* caller-supplied — `select(lut, target, tolerance)` — and never baked into the toolkit. The engineer also picks the seed lattice, closure depth, and lookup-key resolution.
+- **MECHANIC (application layer) owns refinement.** `select()` returns the minimal-bit exact construction within the engineer's tolerance; when the table has a sampling hole, the mechanic hand-applies the *shared* refinement ops — `bisect_n`, `bisect_b` (exact integer norm-balanced), `combine` — starting from `bracket(target)`, the two adjacent table directions. Identical tools for every application.
+- **TOOLKIT is common property:** integer-only exact core (Z[√3] frame, primitive lattice renorm, packed bitstring op-tree addresses that re-evaluate exactly), per-tolerance dense fast path with bucket-edge guard, self-contained deterministic builds (fixed LCG), `stats()` for table economics.
+
+**Demonstration — same toolkit, same 36-direction Eisenstein seed set, two engineer specs:**
+
+| | App A: FINEWIRE spline | App B: PILOT heading |
+|---|---|---|
+| engineer tolerance | 0.01° | 3.0° |
+| closure depth | 3 (32,254 entries, 120 KB payload) | 1 (341 entries, 0.75 KB payload) |
+| result | median err 0.00099°, max 0.0056°, ~20-bit mean constructions, exact 16-direction B-spline tangents | median err 1.31°, max 2.55°, 9.3 bits/leg, O(1) dense lookups |
+| mechanic role | filled the one table hole (edge @130°: shared `bisect_b` on brackets → 0.0014°, within spec) | none needed — depth-1 table covers 3° everywhere |
+
+Both applications met spec (**all selections within the engineer's tolerance**), with a 20× spread in construction cost driven entirely by the tolerance parameter — the contract working as intended.
+
+Canaries: closure totals anchored to SPIN-13b (PASS), `select` == independent exhaustive reference across both tables × both tolerances (64 checks PASS), exact 30° balanced bisection (PASS), full double-run + external byte identity (PASS). Scar: the first version failed double-run identity — the shared LCG stream wasn't reset per table build; fixed by making every `build_table` self-contained.
+
+---
+
+# ADDENDUM 4 (SPIN-13e) — THE COST DOCTRINE in `select()` (Casey)
+
+**The monofilament analogy:** big data says the optimal line is √8 ≈ 2.83 mm, but 3 mm is cheap, common, durable, and trades only a sliver of catch-rate. "This is why we reach for Pythagorean shapes… you can customize everything to enough floating points for tolerance, or you can do it the easy way."
+
+**Implementation:** `select()` now defaults to `prefer="cost"` — the objective is **min construction cost subject to |θ−target| ≤ tolerance**, ranked by `(part_class, bits, depth, err)`. *Pythagorean-standard parts* = primitive directions with **integer real length** k = √(X²+3Y²) ≤ 64 — the exact Euclid-formula analog in the Z[√3] frame (X=m²−3n², Y=2mn, k=m²+3n²: e.g., (1,1)k2, (1,4)k7, (13,3)k14). Class 0 = standard part; 1 = integer length, any k; 2 = small mundane norm; 3 = exotic. `prefer="bits"` (13c/d legacy) and `prefer="nearest"` remain available; 13d's demo is pinned to legacy and byte-reproduces.
+
+**Measured (Eisenstein seed, depth-3 table — 70 standard parts on the shelf of 32,254 entries; depth-1: 26 parts):**
+
+- **Divergence from nearest-angle picks: 100% at 3° tolerance, 98% at 1°, 16% at 0.01°.** The nearest-angle policy picked a standard part **0/64** times — chasing exotic precision always wins by angle, which is exactly the disease the doctrine cures.
+- **The sliver, quantified:** traded precision = median **39% of tolerance** at 1° (0.39°), 26% at 0.1°, always ≤ tolerance by construction (448/448 picks verified within spec). This is *bigger* than the analogy's 6% — because the shelf is thin (70 parts). The sliver shrinks as the shelf grows; the room is the engineer's to grant.
+- **What it buys:** standard-part constructions at 17–23 bits with k ≤ 64, norm² ≤ 4k², vs exotic nearest hits at 28–31 bits with norm² 17k–27k. Exemplar @ 222.49°±1°: nearest (−121,−64) norm² 26,929 @ 31 bits, err 0.0014° → cost (−23,−12) **k=31** @ 23 bits, err 0.389° — a durable standard part using 39% of the granted room. Bits parity vs the legacy min-bits policy (median 0 saved; 3 at 0.3°): the doctrine buys *standardness*, not just shortness.
+- **Viability envelope (fraction of targets with ≥1 standard part within tolerance):** 64/64 at 10°, 57/64 at 3°, 25/64 at 1°, 11/64 at 0.3°, ~0 below 0.03°. **Below ~0.1° the shelf runs out and the mechanic's shared refinement ops take over** (13d showed bisect_b filling holes) — the engineer's tolerance choice literally selects which regime the mechanic works in.
+
+Canaries: 13b anchor PASS, exact-30° PASS, known-triple part_class checks PASS, all 448 cost picks within tolerance PASS, double-run + external byte identity PASS.
+
+**Contract, final form:** the engineer owns tolerance (the room that makes standard parts viable); the mechanic owns refinement with shared tools; the toolkit ranks by construction cost, never by naked closeness — and reaches for Pythagorean shapes because they are the cheap, common, durable ones.
