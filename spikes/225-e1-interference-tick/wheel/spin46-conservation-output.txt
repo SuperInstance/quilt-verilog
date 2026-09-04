@@ -1,0 +1,89 @@
+SPIN-46 CONSERVATION (debt-rate law) — Fri Sep  4 14:34:20 UTC 2026
+hypotheses + decision rule pre-registered in script header (unchanged at run time)
+== CANARY (a): provenance — this runner == spin38.run_ledger ==
+  identical: K=1 seed=1 ticks=38400 {'drift': 96, 'delta': 6} (nw=8)
+  identical: K=2 seed=42 ticks=38400 {'drift': 768, 'delta': 1} (nw=8)
+  identical: K=1 seed=7 ticks=38400 {'drift': 0, 'delta': 12} (nw=8)
+  identical: K=2 seed=1999 ticks=38400 {'drift': 384, 'delta': 12} (nw=8)
+  identical: K=1 seed=42 ticks=153600 {'drift': 768, 'delta': 12} (nw=32)
+  identical: K=2 seed=1 ticks=38400 {'drift': 6, 'delta': 12} (nw=8)
+  identical: K=1 seed=20260902 ticks=4800 {'drift': 6, 'delta': 12} (nw=8)
+  PASS: 7/7 configs
+
+== CANARY (b): anchor replays digit-exact (drift=6 delta=12)
+  zero@15   K=1: 77.3% (want 77.3)  ev 8756 (want 8756)  debt 187834 (want 187834)  -> PASS
+  ladder@15 K=1: 71.5% (want 71.5)  ev 5792 (want 5792)  debt 106378 (want 106378)  -> PASS
+
+== CANARY (c): SPIN-38 drift=384 debt/ev ~9202 replay @4800t ==
+  ladder@30 K=1 drift=384: debt/ev 9202.3 (SPIN-15/38 anchor 9202.4 +-5%) -> PASS
+
+== CANARY (d): gate=never == mc=0 (delta=10**9, no trigger) ==
+  K=1 drift=0: all-zero ledger (PASS)
+  K=1 drift=384: all-zero ledger (PASS)
+  K=2 drift=0: all-zero ledger (PASS)
+  K=2 drift=384: all-zero ledger (PASS)
+
+== CANARY (f): double-run determinism (>=4 configs) ==
+  cfg0 K=1 seed=1 ticks=38400 {'drift': 0}: byte-identical
+  cfg1 K=2 seed=42 ticks=38400 {'drift': 768}: byte-identical
+  cfg2 K=2 seed=7 ticks=153600 {'drift': 384}: byte-identical
+  cfg3 K=2 seed=1999 ticks=38400 {'drift': 96}: byte-identical
+  PASS: 4/4
+
+ALL CANARIES: PASS
+
+== MAIN GRID: outlier@30, delta=12, 38400 ticks, seeds (1, 7, 42, 1999, 20260902)
+drift | K | events | debt | Phi=debt/t | w1->w8 rate (last/first r) | IDs
+    0 | 1 |    122293 |     3062560 |      79.8 |    378480->   383440 (r 1.01) | 4/4
+    0 | 2 |    130159 |     3919907 |     102.1 |    479127->   491540 (r 1.03) | 4/4
+   96 | 1 |    226460 |   163619722 |    4260.9 |  19142490-> 17331193 (r 0.91) | 4/4
+   96 | 2 |    229295 |   603301024 |   15711.0 |  46458927-> 85080492 (r 1.83) | 4/4
+  192 | 1 |    229431 |   696172731 |   18129.5 |  74372992-> 74596837 (r 1.00) | 4/4
+  192 | 2 |    230023 |  1484325726 |   38654.3 | 105704647->152060904 (r 1.44) | 4/4
+  384 | 1 |    230233 |  2957555821 |   77019.7 | 264030225->312370595 (r 1.18) | 4/4
+  384 | 2 |    230240 |  3034509174 |   79023.7 | 145489766->487041103 (r 3.35) | 4/4
+  768 | 1 |    230327 |  6617426221 |  172328.8 | 381181257->660158143 (r 1.73) | 4/4
+  768 | 2 |    230315 |  8753843942 |  227964.7 | 447137059->1984373760 (r 4.44) | 4/4
+  canary (e) mass/debt identities on every main-grid arm: PASS
+
+== DELTA SPOT CHECK (drift=384, 38400t): delta-dead per SPIN-38?
+  delta=1 K=1: debt 2957293645 IDs 4/4
+  delta=1 K=2: debt 3034904599 IDs 4/4
+  delta=6 K=1: debt 2957174678 IDs 4/4
+  delta=6 K=2: debt 3035234624 IDs 4/4
+  delta=12 K=1: debt 2957555821 IDs 4/4
+  delta=12 K=2: debt 3034509174 IDs 4/4
+  K=1 delta spread 0.01% -> delta-dead (<1%)
+  K=2 delta spread 0.02% -> delta-dead (<1%)
+
+== H2 ARM: 153600 ticks = 32x SPIN-38 window, K=2 (K=1 drift=768 control), delta=12
+drift | K | debt | Phi | w1 | w8 | w16 | w24 | w32 | last/first r | 32x/8x debt ratio | IDs
+    0 | 2 |    15716867 |     102.3 |    479127 |    491540 |    491540 |    491540 |    491540 | 1.03 |   4.01 | 4/4
+   96 | 2 |  2164232719 |   14090.1 |  46458927 |  85080492 |  63054926 |  83520843 |  52740546 | 1.14 |   3.59 | 4/4
+  192 | 2 |  6577273938 |   42820.8 | 105704647 | 152060904 | 138764217 | 310817583 | 190544300 | 1.80 |   4.43 | 4/4
+  384 | 2 | 17017706124 |  110792.4 | 145489766 | 487041103 | 386068462 | 609929030 | 900398409 | 6.19 |   5.61 | 4/4
+  768 | 2 | 81292492648 |  529248.0 | 447137059 | 1984373760 | 2974185248 | 3269601181 | 3599084494 | 8.05 |   9.29 | 4/4
+  768 | 1 | 42051450142 |  273772.5 | 381181257 | 660158143 | 1973488597 | 1725222017 | 1131865793 | 2.97 |   6.35 | 4/4
+
+== H1 SEPARABILITY: Phi(drift,K) = D(drift) x R(K)? ==
+  stress grid only (drift 96..768); drift=0 = boundary cell
+  drift= 96: Phi1=   4260.9  Phi2=  15711.0  rho=3.6872
+  drift=192: Phi1=  18129.5  Phi2=  38654.3  rho=2.1321
+  drift=384: Phi1=  77019.7  Phi2=  79023.7  rho=1.0260
+  drift=768: Phi1= 172328.8  Phi2= 227964.7  rho=1.3228
+  [boundary drift=0: rho=1.2799 — excluded from verdict by pre-registration]
+  (i)  spread(rho) = 130.32% of mean(rho)=2.0421  [gate <=10%]  -> BREAKS
+  (ii) max multiplicative-model residual = 99.03%  [gate <=10%]  -> BREAKS
+  H1 VERDICT: FALSIFIED — interaction term IS required
+  [recorded] K=1 drift-doubling Phi ratios: ['4.25', '4.25', '2.24']
+  [record] K=2 drift-doubling Phi ratios: ['2.46', '2.04', '2.88']
+
+== H2 RUNAWAY FATE at 32x (K=2, stress drifts) ==
+  drift= 96: last/first window rate r=1.14 -> UNBOUNDED (>=0.9)  [32x/8x debt ratio 3.59]
+  drift=192: last/first window rate r=1.80 -> UNBOUNDED (>=0.9)  [32x/8x debt ratio 4.43]
+  drift=384: last/first window rate r=6.19 -> UNBOUNDED (>=0.9)  [32x/8x debt ratio 5.61]
+  drift=768: last/first window rate r=8.05 -> UNBOUNDED (>=0.9)  [32x/8x debt ratio 9.29]
+  H2 VERDICT: FALSIFIED (sat=0/4, unb=4/4)
+
+== SUMMARY: H1 FALSIFIED / H2 FALSIFIED / canaries ALL PASS
+DONE. elapsed 41 s
