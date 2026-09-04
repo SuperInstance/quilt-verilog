@@ -1,0 +1,53 @@
+== SPIN-34 SILICON: minimum-PW sweep (q_wall_gate cosim) ==
+hypothesis H1: bit-exact down to PW=41 (GUARD representability bound); H2: PW=40 fails (GUARD truncation)
+== canary 1: Python anchors ==
+  kcoh5_gate s=1 sha=5621c4c1e813ab32 expect=5621c4c1e813ab32 OK
+  kcoh5_gate s=7 sha=00a23583c03b124d expect=00a23583c03b124d OK
+  kcoh5_gate s=42 sha=9d4ae35e45b43f37 expect=9d4ae35e45b43f37 OK
+  kcoh5 gate==off byte-frozen (5 seeds): True
+  step5_gate true12 3-seed mean=36.9 (anchor 36.9) vals=[36.4, 37.3, 37.0]
+  kcoh5 true12 3-seed=[53.0, 55.4, 51.0] expect [53.0,55.4,51.0] (SPIN-19 out; the 53.0-55.4 quote covers s1/s7): True
+  CANARY-1 PASS
+== PW sweep (bounded arms, full-dict bit-exact vs Python) ==
+  PW=48: 35/35 bounded arms bit-exact  <-- all PASS
+  PW=46: 35/35 bounded arms bit-exact  <-- all PASS
+  PW=44: 35/35 bounded arms bit-exact  <-- all PASS
+  PW=42: 35/35 bounded arms bit-exact  <-- all PASS
+  PW=41: 35/35 bounded arms bit-exact  <-- all PASS
+  PW=40: 5/35 bounded arms bit-exact
+      FAIL kcoh5_gates1: counter events: py=16181 rtl=0
+      FAIL kcoh5_gates7: counter events: py=15829 rtl=0
+      FAIL kcoh5_gates42: counter events: py=16524 rtl=0
+      FAIL kcoh5_gates1999: counter events: py=15916 rtl=0
+      FAIL kcoh5_gates20260902: counter events: py=16333 rtl=0
+      FAIL ladder_gates1: counter events: py=14880 rtl=0
+  min-PW (bounded arms, 5 seeds) = 41
+== step5_off: prefix bit-exactness + divergence co-sign ==
+  pw=48 s=1: X@107 PREFIX-MATCH maxresid=6.7e+13 cosigned>1e6
+  pw=48 s=7: X@133 PREFIX-MATCH maxresid=6.83e+13 cosigned>1e6
+  pw=48 s=42: X@131 PREFIX-MATCH maxresid=7.53e+13 cosigned>1e6
+  pw=48 s=1999: X@136 PREFIX-MATCH maxresid=7.84e+13 cosigned>1e6
+  pw=48 s=20260902: X@128 PREFIX-MATCH maxresid=6.28e+13 cosigned>1e6
+  pw=46 s=1: X@102 PREFIX-MATCH maxresid=1.59e+13 cosigned>1e6
+  pw=46 s=7: X@128 PREFIX-MATCH maxresid=1.62e+13 cosigned>1e6
+  pw=46 s=42: X@126 PREFIX-MATCH maxresid=1.79e+13 cosigned>1e6
+  pw=46 s=1999: X@131 PREFIX-MATCH maxresid=1.86e+13 cosigned>1e6
+  pw=46 s=20260902: X@124 PREFIX-MATCH maxresid=1.99e+13 cosigned>1e6
+  pw=44 s=1: X@97 PREFIX-MATCH maxresid=3.78e+12 cosigned>1e6
+  pw=44 s=7: X@123 PREFIX-MATCH maxresid=3.84e+12 cosigned>1e6
+  pw=44 s=42: X@121 PREFIX-MATCH maxresid=4.24e+12 cosigned>1e6
+  pw=44 s=1999: X@126 PREFIX-MATCH maxresid=4.42e+12 cosigned>1e6
+  pw=44 s=20260902: X@119 PREFIX-MATCH maxresid=4.72e+12 cosigned>1e6
+  pw=42 s=1: X@93 PREFIX-MATCH maxresid=1.19e+12 cosigned>1e6
+  pw=42 s=7: X@119 PREFIX-MATCH maxresid=1.22e+12 cosigned>1e6
+  pw=42 s=42: X@116 PREFIX-MATCH maxresid=1.01e+12 cosigned>1e6
+  pw=42 s=1999: X@121 PREFIX-MATCH maxresid=1.05e+12 cosigned>1e6
+  pw=42 s=20260902: X@114 PREFIX-MATCH maxresid=1.12e+12 cosigned>1e6
+  pw=41 s=1: X@90 PREFIX-MATCH maxresid=5.04e+11 cosigned>1e6
+  pw=41 s=7: X@116 PREFIX-MATCH maxresid=5.13e+11 cosigned>1e6
+  pw=41 s=42: X@114 PREFIX-MATCH maxresid=5.66e+11 cosigned>1e6
+  pw=41 s=1999: X@119 PREFIX-MATCH maxresid=5.89e+11 cosigned>1e6
+  pw=41 s=20260902: X@111 PREFIX-MATCH maxresid=4.72e+11 cosigned>1e6
+== headline ==
+  PW=41 step5_gate s1: sha=6680a395fa140ad3 true12=36.4
+  verdict vs pre-registered H1(min=41): VALIDATED

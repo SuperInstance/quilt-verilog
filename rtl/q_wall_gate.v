@@ -73,7 +73,12 @@ module q_wall_gate #(
     output reg  [PW-1:0]         o_gopen_tot,
     output reg  [PW-1:0]         o_gcomp
 );
-    localparam signed [PW-1:0] GUARD = 48'd1000000000000;
+    // GUARD = 1e12 via sized 64-bit literal (unsized literal truncates
+    // to 32 bits and goes NEGATIVE in verilator -- scar booked).
+    // Honest per-PW truncation: exact iff PW >= 41; at PW=40 the sign
+    // bit lands inside 1e12 and GUARD goes negative (swept falsifier).
+    localparam signed [63:0] GUARD64 = 64'd1000000000000;
+    localparam signed [PW-1:0] GUARD = GUARD64[PW-1:0];
 
     // ------------------------------------------------------------ helpers
     function signed [PW-1:0] f_reality;
@@ -101,6 +106,10 @@ module q_wall_gate #(
     reg signed [TW:0]   last;                   // last fire tick, init -10
     reg [1:0]           st;
     localparam ST_IDLE = 2'd0, ST_RUN = 2'd1, ST_DONE = 2'd2;
+    // PW-scaled signed envelope: +-(2^(PW-1) - 1) / -2^(PW-1).
+    // At PW=48 these are exactly 140737488355327 / -140737488355328.
+    localparam signed [PW+5:0] PW_MAX = {1'b0, {(PW-1){1'b1}}};
+    localparam signed [PW+5:0] PW_MIN = ~PW_MAX;
 
     reg [LSW-1:0] i_lats_reg [0:N-1];
     reg signed [PW-1:0] mass_add;            // blocking accumulator
@@ -205,11 +214,12 @@ module q_wall_gate #(
             end
         net   = netw[PW-1:0];
         // fixed-width contract: DECLARE (never hide) the overflow that
-        // unbounded-Python supra-wall divergence runs into
-        ovf   = (netw > 54'sd140737488355327)
-                || (netw < -54'sd140737488355328)
-                || ((g_now + netw) > 54'sd140737488355327)
-                || ((g_now + netw) < -54'sd140737488355328);
+        // unbounded-Python supra-wall divergence runs into. Threshold
+        // scales with PW (PW=48 gives exactly the old 2^47-1 constants).
+        ovf   = (netw > PW_MAX)
+                || (netw < PW_MIN)
+                || ((g_now + netw) > PW_MAX)
+                || ((g_now + netw) < PW_MIN);
         cancel = (netw == 0) && any_pos && any_neg;
     end
 
