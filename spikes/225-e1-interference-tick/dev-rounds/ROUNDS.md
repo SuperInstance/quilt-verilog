@@ -66,3 +66,8 @@ Ordered queue: RESEARCH-AGENDA §4 O1–O7, then §Q open questions, then wheel 
 - **Verdict:** FLOOR-MASKED — quantization floor masks the dichotomy. Twin copies under shared noise: minimal ±1 damage annihilates (S=0 absorbing) in ≥4/5 seeds in every (group, p, N) cell; no sustained exponential separation anywhere; group-typing story neither confirmed nor falsified — ungated. A first build *confirmed* Barbieri (D/P α≈+0.02 vs Z≈0) and was a Gauss-Seidel emission bug, caught by the p=0 BFS-ball wiring canary before verdict. Booked observations: growing survivors only ever on D/P (never Z); Z's one survivor decayed at exactly −1/120 log₂/tick. Next Seam B rung: Rollier–Baetens exact affine-CA spectra.
 - **Commit:** 1542785
 - **Headline:** ≥4/5 seeds floor-hit in all 12 main-grid cells (D p=300 best survivor α=+99694607/32212254720 ≈ +0.0031, dead by t=256).
+
+## Round 15 — Rollier–Baetens exact affine-CA spectra (Seam B next rung) — DISPATCHED 2026-09-03 18:57 AKDT
+- **Item:** Round 13's booked next rung — Q6's Lyapunov proxy was floor-masked (±1 quantization annihilates twin-copy perturbations in every cell); the exact route to the ℤ_n vs D_n Barbieri dichotomy is spectral: exact integer spectra / trace powers of finite affine CAs on ℤ_n vs D_n (vs ℤ_n×ℤ₂ if cheap), small lattices computed exactly so the floor cannot mask.
+- **Lane:** dev_r15_rollier_baetens (zai/glm-5.3, run mode). Deliverable: dev-rounds/ROUND-15-rollier-baetens.md. Pre-registered decision rule before any comparison numbers; integer-only; seeds 1/7/42/1999/20260902; canaries (byte-identity ≥8, round-13 anchor replay, mislabeled-group self-canary). Commit + push g3-kinduction mandated.
+- **Verdict:** pending (backfill on lane completion).
