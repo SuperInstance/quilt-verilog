@@ -1,0 +1,19 @@
+== O2j deviant-cell replication start 01:48:09 ==
+replay pd=4 drift=6: wall=9 (want 9)
+replay pd=3 drift=12: wall=6 (want 6)
+replay K=8 r=1: wall=2 (want 2)
+replay K=8 r=2: wall=3 (want 3)
+replay K=8 r=6: wall=4 (want 4)
+canaries: PASS
+
+G-SEEDS (drift=12, pd=4, delta=12, 10 fresh seeds): wall=8
+G-SEEDS: HOLD
+noise-floor ctx (drift=12, pd=5, fresh seeds): wall=11 (r26 o2-seed: 11)
+noise-floor ctx (drift=12, pd=3, fresh seeds): wall=6 (r26 o2-seed: 6)
+G-DELTA (drift=12, pd=4, delta=16): wall=8
+G-DELTA (drift=12, pd=4, delta=32): wall=8
+
+-- BOOKING --
+'drift-carried +1 premium' STAYS ledger vocabulary (HOLD + delta-stable)
+
+done in 156s
