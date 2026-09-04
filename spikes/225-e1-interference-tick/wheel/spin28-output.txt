@@ -1,0 +1,69 @@
+SPIN-28 REGIME JUMP-LADDER — 2026-09-03 16:34:50
+config: N=6 ladder, K=2 panel, seeds=(1, 7, 42), ticks=4800, delta=12, drift=6, pd=3, P=16
+== CANARY a: wiring byte-identity dyn_run(R0) vs run_fabric ==
+  PASS: 16 configs byte-identical
+
+== CANARY b: R0 anchors (5-seed means) ==
+  ladder15  K=1: pct=71.48 (71.5)  ev=5791.6 (5792)  debt=106378.4 (106378)  -> PASS
+  zero      K=1: pct=77.26 (77.3)  ev=8756.4 (None)  debt=187833.6 (187834)  -> PASS
+
+== CANARY c: SPIN-23 replays (seeds {1,7,42}) ==
+  plateau 5<->30 K=2 P=16 TWmean tax = 36.7 (36.7) -> PASS
+  sawtooth tax s15=27.5 (27.5)  s25=11.7 (11.7)  flip=+15.8pp (15.8) -> PASS
+
+== CANARY d: double-run determinism ==
+  PASS: 30 dual runs byte-identical
+
+ALL CANARIES: PASS
+
+== EXP 1: J-LADDER — tax(P=16, K=2) at spread 15 (10<->25) and 25 (5<->30), BOTH baselines, seeds {1,7,42} ==
+trace         J   s   osc%   TWm%  taxTW   mmS%  taxMM
+plateau     153  25    3.4   40.1   36.7   50.4   47.0
+plateau     153  15   16.2   50.9   34.6   50.4   34.2
+                     dAmp(TWmean)=+2.1pp   dAmp(matched-mean)=+12.8pp
+triangle      2  25   34.1   59.4   25.2   52.4   18.2
+triangle      2  15   43.9   64.5   20.7   52.4    8.5
+                     dAmp(TWmean)=+4.6pp   dAmp(matched-mean)=+9.7pp
+zigzag96      2  25   24.8   60.6   35.8   42.5   17.7
+zigzag96      2  15   31.3   60.2   28.9   42.5   11.2
+                     dAmp(TWmean)=+6.9pp   dAmp(matched-mean)=+6.5pp
+sawtooth    152  25   34.3   45.9   11.7   73.6   39.4
+sawtooth    152  15   33.9   61.4   27.5   73.6   39.7
+                     dAmp(TWmean)=-15.8pp   dAmp(matched-mean)=-0.3pp
+ramp144       2  25   35.9   61.6   25.7   74.6   38.7
+ramp144       2  15   48.9   70.9   22.0   74.6   25.7
+                     dAmp(TWmean)=+3.7pp   dAmp(matched-mean)=+13.0pp
+
+== EXP 2: PHASE-OFFSET SWEEP 0..8 — P=16, K=2, 5<->30 duty 50, extreme-J traces (plateau, sawtooth), seeds {1,7,42} ==
+  plateau   offset=0: osc=2.5
+  plateau   offset=1: osc=9.9
+  plateau   offset=2: osc=9.2
+  plateau   offset=3: osc=4.1
+  plateau   offset=4: osc=4.3
+  plateau   offset=5: osc=2.0
+  plateau   offset=6: osc=2.6
+  plateau   offset=7: osc=5.3
+  plateau   offset=8: osc=3.4
+  plateau   SWING = 7.9pp
+  sawtooth  offset=0: osc=9.9
+  sawtooth  offset=1: osc=18.3
+  sawtooth  offset=2: osc=25.2
+  sawtooth  offset=3: osc=10.4
+  sawtooth  offset=4: osc=24.1
+  sawtooth  offset=5: osc=30.9
+  sawtooth  offset=6: osc=12.3
+  sawtooth  offset=7: osc=15.8
+  sawtooth  offset=8: osc=34.3
+  sawtooth  SWING = 24.4pp
+
+== PRE-REGISTERED VERDICT RULES ==
+  AMP dAmp(TW): plateau=+2.1  triangle=+4.6  zigzag96=+6.9  sawtooth=-15.8  ramp144=+3.7
+  AMP dAmp(MM): plateau=+12.8  triangle=+9.7  zigzag96=+6.5  sawtooth=-0.3  ramp144=+13.0
+  AMP class separation (STRICT both<every-3pp): TW NOSEP, MM NOSEP  J-independent=False
+  -> AMP: FAIL
+  PHASE swings: sawtooth=24.4  plateau=7.9  (slope-class ref ~1pp, spin-23)  non-monotone=False  -> PHASE: PASS
+  ADVISORY (equal-J sufficiency): plateau J=153 vs sawtooth J=152 -> swing 7.9 vs 24.4, dAmp(TW) +2.1 vs -15.8: J-class separates, J-value alone does NOT
+
+  VERDICT: MIXED
+
+DONE. elapsed 3 s
