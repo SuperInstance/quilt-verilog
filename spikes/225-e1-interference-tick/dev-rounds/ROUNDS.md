@@ -70,4 +70,22 @@ Ordered queue: RESEARCH-AGENDA §4 O1–O7, then §Q open questions, then wheel 
 ## Round 15 — Rollier–Baetens exact affine-CA spectra (Seam B next rung) — DISPATCHED 2026-09-03 18:57 AKDT
 - **Item:** Round 13's booked next rung — Q6's Lyapunov proxy was floor-masked (±1 quantization annihilates twin-copy perturbations in every cell); the exact route to the ℤ_n vs D_n Barbieri dichotomy is spectral: exact integer spectra / trace powers of finite affine CAs on ℤ_n vs D_n (vs ℤ_n×ℤ₂ if cheap), small lattices computed exactly so the floor cannot mask.
 - **Lane:** dev_r15_rollier_baetens (zai/glm-5.3, run mode). Deliverable: dev-rounds/ROUND-15-rollier-baetens.md. Pre-registered decision rule before any comparison numbers; integer-only; seeds 1/7/42/1999/20260902; canaries (byte-identity ≥8, round-13 anchor replay, mislabeled-group self-canary). Commit + push g3-kinduction mandated.
+- **Verdict:** LANE LOST — lane dispatched 18:57 AKDT produced no deliverable, no commit, and no active session by 20:38; item remains undone. Re-dispatched as round 18.
+
+## Round 16 — Q7b (round-14 dial on the O2 N-sweep fabric, F14 gate live) — DISPATCHED 2026-09-03 20:05 AKDT
+- **Item:** Q7b — port the round-14 pre-registered 3-register dial (L̂ blade / σ κ-slow / β bursty suppressor + mag/C=1 sort) onto the O2 contention N-sweep fabric where the F14 gate is live (N∈{2..8}, calm+stress, raw vs comp). Question: does suppressor+sort move the O2 wall (booked N=6) the way compensation moved the N=4 bundle wall (12.2→86.3%)?
+- **Decision rule (pre-registered in lane brief):** PROMOTE if dial+sort adds ≥2pp %w over sort-alone at N≥3 raw with debt ≤110% of sort-alone; BOOK "dial inert" if within ±0.5pp at every N; LOCATE if wall shifts — report new gate-clearing N, raw and comp.
+- **Lane:** dev_r16_q7b_dial_o2nsweep (zai/glm-5.3, run mode). Canaries: byte-identity, O2 anchor replay (round 2/3 numbers exact), mislabeled-arm self-canary. Deliverable: dev-rounds/ROUND-16-Q7b-dial-o2nsweep.md. Commit + push g3-kinduction mandated.
+- **Verdict:** PROMOTED-by-rule-letter / dial-and-sort INERT on the contention wall — suppressor+sort within ±0.5pp of sort-alone at every N (wall stays N=6, unmoved the way compensation moved the N=4 bundle wall); the apparent stress-raw lift (~+19pp) is plant-law attribution: the dial's σ outputs effectively run a gentler phase-decay plant (K=1, pd=2, td=12) and would breach the comp-arm debt gate (+20–24%). Dial booked O4-protocol-bound: its registers do not transfer to the O2 switchboard without re-deriving σ on switchboard-native telemetry. T2 RTL note from round 3 stands: wall at N=6.
+- **Commit:** a486b40
+- **Headline:** wall stays N=6; dial inert as contention controller; dial's param outputs lift stress raw ~19pp but that's a plant-law comparison, not contention.
+
+## Round 17 — O2c pure-pd wall sweep — DONE (committed ef6e2b5; pre-registration ca2da8f)
+- **Verdict:** PARTIAL — walls move with pd (pd=2→N=5, pd=3→N=6 control PASS, pd=6→N=7) but NOT as 2pd (pd=6 wall at 7, five seats below predicted 12; win at N=13 is +9.7pp and still growing). Echo-law unification severed: the fan-out wall and the spin-11 echo safe boundary are different objects. Round 16's "immobile wall" qualified: no dial knob moves it, but pd does, weakly and sublinearly. Post-hoc (labeled): wall tracks contention regime (N vs candidate rate), pd a second-order knob. Only surviving structural hypothesis: wall tracks candidate arrival rate (delta/K) — sweep that at fixed pd next.
+- **Commit:** ef6e2b5
+- **Headline:** wall: pd2→N5, pd3→N6, pd6→N7 — sublinear in pd, echo-law severed
+
+## Round 18 — Rollier–Baetens exact affine-CA spectra (round-15 re-run) — DISPATCHED 2026-09-03 20:39 AKDT
+- **Item:** Re-dispatch of lost round-15 lane (same brief): exact integer spectra / trace powers of finite affine CAs on ℤ_n vs D_n (vs ℤ_n×ℤ₂ if cheap), small lattices computed exactly so the quantization floor cannot mask the Barbieri dichotomy. Pre-registered decision rule before any comparison numbers; integer-only; seeds 1/7/42/1999/20260902; canaries (byte-identity ≥8, round-13 anchor replay, mislabeled-group self-canary).
+- **Lane:** dev_r18_rollier_baetens (zai/glm-5.3, run mode). Deliverable: dev-rounds/ROUND-18-rollier-baetens.md. Commit + push g3-kinduction mandated.
 - **Verdict:** pending (backfill on lane completion).
