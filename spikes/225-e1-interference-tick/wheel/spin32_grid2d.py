@@ -306,6 +306,8 @@ def fit_m4(pts, y):
         p0 = 3.0 + 0.25 * p0i
         X = [[1.0, p, max(0.0, p - p0)] for p, d in pts]
         beta = ols(X, y)
+        if beta is None:      # degenerate knee (e.g. p0=3.0 -> collinear)
+            continue
         s = sse(X, y, beta)
         if best is None or s < best[0] - 1e-15:
             best = (s, p0, beta)
@@ -572,7 +574,7 @@ def model_competition(grid):
     # LOO
     print("\nleave-one-arm-out CV (gate: |err| <= 2·NF on >= 80% arms):")
     loo_pass = {}
-    for name, _, _, _, k, _, _ in scored:
+    for _a, name, _pf, _s, _k, _b, _mr in scored:
         npass = 0
         errs = []
         for j in range(n):
@@ -719,7 +721,8 @@ def payoff(verdict, winner, grid):
     print("  slope 1.6; A=96 x drift>=6 ignition corner OUTSIDE "
           "(SPIN-30); A/drift corrections measured at pd=3, delta=12 "
           "ONLY — cross-pd validity untested, flagged.")
-    if wname.startswith("M2") or wname.startswith("M3"):
+    if (verdict.startswith("WINNER")
+            and (wname.startswith("M2") or wname.startswith("M3"))):
         print("  closure status: SINGLE CLOSED FORM (pd, delta) pinned "
               "by this spin; A/drift/N terms partial.")
     else:
