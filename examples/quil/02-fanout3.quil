@@ -1,0 +1,23 @@
+// 02-fanout3.quil — one source bound to three sinks with declared fan-out.
+// Per RFC §1.4: every edge declares its fan-out at bind time; one writer,
+// N named readers; arrival is a synthesis-time choice from the round-19
+// mechanism family (queue_cell / credit_fence / staged_grant). All three
+// are observational-equivalent — switching arrive= never changes the trace.
+
+cell src    { int<16> out = 0; }
+cell sink_a { int<16> acc = 0; }
+cell sink_b { int<16> acc = 0; }
+cell sink_c { int<16> acc = 0; }
+
+view emit(src.out) -> int<16> {
+  src.out
+}
+
+bind emit -> sink_a, sink_b, sink_c   fanout = 3   arrive = queue_cell;
+
+tick {
+  src.out    <= src.out + 1;
+  sink_a.acc <= sink_a.acc + emit;    // each sink: exactly one writer per tick
+  sink_b.acc <= sink_b.acc + emit;
+  sink_c.acc <= sink_c.acc + emit;
+}

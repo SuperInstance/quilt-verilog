@@ -1,0 +1,51 @@
+// 03-nqc3-skeleton.quil — NQ-C3 worm touch-arc skeleton (RFC §3 acceptance demo).
+// Cells and wiring are declared per §3.1/§3.2; all bodies are TODO stubs.
+// This file is design-intent, NOT the acceptance artifact — the gate is
+// bit-exact trace equality vs the hand-written reference (§3.3).
+
+// ---- cells: the 7-cell anterior touch arc (§3.1) ----
+cell AVM  { int<PW> acc = 0; int<PW> refr = 0; }
+cell AVBL { int<PW> acc = 0; int<PW> refr = 0; }
+cell AVBR { int<PW> acc = 0; int<PW> refr = 0; }
+cell PVCL { int<PW> acc = 0; int<PW> refr = 0; }
+cell PVCR { int<PW> acc = 0; int<PW> refr = 0; }
+cell DB02 { int<PW> acc = 0; int<PW> refr = 0; }
+cell DB03 { int<PW> acc = 0; int<PW> refr = 0; }
+
+// ---- views ----
+view avm_out(AVM.acc, AVM.refr) -> int<PW> {
+  // TODO: 1 iff AVM fired on journal entry t-1, else 0
+  //       (fire test: acc >= TH[AVM] && refr == 0, read from the prefix)
+  0
+}
+// TODO: avbl_out, avbr_out, pvcl_out, pvcr_out — same shape, one per driver cell.
+
+// Summed-synapse input; weights verbatim from the WormAtlas-pinned table (§3.1):
+view w_in(src, wt) -> int<PW> { wt * fired(src, -1) }   // journal prefix at t-1
+// TODO: fired(cell, -k) — journal-prefix fire lookup helper.
+
+// ---- wiring: 16 chemical edges + 6 gap pairs (§3.1) ----
+bind avm_out -> AVBL, AVBR, PVCL, PVCR   fanout = 4   arrive = queue_cell;
+// TODO: remaining chemical binds so the declared edge total is 16;
+//       one-tick arrival on every edge (arrive = queue_cell).
+
+link AVBL <-> AVBR   kind = gap;
+link PVCL <-> PVCR   kind = gap;
+// TODO: 4 more gap pairs per the NQ-C3 edge table.
+
+// ---- sensory input: propose lowers to a black-box input port (§1.5) ----
+propose poke { external port int<PW> poke_strength }
+
+// ---- dynamics ----
+tick {
+  // TODO, per cell c:
+  //   acc_next = sat16(exact32(acc - (acc >>> 1)) + Σ_in w_in)
+  //              // half-leak; single saturation from exact 32-bit sums (§3.1)
+  //   fire     = (acc_next >= TH[c]) && (refr == 0)
+  //   refr     = fire ? 1 : 0              // refractory 1 tick
+  //   AVM additionally sums poke_strength, threshold-guarded only (§1.5).
+  //   L2 must emit the blocking local accumulator feeding one non-blocking
+  //   write per cell (§2.2) — the SPIN-19 fix, emitted mechanically.
+}
+
+for i in 0..<TICKS { tick }   // static trip count; poke from the port trace (§3.2)

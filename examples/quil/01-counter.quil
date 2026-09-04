@@ -1,0 +1,15 @@
+// 01-counter.quil — single-cell int<16> tick counter.
+// QUIL per docs/QUIL-HLS-RFC.md: state in cells (§1.1), tick is the only
+// writer (§1.2), views are pure journal-prefix reads (§1.3).
+
+cell counter {
+  int<16> count = 0;          // initial value = journal entry 0
+}
+
+view value(counter.count) -> int<16> {
+  counter.count               // pure function of the journal prefix
+}
+
+tick {
+  counter.count <= counter.count + 1;   // one journal entry per tick
+}

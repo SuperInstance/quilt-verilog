@@ -1,0 +1,4 @@
+// EXPECTED RULE: R5 declared fan-out — link without a declared fan-out.
+cell src int<16> = 0 { tick { src <= src + 1; } }
+cell dst int<16> = 0 { }
+link src -> dst;

@@ -1,0 +1,2 @@
+// EXPECTED RULE: R6 static loop bounds — while-loop with no static bound.
+cell a int<16> = 0 { tick { while (a < 10) { a <= a + 1; } } }
