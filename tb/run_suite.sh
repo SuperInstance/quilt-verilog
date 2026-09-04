@@ -33,6 +33,7 @@ t tb/tb_flit_pipe.v        tb_flit_pipe
 t tb/tb_link_ringport.v    tb_link_ringport
 t tb/tb_dialfile.v         tb_dialfile
 t tb/tb_hebb_edge.v        tb_hebb_edge
+t tb/tb_envelope_fuzz.v   tb_envelope_fuzz
 t tb/tb_hyperbola_tail.v   tb_hyperbola_tail
 t tb/tb_q_echo_gate.v      tb_q_echo_gate
 t tb/tb_q_rqh_bank.v       tb_q_rqh_bank
