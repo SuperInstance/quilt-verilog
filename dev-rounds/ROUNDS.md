@@ -66,3 +66,12 @@ Rule: skip items visibly in flight (check timestamps here + wheel/WHEEL-LOG.md).
 - **Item:** Q2 — is there a MINIMAL correction-channel homeostat with a provable no-collapse bound, or does every local no-error-signal rule learn silence? Test cofire v2 charter predicate (predictability-not-agreement, G1'/G2'/G4) + ≤3 minimal variants (refractory window, floor/decay, lagged reference) on the O6 harness.
 - **Lane:** dev_q2_cofire_minimal (zai/glm-5.3, run mode). Deliverable: dev-rounds/ROUND-9-Q2-cofire-minimal.md. Commit + push g3-kinduction mandated.
 - **Verdict:** BOOKED — every local no-error-signal rule on the correction channel learns silence. v2 charter predicate + refractory + slow-floor variants ALL FAIL G1'/G2'/G4 (honest best 795‰ vs 800‰ gate; predictability band reached on 0‰ of honest ticks; liar pinned 911‰ only by pinning the honest twin at 4.3). Charter falsifier fired verbatim. Trust-learning family demotes to monitor-only permanently; whistle stays (2.2–4.0×); §3.2 runs selection-only.
+
+---
+
+## Round 10 — Q3 (T6 observability theorem) — DISPATCHED 2026-09-03 15:24 AKDT
+- **Item:** Q3 — state "observable behavior ≡ snap-log behavior" [NOVEL-ENHANCEMENTS T6] as checkable formal obligations on q_snaplog + q_cell_core and close them with sby (the program's first T6 formalization; sharpened by F12/F10/F9).
+- **Lane:** dev_q3_t6_observability (zai/glm-5.3, run mode). Deliverable: dev-rounds/ROUND-10-Q3-t6-observability.md. Commit + push g3-kinduction mandated.
+- **Verdict:** CLOSED (bounded) — obligations OBS-1 completeness, OBS-2 soundness/accounting, OBS-3a/3b F12 boolean verdict equivalence machine-checked: d4 PASS (8 s, 7/7 covers incl. saturation + overflow), d8 bracket PASS (5 min), q_cell_core integration leg T6-C1..C4 PASS at shipped DEPTH=16 (BMC 80, 10 min, 5/7 covers). Mutation canary CAUGHT (dropped 6th fire → OBS-1+OBS-2 fail at step 9). SPIN-19 anchor replay byte-identical. Booked: unbounded PDR referee TIMEOUT at 2700 s (frame 92, no counterexample); DEPTH=16 unit deep runs hit the solver wall (no violation through step 25/32). Self-canary: first harness version had a window-edge reference bug (fire coincident with i_tick mis-booked into the new window) — found by the proof itself, fixed before booking.
+- **Commit:** 23b7216
+- **Headline:** T6 equivalence PROVED bounded: log ≡ wave, boolean verdicts ≡ full observation (F12 promoted to proof object); unbounded attempt booked TIMEOUT.
