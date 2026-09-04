@@ -147,7 +147,9 @@ The D-vs-P structure exists but lives strictly below ρ.
 0 degenerate. No headline dichotomy claim is licensed.
 
 **Mechanism upgrade, exact: the ρ route to the Barbieri dichotomy is CLOSED for this
-trio — provably, at any 3-entry affine mask, not merely at this grid.** The separation
+trio — provably, at any 3-entry affine mask, not merely at this grid.**
+
+**[SCOPED by round 18b, DEVIL nudge — 7231ce0 pre-reg, r18b-oddn-output.txt]** Two corrections. (1) *Scope*: "virtually-cyclic" above and in the ROUNDS.md headline was class-sized overreach — the trio is what was analyzed; ℤ_n×ℤ₂ is not representative of virtually-cyclic pairs (no ℤ²-by-finite, no nontrivial ℤ-semidirect products were in the grid). The claim is now **"for this trio."** (2) *Parity*: the grid was even-only (m ∈ {4..16}), and the abelianization-saturation mechanism is parity-dependent — [D_m,D_m]=⟨r²⟩ has index 4 for even m (4 one-dim characters) but index 2 for odd m (2 characters). Round 18b ran the odd cell (m ∈ {15,17}): **G-FORM FAIL, G-TIE FAIL as pre-registered** — the closed-form matches sit within ~0.6% everywhere (estimator-resolution-consistent) but **the D/P tie breaks at seed 42 (gap 0.116/0.090, far beyond the +1.2% bracket bound)**. The theorem statement therefore carries a parity hypothesis on its face: **"closed for even n, this trio."** The broken odd-n seed-42 tie is the first candidate genuine D-vs-P spectral separation and is the named next rung (needs larger K to separate real gap from convergence-rate artifact: |τ_k| factor ≈7 at k=288 is within subdominant-tail range).** The separation
 the rule saw is a wiring artifact (T1's preimage collision), and the D/P tie is forced by
 abelianization saturation (T2). Since ℤ_n, D_n and ℤ_n×ℤ₂ all have 1-dimensional
 characters rich enough to align any mask signs, no 3-entry mask's spectral radius can
