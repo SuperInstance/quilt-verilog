@@ -1,0 +1,100 @@
+SPIN-44 coherence-mass normalizer — pid 10447, 3.14.4
+== CANARY a: harness import byte-identity (sp43.dyn_run_sto43 == sp42.dyn_run_sto) ==
+  PASS: 6 never-arms triple-identical + 12 measurement arms (resid+events+full ledger) identical
+
+== CANARY b: anchors (run_fabric 5-seed means) ==
+  zero       K=1: pct   77.3 (want 77.3)  debt 187834 (want 187834)  ev 8756 (want 8756)  -> PASS
+  ladder@15  K=1: pct   71.5 (want 71.5)  debt 106378 (want 106378)  ev 5792 (want 5792)  -> PASS
+
+== CANARY c: SPIN-43 replays (imported sp43.dyn_run_sto43) ==
+  ladder@15  K=2 q=5 M=1: 2.6 vs never 60.0 -> cost 57.4pp (want 57.4)  -> PASS
+  zero       K=2 q=8 M=1: 49.3 vs never 50.0 -> cost 0.7pp (want 0.7)  -> PASS
+
+== CANARY d: gate=never == mc=0 ==
+  PASS: 9 arms created=deleted=0, 0 draws, ledger assert-live
+
+== CANARY e: determinism (two cells, run twice) ==
+  PASS: 2 dual runs byte-identical
+
+CANARY GATE: ALL PASS
+
+== ARM A: SPIN-43 grid, per-pulse rho (K=2 verdict rows; K=1 vacuous, reported) ==
+-- zero  K=1 --
+  q step   never     M=1    cost   rho_pp rho_grid
+  5   32    77.3    77.3     0.0   2.8491   0.0305
+  6   16    77.3    77.3     0.0   1.8447   0.0197
+  7    8    77.3    77.3     0.0   1.0635   0.0114
+  8    4    77.3    77.3     0.0   0.5186   0.0055
+-- zero  K=2 --
+  q step   never     M=1    cost   rho_pp rho_grid
+  5   32    50.0     5.4    44.6   0.1526   0.0009
+  6   16    50.0    28.9    21.0   0.5105   0.0035
+  7    8    50.0    44.0     5.9   0.4895   0.0038
+  8    4    50.0    49.3     0.7   0.2817   0.0023
+-- ladder@15  K=1 --
+  q step   never     M=1    cost   rho_pp rho_grid
+  5   32    71.5    71.5     0.0   3.1440   0.0413
+  6   16    71.5    71.5     0.0   2.0790   0.0273
+  7    8    71.5    71.5     0.0   1.2570   0.0165
+  8    4    71.5    71.5     0.0   0.6355   0.0084
+-- ladder@15  K=2 --
+  q step   never     M=1    cost   rho_pp rho_grid
+  5   32    60.0     2.6    57.4   0.0953   0.0006
+  6   16    60.0    15.0    45.1   0.2806   0.0018
+  7    8    60.0    27.9    32.1   0.3250   0.0023
+  8    4    60.0    55.2     4.8   0.3163   0.0031
+-- kcoh5@15  K=1 --
+  q step   never     M=1    cost   rho_pp rho_grid
+  5   32    74.1    74.1     0.0   2.8581   0.0270
+  6   16    74.1    74.1     0.0   1.8579   0.0176
+  7    8    74.1    74.1     0.0   1.0801   0.0102
+  8    4    74.1    74.1     0.0   0.5099   0.0048
+-- kcoh5@15  K=2 --
+  q step   never     M=1    cost   rho_pp rho_grid
+  5   32    50.6     2.2    48.4   0.0755   0.0004
+  6   16    50.6    16.1    34.5   0.3786   0.0024
+  7    8    50.6    31.2    19.4   0.3873   0.0027
+  8    4    50.6    46.4     4.2   0.2787   0.0021
+
+== ARM B: noise-per-draw fixed (q=6 step 16, K=2, M=1), pulse-mass scale pd in {2,3,6} ==
+grammar    pd   never     M=1    cost   rho_pp    rho_grid  flags
+zero        2     0.2     0.2     0.0   0.0000      0.0000  DIVERGED(supra-wall N>2pd+1)
+zero        3    50.0    28.9    21.0   0.5105      0.0035  
+zero        6    99.4    96.8     2.6   2.6039      0.0432  
+ladder@15   2     0.3     0.2     0.1   0.0000      0.0000  DIVERGED(supra-wall N>2pd+1)
+ladder@15   3    60.0    15.0    45.1   0.2806      0.0018  
+ladder@15   6    64.2    59.7     4.5   2.4640      0.0296  
+kcoh5@15    2     0.2     0.2     0.0   0.0000      0.0000  DIVERGED(supra-wall N>2pd+1)
+kcoh5@15    3    50.6    16.1    34.5   0.3786      0.0024  
+kcoh5@15    6    87.7    88.8    -1.2   2.3801      0.0252  
+
+== H1: pulse-mass-scale denominator ==
+   rule: FALSIFIED if every grammar pd-flat at q=6 (max-min <= 2.0pp); VALIDATED iff some grammar pd-spread > 2.0pp AND arm-A LOO max|resid| <= 5.0pp AND Spearman(cost,rho_pp) >= 0.90; else MIXED
+  zero       costs pd2/3/6:   0.0/ 21.0/  2.6  spread  21.0pp
+  ladder@15  costs pd2/3/6:   0.1/ 45.1/  4.5  spread  45.0pp
+  kcoh5@15   costs pd2/3/6:   0.0/ 34.5/ -1.2  spread  35.6pp
+  post-hoc divergence gate (LABELED, SPIN-16 guard-prefix scar class): pd=2 is supra-wall divergent at N=6 (N > 2pd+1=5) — its cost is a saturated-pct artifact. pd-flat recheck on stable pd {3,6} only: spreads {'zero': 18.4, 'ladder@15': 40.6, 'kcoh5@15': 35.6}
+  arm-A LOO (rho_pp, 12 cells): max |resid| = 44.4pp
+    zero       q5  rho_pp=0.1526 cost= 44.6 LOO-pred= 57.4 resid= -12.8  >EPS
+    zero       q6  rho_pp=0.5105 cost= 21.0 LOO-pred= 19.4 resid=  +1.6
+    zero       q7  rho_pp=0.4895 cost=  5.9 LOO-pred= 19.4 resid= -13.4  >EPS
+    zero       q8  rho_pp=0.2817 cost=  0.7 LOO-pred= 45.1 resid= -44.4  >EPS
+    ladder@15  q5  rho_pp=0.0953 cost= 57.4 LOO-pred= 48.4 resid=  +9.0  >EPS
+    ladder@15  q6  rho_pp=0.2806 cost= 45.1 LOO-pred=  0.7 resid= +44.4  >EPS
+    ladder@15  q7  rho_pp=0.3250 cost= 32.1 LOO-pred=  0.7 resid= +31.4  >EPS
+    ladder@15  q8  rho_pp=0.3163 cost=  4.8 LOO-pred=  0.7 resid=  +4.1
+    kcoh5@15   q5  rho_pp=0.0755 cost= 48.4 LOO-pred= 57.4 resid=  -9.0  >EPS
+    kcoh5@15   q6  rho_pp=0.3786 cost= 34.5 LOO-pred= 32.1 resid=  +2.3
+    kcoh5@15   q7  rho_pp=0.3873 cost= 19.4 LOO-pred= 32.1 resid= -12.7  >EPS
+    kcoh5@15   q8  rho_pp=0.2787 cost=  4.2 LOO-pred= 45.1 resid= -40.8  >EPS
+  supporting: grid-rho LOO max|resid| = 40.8pp, Spearman = -0.608 (SPIN-43's confounded normalizer)
+  Spearman(cost, rho_pp) = -0.462 (need >= 0.90)
+-> H1 VERDICT: MIXED
+
+== H2: per-pulse rho monotone in step at K=2 (arm A) ==
+  zero       rho_pp by step 32/16/8/4: 0.1526/0.5105/0.4895/0.2817  monotone-nonincreasing=False interior-extremum=True
+  ladder@15  rho_pp by step 32/16/8/4: 0.0953/0.2806/0.3250/0.3163  monotone-nonincreasing=False interior-extremum=True
+  kcoh5@15   rho_pp by step 32/16/8/4: 0.0755/0.3786/0.3873/0.2787  monotone-nonincreasing=False interior-extremum=True
+-> H2 VERDICT: FALSIFIED
+
+head: H1 MIXED (pd-spreads {'zero': 21.0, 'ladder@15': 45.0, 'kcoh5@15': 35.6}, LOO 44.4pp, S -0.462), H2 FALSIFIED

@@ -1,0 +1,26 @@
+SPIN-45 REGIME EDGE-SPACING RESONANCE — 2026-09-04 06:28:50 pid 11726
+config: J=153 pinned, slope s=6 pinned, N=6, seeds=(1, 7, 42), ticks=4800, K=2, gaps=(40, 48, 60, 80, 120, 240), periods=(8, 12, 16, 24, 32, 48)
+== CANARY a: dyn45 byte-identity vs sp33.dyn_run (spin-28 loop verbatim + read-only ledger) ==
+  PASS: 34 configs byte-identical (ledger assert live in dyn45, absent in sp33.dyn_run)
+
+== CANARY b: run_fabric anchors (5-seed means) ==
+  ladder15  K=1: pct=71.48 (71.5)  ev=5791.6 (5792)  debt=106378.4 (106378)  -> PASS
+  zero      K=1: pct=77.26 (77.3)  ev=8756.4 (8756)  debt=187833.6 (187834)  -> PASS
+
+== CANARY c: SPIN-33 swing replays (P=16, offsets 0..8) ==
+  E1s1 swing = 16.3pp (want 16.3) -> PASS
+  E6s6 swing = 1.5pp (want 1.5) -> PASS
+
+== CANARY d: gate=never == mc=0 + trace-shape assertions ==
+  PASS: J==153 + edge-count==240/g at all 6 gaps; n_draws=created=deleted=0; SPIN-15 asserts live
+
+== CANARY e: double-run determinism ==
+  PASS: 2 dual runs byte-identical (resid + ledger)
+
+ALL CANARIES: PASS
+
+== PANEL 1: RESONANCE MAP — swing(g,P), offsets 0..P//2, spread 5<->30, K=2, seeds {1,7,42} ==
+   g  E | P=8           P=12          P=16          P=24          P=32          P=48          
+  40  6 |    4.3           5.8           1.5           7.3           8.4           5.4        
+  48  5 |    9.6          25.0           2.6          26.8           0.5          27.7        
+  60  4 |    0.8          25.4           1.1           1.1           1.9           1.8        
