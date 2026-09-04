@@ -161,81 +161,34 @@ PermissionError for a bad `--outdir`; now a clean one-liner, rc=1.
 
 ## What remains weak (honestly)
 
-### Gapped effect-stream loss (OPEN, candidate RTL hazard, found 2026-09-03 by the B8 lane)
+### Gapped effect-stream loss (CLOSED 2026-09-03: TB artifact, RTL clean)
 
-While building `tb/tb_act_bias.v`, a loss window appeared in the
-ingress path of `q_cell` for **pure gapped effect streams**: with a new
-effect flit presented every ~6 cycles (12 negedges), 6–8 of 32 effects
-never train/integrate (wsum short by exactly 256×lost); with ≥15-cycle
-spacing (30 negedges — the `tb_cell_core` test-3 cadence) or with any
-other op (view) interleaved per effect, the same stream is lossless.
-Stage counters localize it loosely: q_flit_pipe in==out (clean); loss
-sits between ring accept and hebb train; every TB send observed
-ri_ready=1 at its sampling negedge. **Spacing sweep (IDEATOR nudge, 2026-09-03): GRADED decay, not a
-knee.** Losses at 24-effect streams: gap 4→16/24 lost, 6→13, 8→10,
-10→8, 12→5, 14→3, 16→0 (clean from 16 negedges up; 8 cycles — right at
-the effect-op latency). Per the nudge's own criterion, graded decay =
-queue/hazard bug, NOT an absorption window: the designed absorption
-mechanism is visible backpressure (inbuf skid + ri_ready), and the
-probe observed ri_ready=1 at the accept that then vanished — a silent
-loss under a ready=1 handshake is a conservation-contract violation
-candidate, not rate-limiting to be dialed. Measured hazard envelope:
-burst tolerance boundary ≈ op latency + small margin. Consequences:
-(a) root cause via waveform/formal remains the path (next tick);
-(b) until closed, any consumer driving effects back-to-back inside
-~8 cycles of the previous effect (quilt-deck fast bursts included)
-must space or interleave — the deck's balanced transactions go through
-this same ingress. `tb_act_bias` is immune by construction (view per
-effect + per-checkpoint floor-model equality asserts the stream was
-lossless).
+Opened this cycle while building `tb_act_bias`: pure effect streams at
+~6-cycle send spacing lost 6-8/32 flits; graded decay in spacing (lost
+16/13/10/8/5/3/0 at 4..16 negedges) looked like a queue hazard, and an
+IDEATOR nudge proposed reading it as cadence-sensitivity / absorption
+semantics. Waveform-grade tracing (per-cycle ACC/DISP taps plus
+ringport hit/ld_ready/ro_ready decomposition) found the REAL mechanism:
+the TBs' send tasks sampled `ri_ready` in the SAME delta cycle as the
+blocking `ri_valid = 1` assignment, reading the STALE pre-assignment
+combinational value (transit-path ready = 1) -- so the wait loop exited
+immediately, the hit flit was never accepted, and `ri_valid` deasserted
+one cycle later. The fabric ate nothing: every accepted flit was
+dispatched (ACC==DISP throughout), and with a race-free wait (sampling
+the REGISTERED `u_inbuf.b_v`, which decides posedge acceptance for hits
+without an extra cycle of latency) the sweep is CLEAN AT EVERY SPACING
+(24/24 trains even at 4 negedges). Fixed in tb_act_bias, tb_cell_core,
+tb_cosim_fuzz, tb_decay_drift.
 
-- ~~**Hardware is digest-blind.**~~ **Closed (this pass):** the `crc32`
-  KV (§12.2) is the silicon-checkable digest the loader needed — a
-  trailing-shape u32 KV fits the FSM, and the loader now accumulates
-  IEEE CRC-32 over payload bytes bit-serially and refuses DONE on
-  mismatch (error 12; undigested files unaffected, boot-fuzz 232 cases
-  still pass). `quf.sha256` remains the stronger host-side anchor;
-  hardware can now catch its own corruption class. Remaining gap
-  (honest): the loader covers only what it can name — a digest whose
-  KV carries the WRONG value, or sha256-only files, are still
-  uncheckable in silicon.
-- **Python-strict vs RTL-tolerant asymmetries remain by design**:
-  verify polices `kind≠0`, alignment, duplicate names, tick_period
-  consistency — the loader ignores all four (forward-compat). Files
-  failing ONLY those checks boot fine in RTL; documented in
-  `boot_fuzz.py`'s `HW_BLIND` table.
-- **tpw > 31 is now Python-rejected** (was: silently truncated).
-  quf.py verify flags `tpw > 31` as a hard issue -- hardware latches
-  `o_tpw` as 5 bits, so a hostile tpw=40 file would boot silicon with
-  epoch tpw=8 while the file claims 40. The writer rejects tpw out of
-  0..31 outright. The RTL-side tolerance (boots with `tpw&31` rather
-  than fail-static) remains by design and is registered in
-  `boot_fuzz.py`'s `HW_BLIND` table, whose BOOT oracle lands on
-  `tpw&31` -- same asymmetry doctrine as digest/kind blindness.
-  Hostile-file check: patched tpw=40 file (no tick_period KV) now
-  verifies dirty with the explicit epoch-field message.
-- **Hyperbola age wraps at 24 bits (AGEW)** in RTL; the Python QUF
-  record carries age as u32. Diverges only after 16.7M unticked ticks
-  on a wh=0 edge; cosim programs are bounded well below.
-- **`quf_boot` parks in HOLD forever on an empty stream** (no first
-  byte, eod ignored in HOLD): correct fail-static behavior, but a host
-  that asserts eod-before-bytes never gets an error code — it just
-  waits. The fuzz bench pins this as the documented contract.
-- ~~**Dial 13 (FTRACE) in a QUF dial row is dead weight**~~ **Closed
-  (this pass)**: the dialfile ignores writes to the probe alias by
-  construction; boot_fuzz masks it to POR 0 in expectations. quf.py
-  verify now flags a nonzero stored dial 13 as a hard issue ("value
-  will not land", hex-formatted) and boot_fuzz whitelists it in
-  HW_BLIND (hardware tolerates + drops, oracle lands on 0 — same
-  asymmetry doctrine as tpw). Fixing it flushed a REAL latent verify
-  crash: the routing-size message had 1 placeholder for 2 args
-  (TypeError on corrupt route_count KV) — found by the fuzz RNG stream
-  shifting when generators stopped emitting nonzero dial 13. Regress
-  adds the patched-file hostile check; GOOD fixture normalized.
-- ~~The suite runner does not invoke the backend battery.~~ Closed:
-  `run_suite.sh` runs `tools/backend/run_all.sh` as its final stage
-  (wired in commit e6f746d); the suite output's `PASS backend_battery:`
-  line is the fuzz + boot-fuzz + cosim + regress quartet.
+Lessons booked: (1) never sample combinational DUT outputs in the same
+simulation delta as the driving assignments -- registered state or a
+settling cycle; (2) the earlier "hazard envelope ~8 cycles" and the
+consumer caution for back-to-back effect drivers (quilt-deck bursts)
+are RETRACTED -- there is no loss window; (3) the IDEATOR absorption-
+semantics reading is moot: the graded curve was the artifact's
+inbuf-full probability, not fabric behavior. The final root-cause
+instrument is the trace TB pattern (ACC/DISP/ringport-tap per posedge)
+-- worth reusing before any future loss claim.
 
 ## Reproduce
 
