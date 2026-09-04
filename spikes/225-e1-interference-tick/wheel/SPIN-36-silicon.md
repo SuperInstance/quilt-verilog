@@ -27,6 +27,6 @@ Canaries: ALL PASS — RTL replays byte-identical to SPIN-34 published traces (k
 
 The cosim side already showed PW=41 is functionally tight (SPIN-34: min-PW 41, 35/35 bit-exact). SPIN-36 adds the silicon side: **at PW=41 the θ-gate is nearly free** (111 LUT4 / 155 CARRY on a 13.4k-LUT fabric, ~0.8%). For the embedded target, the SPIN-34/22 recommendation stands upgraded: hard-code the 1-bit `nf > 2*pd` gate where possible; where the full θ-arm is kept, PW=41 is the right fabric point — cheaper *and* gate-cheaper.
 
-Not done here (booked): nextpnr timing legs (the .ice40 "bitstream" files staged by the lane are yosys script dumps, not PnR output — PnR never ran; do not mistake them for bitstreams). Timing closure is the natural SPIN-37-adjacent rung if silicon numbers are ever needed beyond cell counts.
+Not done here (booked): nextpnr timing legs (the lane's staged files, named `*.ice40`, were yosys script dumps, not PnR output — PnR never ran; they are committed as `spin36_pw4*.ys`. Do not mistake them for bitstreams). Timing closure is the natural SPIN-37-adjacent rung if silicon numbers are ever needed beyond cell counts.
 
 Raw: `../cosim/stat36_pw4*.txt`, `spin36-output.txt` (driver), yosys logs kept on disk uncommitted (55–65 MB each).
