@@ -1,0 +1,64 @@
+== ROUND 10 Q3 T6 observability — sby run log (excerpts) ==
+== generated 2026-09-03 ~16:2x AKDT, toolchain oss-cad-suite SBY yosys-0.47-2 ==
+
+----- snaplog.t6.d4 -----
+SBY 16:03:00 [formal/snaplog.t6.d4] engine_0: Status returned by engine: pass
+SBY 16:03:00 [formal/snaplog.t6.d4] summary: Elapsed clock time [H:MM:SS (secs)]: 0:00:08 (8)
+SBY 16:03:00 [formal/snaplog.t6.d4] summary: engine_0 (smtbmc boolector) returned pass
+SBY 16:03:00 [formal/snaplog.t6.d4] DONE (PASS, rc=0)
+
+----- snaplog.t6.d4.cover -----
+SBY 16:03:44 [formal/snaplog.t6.d4.cover] summary: engine_0 (smtbmc boolector) returned pass
+SBY 16:03:44 [formal/snaplog.t6.d4.cover] summary:   reached cover statement f_snaplog_observability_d4._witness_.check_cover_f_snaplog_observability_d4_v_202_76 at f_snaplog_observability_d4.v:202.9-202.35 in step 3
+SBY 16:03:44 [formal/snaplog.t6.d4.cover] summary:   reached cover statement f_snaplog_observability_d4._witness_.check_cover_f_snaplog_observability_d4_v_203_78 at f_snaplog_observability_d4.v:203.9-203.33 in step 3
+SBY 16:03:44 [formal/snaplog.t6.d4.cover] summary:   reached cover statement f_snaplog_observability_d4._witness_.check_cover_f_snaplog_observability_d4_v_199_64 at f_snaplog_observability_d4.v:199.9-199.36 in step 4
+SBY 16:03:44 [formal/snaplog.t6.d4.cover] summary:   reached cover statement f_snaplog_observability_d4._witness_.check_cover_f_snaplog_observability_d4_v_200_66 at f_snaplog_observability_d4.v:200.9-200.53 in step 4
+SBY 16:03:44 [formal/snaplog.t6.d4.cover] summary:   reached cover statement f_snaplog_observability_d4._witness_.check_cover_f_snaplog_observability_d4_v_201_72 at f_snaplog_observability_d4.v:201.9-201.40 in step 4
+SBY 16:03:44 [formal/snaplog.t6.d4.cover] summary:   reached cover statement f_snaplog_observability_d4._witness_.check_cover_f_snaplog_observability_d4_v_197_60 at f_snaplog_observability_d4.v:197.9-197.33 in step 7
+SBY 16:03:44 [formal/snaplog.t6.d4.cover] DONE (PASS, rc=0)
+
+----- snaplog.t6.d8 -----
+SBY 16:13:20 [formal/snaplog.t6.d8] engine_0: Status returned by engine: pass
+SBY 16:13:20 [formal/snaplog.t6.d8] summary: Elapsed clock time [H:MM:SS (secs)]: 0:05:03 (303)
+SBY 16:13:20 [formal/snaplog.t6.d8] summary: engine_0 (smtbmc boolector) returned pass
+SBY 16:13:20 [formal/snaplog.t6.d8] DONE (PASS, rc=0)
+
+----- snaplog.t6.cell -----
+SBY 15:45:48 [formal/snaplog.t6.cell] engine_0: Status returned by engine: pass
+SBY 15:45:48 [formal/snaplog.t6.cell] summary: Elapsed clock time [H:MM:SS (secs)]: 0:10:00 (600)
+SBY 15:45:48 [formal/snaplog.t6.cell] summary: engine_0 (smtbmc boolector) returned pass
+SBY 15:45:48 [formal/snaplog.t6.cell] DONE (PASS, rc=0)
+
+----- snaplog.t6.cell.cover -----
+SBY 15:47:35 [formal/snaplog.t6.cell.cover] summary: Elapsed clock time [H:MM:SS (secs)]: 0:01:41 (101)
+SBY 15:47:35 [formal/snaplog.t6.cell.cover] summary: engine_0 (smtbmc boolector) returned FAIL
+SBY 15:47:35 [formal/snaplog.t6.cell.cover] summary:   reached cover statement f_snaplog_t6_cell._witness_.check_cover_f_snaplog_t6_cell_v_266_126 at f_snaplog_t6_cell.v:266.9-266.27 in step 23
+SBY 15:47:35 [formal/snaplog.t6.cell.cover] summary:   reached cover statement f_snaplog_t6_cell._witness_.check_cover_f_snaplog_t6_cell_v_267_127 at f_snaplog_t6_cell.v:267.9-267.27 in step 24
+SBY 15:47:35 [formal/snaplog.t6.cell.cover] summary:   reached cover statement f_snaplog_t6_cell._witness_.check_cover_f_snaplog_t6_cell_v_268_128 at f_snaplog_t6_cell.v:268.9-268.29 in step 25
+SBY 15:47:35 [formal/snaplog.t6.cell.cover] summary:   reached cover statement f_snaplog_t6_cell._witness_.check_cover_f_snaplog_t6_cell_v_270_132 at f_snaplog_t6_cell.v:270.9-270.40 in step 31
+SBY 15:47:35 [formal/snaplog.t6.cell.cover] summary:   reached cover statement f_snaplog_t6_cell._witness_.check_cover_f_snaplog_t6_cell_v_269_130 at f_snaplog_t6_cell.v:269.9-269.29 in step 40
+SBY 15:47:35 [formal/snaplog.t6.cell.cover] DONE (FAIL, rc=2)
+
+----- snaplog.t6.canary -----
+SBY 15:34:51 [formal/snaplog.t6.canary] engine_0: Status returned by engine: FAIL
+SBY 15:34:51 [formal/snaplog.t6.canary] summary: Elapsed clock time [H:MM:SS (secs)]: 0:00:00 (0)
+SBY 15:34:51 [formal/snaplog.t6.canary] summary: engine_0 (smtbmc boolector) returned FAIL
+SBY 15:34:51 [formal/snaplog.t6.canary] summary:   failed assertion f_snaplog_observability_canary._witness_.check_assert_f_snaplog_observability_canary_v_101_51 at f_snaplog_observability_canary.v:101.13-101.79 in step 9
+SBY 15:34:51 [formal/snaplog.t6.canary] summary:   failed assertion f_snaplog_observability_canary._witness_.check_assert_f_snaplog_observability_canary_v_102_56 at f_snaplog_observability_canary.v:102.9-102.46 in step 9
+SBY 15:34:51 [formal/snaplog.t6.canary] DONE (FAIL, rc=2)
+
+----- snaplog.t6.w24 -----
+
+----- snaplog.t6.pdr -----
+
+----- snaplog.t6 (64-journal deep attempt, KILLED at solver wall) -----
+SBY 15:44:34 [formal/snaplog.t6] engine_0: ##   0:13:20  waiting for solver (5 minutes)
+SBY 15:49:34 [formal/snaplog.t6] engine_0: ##   0:18:20  waiting for solver (10 minutes)
+SBY 15:51:49 [formal/snaplog.t6] engine_0: terminating process
+
+----- snaplog.t6.pdr (unbounded referee attempt: TIMEOUT at 2700s wrapper cap, frame 92, CTG frontier ~1300, no counterexample found) -----
+SBY 16:28:53 [formal/snaplog.t6.pdr] engine_0: terminating process
+
+----- snaplog.t6.w24 (DEPTH=16 24-journal shift-encoded: KILLED at step 26/32 solver wall ~34 min, no violation found through step 25) -----
+SBY ---- Keyboard interrupt or external termination signal ----
+SBY 16:30:29 [formal/snaplog.t6.w24] engine_0: terminating process

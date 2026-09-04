@@ -1,0 +1,20 @@
+# snaplog.t6.d4.sby -- T6 OBSERVABILITY, small-parameter closure: same
+# obligation set at DEPTH=4 / JOURNAL=8 (fast decisive run; saturation +
+# overflow drops exercised cheaply). The shipped DEPTH=16 runs are the
+# deep companions (snaplog.t6.sby 64-journal, snaplog.t6.w24.sby
+# 24-journal shift-encoded).
+[options]
+mode cover
+depth 16
+
+[engines]
+smtbmc boolector
+
+[script]
+read -formal q_snaplog.v
+read -formal f_snaplog_observability_d4.v
+prep -top f_snaplog_observability_d4
+
+[files]
+rtl/q_snaplog.v
+formal/f_snaplog_observability_d4.v

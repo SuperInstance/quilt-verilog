@@ -1,0 +1,19 @@
+# snaplog.t6.canary.sby -- MUTATION CANARY for the T6 proof: identical
+# obligations against a DUT copy that silently drops the 6th fire.
+# EXPECTED: FAIL (obligations catch the lost observation). A PASS here
+# means the real proof is vacuous.
+[options]
+mode bmc
+depth 30
+
+[engines]
+smtbmc boolector
+
+[script]
+read -formal q_snaplog_drop.v
+read -formal f_snaplog_observability_canary.v
+prep -top f_snaplog_observability_canary
+
+[files]
+formal/canary/q_snaplog_drop.v
+formal/f_snaplog_observability_canary.v

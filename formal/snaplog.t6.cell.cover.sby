@@ -1,0 +1,26 @@
+# snaplog.t6.cell.sby -- T6 INTEGRATION LEG (cover companion: non-vacuity) (round 10, Q3): q_cell_core
+# under the flood environment with a q_snaplog blade on its fire events.
+# T6-C1 burst coherence, T6-C2 completeness, T6-C3 soundness (delta-
+# exact), T6-C4 F12 boolean verdict equivalence. Depth 80 as the tick
+# harness (a fire needs bind+link+tick service, worst ~66 + margin).
+[options]
+mode cover
+depth 80
+
+[engines]
+smtbmc boolector
+
+[script]
+read -formal q_echo_gate.v
+read -formal q_rqh_bank.v
+read -formal q_cell_core.v
+read -formal q_snaplog.v
+read -formal f_snaplog_t6_cell.v
+prep -top f_snaplog_t6_cell
+
+[files]
+rtl/q_echo_gate.v
+rtl/q_rqh_bank.v
+rtl/q_cell_core.v
+rtl/q_snaplog.v
+formal/f_snaplog_t6_cell.v

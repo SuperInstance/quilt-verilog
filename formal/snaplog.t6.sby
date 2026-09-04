@@ -1,0 +1,20 @@
+# snaplog.t6.sby -- T6 OBSERVABILITY THEOREM (round 10, Q3): the
+# full-wave journal vs the retained snap-log window. Obligations
+# OBS-1 (completeness), OBS-2 (soundness + exact drop accounting),
+# OBS-3a/3b (F12 boolean verdict equivalence). BMC depth 80 admits
+# journal saturation (64 fires: log DEPTH=16 saturated + 48 drops).
+[options]
+mode bmc
+depth 80
+
+[engines]
+smtbmc boolector
+
+[script]
+read -formal q_snaplog.v
+read -formal f_snaplog_observability.v
+prep -top f_snaplog_observability
+
+[files]
+rtl/q_snaplog.v
+formal/f_snaplog_observability.v

@@ -1,0 +1,19 @@
+# snaplog.t6.w24.sby -- T6 OBSERVABILITY (window variant): identical
+# obligations to snaplog.t6.sby against a 24-fire full-wave journal
+# (saturation 16 + 8 overflow drops admitted). The decisive run;
+# the 64-deep variant is the deep companion (slow, booked honestly).
+[options]
+mode bmc
+depth 32
+
+[engines]
+smtbmc boolector
+
+[script]
+read -formal q_snaplog.v
+read -formal f_snaplog_observability_w24.v
+prep -top f_snaplog_observability_w24
+
+[files]
+rtl/q_snaplog.v
+formal/f_snaplog_observability_w24.v

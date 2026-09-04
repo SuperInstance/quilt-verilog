@@ -1,0 +1,18 @@
+# snaplog.t6.d8.sby -- T6 OBSERVABILITY, mid-parameter bracket:
+# DEPTH=8 / 12-fire journal (between the d4 closure and the shipped
+# DEPTH=16). Same obligations verbatim.
+[options]
+mode bmc
+depth 24
+
+[engines]
+smtbmc boolector
+
+[script]
+read -formal q_snaplog.v
+read -formal f_snaplog_observability_d8.v
+prep -top f_snaplog_observability_d8
+
+[files]
+rtl/q_snaplog.v
+formal/f_snaplog_observability_d8.v
