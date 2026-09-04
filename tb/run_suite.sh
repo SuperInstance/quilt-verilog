@@ -10,12 +10,15 @@ RTL="rtl/q_tick_sched.v rtl/q_flit_pipe.v rtl/q_link_ringport.v rtl/q_dialfile.v
      rtl/q_cell.v rtl/q_io_port.v rtl/q_fabric_top.v"
 fail=0
 
+nb=0; np=0
 t() { # tbfile top extra_rtl
   local f=$1 top=$2 extra=${3:-}
+  nb=$((nb+1))
   if [ ! -f "$f" ]; then echo "MISSING $f"; fail=1; return; fi
   if iverilog -g2005 -s "$top" -o "tb/run/$top.vvp" $RTL $extra "$f" 2>/tmp/err_$$; then
     if out=$(timeout 300 vvp "tb/run/$top.vvp" 2>&1); then
       if echo "$out" | grep -qE "PASS"; then
+        np=$((np+1))
         echo "PASS  $top: $(echo "$out" | grep -E 'PASS' | head -1)"
       else
         echo "FAIL  $top (no PASS banner)"; echo "$out" | tail -5; fail=1
@@ -48,7 +51,9 @@ t tb/tb_hebb_pipe.v        tb_hebb_pipe
 t tb/tb_quf_boot.v         tb_quf_boot "rtl/q_uf_loader.v rtl/quf_boot.v"
 t tb/tb_q_tern_dice.v      tb_q_tern_dice "rtl/q_tern_dice.v"
 # QUF loader lane (python golden build -> iverilog)
+nb=$((nb+1))
 if bash tools/run_quf_tb.sh > /tmp/quf_out 2>&1 && grep -q PASS /tmp/quf_out; then
+  np=$((np+1))
   echo "PASS  tb_quf_loader: $(grep PASS /tmp/quf_out | head -1)"
 else
   echo "FAIL  tb_quf_loader"; tail -5 /tmp/quf_out; fail=1
@@ -88,9 +93,12 @@ fi
 if bash benches/gc/run_benches.sh > /tmp/gc_benches_out 2>&1 \
    && grep -q "GC FALSIFIER SUITE: ALL PASS" /tmp/gc_benches_out; then
   nchecks=$(grep -o 'RESULT: PASS -- [0-9]*' /tmp/gc_benches_out | grep -o '[0-9]*' | awk '{s+=$1} END {print s+0}')
+  nb=$((nb+1)); np=$((np+1))
   echo "PASS  gc_falsifier_benches: 4/4 benches PASS, 0 kills, ${nchecks} exact-integer checks"
 else
+  nb=$((nb+1))
   echo "FAIL  gc_falsifier_benches"; grep -E 'RESULT:|KILLED' /tmp/gc_benches_out | head -8; fail=1
 fi
 
+echo "SUITE SUMMARY: $np/$nb benches PASS"
 exit $fail

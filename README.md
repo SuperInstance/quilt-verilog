@@ -4,7 +4,7 @@ The bottom layer of the quilt, in silicon logic. A cellular learning
 fabric — Hebbian edges, power-law forgetting, dial state, a fabric-wide
 tick — written in pure, generic Verilog-2005 (IEEE 1364-2005): no vendor
 primitives, no IP cores, no SystemVerilog, no floats. Every module is
-parameterized, fixed-point, and streaming. It is verified by an 18-bench
+parameterized, fixed-point, and streaming. It is verified by a 23-bench
 testbench suite, six SymbiYosys formal proofs, and a real iCE40 bitstream
 produced entirely with open tools, and its complete state travels in one
 flat binary file — QUF, the GGUF of cellular silicon — that a testbench,
@@ -21,7 +21,7 @@ measured and recorded in the doc cited. Nothing here is aspirational.
 
 | lane | command | result | where |
 |---|---|---|---|
-| RTL simulation | `make test` | **18/18 PASS** (✓ re-run 2026-08-30) | [docs/VERIFICATION.md](docs/VERIFICATION.md) |
+| RTL simulation | `make test` | **23/23 PASS** (✓ re-run 2026-09-03; the suite emits its own `SUITE SUMMARY: 23/23` line — the count is machine-derived, never hand-edited) | [docs/VERIFICATION.md](docs/VERIFICATION.md) |
 | Behavioral model | `make sim` | **34/34 OK** (✓ re-run 2026-08-30) | [docs/VERIFICATION.md](docs/VERIFICATION.md) |
 | Formal proofs | `make formal` | **6/6 PASS** — 5 BMC + 1 k-induction (last full run 2026-08-29) | [docs/FORMAL-PROOFS.md](docs/FORMAL-PROOFS.md) |
 | iCE40 synth + PnR | `make synth && make pnr` | HX8K-CT256: **7,596/7,680 LC (98%), 44.43 MHz post-route @ 12 MHz target, 135,100-byte bitstream** (2026-08-29) | [docs/SYNTHESIS-RESULTS.md](docs/SYNTHESIS-RESULTS.md) |
@@ -74,8 +74,9 @@ make pnr       # nextpnr-ice40 + icepack → bitstream     — ~3 min
 make all       # all five, in order
 ```
 
-What `make test` printed when this README was written (2026-08-30,
-18 PASS lines; abridged — first two and last four, verbatim):
+What `make test` printed when this README was written (2026-09-03,
+26 PASS lines from 23 benches — some benches print several PASS lines;
+abridged — first two and last four, plus the machine-emitted summary):
 
 ```
 $ make test
@@ -87,7 +88,12 @@ PASS  tb_hebb_pipe: TB-HEBB-PIPE PASS: 300 ops, 224 lo flits, 18 lx flits, act/t
 PASS  tb_quf_boot: TB-QUF-BOOT PASS: warm-start, corrupt-header fallback, truncation fallback, epoch latch -- all 4 cases
 PASS  tb_quf_loader: quf.py selftest PASS: 576 bytes, sha256 5b2a236ba5e38bca9ad96783c4252a12f36517f98a9164a249f0db115f221392, round-trip byte-exact
 PASS  tb_serfabric: TB-SERFABRIC PASS: QUF serialized boot byte-exact (2 cells), serial==parallel egress streams (68 flits, cycle-locked), end-state dial rows byte-exact, gate-mode fail-static + release-word epoch + serial-flit config -- all cases
+SUITE SUMMARY: 23/23 benches PASS
 ```
+
+Do not quote a bench count from this README; quote the `SUITE SUMMARY`
+line your own run prints — the suite tallies its benches mechanically,
+so the count moves when benches are added and cannot drift stale.
 
 What `make sim` printed, complete:
 
