@@ -134,3 +134,9 @@ Ordered queue: RESEARCH-AGENDA §4 O1–O7, then §Q open questions, then wheel 
 - **Verdict:** DONE (pre-reg 485560e) — TWO-KNOB BY LETTER / DRIFT-BLIND 14/15: ladder identical at drift 3 and 6 in all cells and at drift 12 in 4/5; lone deviation (12,4) wall 8 vs 9 — the +1 step erodes at the step edge, landing exactly on 2pd. Product law dead on collision pairs (pd·drift=24 reads 4/9/13); separable dead (offsets {0,0,−1,0,0}). Step location (not magnitude) is the drift-sensitive object: 2pd→2pd+1 crossing at pd 3→4 for drift 3/6, migrates to 4→5 at drift 12. Canaries all PASS (r25 column EXACT, double-run identical, mislabel CAUGHT). Next rung: step-edge Δ-sweep at drift=12 pd{3,4,5}.
 - **Commit:** 485560e (pre-reg) · 3349f85 (result)
 - **Headline:** 14/15 cells drift-blind over 4× drift; the one seat that moves is the +1 parity step itself — wall = 2pd/2pd+1 with a drift-migrating step edge.
+
+## Round 4 — O4 (lag-compensation regime motion, E4 architecture) — DISPATCHED
+- **Dispatched:** 2026-09-04 07:1x AKDT · lane: dev_o4_regime_motion (zai/glm-5.3, run mode)
+- **Item:** O4 — closed loop: lag discovery (480-tick blade) → per-twin compensation → REGIME-META κ-detector → mode dial, vs static arms under mid-stream regime shifts (calm→conflict→bursty, §3.2), 5 seeds, integer-only. Promote to E4 iff adaptive ≥ max(static)−1pp %w AND debt ≤ 60% best static; else book detector-lag vs dwell boundary.
+- **In-flight check:** wheel lane spin49 attempt 2 in flight (wheel cron); this is the 2nd of 2 allowed lanes.
+- **Verdict:** pending.
