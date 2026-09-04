@@ -3,7 +3,7 @@
  * BEFORE this was run. Counters emitted as integer CSV; MI computed downstream in
  * fixed-point integer arithmetic (q4_mi_criticality.py). No floats here.
  *
- * Usage: q4_mi_sweep [group] [n] [d] [p_num] [seed]
+ * Usage: q4_mi_sweep32 [group] [n] [d] [p_num] [seed]
  *   group: 0 = Z_n (cycle, n sites, gens {+1,-1})
  *          1 = D_{n/2} (Cayley{r,s}, n elements, r:(f,k)->(f,k+1), s:(f,k)->(1-f,-k))
  * Emits: group,n,d,p_num,seed, act_permille_num, act_total,
@@ -93,11 +93,11 @@ int main(int argc, char **argv) {
             if (lcg_below(10000) < p_num) a[v] += lcg_below(2*PNOISE+1) - PNOISE;
         }
         for (int v = 0; v < n; v++) {
-            if (a[v] != 0) {
+            if (a[v] > 1 || a[v] < -1) {
                 int32_t e = fdiv(a[v], 3); if (e == 0) e = (a[v] > 0) ? 1 : -1;
                 a[nbr(group, n, v, 0)] += e;
                 a[nbr(group, n, v, 1)] += e;
-                a[v] -= e;
+                a[v] -= 2 * e;
             }
         }
         /* --- lattice B dynamics (independent stream, cross-seed floor) --- */
