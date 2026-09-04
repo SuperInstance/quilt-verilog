@@ -80,8 +80,8 @@ def main():
             per_seed = [curve(pdn, pdd, delta, sd) for sd in SEEDS]
             mean_c = [mean([per_seed[si][i] for si in range(len(SEEDS))])
                       for i in range(len(SPREADS))]
-            a = crossing(mean_c, delta)
-            per_seed_a = [crossing(c, delta) for c in per_seed]
+            a = crossing(mean_c, spreads=SPREADS)
+            per_seed_a = [crossing(c, spreads=SPREADS) for c in per_seed]
             nf = (max(per_seed_a) - min(per_seed_a)) / 2.0
             alpha[(lab, delta)] = (a, nf)
             print(f"  pd={lab:>4} d={delta:2d}  alpha={a:7.4f} "
