@@ -93,8 +93,10 @@ DESIGN:
 
 INSTRUMENT (new, canary-gated):
   dyn_run_r — verbatim clone of spin29's dyn_run with the pulse divider
-  generalized to rational pd = pdn/pdd:  m = pdn·|e| // pdd or 1.
-  For pdd == 1 this reduces EXACTLY to dyn_run's m = |e| // pd (canary
+  generalized to rational pd = pdn/pdd (pd is a DIVISOR):
+  m = pdd*|e| // pdn or 1.
+  For pdd == 1, pdn == 3 this reduces EXACTLY to dyn_run's m = |e| // pd
+  (canary
   e: byte-identity on 4 configs x 2 seeds vs dyn_run AND run_fabric).
   Integer-only in-loop preserved for every rational pd used (all probes
   use pdn,pdd in small integers: 2.5=5/2, 2.75=11/4, 3.5=7/2, 5.5=11/2,
@@ -163,8 +165,9 @@ PROBE_DELTAS = (8, 16)
 # ------------------------------------------------------------ instrument
 def dyn_run_r(lats_fn, reality_fn, ticks=TICKS, k=1, pdn=3, pdd=1,
               delta=12, drift=DRIFT32, seed=42):
-    """spin29 dyn_run clone; pulse divider generalized to pd = pdn/pdd:
-    m = pdn*|e| // pdd or 1.  Identical to dyn_run when pdd == 1."""
+    """spin29 dyn_run clone; pulse divider generalized to pd = pdn/pdd
+    (a DIVISOR):  m = pdd*|e| // pdn or 1.  For pdn=3, pdd=1 this is
+    exactly m = |e| // 3 == dyn_run(pd=3) — canary e proves it."""
     rng = LCG(seed)
     g = reality_fn(0)
     pulses = deque()
@@ -180,7 +183,7 @@ def dyn_run_r(lats_fn, reality_fn, ticks=TICKS, k=1, pdn=3, pdd=1,
         errs = [r - g for r in reads]
         trig = [(i, e) for i, e in enumerate(errs) if abs(e) > delta]
         for i, e in trig:
-            m = pdn * abs(e) // pdd or 1
+            m = pdd * abs(e) // pdn or 1
             pulses.appendleft([m if e > 0 else -m, k])
         if pulses:
             net = sum(p[0] for p in pulses)
