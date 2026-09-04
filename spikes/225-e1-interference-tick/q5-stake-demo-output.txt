@@ -1,0 +1,56 @@
+== C2: CHAMPION ANCHOR REPLAY (any FAIL halts claims) ==
+  [PASS] champion K1/pd2/d16 stress: got (96.1, 121762, 33)  want (96.1, 121762, 33)
+  [PASS] old champion K5/pd4/d16 stress: got (93.2, 132823, 38)  want (93.2, 132823, 38)
+  [PASS] impulse d16 stress: got (96.0, 139949, 61)  want (96.0, 139949, 61)
+  [PASS] champion gentle: got (98.0, 103116, 27)  want (98.0, 103116, 27)
+
+== C3b: SELF-CANARY — wrong-anchor gate must FAIL (gate teeth) ==
+  [FAIL] (deliberately wrong) champion stress: got 0.0  want 96.1
+  [CAUGHT] wrong-anchor gate failed as designed
+
+== C3a: SELF-CANARY — fitness-inverted greedy must end strictly worse ==
+  CANARY seed ('interference', 5, 4, 16) -> stress 93.2% debt 132823
+  CANARY step 2: ('interference', 6, 4, 16) -> stress 91.9% debt 134225   (inverted)
+  CANARY step 4: ('interference', 5, 5, 16) -> stress 91.3% debt 146534   (inverted)
+  CANARY step 9: ('interference', 5, 4, 14) -> stress 88.6% debt 153133   (inverted)
+  CANARY step 10: ('sequential', 5, 4, 14) -> stress 67.5% debt 183643   (inverted)
+  CANARY step 25: ('sequential', 5, 4, 13) -> stress 60.0% debt 212392   (inverted)
+  CANARY step 27: ('sequential', 5, 4, 12) -> stress 51.4% debt 244973   (inverted)
+  CANARY step 34: ('sequential', 5, 4, 11) -> stress 40.9% debt 284423   (inverted)
+  CANARY step 36: ('sequential', 5, 4, 10) -> stress 32.1% debt 315768   (inverted)
+  CANARY step 43: ('sequential', 5, 4, 9) -> stress 19.5% debt 337820   (inverted)
+  CANARY step 45: ('sequential', 5, 4, 8) -> stress 13.7% debt 355670   (inverted)
+  [CAUGHT] inverted arm ended at ('sequential', 5, 4, 8) stress 13.7% (< seed 93.2%)
+
+== GD CONTROL ARM (discrete greedy, full space, budget 186 calls) ==
+  GD seed ('interference', 5, 4, 16) -> stress 93.2% debt 132823
+  GD step 1: ('sequential', 5, 4, 16) -> stress 96.0% debt 139949   
+  GD step 15: ('sequential', 5, 4, 17) -> stress 96.0% debt 129991   
+  GD step 17: ('sequential', 5, 4, 18) -> stress 96.0% debt 117881   
+  GD step 24: ('sequential', 5, 4, 19) -> stress 96.0% debt 107484   
+  GD step 26: ('sequential', 5, 4, 20) -> stress 96.0% debt 99770   
+  GD step 33: ('sequential', 5, 4, 21) -> stress 96.0% debt 94429   
+  GD step 35: ('sequential', 5, 4, 22) -> stress 96.0% debt 92295   
+  GD final: ('sequential', 5, 4, 22) stress 96.0% debt 92295 | search evals used: 180 / 186 calls
+  GD holdout verify (in-budget): pct=96.0 debt=55317 maxE=61
+  GD lane total call spend: 183 / 186
+
+== HEAD-TO-HEAD: CHAMPION ('interference', 1, 2, 16) ==
+  (calm frames override entry delta with frame delta — round-1 scoring convention)
+  stress : pct=96.1 debt=121762 maxE=33 per-seed=(96.0, 96.1, 96.1, 96.1, 96.1)
+  gentle : pct=98.0 debt=103116 maxE=27
+  lcalm  : pct=98.0 debt=94625 maxE=27
+  holdout(stress, seeds 11/313/8888): pct=96.1 debt=72518 maxE=35
+
+== HEAD-TO-HEAD: GD ARM ('sequential', 5, 4, 22) ==
+  (calm frames override entry delta with frame delta — round-1 scoring convention)
+  stress : pct=96.0 debt=92295 maxE=61 per-seed=(96.1, 96.0, 96.0, 96.0, 96.0)
+  gentle : pct=56.6 debt=117198 maxE=53
+  lcalm  : pct=98.0 debt=55545 maxE=53
+  holdout(stress, seeds 11/313/8888): pct=96.0 debt=55317 maxE=61
+
+== PRE-REGISTERED DECISION RULE APPLICATION ==
+  stress delta -0.1pp | gentle -41.4pp | lcalm +0.0pp | holdout -0.1pp
+
+VERDICT: V2-THIN-MARGIN
+C1-BODY 497fcdc3bf310f1a48a0d4d87168bbbc4762de9f8d55384af14a449d66c83106

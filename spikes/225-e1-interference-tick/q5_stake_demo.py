@@ -176,6 +176,7 @@ def gd_arm(budget, invert=False, label="GD"):
 def head_to_head(cfg, name):
     mode, K, pd, delta = cfg
     say(f"\n== HEAD-TO-HEAD: {name} {cfg} ==")
+    say("  (calm frames override entry delta with frame delta — round-1 scoring convention)")
     s = run5(mode, K, pd, delta, STRESS["drift"], STRESS["lat"])
     g = run5(mode, K, pd, GENTLE["delta"], GENTLE["drift"], GENTLE["lat"])
     c = run5(mode, K, pd, LCALM["delta"], LCALM["drift"], LCALM["lat"])
@@ -212,7 +213,7 @@ def main():
     gate("old champion K5/pd4/d16 stress", (a["pct"], a["debt"], a["maxerr"]), (93.2, 132823, 38))
     a = run5("sequential", 8, 3, 16, STRESS["drift"], STRESS["lat"])
     gate("impulse d16 stress", (a["pct"], a["debt"], a["maxerr"]), (96.0, 139949, 61))
-    a = run5(*CHAMP, GENTLE["drift"], GENTLE["lat"])
+    a = run5(*CHAMP[:3], GENTLE["delta"], GENTLE["drift"], GENTLE["lat"])
     gate("champion gentle", (a["pct"], a["debt"], a["maxerr"]), (98.0, 103116, 27))
     if FAILS:
         say("\nC2 FAILED — no claims from this run.")
@@ -228,12 +229,11 @@ def main():
 
     say("\n== C3a: SELF-CANARY — fitness-inverted greedy must end strictly worse ==")
     b = Budget(GD_BUDGET + 60)  # canary lane runs OUTSIDE the real budget
-    seed_fit, _ = fitness(SEEDCFG, b)
+    seed_r = run5(*SEEDCFG, STRESS["drift"], STRESS["lat"])
     bad_cfg, bad_r = gd_arm(b, invert=True, label="CANARY")
-    bad_fit, _ = fitness(bad_cfg, b)
-    ok = bad_fit < seed_fit
+    ok = bad_r["pct"] < seed_r["pct"]
     say(f"  [{'CAUGHT' if ok else 'MISSED'}] inverted arm ended at {bad_cfg} "
-        f"stress {bad_r['pct']}% (< seed {seed_fit[0]}%)")
+        f"stress {bad_r['pct']}% (< seed {seed_r['pct']}%)")
     if not ok:
         return 1
 

@@ -65,18 +65,71 @@ integer-only, plus 3-seed stress holdout (11/313/8888).
   strictly worse (search-machinery teeth); (b) anchor gate fed a
   deliberately wrong value must FAIL (gate teeth).
 
-## Results
+## Results (run of 2026-09-03 ~17:4x AKDT, pre-reg commit b354154)
 
-(to be booked after the pre-reg commit)
+Canaries: C1 PASS (double run byte-identical; body sha256
+`497fcdc3…06`). C2 PASS 4/4 (champion stress 96.1/121762/33, old champ
+93.2/132823/38, impulse d16 96.0/139949/61, champion gentle 98.0/103116/27).
+C3a CAUGHT (inverted greedy descended 93.2→13.7, sequential/d8);
+C3b CAUGHT (wrong-anchor gate fired FAIL as designed).
+
+GD arm trace (183/186 calls spent, 36 candidate evals): seed
+(interference, 5,4,16) 93.2% → **step 1 flips mode to sequential (96.0%)**
+→ rides the delta ridge 17→22 (pct flat 96.0, debt 139949→92295) → stops at
+**(sequential, K=5, pd=4, delta=22)**, stress 96.0%, debt 92295, maxE 61.
+
+Head-to-head (champion vs GD arm):
+
+| frame | champion | GD arm | Δ (GD−champ) |
+|---|---|---|---|
+| stress (primary 5 seeds) | 96.1 (debt 121762, maxE 33) | 96.0 (debt 92295, maxE 61) | **−0.1pp** |
+| gentle d6/drift3/lat5 | 98.0 (debt 103116, maxE 27) | 56.6 (debt 117198, maxE 53) | **−41.4pp** |
+| lcalm d12/drift3/lat5 | 98.0 (debt 94625, maxE 27) | 98.0 (debt 55545, maxE 53) | +0.0pp |
+| holdout stress 11/313/8888 | 96.1 (debt 72518, maxE 35) | 96.0 (debt 55317, maxE 61) | −0.1pp |
+
+Rule application: V1 needs ≥+1.0pp stress AND both calm frames — no.
+V3 needs GD < champ by >1.0pp on stress — no (−0.1pp).
+**→ V2-THIN-MARGIN fires by the letter of the pre-registration.**
 
 ## Verdict
 
-(pending)
+**V2-THIN-MARGIN (booked per pre-registration).** On the crowning metric
+(stress %within), an unsteered equal-budget discrete-greedy control arm —
+seeded at pre-round-1 knowledge, free to leave the interference family,
+and in fact leaving it at its very first move — comes within 0.1pp of the
+champion (96.0 vs 96.1) with lower ledger debt. The selection-bias
+objection therefore lands *partially on stress*: the family restriction
+bought essentially nothing there; a plain mode-flip + delta-ride matches.
+What the family search actually banked is **regime robustness**: the GD
+arm collapses on the gentle calm frame (−41.4pp, 98.0→56.6) and carries
+maxE 61 vs 33, exactly the leaderboard-impulse calm-specialist fragility
+the Variety Ledger predicted. Family search is NOT demoted (V1 failed);
+the stress margin is thin and now honestly booked as such (V2); the
+champion's real edge is triple-frame domination, not the stress number.
 
 ## Scars
 
-(pending)
+- **Greedy is mode-locked at step 1.** First-improvement accepted the
+  sequential flip (93.2→96.0) and never returned; the interference family
+  contains configs ≥96.1 but the unsteered local search cannot reach them
+  from this seed without a non-local jump. Search-structure sensitivity is
+  a live confound for ANY single-arm comparison — booked, not resolved.
+- **Fitness was stress-only, by design** (matching the family search's
+  promotion metric). A multi-frame fitness would have caught the gentle
+  collapse during search; the champion's banked value is precisely that it
+  didn't need to be told. Round-1's calm-axis rows served that role for the
+  family search; an honest future control should score all frames in-budget.
+- **Debt tie-break favors the GD arm on stress** (92295 vs 121762) — the
+  champion survives on pct alone; the margin is thinner than the ledger's
+  "triple-axis Pareto domination" phrasing suggests against this opponent.
+- Anchor-#1 run of the harness had a frame-delta bug (calm frames used the
+  arm's delta); caught by the C2 gentle anchor gate before any comparison
+  numbers were produced. Gate machinery earned its keep.
 
 ## Headline
 
-(pending)
+"0.1pp on stress, 41pp on calm" — the equal-budget unsteered control arm
+matches the champion where the champion was crowned, and falls off a cliff
+where the family search was never told to look: V2-THIN-MARGIN booked, the
+selection-bias objection half-refuted, and the champion's crown quietly
+moves from "96.1%" to "96.1% everywhere".

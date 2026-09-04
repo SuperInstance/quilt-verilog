@@ -277,6 +277,7 @@ highest-value first.
   *different* operationalization and its failure does not touch this one.
 - **Q5 — §3.2 stake demo**: the equal-budget GD control arm does not exist. Nothing in the derby
   or arena touched it. It remains the only cure for the selection-bias objection [CHARTER §5.1].
+  [STATUS 2026-09-03: run as round 12 — V2-THIN-MARGIN; control matches on stress (−0.1pp), collapses on calm (−41.4pp).]
 - **Q6 — Barbieri operationalized properly**: F26 falsified the naïve version; the real one
   (perturbation-support growth / exact integer Lyapunov proxy on ℤ_n vs D_n vs ℤ_n×ℤ₂ Cayley
   lattices [RD-BEYOND-UTM Seam B experiment]) is unrun — and it gates the Lattice primitive's
