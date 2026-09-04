@@ -107,3 +107,8 @@ Ordered queue: RESEARCH-AGENDA §4 O1–O7, then §Q open questions, then wheel 
 - **Decision rule (pre-reg mandated in doc PART 1):** PROMOTE arrival-rate law if walls across ≥2 pd values collapse onto arrival rate within ±1 seat; else BOOK "fan-out structural."
 - **Lane:** subagent 9e8fc1ae (zai/glm-5.3, run mode). Deliverable: dev-rounds/ROUND-19-arrival-rate-wall.md. Seeds 1/7/42/1999/20260902, integer-only, 3 canaries. Commit+push g3-kinduction mandated; told to leave the other lane's uncommitted files (q_wall_gate.v, wheel logs) untouched.
 - **Verdict: PARTIAL — booked in 4cbfd83.** Raw-wall arrival-rate law REFUTED (walls move 2–3 seats but delta/K families disagree — two-knob object, not ratio); genuine discovery: lag compensation collapses the K degree of freedom — comp wall(delta/K) is a single curve across both families over 1.7 decades. Fan-out governs the uncompensated wall; arrival rate governs the compensated wall. Next spoke: comp-collapse confirmation at pd∈{2,6}.
+
+## Round 22 — comp-wall K-handover sweep — DISPATCHED 2026-09-03 22:59 AKDT
+- **Item:** Round 21's named next rung — sweep K ∈ {1,2,4,8} at fixed (pd,Δ) to locate where the Δ-flat K=1 regime (SPIN-32 cells) hands over to the r^0.25 regime (F2=⌈2·r^0.25⌉, banked for K≥4, pd≤3). Anchor replays: round-21 octave walls (pd=3, K∈{4,8}) + K=1 pd∈{3,4} cells.
+- **Lane:** dev_r22_compwall_k_handover (zai/glm-5.3, run mode). Deliverable: dev-rounds/ROUND-22-compwall-k-handover.md. Pre-reg before numbers; seeds 1/7/42/1999/20260902; canaries C1–C4. Commit+push g3-kinduction mandated.
+- **Verdict:** pending (backfill on lane completion).
