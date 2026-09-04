@@ -1,0 +1,90 @@
+SPIN-42 conservation stochastic-mass-neutral observer — pid 7923, 3.14.4
+== CANARY a: byte-identity run_fabric == sp41.dyn_run_mq(never) == dyn_run_sto(never) ==
+  PASS: 12 configs triple-identical
+
+== CANARY b: anchors (run_fabric 5-seed means) ==
+  zero       K=1: pct   77.3 (want 77.3)  debt 187834 (want 187834)  ev 8756 (want 8756)  -> PASS
+  ladder@15  K=1: pct   71.5 (want 71.5)  debt 106378 (want 106378)  ev 5792 (want 5792)  -> PASS
+
+== CANARY c: SPIN-41 floored primary replay (imported) ==
+  floored zero K=2 q=8: pct 1.3 vs never 50.0 -> cost 48.7pp (want 48.7)  -> PASS
+
+== CANARY d: gate=never == mc=0 (untouched ledgers) ==
+  PASS: 4 arms created=deleted=0, 0 draws, ledgers closed (assert-live)
+
+== CANARY e: determinism (floored + stochastic, run twice) ==
+  PASS: floored 1 + stochastic 2 dual runs byte-identical
+
+CANARY GATE: ALL PASS
+
+== PANEL (stochastic unbiased): pct / del / cre (5-seed means; del,cre = mass ledger per run) ==
+   q6->step16  q8->step4  q12->step1(no-op); M=None never
+
+-- zero  K=1 --
+   q\M             M=1             M=4            M=16            M=64          M=None
+   q=6     77.3/21424     77.3/5183     77.3/1161     77.3/293     77.3/  0
+   cre           21416            5156            1144             293               0
+   del           21424            5183            1161             293               0
+   q=8     77.3/6784     77.3/1660     77.3/398     77.3/ 98     77.3/  0
+   cre            6757            1661             399             103               0
+   del            6784            1660             398              98               0
+  q=12     77.3/  0     77.3/  0     77.3/  0     77.3/  0     77.3/  0
+   cre               0               0               0               0               0
+   del               0               0               0               0               0
+-- zero  K=2 --
+   q\M             M=1             M=4            M=16            M=64          M=None
+   q=6     28.9/99649     38.4/24272     46.6/4917     47.5/1168     50.0/  0
+   cre          103008           24252            4889            1178               0
+   del           99649           24272            4917            1168               0
+   q=8     49.3/19367     48.5/5383     49.8/1307     50.2/338     50.0/  0
+   cre           19424            5397            1306             330               0
+   del           19367            5383            1307             338               0
+  q=12     50.0/  0     50.0/  0     50.0/  0     50.0/  0     50.0/  0
+   cre               0               0               0               0               0
+   del               0               0               0               0               0
+-- kcoh5@15  K=1 --
+   q\M             M=1             M=4            M=16            M=64          M=None
+   q=6     74.1/27823     74.1/6853     74.1/1632     74.1/433     74.1/  0
+   cre           27882            6848            1627             454               0
+   del           27823            6853            1632             433               0
+   q=8     74.1/8379     74.1/2152     74.1/517     74.1/126     74.1/  0
+   cre            8378            2129             511             127               0
+   del            8379            2152             517             126               0
+  q=12     74.1/  0     74.1/  0     74.1/  0     74.1/  0     74.1/  0
+   cre               0               0               0               0               0
+   del               0               0               0               0               0
+-- kcoh5@15  K=2 --
+   q\M             M=1             M=4            M=16            M=64          M=None
+   q=6     16.1/118681     29.2/28310     42.6/5607     48.8/1199     50.6/  0
+   cre          121949           28674            5574            1164               0
+   del          118681           28310            5607            1199               0
+   q=8     46.4/21549     49.5/5620     48.2/1403     50.3/346     50.6/  0
+   cre           21461            5597            1419             345               0
+   del           21549            5620            1403             346               0
+  q=12     50.6/  0     50.6/  0     50.6/  0     50.6/  0     50.6/  0
+   cre               0               0               0               0               0
+   del               0               0               0               0               0
+
+== DECOHERENCE COSTS, stochastic unbiased (pp vs M=never) ==
+   grammar  K   q      M=1      M=4     M=16     M=64   M=None
+      zero  1   6      0.0      0.0      0.0      0.0      0.0
+      zero  1   8      0.0      0.0      0.0      0.0      0.0
+      zero  1  12      0.0      0.0      0.0      0.0      0.0
+      zero  2   6     21.0     11.6      3.3      2.5      0.0
+      zero  2   8      0.7      1.4      0.1     -0.2      0.0
+      zero  2  12      0.0      0.0      0.0      0.0      0.0
+  kcoh5@15  1   6      0.0      0.0      0.0      0.0      0.0
+  kcoh5@15  1   8      0.0      0.0      0.0      0.0      0.0
+  kcoh5@15  1  12      0.0      0.0      0.0      0.0      0.0
+  kcoh5@15  2   6     34.5     21.4      8.0      1.8      0.0
+  kcoh5@15  2   8      4.2      1.1      2.4      0.3      0.0
+  kcoh5@15  2  12      0.0      0.0      0.0      0.0      0.0
+
+PRIMARY cell: zero K=2 q=8 M=1 stochastic: pct 49.3 vs anchor (M=never) 50.0 -> cost 0.7pp
+  ledger: deleted 19367 / created 19424 mass/run -> drift +57 (SPIN-41 floored bias was +43,260); integer-exact closure assert-live on every arm
+PRE-REGISTERED rule: <=5.0 VALIDATED (channel = BIAS, net mass
+  distortion); >10.0 with drift-closed ledger FALSIFIED (observation per se); else MIXED.
+-> VERDICT: VALIDATED
+secondary kcoh5@15 K=2 q=8 M=1 cost = 4.2pp (drift -88)
+
+head: verdict VALIDATED, primary sto-cost 0.7pp (anchor 50.0), secondary 4.2pp, deleted 19367 / created 19424 mass/run
