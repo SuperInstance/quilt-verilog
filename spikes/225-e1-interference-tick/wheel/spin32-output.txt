@@ -1,0 +1,133 @@
+SPIN-32 METROLOGY 2D grid — 2026-09-03 19:06:51
+config: N=6 ladder, K=1, slope 1.6 spec (200/125), spreads=[8, 10, 12, 14, 16, 18, 20, 22, 24, 26, 28, 30], grid pd(3, 4, 5, 6) x delta(8, 10, 12, 14, 16), 3 seeds/arm (1, 7, 42), probes rational-pd [(3, [(5, 2), (11, 4), (7, 2)]), (6, [(11, 2), (23, 4), (13, 2)])] at delta(8, 16), ticks=4800, drift=6
+PRE-REGISTERED: M1-M4 competition, AIC Delta>=10 + LOO<=2NF 80%; SPIN-31 14.8% replication gate; curvature 2nd-diff gate; payoff joint law C ~ 2d·alpha + drift/A corrections.
+== CANARY a: wiring byte-identity dyn_run vs run_fabric (pd=3 AND pd=6 legs) ==
+  PASS: 16 configs byte-identical
+
+== CANARY b: R0 anchors at delta=12 pd=3 (5-seed means) ==
+  ladder15 K=1: pct=71.48 (71.48)  ev=5791.6 (5791.6)  debt=106378.4 (106378.4)  -> PASS
+  zero    K=1: pct=77.26 (77.26)  ev=8756.4 (8756.4)  debt=187833.6 (187833.6)  -> PASS
+
+== CANARY c: STOP-gate delta=12 pd=3 replay (5-seed): s*->17.6, C->28.1 digit-for-digit ==
+  curve: 100.0 100.0 100.0 85.8 60.0 47.3 42.5 38.4 28.0 34.4 26.8 22.6
+  s*=17.577 (round 17.6, want 17.6)  C=28.124 (round 28.1, want 28.1)  -> PASS
+
+== CANARY d: determinism (one dual-run per grid arm + 2 probe arms) ==
+  PASS: 22 dual runs byte-identical
+
+== CANARY e: dyn_run_r(pdn=3,pdd=1) == dyn_run(pd=3) byte-identity ==
+  PASS: 8 configs byte-identical
+
+ALL CANARIES: PASS
+
+== PANEL 1: 20-arm grid, 3 seeds/arm, K=1, slope 1.6 spec ==
+arm = pd x delta; per-seed alpha from per-seed crossings; NF_arm = half per-seed alpha range
+ pd  delta   s*      C   alpha  |  per-seed alphas (s1,s7,s42)        NF
+  3      8   12.5   19.9  1.247  | 1.243 1.241 1.256   0.008
+  3     10   15.4   24.6  1.230  | 1.231 1.224 1.237   0.007
+  3     12   17.6   28.1  1.173  | 1.176 1.167 1.174   0.005
+  3     14   21.0   33.6  1.201  | 1.201 1.199 1.204   0.002
+  3     16   23.5   37.6  1.176  | 1.177 1.172 1.181   0.005
+  4      8   10.9   17.4  1.088  | 1.089 1.087 1.088   0.001
+  4     10   13.6   21.7  1.087  | 1.087 1.085 1.088   0.001
+  4     12   16.5   26.3  1.097  | 1.095 1.096 1.099   0.002
+  4     14   18.8   30.1  1.075  | 1.074 1.076 1.075   0.001
+  4     16   22.0   35.1  1.098  | 1.099 1.096 1.097   0.001
+  5      8   10.2   16.4  1.025  | 1.026 1.025 1.023   0.002
+  5     10   12.8   20.5  1.027  | 1.029 1.027 1.024   0.002
+  5     12   15.2   24.3  1.012  | 1.010 1.014 1.012   0.002
+  5     14   17.9   28.6  1.020  | 1.022 1.023 1.017   0.003
+  5     16   20.9   33.4  1.043  | 1.043 1.044 1.044   0.001
+  6      8    8.7   13.9  0.868  | 0.888 0.875 0.839   0.024
+  6     10   12.4   19.8  0.991  | 0.994 0.993 0.988   0.003
+  6     12   14.7   23.5  0.977  | 0.979 0.979 0.975   0.002
+  6     14   17.2   27.5  0.984  | 0.991 0.983 0.978   0.007
+  6     16   20.1   32.1  1.005  | 1.008 1.005 1.001   0.003
+
+== PANEL 2: endpoint curvature probes (rational pd), 3 seeds/arm ==
+    pd  delta   s*      C   alpha  per-seed alphas
+   5/2      8   NO CROSSING (wall-adjacent, pre-booked)
+  11/4      8    9.4   15.1  0.944    ---- 1.058 1.064
+   7/2      8   11.9   19.0  1.190  1.190 1.186 1.194
+   5/2     16   19.0   30.4  0.951  0.958 0.945 0.953
+  11/4     16   23.9   38.3  1.197  1.317 1.194 1.194
+   7/2     16   22.6   36.1  1.128  1.126 1.126 1.130
+  11/2      8    9.2   14.7  0.918  0.928 0.927 0.899
+  23/4      8    8.7   13.9  0.868  0.888 0.875 0.839
+  13/2      8    8.1   13.0  0.811  0.823 0.825   ----
+  11/2     16   20.4   32.6  1.019  1.019 1.019 1.018
+  23/4     16   20.1   32.2  1.006  1.007 1.007 1.003
+  13/2     16   19.9   31.8  0.994  1.002 0.995 0.983
+
+== ANALYSIS 1: model competition on 20 arm-mean alphas ==
+noise floor: median NF_arm = 0.0050 (half per-seed range); per-arm NF used where defined
+model                         SSE  maxres      AIC      BIC
+M1 bilinear-no-cross       0.0214  0.0785  -128.81  -124.83
+M2 bilinear-with-cross     0.0126  0.0611  -137.42  -132.44
+M3 separable-product       0.0633  0.1376  -105.10  -100.12
+M4 saturation-knee         0.0172  0.0962  -131.13  -126.15
+
+AIC order: M2 bilinear-with-cross < M4 saturation-knee < ... Delta-AIC(winner vs runner-up) = 6.29 (gate >= 10) -> W1 FAIL
+
+leave-one-arm-out CV (gate: |err| <= 2·NF on >= 80% arms):
+  M2 bilinear-with-cross   pass 1/20 (5%)  max|err|=0.0773
+  M4 saturation-knee       pass 4/20 (20%)  max|err|=0.1197
+  M1 bilinear-no-cross     pass 2/20 (10%)  max|err|=0.1033
+  M3 separable-product     pass 1/20 (5%)  max|err|=0.1118
+W2 (winner LOO >= 80%): FAIL (1/20)
+MODEL VERDICT: NO SINGLE SURFACE (gates not both met)
+
+winner-fit residuals by arm (pd, delta): pred - obs
+  pd=3.0 delta=8.0: -0.0247  (obs 1.247)
+  pd=3.0 delta=10.0: -0.0249  (obs 1.230)
+  pd=3.0 delta=12.0: +0.0163  (obs 1.173)
+  pd=3.0 delta=14.0: -0.0291  (obs 1.201)
+  pd=3.0 delta=16.0: -0.0207  (obs 1.176)
+  pd=4.0 delta=8.0: +0.0289  (obs 1.088)
+  pd=4.0 delta=10.0: +0.0272  (obs 1.087)
+  pd=4.0 delta=12.0: +0.0137  (obs 1.097)
+  pd=4.0 delta=14.0: +0.0322  (obs 1.075)
+  pd=4.0 delta=16.0: +0.0064  (obs 1.098)
+  pd=5.0 delta=8.0: -0.0124  (obs 1.025)
+  pd=5.0 delta=10.0: -0.0050  (obs 1.027)
+  pd=5.0 delta=12.0: +0.0198  (obs 1.012)
+  pd=5.0 delta=14.0: +0.0215  (obs 1.020)
+  pd=5.0 delta=16.0: +0.0085  (obs 1.043)
+  pd=6.0 delta=8.0: +0.0387  (obs 0.868)
+  pd=6.0 delta=10.0: -0.0611  (obs 0.991)
+  pd=6.0 delta=12.0: -0.0239  (obs 0.977)
+  pd=6.0 delta=14.0: -0.0070  (obs 0.984)
+  pd=6.0 delta=16.0: -0.0045  (obs 1.005)
+
+M2 coefficients: alpha = 1.7625 -0.15805·pd -0.02819·delta +0.006635·pd·delta
+
+== ANALYSIS 2: SPIN-31 replication — alpha(pd=6) over 5-point delta column ==
+  d8=0.868  d10=0.991  d12=0.977  d14=0.984  d16=1.005
+  range=0.136 (14.1% of mean 0.965); gate range > 2·medianNF = 0.010 -> REAL (survives seed replication)
+  monotone rising in delta (pre-registered expectation): NO
+
+== ANALYSIS 3: endpoint curvature (gate 2·medianNF on second difference) ==
+  pd=3, delta=8: alpha(2.50)=None  alpha(3)=1.247  alpha(3.50)=1.190034965034965  quarter=0.9439878234398784
+    (lo or hi no crossing — wall side dropped, pre-booked)
+  pd=3, delta=16: alpha(2.50)=0.95140771637122  alpha(3)=1.176  alpha(3.50)=1.1275316455696203  quarter=1.1966480446927377
+    second difference = -0.2739 vs gate 0.010 -> CURVES (2nd diff beyond noise)
+  pd=6, delta=8: alpha(5.50)=0.9182978723404256  alpha(6)=0.868  alpha(6.50)=0.8105263157894737  quarter=0.868421052631579
+    second difference = -0.0080 vs gate 0.010 -> LINEAR-CONTINUES (2nd diff within noise)
+  pd=6, delta=16: alpha(5.50)=1.0189304812834226  alpha(6)=1.005  alpha(6.50)=0.9938992042440319  quarter=1.0056354916067147
+    second difference = +0.0036 vs gate 0.010 -> LINEAR-CONTINUES (2nd diff within noise)
+
+== ANALYSIS 4: PAYOFF — candidate closed form C(pd, delta, A, drift) ==
+  winning surface: M2 bilinear-with-cross
+  C(pd, delta) = 2·delta·alpha_win(pd, delta) at A=200, drift=6, N=6, slope 1.6:
+    pd=3:  19.6  24.1  28.5  32.8  37.0
+    pd=4:  17.9  22.3  26.7  31.0  35.3
+    pd=5:  16.2  20.4  24.8  29.2  33.7
+    pd=6:  14.5  18.6  22.9  27.4  32.0
+  joint candidate law (partial, pre-registered form):
+    C(pd, delta, A, drift) ~= 2·delta·alpha_win(pd, delta)
+        + 0.138·(drift - 6) - 2.11·log2(A/200)
+  validity domain: A>=200, drift in [0,10], pd in [2.5,6.5] (wall-adjacent cells excluded), delta in [8,16], N=6, K=1,
+  slope 1.6; A=96 x drift>=6 ignition corner OUTSIDE (SPIN-30); A/drift corrections measured at pd=3, delta=12 ONLY — cross-pd validity untested, flagged.
+  closure status: no single pd x delta surface passed gates; law remains open — partial only.
+
+DONE. elapsed 12 s
