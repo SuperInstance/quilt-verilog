@@ -1,5 +1,12 @@
 # dev-rounds — ROUNDS ledger (branch g3-kinduction)
 
+## Round 14 — Q7 §5.4 regime-gating dial — DISPATCHED 2026-09-03 18:21 AKDT
+- **Item:** Q7 — minimal integer controller {κ-detector, lag blade L̂, fan-out N} → {mode, K, pd}, ≤3 registers, no multiply; must clear BOTH O4 gates (932‰ %w AND debt ≤32,770) on the O4 protocol. Pre-registered rule committed before comparison runs.
+- **Lane:** dev_q7_regime_dial (zai/glm-5.3, run mode). Deliverable: dev-rounds/ROUND-14-Q7-regime-dial.md. Commit + push g3-kinduction mandated.
+- **Verdict:** BOUNDARY BOOKED — pre-registered 3-register dial (R1=L̂ blade-fast, R2=σ stress bit κ-slow, R3=β bursty bit via transient-hit rate) clears the debt gate for the first time in the program (13,211 = 24% of best-static 54,616; adaptive was 57,136) but fails %w (800‰ vs 932‰) and knife-edge (L̂±1): the transient suppressor (≥40 single-tick jumps) kills bursty debt −77% yet leaves ±45 ticks unsettled by construction (bursty 541‰ vs chased 929‰). Frontier mapped with labeled post-hoc amendments (β-gated chase: 922‰/56,089; ideal ≈ 929‰ @ ≈29.2k — 3‰ short of gate a and still L̂+1-fragile). Booking: the three O4 gates are jointly infeasible for any {mode,K,pd} dial at N=2 — chase (settle), don't-pay (debt), alignment-blind (±1) — pick two; O4's 932‰ sat on the corner by L̂=9 underseat luck. Blade-fast/κ-slow works (2 sw/run, conflict 992‰); F14 mag/C=1 gate verified inert at N=2, correct at N=6 (unit). Canaries: O4/F19 anchors exact (932/57,136; 984/17,700/28; blade 5/5), self-canary CAUGHT ×2, double-run byte-identical. Follow-ups: Q7b (dial on O2 N-sweep, F14 gate live), Q7c (leak-proof latch frontier pin).
+- **Commit:** a02a84b (pre-registration) + verdict commit
+- **Headline:** %w 800‰ @ debt 13,211 vs gates 932‰/32,770 — first arm under the debt gate; gates a+b+c jointly infeasible (chase 929‰/L̂+1→315‰ vs suppress 541‰/13.2k).
+
 Format per block: round #, item, verdict, commit hash, headline number.
 Ordered queue: RESEARCH-AGENDA §4 O1–O7, then §Q open questions, then wheel spokes round-robin.
 

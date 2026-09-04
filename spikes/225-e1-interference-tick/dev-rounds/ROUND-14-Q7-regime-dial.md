@@ -121,3 +121,122 @@ misled (per-segment debt telemetry is recorded for exactly this). If an anchor
 fails to replay: STOP, commit failure analysis, no verdict.
 
 — end PART 1 (pre-registration; comparison runs begin only after this is committed)
+
+---
+
+## PART 2 — RUNS, VERDICT (comparison runs began only after PART 1 commit a02a84b)
+
+### Canaries (all PASS/CAUGHT)
+
+| Canary | Check | Result |
+|---|---|---|
+| 1 (F14 gate units) | N=6 synthetic 6-candidate set → keeps argmax|e|=44, rejects 5; N=2 inert (keeps all, rejects 0); rejected==0 on every dial run | PASS |
+| 2 (O4/F19 anchors) | blade 3/5/7/10/15 exact; adaptive replay **932‰ / 57,136** exact; F19 int-comp 5-seed mean 984/17,700/28 exact; seq-comp 1000‰ exact | PASS |
+| 3 (self-canary) | inverted-dial "dial": calm-seq 49 vs calm-int 1551 → CAUGHT; filter-off arm faked as dial: fingerprints (801,13393,1135) vs (932,104046,0) → CAUGHT | CAUGHT |
+| 4 (byte-identity) | dial + adaptive × 5 seeds run twice, full metric signatures identical | PASS |
+
+Scar (honest bookkeeping): the first run's F19 anchor canary FAILED — my port
+compared a single seed (20260902: 984/17,352/27) against the published 5-seed
+mean (984/17,700/28). Canary bug, not a harness drift: fixed to 5-seed means,
+then exact. No verdict-relevant number was touched by the fix.
+
+### Baselines (O4 `run_arm` verbatim replay — identical to round 4)
+
+seq-raw 266‰/87,152 · int-raw 371‰/105,027 · seq-comp-fix 636‰/59,686 ·
+int-comp-fix 422‰/81,193 · **seq-comp-oracle 778‰/54,616 (best static)** ·
+int-comp-oracle 545‰/80,320 · **adaptive 932‰/57,136**. All exact vs round 4.
+
+### Dial arms (5 seeds, mean; seg pm calm/conflict/bursty; seg debt c/cf/bu)
+
+| Arm | pm | debt | seg pm | seg debt | notes |
+|---|---|---|---|---|---|
+| **dial** (pre-registered) | **800‰** | **13,211** | 867/992/541 | 3,980/6,641/2,590 | 2 switches/run; 1,136 suppressions |
+| dial-Lm1 (forced 9) | 578‰ | 13,343 | 183/991/562 | — | calm misaligned (true 5) |
+| dial-Lp1 (forced 11) | 478‰ | 14,200 | 149/991/296 | — | bursty craters too |
+| dial-nofilter | 932‰ | 103,562 | 870/996/929 | 3,946/6,682/92,933 | = O4 adaptive class; knife-edge returns |
+| dial-g60 | 800‰ | 13,286 | 867/992/541 | — | threshold 40 robust at mag 60 |
+| dial-g20 | 909‰ | 47,633 | 867/992/867 | —/—/37,012 | ±20 slips the filter (coupling booked) |
+| dialv2 (β-gated chase, latched) * | 922‰ | 56,089 | 867/992/907 | 3,980/6,641/45,468 | 68 sw: (3/4)^32 latch leaks |
+| dialv2-flap (unlatched) * | 906‰ | 51,157 | 867/992/858 | — | β flaps → 196 mode switches |
+| dialv2-Lm1 / -Lp1 * | 742‰ / 488‰ | — | —/991/966 and —/991/315 | — | knife-edge alive under chase |
+
+\* post-hoc amendment arms, run AFTER the pre-registered numbers were seen;
+labeled, not gate-eligible (Q4-round precedent: "falsifier fires on the letter,
+amendment conducts").
+
+### Decision rule, applied (pre-registered)
+
+- Gate a: dial 800‰ ≥ 932‰? **FAIL** (−132‰).
+- Gate b: dial debt 13,211 ≤ 32,770? **PASS** — **the first arm in the program
+  under the debt gate**: 24.2% of best-static debt (54,616), 23.1% of adaptive's
+  (57,136).
+- Gate c: L̂±1 578/478 vs 800−50 allowed? **FAIL** (dominated by forced-wrong
+  calm lag; bursty-specific: 562/296 vs 541 — even the suppressor degrades
+  245‰ at L̂+1).
+
+**VERDICT: BOUNDARY BOOKED.** Not promoted; not refuted (gate b is a real
+first). Output: `dev-rounds/q7-dial-output.txt`.
+
+### The boundary, with numbers
+
+1. **The transient suppressor is a debt cure AND a %w killer.** Suppressing
+   single-tick ≥40 aligned jumps cuts total debt 57,136 → 13,211 (−77%) and
+   bursty debt 18,586 → 2,590 per seed — but unanswered ±45 ticks are
+   unsettled *by construction* (the reading itself is 45 off; only chasing —
+   g += e within the tick — can settle a glitch tick). Suppressed bursty caps
+   at 541‰ vs chased 929‰. Gate a and the suppressor are enemies.
+
+2. **Gates a+b are *almost* jointly satisfiable — by β-gated chasing.** Chase
+   debt concentrates in bursty (92,933/5 = 18,586/seed) while suppressed
+   calm+conflict cost only 10,621 → ideal gated-chase total ≈ 29,207 ≤ 32,770
+   with pm ≈ (867+992+929)/3 ≈ 929‰ — **3‰ short of gate a**. The measured
+   latch variant lands 922‰/56,089 (a (3/4)^32-per-tick latch leak flaps the
+   mode 68×/run; each leak window chases at Δ12/interference). No register
+   saturated; the binding input is the bursty environment itself.
+
+3. **Gate c is structurally incompatible with gate a.** Every ≥929‰ arm
+   chases glitches; chasing is alignment-sensitive by mechanism (O4 scar,
+   replicated here: dialv2 bursty 907‰ at live L̂, 315‰ at L̂+1; dial-nofilter
+   929 vs O4's 336 at exact alignment). The only ±1-stable strategy family
+   (suppression) caps at 800‰. The three gates jointly demand *chase* (settle
+   glitch ticks), *don't pay* (debt), and *be alignment-blind* (knife-edge) —
+   **any {mode,K,pd} dial at N=2 can pick two.** The 932‰/debt-32,770/±1-stable
+   corner does not exist on this protocol; O4's adaptive sat on it only by
+   alignment luck (the L̂=9 underseat).
+
+4. **Threshold coupling (booked, pre-registered):** the ≥40 suppressor is
+   informed by the known ±45 magnitude — robust at 60 (identical pm), slips at
+   20 (909‰, debt 47,633, only 24 suppressions fire). A field dial needs the
+   threshold tied to a measured noise scale, not a protocol constant.
+
+### What the dial got right (reusable bookings)
+
+- Blade-as-fast-path + κ-as-slow-confirm works as tasked: 2 switches/run vs
+  O4's 6; conflict seg 992‰ with no 90-tick detector hole visible at permille
+  resolution (κ bridges [1600,1920) before the blade's first post-shift seat).
+- Bursty detection by transient-hit rate (R3) is faster than both the κ-detector
+  (round 4: ~7 ticks re-entry) and cheaper than lag inference (L̂ cannot
+  distinguish conflict from bursty — both sit at lag 10; the transient rate can).
+- Calm 867‰ ≈ O4 oracle-class (1000‰ post-blade; the first 480 ticks are
+  uncompensated by spec — the residual deficit is the blade's seat time, not
+  the dial).
+- F14 mag/C=1 gate verified inert at N=2 (rejected=0 everywhere) and correct
+  at N=6 (unit canary); its contention payoff remains untestable on the 2-twin
+  protocol — needs the O2 fabric at N≥6, queued as follow-up.
+
+### Follow-ups queued
+
+- Q7b: dial on the O2 N-sweep fabric (N∈{2..8}) where the F14 gate is live —
+  does the suppressor/sort combination move the O2 wall the way compensation
+  moved the N=4 wall?
+- Q7c: gated-chase with a leak-proof latch (release on 128+ quiet ticks or
+  never within a segment) — projected ≈929‰ @ ≈29.2k debt; still fails gates
+  a and c; worth one run to pin the frontier endpoint, not to promote.
+
+## Headline number
+
+**Pre-registered 3-register dial: %w 800‰ @ debt 13,211 vs gates 932‰/32,770 —
+first arm under the debt gate (24% of best-static; adaptive was 104%), but the
+gates are jointly infeasible at N=2: chasing settles bursts (929‰) but is
+alignment-sensitive (L̂+1 → 315‰), suppressing is alignment-stable but leaves
+bursts unanswered (541‰) — any {mode,K,pd} dial picks two of three.**

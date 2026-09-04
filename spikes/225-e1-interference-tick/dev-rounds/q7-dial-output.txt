@@ -1,0 +1,47 @@
+== Q7 ROUND 14: minimal regime-gating dial (calm->conflict->bursty, 4800 ticks x 5 seeds) ==
+segments: calm [0,1600) d6/d3/lat5 | conflict [1600,3200) d12/d6/lat10 | bursty [3200,4800) d6/d3/lat10 + 1-in-4 +/-45 glitches
+dial: R1=L^ (blade, fast) R2=sigma (stress: blade>=8 OR kappa) R3=beta (bursty: >=2 transients/16)
+outputs: mode int<->seq, K=1/pd=2+phase-decay under stress-confirmed, td 12/6, transient suppressor >=40, F14 mag/C=1 gate at N>=6 (inert at N=2)
+
+-- CANARY 1: F14 sort gate unit checks --
+  N=6: [44] kept 1/6, rejected 5  OK
+  N=2: inert (kept all, rejected 0)  OK
+
+  ANCHOR SET: PASS
+
+-- CANARY 3: self-canary --
+  inverted-dial 'dial' @20260902: calm-seq 49 vs calm-int 1551 ticks -> CAUGHT
+  filter-off arm passed off as full dial @42: fingerprints (801, 13393, 1135) vs (932, 104046, 0) -> CAUGHT
+
+-- CANARY 4: double-run byte-identity --
+  dial+adaptive x 5 seeds run twice: PASS
+
+-- GRID: baseline arms x seeds (O4 run_arm verbatim) --
+  arm                    pm     debt  maxErr  per-seed pm
+  seq-raw              266 permille    87152      61  [267, 268, 271, 262, 264]
+  int-raw              371 permille   105027      54  [370, 366, 369, 380, 374]
+  seq-comp-fix         636 permille    59686      53  [635, 639, 642, 631, 634]
+  int-comp-fix         422 permille    81193      50  [418, 427, 421, 422, 424]
+  seq-comp-oracle      778 permille    54616      45  [778, 778, 778, 778, 778]
+  int-comp-oracle      545 permille    80320      50  [542, 543, 547, 545, 551]
+  adaptive             932 permille    57136      53  [932, 935, 932, 932, 929]
+
+-- GRID: dial arms x seeds --
+  dial             800 permille    13211      56  per-seed pm [803, 804, 801, 798, 797]  segpm c/cf/bu 867/992/541  segdebt 3980/6641/2590  supp 1136 rej 0 sw 2
+  dial-Lm1         578 permille    13343      58  per-seed pm [583, 573, 578, 578, 582]  segpm c/cf/bu 183/991/562  segdebt 5437/5307/2599  supp 1097 rej 0 sw 28
+  dial-Lp1         478 permille    14200      57  per-seed pm [477, 475, 474, 487, 481]  segpm c/cf/bu 149/991/296  segdebt 6324/5285/2590  supp 1621 rej 0 sw 28
+  dial-nofilter    932 permille   103562      53  per-seed pm [933, 936, 932, 932, 929]  segpm c/cf/bu 870/996/929  segdebt 3946/6682/92933  supp 0 rej 0 sw 5
+  dial-g60         800 permille    13286      71  per-seed pm [803, 804, 801, 798, 797]  segpm c/cf/bu 867/992/541  segdebt 3980/6641/2665  supp 1136 rej 0 sw 2
+  dial-g20         909 permille    47633      58  per-seed pm [914, 911, 906, 908, 906]  segpm c/cf/bu 867/992/867  segdebt 3980/6641/37012  supp 24 rej 0 sw 9
+  dialv2           922 permille    56089      57  per-seed pm [923, 926, 923, 921, 920]  segpm c/cf/bu 867/992/907  segdebt 3980/6641/45468  supp 83 rej 0 sw 68
+  dialv2-Lm1       742 permille    55934      58  per-seed pm [750, 734, 738, 743, 749]  segpm c/cf/bu 271/991/966  segdebt 5400/5054/45480  supp 94 rej 0 sw 94
+  dialv2-Lp1       488 permille    59670      92  per-seed pm [490, 482, 485, 495, 491]  segpm c/cf/bu 159/991/315  segdebt 7131/4984/47554  supp 94 rej 0 sw 94
+  dialv2-flap      906 permille    51157      59  per-seed pm [901, 911, 907, 907, 905]  segpm c/cf/bu 867/992/858  segdebt 3980/6641/40535  supp 195 rej 0 sw 196
+
+-- DECISION RULE (pre-registered) --
+  gate a: dial pm 800 >= adaptive 932 ? FAIL
+  gate b: dial debt 13211 <= 32770 ? PASS
+  gate c: L^-1/L^+1 pm 578/478 vs dial 800 (-50 allowed); bursty 562/296 vs 541 -> FAIL
+  canaries: f14-unit PASS, anchors PASS, self-canary CAUGHT, byte-identity PASS
+  VERDICT: BOUNDARY BOOKED
+  best static: seq-comp-oracle pm 778 debt 54616 | adaptive 932/57136 | dial 800/13211
