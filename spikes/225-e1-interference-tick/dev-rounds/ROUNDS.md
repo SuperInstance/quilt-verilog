@@ -127,3 +127,8 @@ Ordered queue: RESEARCH-AGENDA §4 O1–O7, then §Q open questions, then wheel 
 - **Next rung (named):** drift-axis law — is the (pd,drift) seat field a product law pd·drift or separable? Sweep drift{3,6,12} × pd{2..6} at Δ=16, K=1, comp arm.
 - **Commit:** 6b4f715 (pre-reg cd09969)
 - **Headline:** wall=6 everywhere — drift 3→6 moves nothing; K=1 walls are (pd,drift) seats, Δ-blind to 48 at both drifts.
+
+## Round 26 — drift×pd seat-field law (product vs separable) — DISPATCHED 2026-09-04 01:26 AKDT
+- **Item:** Round 24's named rung, sharpened by round 25: K=1 comp-wall ladder wall(pd,drift) at Δ=12, drift ∈ {3,6,12} × pd ∈ {2..6}, N 2..18. Gates: product law vs separable vs drift-blind (extends r24 drift-artifact); does the 2pd→2pd+1 step stay at pd=3→4 at every drift? Anchors: r25 drift=6 column (4/6/9/11/13) must replay exact.
+- **Lane:** dev_r26_driftpd_law (zai/glm-5.3, run mode). Deliverable: dev-rounds/ROUND-26-driftpd-law.md. Pre-reg before numbers; seeds 1/7/42/1999/20260902; canaries incl. r25 anchor replay + mislabeled-arm. Commit+push g3-kinduction mandated.
+- **Verdict:** pending (backfill on lane completion).
