@@ -1,0 +1,13 @@
+# ROUND 17 — O2c pure-pd wall sweep (pre-registered ca2da8f, IDEATOR nudge): walls move with pd but NOT as 2pd — echo-law unification severed, "immobile wall" qualified
+
+**Verdict: PARTIAL — and the partial table kills both clean stories.** Wall (first N where the mag+C=1 sorted win over admit-all clears +2.0pp, mean of calm+stress, seeds 1/7/42/1999/20260902): **pd=2 → N=5, pd=3 → N=6 (control PASS, reproduces round 3), pd=6 → N=7.**
+
+- **Against the echo-law unification (IDEATOR's proposal):** walls increase with pd but do not track 2pd — pd=6's wall lands at 7, five seats below the predicted 12, and the pd=6 sweep *keeps* clearing (win at N=13 is +9.7pp and still growing). If the lattice were riding the N=2pd safe boundary, pd=6 should have been stable through N=12 and diverged after; instead sorting just helps more as contention grows. G-TRACK FAIL. The fan-out wall and the spin-11 echo safe boundary are **different objects**. EXP4's mixed-pd rejection stands, now with pure-pd evidence.
+- **Against round 16's "immobile wall" framing:** pd is not inert either — 5 → 6 → 7 over pd 2 → 3 → 6. The fourth-straight survival gets a qualifier: no *dial* knob moves it, but the pulse divisor does, weakly and sublinearly (~+1 seat per pd doubling past pd=3).
+- **What the wall actually tracks (post-hoc, labeled as such):** contention shape, not pulse granularity. Once N is large enough that the switchboard must reject candidates routinely, sorting wins ≥2pp almost immediately (pd=6 clears at N=7 and grows monotonically after). The "wall" metric saturates because its threshold is crossed by N-driven contention, only modulated by pd. The clean statement: **the wall is a property of the contention regime (N vs candidate rate), with pd as a weak second-order knob — not a lattice-structure constant and not the echo boundary.**
+
+The ambiguity carried since 9491c25 is closed: not the echo law's object, not pd-invariant either. Next spoke if anyone wants the replacement law: sweep the *candidate arrival rate* (delta/K) at fixed pd and see whether the wall tracks contention load instead — that is now the only surviving structural hypothesis.
+
+## Method
+
+Round-2/3 harness verbatim (`run_sw`, admit-all = key=None/C=N vs mag+C=1; regimes calm K8/d6/Δ6, stress K4/Δ12/drift6; pd via pulse_div; lat spreads 0..12, canonical sets pinned at N∈{2,3,5,8}, interpolated elsewhere; 3 pd × 12 N × 2 regimes × 2 arms × 5 seeds × 4800 ticks, 62 s). Wall gate and decision rule committed before the run (ca2da8f); the PARTIAL branch is exactly as pre-registered. Raw: `o2c-pdwallsweep-output.txt`.
