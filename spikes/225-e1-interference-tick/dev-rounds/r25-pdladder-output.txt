@@ -1,0 +1,21 @@
+== O2i K=1 pd-ladder extended-N start 01:06:17 ==
+K=1 pd=(2, 3, 4, 5, 6) drift=6 delta=12 N=(2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18)
+replay K=8 r=1: wall=2 (want 2)
+replay K=8 r=2: wall=3 (want 3)
+replay K=8 r=6: wall=4 (want 4)
+canary C1 pd=3: wall=6 (want 6)
+canary C2 pd=4: wall=9 (want 9)
+canaries: PASS
+pd=2: wall=4 2pd=4 [ 117s]
+pd=5: wall=11 2pd=10 [ 124s]
+pd=6: wall=13 2pd=12 [ 130s]
+
+-- G-2PD --
+pd=2: wall=4  2pd=4  off=0
+pd=3: wall=6  2pd=6  off=0
+pd=4: wall=9  2pd=8  off=1
+pd=5: wall=11  2pd=10  off=1
+pd=6: wall=13  2pd=12  off=1
+G-2PD: 2pd coincidence DIES cleanly for the K=1 ladder; the {4,5} bumps are the whole story
+
+done in 130s
