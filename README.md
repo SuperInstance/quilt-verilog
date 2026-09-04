@@ -55,6 +55,26 @@ ingress acceptance (`ci_ready`) until serviced — non-deferrable time,
 proven under permanent ingress flood ([docs/FORMAL-PROOFS.md](docs/FORMAL-PROOFS.md), §4).
 One tick traced end-to-end through the RTL: [docs/THE-TICK.md](docs/THE-TICK.md).
 
+How one flit moves through a cell — ingress, the five verbs, the tick's
+unstarvable lane, and the answer that always comes back:
+
+```mermaid
+flowchart LR
+    host[host / soft core] -->|request flit| arb{{"ingress\n(ci_ready)"}}
+    arb --> fsm["q_cell_core —\nrun-to-completion FSM"]
+    fsm -->|OP_BIND| bound[cell_id + dials]
+    fsm -->|OP_LINK| edges["edge slots — wiring as data"]
+    fsm -->|OP_EFF| edges
+    edges --> act["act accumulator\n(sat w·dat)"]
+    fsm -->|OP_VIEW| act
+    tick([OP_TICK — cannot starve:\nci_ready held low until serviced]) --> fsm
+    tick -->|decay + leak + fire test| act
+    act -->|fires| fanout["qm_effect fanout\nto every linked peer"]
+    fanout -->|flit| peers[linked cells]
+    fsm -->|ack / nak — never left hanging| host
+    act -->|readout| host
+```
+
 ## Quickstart — one command per lane
 
 Toolchain: stock oss-cad-suite (Icarus, Yosys, SymbiYosys, boolector,
