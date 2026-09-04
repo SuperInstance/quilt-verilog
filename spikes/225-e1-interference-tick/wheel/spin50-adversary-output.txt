@@ -1,0 +1,129 @@
+SPIN 50, ADVERSARY spoke, attempt 3 of the SPIN-49 brief.
+D6 EMISSION-CHANNEL PROVENANCE — pre-registered docstring, written
+BEFORE any run. Continuation of SPIN-39 (mixed-strategy evasion
+FALSIFIED; D5 declared-vs-emitted audit 0 FP) -> SPIN-47 (coalition
+FALSIFIED; FP-FLOOD VALIDATED: spoofed honest-id pulses false-flag
+honest cells 5/5 seeds, -2.2..-16.0pp residency erosion, global D5
+blind — emission-id spoofing is OUTSIDE D5's declared-nf model).
+
+OPEN QUESTION THIS SPIN ATTACKS:
+  D5 audits the DECLARATION channel (declared nf vs emitted pulses)
+  and is provably blind to forged emission IDs. SPIN-47's spoof
+  storm is therefore an open hole. D6 moves the audit to the
+  EMISSION channel itself: every egress flit carries a source
+  attestation the fabric verifies at ingress — per-cell emission
+  counters (this epoch, mod 256) cross-checked against the epoch
+  tag. A forger cannot increment a victim's counter (private
+  per-cell state), so a forged flit survives only by guessing the
+  victim's exact next counter value (1/256 per flit, epoch public).
+  A per-cell token-bucket ledger (refill 1/tick, burst 2 — the
+  honest contract is <=1 flit/cell/tick) prices volume floods to
+  the emitting cell: excess flits are dropped and attributed.
+
+ARMS (all @ theta*=1.10, cells {ladder@15, kcoh5@15} x K{1,2}):
+  A  SPOOF STORM under D6-provenance: exact SPIN-47 fp_flood
+     dynamics, forged flits now tag-verified at ingress.
+     H1: D6 catches the spoof storm with honest-cell FPR 0 in 5/5
+     seeds. FALSIFY if spoofed flits accepted at >1% or honest
+     FPR >0 (any seed, any cell).
+  B  SELF-ATTRIBUTED FLOOD under D6-quota: twin 5 floods honestly-
+     attributed junk (3 magnitude-1 pulses per trigger tick, valid
+     tags) to exhaust the flag budget. Ledger prices the excess to
+     the liar.
+     H2: D6-with-quota holds residency within 2pp of the honest
+     baseline in all cells while the ledger prices the flood to the
+     liar. FALSIFY if honest residency erodes >5pp in any cell;
+     MIXED if between.
+  C  COALITION SPOOF+DECLARE HYBRID under D6-full (prov+quota):
+     twin 5 runs nf_inflate declarations AND the spoof storm.
+     Caught iff either D5 (per-cell declared!=emitted) or D6
+     (forged-tag catch) flags. H3: caught in 5/5 seeds with honest
+     FPR 0; report as coverage evidence.
+
+PRE-REGISTERED DECISION RULE (fixed before running):
+  H1 VALIDATED iff honest_rej == 0 AND honest D5 flags == 0 in
+     5/5 seeds of all 4 cells AND forged-acceptance <= 1.0% in all
+     4 cells. FALSIFIED otherwise (report which clause broke).
+  H2 VALIDATED iff |shift vs gate-off honest null| <= 2.0pp in all
+     4 cells. FALSIFIED if any |shift| > 5.0pp. MIXED otherwise.
+  H3 VALIDATED iff union(D5, D6) catch in 5/5 seeds of all 4 cells
+     with honest FPR 0.
+  S1 closure: SPIN-15 identity asserted live in-loop per run.
+  VERDICT per arm VALIDATED/FALSIFIED/MIXED; INCONCLUSIVE if any
+  canary fails.
+
+CANARIES (mandatory, abort on fail):
+  Ca: provenance — run50(mode in {none, fp_flood}, d6=off)
+      full-dict byte-identical to spin47.run_coal (8 configs) and
+      mode=none byte-identical to exp_glm1.run_fabric (8 configs).
+  Ca2: SPIN-5 anchors digit-exact: zero@15 K1 77.3/8756/187834,
+      ladder@15 K1 71.5/5792/106378.
+  Cc47: SPIN-47 FP-flood replay (via run50 d6=off): honest FP
+      5/5 seeds, global D5 zero, shifts -2.2/-16.0/-10.9/-12.2pp
+      tol ±0.3pp.
+  Cc39: SPIN-39 anchor nf_alt ladder@15 K2 @1.10 = -55.8pp ±0.3.
+  Cb: gate=never == gate=off full-dict for all new modes incl.
+      d6=full (a never-open gate cannot see a lie; mc=0).
+  Cc: double-run determinism (same dict twice, 5 configs).
+
+Config: N=6, ladder@15 / kcoh5@15; pd=3, delta=12, drift=6;
+ticks 4800; seeds {1,7,42,1999,20260902}; ADV=5; theta*=1.10;
+EPOCH=400 ticks; counter mod 256; quota token bucket R=1/tick,
+B=2; integer-only in-loop; floats display-only. Run with -u,
+detached, no pipes.
+
+======================================================================
+SPIN 50 — ADVERSARY — D6 EMISSION-CHANNEL PROVENANCE — harness run, -u, detached, no pipes
+== CANARY Ca: provenance — run50 == spin47.run_coal / run_fabric byte-identity (8+8 configs, d6=off) ==
+  Ca: PASS 16/16 identity triples (fabric / 47-none / 47-fp_flood)
+
+== CANARY Ca2: SPIN-5 anchor replay (5-seed means) ==
+  zero@15 K=1: 77.3% ev 8756 debt 187834 (want 77.3/8756/187834) -> PASS
+  ladder@15 K=1: 71.5% ev 5792 debt 106378 (want 71.5/5792/106378) -> PASS
+
+== CANARY Cc47: SPIN-47 FP-flood replay via run50(d6=off) ==
+  ladder@15 K=1: shift -2.2pp honestFP 5/5 nfMis 0 (want -2.2, FP 5/5, D5 0) -> PASS
+  ladder@15 K=2: shift -16.0pp honestFP 5/5 nfMis 0 (want -16.0, FP 5/5, D5 0) -> PASS
+  kcoh5@15 K=1: shift -10.9pp honestFP 5/5 nfMis 0 (want -10.9, FP 5/5, D5 0) -> PASS
+  kcoh5@15 K=2: shift -12.2pp honestFP 5/5 nfMis 0 (want -12.2, FP 5/5, D5 0) -> PASS
+
+== CANARY Cc39: SPIN-39 anchor, nf_alt ladder@15 K=2 @1.10 ==
+  shift -55.8pp (want -55.8) -> PASS
+
+== CANARY Cb: gate=never == gate=off full-dict, new modes (incl. d6=full) ==
+  Cb: PASS (4 mode/d6 pairs)
+
+== CANARY Cc: double-run determinism ==
+  Cc: PASS (5 configs)
+
+CANARIES: PASS
+
+== ARM A: SPOOF STORM under D6-provenance @1.10 ==
+  grammar |         K |     mean% |     null% |     shift | storm-noD6 | forgedAtt | forgedPass |   accept% | honestRej |  honestFP |  closureΔ
+ladder@15 |         1 |      71.5 |      71.5 |    -0.0pp |    -2.2pp |      5727 |      18.6 |     0.32% |         0 |       5/5 |         0
+ladder@15 |         2 |      59.8 |      60.0 |    -0.2pp |   -16.0pp |      5575 |      22.0 |     0.39% |         0 |       5/5 |         0
+ kcoh5@15 |         1 |      74.2 |      74.1 |    +0.0pp |   -10.9pp |      9441 |      37.2 |     0.39% |         0 |       5/5 |         0
+ kcoh5@15 |         2 |      49.2 |      50.6 |    -1.4pp |   -12.2pp |      7413 |      28.8 |     0.39% |         0 |       5/5 |         0
+  H1 (D6 catches storm, honest FPR 0, accept<=1%): FALSIFIED (honest FPR>0 ladder@15 K1; honest FPR>0 ladder@15 K2; honest FPR>0 kcoh5@15 K1; honest FPR>0 kcoh5@15 K2) [worst accept 0.39%]
+
+== ARM B: SELF-ATTRIBUTED FLOOD under D6-quota @1.10 ==
+  grammar |         K |     mean% |     null% |     shift |   junkAtt |  junkPass | junkPriced | pricedSeeds |  closureΔ
+ladder@15 |         1 |      69.7 |      71.5 |    -1.8pp |      4505 |      1267 |      3237 |       5/5 |         0
+ladder@15 |         2 |      56.6 |      60.0 |    -3.5pp |      6375 |      1101 |      5274 |       5/5 |         0
+ kcoh5@15 |         1 |      72.4 |      74.1 |    -1.7pp |      8348 |      1361 |      6988 |       5/5 |         0
+ kcoh5@15 |         2 |      47.2 |      50.6 |    -3.4pp |     10531 |       965 |      9566 |       5/5 |         0
+  H2 (quota holds residency within 2pp, prices liar): MIXED (some cell in (2pp, 5pp])
+
+== ARM C: SPOOF+DECLARE HYBRID under D6-full @1.10 ==
+  grammar |         K |     mean% |     null% |     shift |   D5flag5 |   D6catch |     union |  honestFP |  closureΔ
+ladder@15 |         1 |      71.1 |      71.5 |    -0.4pp |       5/5 |       5/5 |       5/5 |       5/5 |         0
+ladder@15 |         2 |      66.6 |      60.0 |    +6.6pp |       5/5 |       5/5 |       5/5 |       5/5 |         0
+ kcoh5@15 |         1 |      82.1 |      74.1 |    +7.9pp |       5/5 |       5/5 |       5/5 |       5/5 |         0
+ kcoh5@15 |         2 |      68.0 |      50.6 |   +17.4pp |       5/5 |       5/5 |       5/5 |       5/5 |         0
+  H3 (union catch 5/5, honest FPR 0): FALSIFIED (a seed/cell escapes both D5 and D6, or honest FPR >0)
+
+  PRE-REGISTERED VERDICT:
+    H1 (D6 prov catches spoof storm, FPR 0): FALSIFIED
+    H2 (quota holds residency <=2pp): MIXED (some cell in (2pp, 5pp])
+    H3 (hybrid union catch 5/5): FALSIFIED
+    S1 closure: PASS (live asserts, no abort)

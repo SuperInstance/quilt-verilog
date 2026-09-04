@@ -1,0 +1,151 @@
+SPIN 49, SPOKE 2 (attempt 2): ADVERSARY — D6 EMISSION-CHANNEL
+PROVENANCE. Pre-registered docstring, written BEFORE any panel run.
+
+Provenance chain: SPIN-39 (single-liar, D5 zero-miss) -> SPIN-47
+(coalition FALSIFIED for D5; FP-FLOOD VALIDATED: emission-id
+spoofing storms honest cells 5/5 seeds x 4/4 cells, -2.2..-16.0pp,
+global D5 blind). SPIN-47's filed next-spoke: D6, a fabric-verifiable
+emission provenance check.
+
+D6 MECHANISM (booked here, before runs):
+  Every egress pulse carries an attestation (src_id, seq) where seq
+  is the source cell's monotone per-cell emission counter. Ingress
+  verifies seq == counter[src]; mismatched pulses are DROPPED before
+  entering the pulse fabric and booked to the D6 ledger. Honest cells
+  always present matching seqs (structural). A spoofer emitting under
+  honest id j does not hold j's counter state, so its attestation
+  lags (modeled as seq = cnt[j] + 1 -> mismatch). Equivalent in
+  spirit to nonce-signed per-cell emissions.
+  D6-QUOTA (Arm B): per-cell per-epoch (epoch=50 ticks) quota Q on
+  EXTRA (non-trigger) self-attributed emissions; extras beyond Q are
+  dropped and priced to the emitting cell's ledger. Trigger-declared
+  emissions are never quota-dropped (quota prices junk, not traffic).
+  Q is set per (grammar,K) = max over seeds of honest per-cell
+  per-epoch trigger-emission counts + 2.
+
+ARMS:
+  A  SPOOF STORM under D6: replay of SPIN-47's fp_flood attack with
+     D6 verification live. Metrics: spoof acceptance rate (accepted
+     spoofed flits / spoof tries), honest-cell FPR (D6 rejections of
+     honest emissions / honest emissions), residency vs honest null.
+  B  SELF-ATTRIBUTED FLOOD: twin 5 (ADV) floods honestly-attested
+     junk (own id, correct seq, magnitude 1, sign of its error,
+     K-life) on every tick it triggers — sized like fp_flood (one per
+     honest non-triggering cell) to stress the quota. Control arm
+     with D6 off shows raw flood erosion; D6-with-quota arm shows the
+     ledger pricing it to the liar.
+  C  COALITION SPOOF+DECLARE HYBRID: twin 5 runs fp_flood spoofing,
+     twin 4 runs the nf-style lie (declared+1 attributed to twin 4
+     when twin 4 triggers), D6 live. Coalition caught in a seed iff
+     per-cell D5 flags a coalition member OR D6 drops >=1 spoofed
+     flit.
+
+PRE-REGISTERED DECISION RULES (fixed before any run):
+  H1 (Arm A) VALIDATED iff spoof acceptance rate <= 1% AND
+      honest-cell FPR == 0 in 5/5 seeds (all cells). FALSIFIED if
+      spoofed flits accepted at >1% rate or honest FPR >0 in any
+      seed.
+  H2 (Arm B) VALIDATED iff under D6-with-quota honest-cell residency
+      (mean over honest cells of in-band ticks/ticks, 5-seed mean)
+      is within 2.0pp of the honest baseline in every (grammar,K)
+      cell AND honest cells suffer 0 quota drops. FALSIFIED if
+      honest residency still erodes >5.0pp in any cell. Between 2
+      and 5pp: INCONCLUSIVE-leaning-report.
+  H3 (Arm C) VALIDATED iff coalition is caught in 5/5 seeds (D5 or
+      D6) AND honest-cell FPR (D5 per-cell + D6) is 0 in 5/5 seeds.
+      FALSIFIED if any seed has zero catches or any honest flag.
+  S1 closure PASS iff |mass - sum|emissions-errors|| < 1 on every
+      arm (SPIN-15 identity asserted live in-loop per run).
+  VERDICT: per-hypothesis VALIDATED/FALSIFIED; INCONCLUSIVE if any
+  canary fails or the environment dies (attempt 1 booked INCONCLUSIVE
+  for exactly that).
+
+CANARIES (mandatory, abort on fail):
+  Ca  provenance: import/extend spin47_adversary (same dir); honest
+      byte-identity spin47.run_coal vs spin39.run_adv_gate (4 cfgs);
+      SPIN-47 fp_flood replay via spin47.stats47 ladder@15 K=1 @1.10:
+      honestFP 5/5 seeds, global nfMis 0, shift -2.2pp +/-0.3.
+  Ca2 SPIN-5 anchors digit-exact: zero@15 K1 77.3/8756/187834,
+      ladder@15 K1 71.5/5792/106378 (means tol ±0.2pp).
+  Cc1 SPIN-39 anchor: nf_alt ladder@15 K=2 @1.10 shift -55.8pp
+      (+/-0.3).
+  Cb  gate=never == gate=off full-dict for every new mode
+      (spoof_storm / self_flood / hybrid, D6 and D6-quota variants).
+  Cc  double-run determinism (same dict twice, 5 configs).
+
+Config: N=6, ladder@15 [0,3,6,9,12,15] / kcoh5@15 [0,0,0,0,0,15];
+pd=3, delta=12, drift=6; ticks 4800; seeds {1,7,42,1999,20260902};
+theta*=1.10; integer-only in-loop; floats display-only. Run -u, no
+pipes. No git.
+
+======================================================================
+SPIN 49 — ADVERSARY — D6 EMISSION-CHANNEL PROVENANCE — attempt 2 (attempt 1 lane died: INCONCLUSIVE booked)
+== CANARY Ca: provenance — spin47.run_coal honest byte-identity vs spin39.run_adv_gate (4 configs) ==
+  Ca-1: PASS 4/4 (spin47 harness imported & intact)
+
+== CANARY Ca-fp: SPIN-47 FP-flood replay (spin47.stats47) ==
+  honestFP 5/5 seeds (5342/seed), global nfMis 0, shift -2.2pp (want 5/5, 0, -2.2) -> PASS
+
+== CANARY Ca2: SPIN-5 anchor replay (5-seed means) ==
+  zero@15 K=1: 77.3% ev 8756 debt 187834 (want 77.3/8756/187834) -> PASS
+  ladder@15 K=1: 71.5% ev 5792 debt 106378 (want 71.5/5792/106378) -> PASS
+
+== CANARY Cc1: SPIN-39 mixed-twin replay, nf_alt ladder@15 K=2 @1.10 ==
+  shift -55.8pp (want -55.8) -> PASS
+
+== CANARY Cb: gate=never == gate=off full-dict, new modes ==
+  Cb: PASS (all 3 new modes)
+
+== CANARY Cc: double-run determinism ==
+  Cc: PASS (5 configs)
+
+CANARIES: PASS
+
+== ARM A: SPOOF STORM under D6 @1.10 ==
+  grammar |         K |     mean% |     null% |     shift |  spoofTry |  spoofAcc |      acc% | honestFPR |     seeds |  closureΔ
+ladder@15 |         1 |      71.5 |      71.5 |    +0.0pp |     28651 |         0 |        0% |       0/5 |       5/5 |         0
+ladder@15 |         2 |      60.0 |      60.0 |    +0.0pp |     28040 |         0 |        0% |       0/5 |       5/5 |         0
+ kcoh5@15 |         1 |      74.1 |      74.1 |    +0.0pp |     47304 |         0 |        0% |       0/5 |       5/5 |         0
+ kcoh5@15 |         2 |      50.6 |      50.6 |    +0.0pp |     38200 |         0 |        0% |       0/5 |       5/5 |         0
+  H1 (D6 catches spoof storm, honest FPR 0, acc<=1%): VALIDATED
+
+== ARM B: SELF-ATTRIBUTED FLOOD — D6-quota vs raw ==
+  grammar |         K |  rawShift |   D6shift |   honResΔ |     quota |  extrasOK | ledgerPrice |   honDrop |  closureΔ
+ladder@15 |         1 |    -2.2pp |    -1.5pp |   -18.2pp |        39 |      3450 |      2025 |         0 |         0
+ladder@15 |         2 |   -16.0pp |   -12.8pp |   -89.4pp |        48 |      3968 |       956 |         0 |         0
+ kcoh5@15 |         1 |   -10.9pp |    -5.2pp |   -25.1pp |        43 |      4110 |      4557 |         0 |         0
+ kcoh5@15 |         2 |   -12.2pp |    -9.5pp |   -45.7pp |        52 |      4478 |      2414 |         0 |         0
+  H2 (D6-quota holds honest residency within 2pp, prices flood to liar): FALSIFIED (honest residency erodes >5pp or priced to honest cells)
+
+== ARM C: COALITION SPOOF+DECLARE HYBRID under D6 @1.10 ==
+  grammar |         K |     mean% |     null% |     shift |    caught | honestD5FP | honestD6FP |  spoofAcc |  closureΔ
+ladder@15 |         1 |      69.0 |      71.5 |    -2.4pp |       5/5 |       0/5 |       0/5 |         0 |         0
+ladder@15 |         2 |      55.8 |      60.0 |    -4.2pp |       5/5 |       0/5 |       0/5 |         0 |         0
+ kcoh5@15 |         1 |      74.1 |      74.1 |    -0.1pp |       5/5 |       0/5 |       0/5 |         0 |         0
+ kcoh5@15 |         2 |      60.9 |      50.6 |   +10.3pp |       5/5 |       0/5 |       0/5 |         0 |         0
+  H3 (hybrid caught 5/5, honest FPR 0): VALIDATED
+
+  PRE-REGISTERED VERDICT:
+    H1 (D6 catches spoof storm, honest FPR 0): VALIDATED
+    H2 (D6-quota holds honest residency, prices liar): FALSIFIED
+    H3 (spoof+declare hybrid caught 5/5): VALIDATED
+    S1 closure (SPIN-15 live asserts + ledger): PASS
+POST-HOC SENSITIVITY (exploratory, NOT the pre-registered gate):
+self_flood under D6 with tight per-epoch extras quota Q
+  grammar |         K |         Q |   D6shift |   honResΔ |  extrasOK |    ledger |   honDrop
+ladder@15 |         1 |         1 |    -0.3pp |    -0.6pp |        96 |      5620 |         0
+ladder@15 |         1 |         2 |    -0.1pp |    -0.9pp |       192 |      5485 |         0
+ladder@15 |         1 |         4 |    -0.3pp |    -2.1pp |       384 |      5296 |         0
+ladder@15 |         1 |         8 |    -0.5pp |    -4.2pp |       765 |      4894 |         0
+ladder@15 |         2 |         1 |    -0.2pp |    -1.2pp |        96 |      5486 |         0
+ladder@15 |         2 |         2 |    -1.1pp |    -5.5pp |       192 |      5369 |         0
+ladder@15 |         2 |         4 |    -1.8pp |    -8.9pp |       383 |      5157 |         0
+ladder@15 |         2 |         8 |    -3.6pp |   -19.6pp |       764 |      4718 |         0
+ kcoh5@15 |         1 |         1 |    -0.2pp |    -1.2pp |        96 |      9311 |         0
+ kcoh5@15 |         1 |         2 |    +0.1pp |    +0.6pp |       192 |      9250 |         0
+ kcoh5@15 |         1 |         4 |    -0.2pp |    -0.9pp |       384 |      9030 |         0
+ kcoh5@15 |         1 |         8 |    -1.3pp |    -6.4pp |       768 |      8513 |         0
+ kcoh5@15 |         2 |         1 |    -1.0pp |    -5.0pp |        96 |      7334 |         0
+ kcoh5@15 |         2 |         2 |    -0.4pp |    -2.1pp |       190 |      7368 |         0
+ kcoh5@15 |         2 |         4 |    +0.3pp |    +1.5pp |       383 |      7274 |         0
+ kcoh5@15 |         2 |         8 |    -3.1pp |   -15.1pp |       764 |      6598 |         0
