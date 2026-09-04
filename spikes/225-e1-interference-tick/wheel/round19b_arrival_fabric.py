@@ -247,6 +247,14 @@ def fabric(seed, arm, lats, K, drift, delta, pd=PD, ticks=TICKS, pw=None,
     return out
 
 
+def msfmt(ms):
+    """Compact maxstate for display (avoids int->str 4300-digit limit on runaways;
+    display-side only -- comparisons vs 2^40 use the raw int)."""
+    if ms.bit_length() <= 60:
+        return str(ms)
+    return f"~2^{ms.bit_length()} (>=2^40)"
+
+
 def cell(arm, fam, kappa, n, pw=None, want_trace=False):
     """5-seed mean %w (+max maxstate) for (arm, family, kappa, N)."""
     cfg = FAMILIES[fam]
@@ -376,7 +384,7 @@ def leg1():
                             ms = max(ms, r["maxstate"])
                         res[(arm, fam, kap, n)] = (tot / len(SEEDS), ms)
                         print(f"  {arm:7s} {fam:6s} k={kap:2d} d={KAPPA_DELTA[fam][kap]:3d}"
-                              f" N={n:2d} %w={tot/len(SEEDS):6.1f} maxstate={ms}")
+                              f" N={n:2d} %w={tot/len(SEEDS):6.1f} maxstate={msfmt(ms)}")
 
     # kappa=2 leg first (budget-guard measurement point)
     run_block(("admit", "mag1"), (2,))
@@ -524,7 +532,7 @@ def leg3(res, dropped, ok_pw, canaries_ok):
         okk = i and ii and iii and iv
         if okk:
             promoted.append(arm)
-        print(f"    {arm:7s} (i)PW={'ok' if i else 'FAIL'}(maxstate={ms}) "
+        print(f"    {arm:7s} (i)PW={'ok' if i else 'FAIL'}(maxstate={msfmt(ms)}) "
               f"(ii)k8N64 gain={min(res[(arm, f, 8, 64)][0] - res[('admit', f, 8, 64)][0] for f in FAMILIES):+.1f}pp "
               f"{'ok' if ii else 'FAIL'} (iii)k2 tax "
               f"{min(res[(arm, f, 2, n)][0] - res[('admit', f, 2, n)][0] for f in FAMILIES for n in (2, 5) if (arm, f, 2, n) in res):+.1f}pp "
