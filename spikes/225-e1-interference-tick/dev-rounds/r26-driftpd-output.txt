@@ -1,0 +1,39 @@
+== O2i R26 drift-x-pd seat-field start 01:28:01 ==
+K=1 drift=(3, 6, 12) pd=(2, 3, 4, 5, 6) delta=12 N=(2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18)
+canary C2 double-run drift=6 pd=3: IDENTICAL
+  run1 wins: [-3.36, -3.72, -3.46, -2.84, 18.98, 95.8, 96.0, 96.0, 96.0, 96.0, 96.0, 96.0, 96.0, 96.0, 96.0, 96.0, 96.0]
+  run2 wins: [-3.36, -3.72, -3.46, -2.84, 18.98, 95.8, 96.0, 96.0, 96.0, 96.0, 96.0, 96.0, 96.0, 96.0, 96.0, 96.0, 96.0]
+canary C3 mislabel probe (drift=6 pd=3): true wall=6, swapped-arm wall=2 -> CAUGHT
+drift= 3 pd=2: wall=4 2pd=4 off=0 [  43s]
+drift= 3 pd=3: wall=6 2pd=6 off=0 [  53s]
+drift= 3 pd=4: wall=9 2pd=8 off=1 [  61s]
+drift= 3 pd=5: wall=11 2pd=10 off=1 [  68s]
+drift= 3 pd=6: wall=13 2pd=12 off=1 [  73s]
+drift= 6 pd=2: wall=4 2pd=4 off=0 [  86s]
+drift= 6 pd=3: wall=6 2pd=6 off=0 [  86s]
+drift= 6 pd=4: wall=9 2pd=8 off=1 [  94s]
+drift= 6 pd=5: wall=11 2pd=10 off=1 [ 100s]
+drift= 6 pd=6: wall=13 2pd=12 off=1 [ 105s]
+drift=12 pd=2: wall=4 2pd=4 off=0 [ 118s]
+drift=12 pd=3: wall=6 2pd=6 off=0 [ 129s]
+drift=12 pd=4: wall=8 2pd=8 off=0 [ 137s]
+drift=12 pd=5: wall=11 2pd=10 off=1 [ 143s]
+drift=12 pd=6: wall=13 2pd=12 off=1 [ 148s]
+canary C1 drift=6 column vs r25 anchors {4,6,9,11,13}: EXACT
+canaries: PASS
+
+-- ladder table (drift x pd -> wall) --
+drift\pd    2    3    4    5    6
+       3   4    6    9   11   13
+       6   4    6    9   11   13
+      12   4    6    8   11   13
+
+-- decision --
+VERDICT: UNBOOKED/two-knob -- wall(pd,drift) is a genuine two-knob object; report measured field
+
+-- STEP-LOC sub-probe (+1 step at pd 3->4 at every drift?) --
+drift=3: wall(pd=3)=6 wall(pd=4)=9 -> step at 3->4: YES
+drift=6: wall(pd=3)=6 wall(pd=4)=9 -> step at 3->4: YES
+drift=12: wall(pd=3)=6 wall(pd=4)=8 -> step at 3->4: NO/shifted/None
+
+done in 148s
