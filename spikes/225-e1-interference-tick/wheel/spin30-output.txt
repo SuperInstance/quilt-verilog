@@ -1,4 +1,4 @@
-SPIN-30 METROLOGY drift x band sweep @ d=12 — 2026-09-03 17:57:38
+SPIN-30 METROLOGY drift x band sweep @ d=12 — 2026-09-03 18:19:48
 config: N=6 ladder, slope 1.6 spec, spreads 8..40, drifts=(0, 2, 6, 10), amps=(96, 200, 400), K=1, seeds=(1, 7, 42, 1999, 20260902), ticks=4800, pd=3, delta=12, BAND_LO=353
 PRE-REGISTERED: H1 alpha->1 at drift=0 (2Δ returns); H2 alpha const ~1.19 across all 12 arms; else MIXED.
 

@@ -80,3 +80,5 @@ Rule: skip items visibly in flight (check timestamps here + wheel/WHEEL-LOG.md).
 - **Item:** Q4 — charter §3.1 hello-world: sweep LCG noise rate p over 3–4 decades × decay d∈{1,2,3}, N=10k ticks; activity-fraction order parameter + single-site→neighbor MI via integer-binned histograms; transition located by MI maximum; finite-size scaling on 3 lattice sizes; exponent as rational; deliverable noise→channel-capacity lookup table + Z_n vs D_n Barbieri dichotomy check. Falsifier: MI-peak doesn't survive integer quantization → criticality story dies.
 - **Lane:** dev_q4_mi_criticality (zai/glm-5.3, run mode). Deliverable: dev-rounds/ROUND-11-Q4-mi-criticality.md. Commit + push g3-kinduction mandated.
 - **Verdict:** pending (backfill on lane completion).
+
+*(Ledger note 2026-09-03 21:15 AKDT: authoritative round ledger moved to spikes/225-e1-interference-tick/dev-rounds/ROUNDS.md — rounds 11–18b booked there. Round 11 Q4 verdict: PARTIAL, SPLIT amendment (commits 1940365/21ab669). Round 19 (arrival-rate wall sweep) dispatched 21:15.)*

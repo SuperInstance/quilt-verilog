@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""DEV ROUND 20 (pre-registration) -- comp-wall law: form pinning + pd legs
+"""DEV ROUND 21 (pre-registration) -- comp-wall law: form pinning + pd legs
 + SPIN-32-cell seating (EXPERT nudge on round 19, 4cbfd83).
 
 EXPERT's two moves, executed as declared:
@@ -46,7 +46,7 @@ Pre-registered decision rule (frozen BEFORE any new number):
     fabric -- comp wall(pd, r) = F(r), pd-invariant -- and the next
     SPIN-32-style model family for the comp regime must carry delta/K
     as a term.  SPIN-32-cell table is booked alongside as the bridge.
-Run: python3 -u r20_compwalllaw.py > r20-compwalllaw-output.txt
+Run: python3 -u r21_compwalllaw.py > r20-compwalllaw-output.txt
 """
 import math
 import os
@@ -110,7 +110,7 @@ def f2(r):
 
 
 def main():
-    print(f"== O2e comp-wall law start {time.strftime('%H:%M:%S')} ==")
+    print(f"== O2f comp-wall law start {time.strftime('%H:%M:%S')} ==")
     print(f"new r={R_NEW} pd_legs={PD_LEGS} N={NS} seeds={SEEDS} comp arm only")
     print(f"F1(r)=2+round(0.9*log2 r)  preds: "
           f"{[(r, f1(r)) for r in R_NEW]}")

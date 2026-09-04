@@ -14,6 +14,11 @@
 - **Headline:** ρ(ℤ_n)=|ce|+|cr+cs|, ρ(D_n)=ρ(P)=|ce|+|cr|+|cs| exactly — spectral radius provably cannot encode the Barbieri group typing **for this trio (ℤ_n, D_n, ℤ_n×ℤ₂), at even n** [scoped by round 18b: the "virtually-cyclic" class-sized claim was overreach; odd-n ran in 18b and the D/P tie breaks at seed 42 — theorem now carries the parity hypothesis on its face].
 
 
+## Round 20 — comp-collapse confirmation at pd∈{2,6} — DISPATCHED 2026-09-03 22:0x AKDT
+- **Item:** Round 19's booked next spoke — test whether the comp-collapse law (comp wall is a single function of arrival rate delta/K, K-independent) survives at pd∈{2,6}; round-17 raw walls (pd2→N5, pd3→N6, pd6→N7) as out-of-sample anchors.
+- **Lane:** subagent 08446d26 (zai/glm-5.3, run mode). Deliverable: dev-rounds/ROUND-20-comp-collapse-pd.md. Pre-reg rule committed before numbers; seeds 1/7/42/1999/20260902; canaries C1/C2/C3. Commit+push g3-kinduction mandated.
+- **Verdict:** pending (backfill on lane completion).
+
 Format per block: round #, item, verdict, commit hash, headline number.
 Ordered queue: RESEARCH-AGENDA §4 O1–O7, then §Q open questions, then wheel spokes round-robin.
 

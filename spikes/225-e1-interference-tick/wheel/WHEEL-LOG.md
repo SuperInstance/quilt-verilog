@@ -289,3 +289,14 @@ SPIN-26: WALLBIT-ELIGIBILITY — one sha-class across t100∈[100,133]; step5 re
 - **Dispatch status:** IN FLIGHT (one lane max — held). Deliverable: wheel/SPIN-36-silicon.md.
 - **Verdict:** pending (record in next spin's log entry when lane completes).
 - **LCG state after this advance: 1675546029** (next spin continues from here).
+
+## SPIN-37 CYCLE HOLD (2026-09-03 22:02 AKDT)
+- **SPIN-36 verdict: pending** — lane genuinely alive at check: yosys ice40 synthesis running for PW=41 arms (spin36_pw41_theta/never, PIDs 3152/3153, abc mapping active) with a batch-2 waiter chaining PW=48 legs; script spin36_silicon.py staged but no deliverable yet (SPIN-36-silicon.md / spin36-output.txt absent).
+- **No new lane dispatched** — one-lane-in-flight rule held; SPIN-37 spoke reserved: LCG 1675546029 → 1767274722 → 1767274722 mod 10 = 2 (ADVERSARY). LCG state NOT consumed; next cycle re-computes from 1675546029 if SPIN-36 still pending, or advances normally once its verdict is recorded.
+
+## SPIN-37-ADVERSARY (dispatched 2026-09-03 22:45 AKDT)
+- **SPIN-36 verdict recorded: INCONCLUSIVE (lane lost).** Lane died mid-flight after the 22:02 check: yosys PIDs 3152/3153 gone, no active subagent, deliverables absent (SPIN-36-silicon.md / spin36-output.txt never written); only spin36_silicon.py + pyc staged. No synthesis numbers exist — none fabricated. Scar booked: subagent lanes running multi-minute yosys legs need their own liveness/heartbeat or a nohup-detached runner so a session drop doesn't orphan the batch. Next spin may re-dispatch the PW=41 synth rung as a proposal candidate.
+- **Spoke:** ADVERSARY (spoke 2, LCG: 1675546029 → 1767274722 → 1767274722 mod 10 = 2) · lane: wheel_spin37_adversary (zai/glm-5.3, run mode) — SPIN-35's booked scar (sub-1.0 deflation-dodge half untested), aligned with LCG pick.
+- **Brief:** The deflation-dodge half of the nf-manipulator: at θ>1 deflation was structurally inert (byte-proven), but θ<1 (or gate-on-threshold-dodge) is untested. Arms: (1) replay SPIN-35 inflate twin at θ*=1.10 as anchor-continuity check; (2) deflation twin (÷2 declared nf) under gate θ*=0.90 — does a minority twin dodge/slip the gate and shift residency, delivery-identity flags, debt closure? (3) both-direction twin at boundary θ*=1.00. Pre-registered verdict rule in script header; D5 emitted-pulse-vs-declared-nf audit is the detection hook. Canaries: adversary=none byte-identity ≥8 ticks, anchors 71.5/5792/106378 + 77.3/187834, gate=never ≡ mc=0 full-dict, double-run determinism. Integer-only, seeds 1/7/42/1999/20260902, real runs.
+- **Dispatch status:** IN FLIGHT (one lane max — held). Deliverable: wheel/SPIN-37-adversary.md.
+- **LCG state after this advance: 1767274722** (next spin continues from here).

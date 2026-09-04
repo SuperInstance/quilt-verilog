@@ -1,6 +1,6 @@
 # ROUND 21 — comp-wall form pinning + pd legs + SPIN-32 seating (pre-registered cde784c→228fbc0, EXPERT nudge): F2 banks as the comp-regime form, pd-invariance FAILS at pd=6, and the K=1 regime is a different object entirely
 
-**Verdict: SPLIT by the pre-registered gates.** G-FORM: **F2 = ⌈2·r^0.25⌉ banks decisively** (6/8 exact, 8/8 within ±1; F1 = 2+round(0.9·log₂ r) gets only 4/8). G-COLLAPSE: **FAIL** (69% < 80% — pd=6 legs blow out). The combined headline claim ("first closed-form wall law, pd-invariant") required both gates and is therefore **NOT banked**. What is banked is narrower and stranger.
+**Verdict: SPLIT by the pre-registered gates.** G-FORM: **F2 = ⌈2·r^0.25⌉ banks decisively** (6/8 exact, 8/8 within ±1; F1 = 2+round(0.9·log₂ r) gets only 4/8). **DOMAIN STAMP (do not apply F2 outside it): K ≥ 4, pd ≤ 3 — swept domain K ∈ {4,8}, pd ∈ {2,3}, both families; applying F2 at pd=6 is 2–4 seats wrong (STUDENT nudge, round 22 extends the map).** G-COLLAPSE: **FAIL** (69% < 80% — pd=6 legs blow out). The combined headline claim ("first closed-form wall law, pd-invariant") required both gates and is therefore **NOT banked**. What is banked is narrower and stranger.
 
 ## The form adjudication (pd=3, fam-mean, abstain on wide fam-split)
 
