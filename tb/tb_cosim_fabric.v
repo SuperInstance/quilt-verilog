@@ -193,6 +193,40 @@ module tb_cosim_fabric;
         lasteg = cyc;
     end
 
+    // ---------------- egress digest (G4: MerkleMesh-flavored) ---------
+    // two-level commutative digest over the egress stream, so the
+    // model-side diff can compare one value per window instead of
+    // flit-by-flit multisets: leaf = FNV-1a over the 7 flit fields
+    // (11 bytes); window node = sum mod 2^32 of its leaves (commutative
+    // -- matches the multiset-per-window diff semantics; identical
+    // flits ADD rather than cancel, unlike XOR); root = FNV-1a chain
+    // over the 4 bytes of each window digest in window order.
+    // Emitted as additive trace lines the old diff() ignores:
+    //   D <win> <digest>  per window
+    //   R <root>
+    function [31:0] fnv_byte(input [31:0] h, input [7:0] b);
+        fnv_byte = (h ^ {24'b0, b}) * 32'h01000193;
+    endfunction
+    function [31:0] fnv_flit(input [2:0] op, input [3:0] src,
+                             input [3:0] dst, input [15:0] a0,
+                             input [15:0] a1, input [15:0] a2,
+                             input [15:0] dat);
+        reg [31:0] h;
+        begin
+            h = 32'h811C9DC5;
+            h = fnv_byte(h, {5'b0, op});
+            h = fnv_byte(h, {4'b0, src});
+            h = fnv_byte(h, {4'b0, dst});
+            h = fnv_byte(h, a0[15:8]);  h = fnv_byte(h, a0[7:0]);
+            h = fnv_byte(h, a1[15:8]);  h = fnv_byte(h, a1[7:0]);
+            h = fnv_byte(h, a2[15:8]);  h = fnv_byte(h, a2[7:0]);
+            h = fnv_byte(h, dat[15:8]); h = fnv_byte(h, dat[7:0]);
+            fnv_flit = h;
+        end
+    endfunction
+    reg [31:0] wdigest [0:16383];
+    reg [31:0] droot;
+
     integer i, j, r, fd, tfd, tmo, gcyc;
     initial tmo = 40000000;   // cycles; refined after program load
 
@@ -288,6 +322,21 @@ module tb_cosim_fabric;
             for (i = 0; i < tc[j]; i = i + 1)
                 $fdisplay(tfd, "T %0d %0d %0d", j, t_win[j*EVCAP+i],
                           t_cyc[j*EVCAP+i]);
+        // digest lines: per-window egress digest + chained root
+        for (i = 0; i < win; i = i + 1) wdigest[i] = 32'b0;
+        for (i = 0; i < ec; i = i + 1)
+            wdigest[e_win[i]] = wdigest[e_win[i]] +
+                fnv_flit(e_op[i], e_src[i], e_dst[i], e_a0[i],
+                         e_a1[i], e_a2[i], e_dat[i]);
+        droot = 32'h811C9DC5;
+        for (i = 0; i < win; i = i + 1) begin
+            $fdisplay(tfd, "D %0d %0d", i, wdigest[i]);
+            droot = fnv_byte(droot, wdigest[i][31:24]);
+            droot = fnv_byte(droot, wdigest[i][23:16]);
+            droot = fnv_byte(droot, wdigest[i][15:8]);
+            droot = fnv_byte(droot, wdigest[i][7:0]);
+        end
+        $fdisplay(tfd, "R %0d", droot);
         $fclose(tfd);
 
         $write("TB-COSIM-FABRIC DONE: %0d flits, %0d egress flits, %0d windows, NCELL=%0d, events:",

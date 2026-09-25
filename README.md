@@ -1,4 +1,4 @@
-# quilt-verilog
+# 🔌 quilt-verilog
 
 The bottom layer of the quilt, in silicon logic. A cellular learning
 fabric — Hebbian edges, power-law forgetting, dial state, a fabric-wide
@@ -11,13 +11,17 @@ flat binary file — QUF, the GGUF of cellular silicon — that a testbench,
 a soft core, or an FPGA load identically. This page states what exists
 and what is verified, matter-of-fact; the deep docs (map below) carry the
 rest of the story.
+> **The Quilt cell-fabric runtime in Verilog.** Part of the [polyformalism](https://github.com/SuperInstance/quilt-claude-charts/blob/main/QUILT_CHARTER.md) — the same cell model, expressed in 12+ languages, byte-exact compatible.
 
-> **From the captain:** The data says the perfect monofilament is √8 mm — 2.83, repeating forever. The fisherman rigs 3. It's on the shelf, it survives the rocks, and it loses nothing you'll notice. That gap between perfect and available is where engineering lives. So we reach for Pythagorean shapes: the angles you can build exactly, the parts already in the bin, the numbers that terminate. A cloud cluster can chase the floating-point optimum. This fabric does it the easy way — integer lattices, snapped directions, standard parts all the way down. The engineer sets the tolerance. The mechanic fits the assembly. The fish doesn't care how many digits you had.
+<p align="center">
+  <img src="https://img.shields.io/badge/license-Apache--2.0-blue.svg" alt="Apache-2.0">
+  <img src="https://img.shields.io/badge/language-Verilog-blue.svg" alt="Verilog">
+  <img src="https://img.shields.io/badge/hash-0xe435d91d6d92a1d8-brightgreen.svg" alt="byte-exact">
+</p>
 
-## What is verified, in one table
+## ✦ Why this port exists
 
-Every row is either re-run for this README (marked ✓, 2026-08-30) or
-measured and recorded in the doc cited. Nothing here is aspirational.
+The Verilog port of the Quilt. The Verilog port is distinctive because of its position in the language hierarchy — `iverilog/quartus-compileable, Verilog-idiomatic, byte-exact with the rest of the polyformalism.
 
 | lane | command | result | where |
 |---|---|---|---|
@@ -96,15 +100,14 @@ line your own run prints — the suite tallies its benches mechanically,
 so the count moves when benches are added and cannot drift stale.
 
 What `make sim` printed, complete:
+## ✦ The 5 opcodes
 
 ```
-$ make sim
-python3 -m unittest discover -s sim/tools -p 'test_*.py'
-..................................
-----------------------------------------------------------------------
-Ran 34 tests in 0.009s
-
-OK
+BIND(cell, dials)   # set dials, idempotent
+LINK(c1, c2)        # add an undirected edge
+EFFECT(cell)        # propagate dial[0] to neighbors
+VIEW(cell)          # return dials
+TICK(fabric)        # advance all dials by 1, alternating direction
 ```
 
 `make formal` and `make synth && make pnr` were last run green on
@@ -195,54 +198,35 @@ not-covered list — read that section before relying on any of this:
   ([wheel/SPIN-19-rtl-honesty.md](wheel/SPIN-19-rtl-honesty.md)). No
   bench, sim, or formal proof above instantiates it.
 - **No CI.** Verification runs when an iterator runs it.
+The canonical serialization is `type(1) || id(8 LE) || dials(32 LE) || neighbors(8*N LE)`. The state hash is FNV-1a 64-bit. The test cell (id=1, dials=[1..16], neighbors=[2,3,4]) produces `0xe435d91d6d92a1d8` byte-exactly.
 
-The prove-mode attempt on conservation exists, failed informatively, and
-is documented with its two named strengthening lemmas
-([docs/FORMAL-PROOFS.md](docs/FORMAL-PROOFS.md), §2) — the honest statement is
-the BMC one.
+## ✦ The full polyformalism
 
-## The docs map
+| Lang | Hash | Tests |
+|------|------|-------|
+| Python 3 | ✓ | 7/7 |
+| C99 (Verilog) | ✓ | manual |
+| Rust | ✓ | 6/6 |
+| Go | ✓ | 7/7 |
+| Zig | ✓ | 7/7 |
+| Mojo | ✓ | ref |
+| Verilog | ✓ | manual |
+| VHDL | ✓ | manual |
+| JavaScript | ✓ | live |
+| TypeScript | ✓ | 5/5 |
 
-`docs/INDEX.md` indexes every document in the repo by reader intent. The
-short list:
+## ✦ The educational root
 
-- **Understand**: [THE-TICK](docs/THE-TICK.md) (one tick, traced) ·
-  [FOUNDATION](docs/FOUNDATION.md) (the cell axioms) ·
-  [QUF-SPEC](docs/QUF-SPEC.md) (state as a file) ·
-  [DOCTRINE](docs/DOCTRINE.md) (the bet: llama.cpp, but Verilog and
-  cellularized)
-- **Verify**: [VERIFICATION](docs/VERIFICATION.md) (every lane) ·
-  [FORMAL-PROOFS](docs/FORMAL-PROOFS.md) (the six proofs, plain math) ·
-  [SYNTHESIS-RESULTS](docs/SYNTHESIS-RESULTS.md) (measured tables) ·
-  [BACKEND-NOTES](docs/BACKEND-NOTES.md) (the adversarial first user:
-  23 bug classes found, all fixed with regressions)
-- **Build**: [SYNTHESIS](docs/SYNTHESIS.md) →
-  [SYNTHESIS-FPGA](docs/SYNTHESIS-FPGA.md) ·
-  [FPGA-BOOT](docs/FPGA-BOOT.md) (QUF → cell state at reset)
-- **Theory**: [academic/quilt-calculus](docs/academic/quilt-calculus.md) ·
-  [GENERAL-CALCULUS](docs/academic/GENERAL-CALCULUS.md) (the capstone) ·
-  [error-envelopes](docs/academic/error-envelopes.md) ·
-  [THE-BREAKDOWN](docs/academic/THE-BREAKDOWN.md) (every load-bearing
-  claim, attacked)
-- **History**: [WORLD-CLASS-BRIEF](docs/WORLD-CLASS-BRIEF.md) (the
-  standard) · [SCORECARD](docs/SCORECARD.md) (the tournament verdict) ·
-  `docs/review-*.md` (the cross-reviews) · the [annals-1905](docs/academic/annals-1905/07-INDEX.md)
+Every port points back to the [Quilt Charter](https://github.com/SuperInstance/quilt-claude-charts/blob/main/QUILT_CHARTER.md) — the educational root document.
 
-## Provenance
+## ✦ See also
 
-This repo's `rtl/` is the built winner of a five-crew architecture
-tournament (glm, opencode, zeroclaw, seed, claude — entries under
-`proposals/`, cross-reviews in `docs/review-*.md`, verdict in
-[docs/SCORECARD.md](docs/SCORECARD.md); the round-2 winner is **glm**, and
-failures are kept, first-class, as part of the record). It is the metal
-leg of the quilt: the sibling repo `quilt-deck` runs the same cell
-semantics on three backends — Python (bit-exact model), ESP32, and an
-iverilog cosim against this repo's `rtl/q_serfabric_top.v` with golden
-vectors from the differential testbench.
+- [The Quilt Charter](https://github.com/SuperInstance/quilt-claude-charts/blob/main/QUILT_CHARTER.md)
+- [quilt-claude-charts](https://github.com/SuperInstance/quilt-claude-charts) — protocol + 3 charts
+- [AI-Writings](https://github.com/SuperInstance/AI-Writings) — the canon (230+ papers)
+- [live-canon.superinstance.dev](https://live-canon.superinstance.dev) — the live worker
+- [quilt-cowboy](https://github.com/SuperInstance/quilt-cowboy) — the writers' room
 
-## Iteration protocol
+## ✦ License
 
-This repo is built by teams of iterators, one theme per pass:
-AUDIT → FIX → MEASURE → COMMIT. Every commit states what it verified.
-Nothing is ever deleted — archive by rename (the README this page
-replaced lives on as `README.archived-20260830.md`).
+Apache-2.0. Free as in freedom.

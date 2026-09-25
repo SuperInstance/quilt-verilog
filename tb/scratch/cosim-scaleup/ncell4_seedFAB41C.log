@@ -1,0 +1,10 @@
+cosim_fabric: NCELL=4 seed=0xFAB41C n_random=12
+cosim_fabric: classification (pre-registered): 14 decidable / 6 budget-adjacent (wait < 128)
+cosim_fabric: 20/20 programs bit-exact (NCELL=4), 837 egress flits compared
+cosim_fabric: decidable class 14/14 bit-exact; budget-adjacent class 6/6
+EXIT=0
+# lane note (relaunch #5, 2026-08-31 ~22:04-22:11 AKDT): re-establishing the
+# proof that relaunch #4 established but lost by dying before commit.
+# Harness = commit 5d9d848 unmodified (8 directed + 12 random = 20 programs;
+# directed D1-D8 + randD/randB split per pre-registered classifier).
+# Wall time ~7 min on eileen (WSL2). Matches relaunch #4's reported 20/20.

@@ -1,0 +1,25 @@
+cosim_fabric: NCELL=4 seed=0xFAB41C n_random=12
+cosim_fabric: classification (pre-registered): 14 decidable / 6 budget-adjacent (wait < 128)
+cosim_fabric[directed-0]: OK (egress root digest 2529086310)
+cosim_fabric[directed-1]: OK (egress root digest 242445977)
+cosim_fabric[directed-2]: OK (egress root digest 2222941400)
+cosim_fabric[directed-3]: OK (egress root digest 2026347941)
+cosim_fabric[directed-4]: OK (egress root digest 2074447156)
+cosim_fabric[directed-5]: OK (egress root digest 2010619023)
+cosim_fabric[directed-6]: OK (egress root digest 2163269481)
+cosim_fabric[directed-7]: OK (egress root digest 365435950)
+cosim_fabric[randD-0]: OK (egress root digest 948163244)
+cosim_fabric[randB-1]: OK (egress root digest 666632267)
+cosim_fabric[randD-2]: OK (egress root digest 4232746052)
+cosim_fabric[randB-3]: OK (egress root digest 3970007580)
+cosim_fabric[randD-4]: OK (egress root digest 292466651)
+cosim_fabric[randB-5]: OK (egress root digest 2518366075)
+cosim_fabric[randD-6]: OK (egress root digest 3626096379)
+cosim_fabric[randB-7]: OK (egress root digest 1121970299)
+cosim_fabric[randD-8]: OK (egress root digest 214258015)
+cosim_fabric[randB-9]: OK (egress root digest 3021752901)
+cosim_fabric[randD-10]: OK (egress root digest 103838815)
+cosim_fabric[randB-11]: OK (egress root digest 393440504)
+cosim_fabric: 20/20 programs bit-exact (NCELL=4), 837 egress flits compared
+cosim_fabric: decidable class 14/14 bit-exact; budget-adjacent class 6/6
+EXIT=0

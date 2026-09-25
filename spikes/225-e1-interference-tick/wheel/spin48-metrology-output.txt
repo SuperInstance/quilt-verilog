@@ -1,0 +1,90 @@
+SPIN-48 METROLOGY (window-local rate exponent) — Fri Sep  4 14:49:35 UTC 2026
+hypotheses + decision rule pre-registered in script header (unchanged at run time)
+== CANARY (a): provenance — this runner == sp46.run_ledger ==
+  identical: K=1 seed=1 ticks=38400 {'drift': 96, 'delta': 6} (nw=8)
+  identical: K=2 seed=42 ticks=38400 {'drift': 768, 'delta': 1} (nw=8)
+  identical: K=1 seed=7 ticks=38400 {'drift': 0, 'delta': 12} (nw=8)
+  identical: K=2 seed=1999 ticks=38400 {'drift': 384, 'delta': 12} (nw=8)
+  identical: K=1 seed=42 ticks=153600 {'drift': 768, 'delta': 12} (nw=32)
+  identical: K=2 seed=7 ticks=153600 {'drift': 384, 'delta': 12} (nw=32)
+  identical: K=2 seed=1 ticks=38400 {'drift': 6, 'delta': 12} (nw=8)
+  PASS: 7/7 configs (incl. 153600-tick nw=32 x2)
+
+== CANARY (b): anchor replays digit-exact (drift=6 delta=12)
+  zero@15   K=1: 77.3% (want 77.3)  ev 8756 (want 8756)  debt 187834 (want 187834)  -> PASS
+  ladder@15 K=1: 71.5% (want 71.5)  ev 5792 (want 5792)  debt 106378 (want 106378)  -> PASS
+
+== CANARY (c): SPIN-38/46 drift=384 debt/ev ~9202 replay @4800t
+  ladder@30 K=1 drift=384: debt/ev 9202.3 (anchor 9202.4 +-5%) -> PASS
+
+== CANARY (d): gate=never == mc=0 (delta=10**9) ==
+  K=1 drift=0: all-zero ledger (PASS)
+  K=1 drift=384: all-zero ledger (PASS)
+  K=2 drift=0: all-zero ledger (PASS)
+  K=2 drift=384: all-zero ledger (PASS)
+
+== CANARY (f): double-run determinism (>=4 configs) ==
+  cfg0 K=1 seed=1 ticks=38400 {'drift': 0}: byte-identical
+  cfg1 K=2 seed=42 ticks=38400 {'drift': 768}: byte-identical
+  cfg2 K=2 seed=7 ticks=153600 {'drift': 384}: byte-identical
+  cfg3 K=1 seed=1999 ticks=153600 {'drift': 96}: byte-identical
+  PASS: 4/4
+
+ALL CANARIES: PASS
+
+== H1 ARM: outlier@30 K=2, delta=12, 153600 ticks (32 windows), seeds (1, 7, 42, 1999, 20260902)
+drift | events | debt | alpha(err) | alpha_j curve (j=4,8,12,16,20,24,28,31) | IDs
+    0 |   521359 |    15716867 | 1.001(0.000) | 1.006 1.003 1.002 1.002 1.001 1.001 1.001 1.001 | 5/5
+   96 |   917195 |  2164232719 | 0.833(0.566) | 0.918 0.838 0.493 1.110 1.048 1.031 0.593 0.777 | 5/5
+  192 |   920163 |  6577273938 | 1.193(0.352) | 1.286 0.797 0.811 0.775 1.169 1.612 1.169 0.926 | 5/5
+  288 |   921008 | 11499739590 | 1.719(0.441) | 1.423 1.023 1.007 0.890 0.949 1.277 1.648 2.153 | 5/5
+  384 |   921182 | 17017706124 | 1.554(0.900) | 1.224 1.366 1.083 1.071 1.373 1.371 1.394 1.712 | 5/5
+  480 |   921248 | 28622612957 | 1.251(0.988) | 1.564 1.419 1.136 1.310 1.191 1.029 1.020 1.250 | 5/5
+  576 |   921346 | 30057689509 | 1.503(0.752) | 1.177 1.332 0.931 0.848 1.183 0.952 1.816 1.489 | 5/5
+  768 |   921453 | 81292492648 | 1.323(0.639) | 1.325 1.980 1.585 1.524 1.491 1.500 1.399 1.426 | 5/5
+
+== H2 ARM: outlier@30 K=1, delta=12, 153600 ticks, drifts (96, 192, 384, 768)
+   96 |   906866 |   700786406 | 1.134(0.528) | 1.219 0.985 0.927 1.269 0.960 1.114 0.776 1.307 | 5/5
+  192 |   918065 |  2822125478 | 1.076(0.403) | 1.402 0.847 1.425 0.990 1.014 1.513 0.767 1.112 | 5/5
+  384 |   920675 | 11192491014 | 0.800(0.436) | 0.519 0.482 0.967 1.070 1.204 0.666 1.046 0.566 | 5/5
+  768 |   921321 | 42051450142 | 0.876(1.114) | 1.468 0.945 2.072 1.488 1.182 1.122 0.426 0.859 | 5/5
+  canary (e) SPIN-15 identities live on every arm: PASS
+
+== H1: K=2 exponent transition brackets the rho-crossing? ==
+  drift= 96: alpha=0.833 (err 0.566)
+  drift=192: alpha=1.193 (err 0.352)
+  drift=288: alpha=1.719 (err 0.441)
+  drift=384: alpha=1.554 (err 0.900)
+  drift=480: alpha=1.251 (err 0.988)
+  drift=576: alpha=1.503 (err 0.752)
+  drift=768: alpha=1.323 (err 0.639)
+  [boundary drift=0: alpha=1.001 — excluded from verdict by pre-registration]
+  (i)   alpha(96)=0.833 <= 1.05 ? YES
+  (ii)  alpha(768)=1.323 >= 1.10 ? YES
+  (iii) drift-flat gate (max-min<=0.03): spread=0.887 -> NOT flat
+  (iv)  d* (smallest drift with alpha>=1.05) = 192; brackets 384 iff 192 < d* < 480 -> NO
+  H1 VERDICT: FALSIFIED
+
+== H2: exponent dichotomy alpha(K=2) > alpha(K=1) at 32x? ==
+  drift= 96: alpha2=0.833(0.566)  alpha1=1.134(0.528)  diff=-0.301 err=1.094 -> EQUAL WITHIN ERROR
+  drift=192: alpha2=1.193(0.352)  alpha1=1.076(0.403)  diff=+0.116 err=0.755 -> EQUAL WITHIN ERROR
+  drift=384: alpha2=1.554(0.900)  alpha1=0.800(0.436)  diff=+0.754 err=1.336 -> EQUAL WITHIN ERROR
+  drift=768: alpha2=1.323(0.639)  alpha1=0.876(1.114)  diff=+0.447 err=1.753 -> EQUAL WITHIN ERROR
+  H2 VERDICT: FALSIFIED
+
+== RECORDED (no gate): alpha(drift) table + gamma convergence
+  SPIN-46 asked: does gamma converge to a constant (power-law runaway) or keep growing (no exponent)?
+  K=2 drift= 96: alpha q2(12-24)=0.979 q4(24-32)=0.731 drifting
+  K=2 drift=192: alpha q2(12-24)=1.157 q4(24-32)=1.183 converging
+  K=2 drift=288: alpha q2(12-24)=0.993 q4(24-32)=1.801 drifting
+  K=2 drift=384: alpha q2(12-24)=1.233 q4(24-32)=1.574 drifting
+  K=2 drift=480: alpha q2(12-24)=1.201 q4(24-32)=1.173 converging
+  K=2 drift=576: alpha q2(12-24)=1.028 q4(24-32)=1.585 drifting
+  K=2 drift=768: alpha q2(12-24)=1.529 q4(24-32)=1.376 drifting
+  K=1 drift= 96: alpha q2(12-24)=1.041 q4(24-32)=1.136 drifting
+  K=1 drift=192: alpha q2(12-24)=0.995 q4(24-32)=0.988 converging
+  K=1 drift=384: alpha q2(12-24)=1.003 q4(24-32)=0.847 drifting
+  K=1 drift=768: alpha q2(12-24)=1.446 q4(24-32)=0.713 drifting
+
+== SUMMARY: H1 FALSIFIED / H2 FALSIFIED / canaries ALL PASS
+DONE. elapsed 129 s

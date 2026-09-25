@@ -1,0 +1,147 @@
+SPIN 47, SPOKE 2: ADVERSARY — D5 UNDER COALITION.
+Pre-registered docstring, written BEFORE any run. Continuation of
+SPIN-35 (single-liar nf adversaries; D5 declared-vs-emitted audit,
+0 FP) -> SPIN-37 (mixed twins) -> SPIN-39 (mixed-strategy evasion
+FALSIFIED: every lied tick D5-flagged, honest FPR structurally 0).
+
+OPEN QUESTION THIS SPIN ATTACKS:
+  D5's zero-miss record (5/5 seeds, 0 false positives) is the
+  defense's entire load-bearing wall and has NEVER been attacked
+  directly by more than one liar. Two questions:
+  (1) COALITION: can two coordinated liars split the lying load so
+      each member's per-tick lie attribution stays small enough that
+      D5 misses at least one of them in at least one seed, while the
+      collective drift injection matches SPIN-39's single-liar rate?
+      NOTE on "per-tick lie magnitude under D5's flag threshold":
+      in the booked model D5's flag threshold is exactly 0 (any
+      declared!=emitted tick flags) and lie magnitude is integer, so
+      the minimum splittable magnitude is 1 — there is no sub-
+      threshold slot. The coalition therefore splits the load by
+      TURNS (who carries the +1 declaration each lied tick), halving
+      each member's per-liar miss-rate. The pre-registered question
+      is whether that is enough for evasion.
+  (2) FP-FLOOD: can a liar emit pulses attributed to HONEST cells'
+      ids (fabric-verifiable per-cell audit sees honest ids with
+      emissions they never declared) so that D5 FALSE-FLAGS honest
+      cells? And does the resulting honest-flag storm erode
+      collective residency?
+
+ARMS:
+  A  COALITION @ θ*=1.10 on {ladder@15, kcoh5@15} x K in {1,2},
+     coalition = twins {4,5}, per-tick audit per-cell (declared
+     contribution vs emitted contribution, per cell per tick):
+       coal_alt : lie schedule == SPIN-39 nf_inflate (declared =
+                  nf+1 iff twin 5 in trig — collective rate matched
+                  to the single liar); the false +1 is ATTRIBUTED to
+                  coalition members alternating per lied tick.
+       coal_tag : same rate; attribution by tick parity (t%2).
+       coal_cov : coverage escalation — lie iff ANY coalition member
+                  in trig (rate probe above single-liar; attribution
+                  alternating). Booked as scaling evidence only.
+  B  FP-FLOOD @ θ*=1.10, same 4 cells: twin 5 declares HONESTLY
+     (declared = nf) but on every tick it triggers emits one extra
+     spoofed pulse (magnitude 1, sign of its own error, K-life)
+     under EVERY honest non-triggering cell's id. Per-cell D5 then
+     sees honest cells with emitted-but-never-declared pulses.
+  C  control: SPIN-39 mixed-twin replay (nf_alt ladder@15 K=2
+     @1.10) as anchor-continuity (published -55.8pp).
+
+PRE-REGISTERED DECISION RULE (fixed before running):
+  H1 VALIDATED   iff some coalition strategy/cell shifts collective
+                 residency >5.0pp vs the gate-off honest null AND,
+                 in at least one seed of that cell, NO coalition
+                 member is D5-flagged (evasion: harm with zero
+                 flagged liars). FALSIFIED if in every seed of every
+                 strategy/cell D5 flags >= 1 coalition member.
+  H2 VALIDATED   iff fp_flood produces >=1 honest-cell false flag
+                 in 5/5 seeds (per-cell D5, honest cells only).
+                 FALSIFIED if honest-cell false flags stay 0 in any
+                 seed. Residency erosion of the storm is reported
+                 as evidence either way (not a gate).
+  S1 closure PASS iff |mass - sum|emissions-errors|| < 1 on every
+     arm (SPIN-15 identity asserted live in-loop-collected, checked
+     per run).
+  VERDICT: per-hypothesis VALIDATED/FALSIFIED; INCONCLUSIVE if any
+  canary fails or the environment dies.
+
+CANARIES (mandatory, abort on fail):
+  Ca: provenance — import/extend spin39_adversary (same dir); honest
+      byte-identity vs exp_glm1.run_fabric re-run through spin39's
+      run_adv_gate (8 configs).
+  Ca2: SPIN-5 anchors digit-exact: zero@15 K1 77.3/8756/187834,
+      ladder@15 K1 71.5/5792/106378 (tol ±0.2pp on means).
+  Cc1: SPIN-39 mixed-twin replay: nf_alt ladder@15 K=2 @1.10 shift
+      -55.8pp vs gate-off null (tol ±0.3pp).
+  Cb: gate=never == gate=off full-dict for every new mode (a
+      never-open gate cannot see a lie) — coal_alt/tag/cov/fp_flood.
+  Cc: double-run determinism (same dict twice, 5 configs).
+
+Config: N=6, ladder@15 [0,3,6,9,12,15] / kcoh5@15 [0,0,0,0,0,15];
+pd=3, delta=12, drift=6; ticks 4800; seeds {1,7,42,1999,20260902};
+θ*=1.10; integer-only in-loop; floats display-only (spin39 imean
+lesson). Run with -u, no pipes.
+
+======================================================================
+SPIN 47 — ADVERSARY — D5 UNDER COALITION — harness run, -u, no pipes
+== CANARY Ca: provenance — spin39.run_adv_gate honest byte-identity vs exp_glm1.run_fabric (8 configs) ==
+  Ca: PASS 8/8 (spin39 harness imported & intact)
+
+== CANARY Ca2: SPIN-5 anchor replay (5-seed means) ==
+  zero@15 K=1: 77.3% ev 8756 debt 187834 (want 77.3/8756/187834) -> PASS
+  ladder@15 K=1: 71.5% ev 5792 debt 106378 (want 71.5/5792/106378) -> PASS
+
+== CANARY Cc1: SPIN-39 mixed-twin replay, nf_alt ladder@15 K=2 @1.10 ==
+  shift -55.8pp (want -55.8) -> PASS
+
+== CANARY Cb: gate=never == gate=off full-dict, new modes ==
+  Cb: PASS (all 4 new modes)
+
+== CANARY Cc: double-run determinism ==
+  Cc: PASS (5 configs)
+
+CANARIES: PASS
+
+== ARM A: COALITION @ θ*=1.10 (vs gate-off honest null) ==
+   (honest @1.10 == gate=off by spin39 Cb2; null is exact)
+     mode |   grammar |         K |     mean% |     null% |     shift |     gOpen | lie4/lie5 | flag4/5 seeds |   anyFlag |  honestFP |  closureΔ
+ coal_alt | ladder@15 |         1 |      71.1 |      71.5 |    -0.4pp |        75 |   775/775 |       5/5 |       5/5 |         0 |         0
+ coal_alt | ladder@15 |         2 |      66.5 |      60.0 |    +6.4pp |        86 |   885/885 |       5/5 |       5/5 |         0 |         0
+ coal_alt |  kcoh5@15 |         1 |      82.1 |      74.1 |    +7.9pp |       343 | 1484/1483 |       5/5 |       5/5 |         0 |         0
+ coal_alt |  kcoh5@15 |         2 |      67.9 |      50.6 |   +17.3pp |       679 | 1575/1574 |       5/5 |       5/5 |         0 |         0
+ coal_tag | ladder@15 |         1 |      71.1 |      71.5 |    -0.4pp |        75 |   785/764 |       5/5 |       5/5 |         0 |         0
+ coal_tag | ladder@15 |         2 |      66.5 |      60.0 |    +6.4pp |        86 |   886/884 |       5/5 |       5/5 |         0 |         0
+ coal_tag |  kcoh5@15 |         1 |      82.1 |      74.1 |    +7.9pp |       343 | 1498/1469 |       5/5 |       5/5 |         0 |         0
+ coal_tag |  kcoh5@15 |         2 |      67.9 |      50.6 |   +17.3pp |       679 | 1596/1553 |       5/5 |       5/5 |         0 |         0
+ coal_cov | ladder@15 |         1 |      71.1 |      71.5 |    -0.4pp |        75 |   793/793 |       5/5 |       5/5 |         0 |         0
+ coal_cov | ladder@15 |         2 |      66.5 |      60.0 |    +6.4pp |        86 |   908/908 |       5/5 |       5/5 |         0 |         0
+ coal_cov |  kcoh5@15 |         1 |      82.1 |      74.1 |    +7.9pp |       343 | 2000/2000 |       5/5 |       5/5 |         0 |         0
+ coal_cov |  kcoh5@15 |         2 |      67.9 |      50.6 |   +17.3pp |       679 | 2105/2104 |       5/5 |       5/5 |         0 |         0
+  H1 (coalition evasion, >5pp with an unflagged seed): FALSIFIED (D5 flags >=1 coalition member in every seed of every strategy)
+
+== ARM B: FP-FLOOD @ θ*=1.10 — spoofed honest-id pulses ==
+  grammar |         K |     mean% |     null% |     shift |     gOpen | global nfMis | honestFP seeds | honestFP/seed |  closureΔ
+ladder@15 |         1 |      69.3 |      71.5 |    -2.2pp |         0 |         0 |       5/5 |      5342 |         0
+ladder@15 |         2 |      44.0 |      60.0 |   -16.0pp |         0 |         0 |       5/5 |      4759 |         0
+ kcoh5@15 |         1 |      63.3 |      74.1 |   -10.9pp |         0 |         0 |       5/5 |      7889 |         0
+ kcoh5@15 |         2 |      38.4 |      50.6 |   -12.2pp |         0 |         0 |       5/5 |      6672 |         0
+  H2 (>=1 honest-cell false flag in 5/5 seeds): VALIDATED
+
+== ARM C: control — SPIN-39 mixed-twin replay cells (anchor-continuity, via spin39 harness) ==
+     mode |   grammar |         K |     mean% |     null% |     shift | nfMis/seed |  closureΔ
+   nf_alt | ladder@15 |         1 |      71.5 |      71.5 |    +0.0pp |       5/5 |         0
+   nf_alt | ladder@15 |         2 |       4.2 |      60.0 |   -55.8pp |       5/5 |         0
+   nf_alt |  kcoh5@15 |         1 |      81.4 |      74.1 |    +7.3pp |       5/5 |         0
+   nf_alt |  kcoh5@15 |         2 |       0.5 |      50.6 |   -50.1pp |       5/5 |         0
+   nf_rnd | ladder@15 |         1 |      71.5 |      71.5 |    +0.0pp |       5/5 |         0
+   nf_rnd | ladder@15 |         2 |       5.0 |      60.0 |   -55.1pp |       5/5 |         0
+   nf_rnd |  kcoh5@15 |         1 |      81.4 |      74.1 |    +7.3pp |       5/5 |         0
+   nf_rnd |  kcoh5@15 |         2 |       0.8 |      50.6 |   -49.8pp |       5/5 |         0
+   nf_2pd | ladder@15 |         1 |      71.5 |      71.5 |    +0.0pp |       5/5 |         0
+   nf_2pd | ladder@15 |         2 |      60.0 |      60.0 |    +0.0pp |       5/5 |         0
+   nf_2pd |  kcoh5@15 |         1 |      74.1 |      74.1 |    +0.0pp |       5/5 |         0
+   nf_2pd |  kcoh5@15 |         2 |      50.6 |      50.6 |    +0.0pp |       5/5 |         0
+
+  PRE-REGISTERED VERDICT:
+    H1 (coalition evasion of D5): FALSIFIED
+    H2 (FP-flood honest false flags 5/5): VALIDATED
+    S1 closure (SPIN-15 live asserts + ledger): PASS

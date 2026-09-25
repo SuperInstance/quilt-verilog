@@ -57,6 +57,48 @@ import random
 import subprocess
 import sys
 
+# ---- G4 egress digest (MerkleMesh-flavored two-level chain) ----------
+# leaf  = FNV-1a-32 over the 7 flit fields (11 bytes)
+# node  = per-window SUM of leaves mod 2^32 (commutative, matching the
+#         multiset-per-window diff semantics; identical flits add, they
+#         do not cancel the way XOR would)
+# root  = FNV-1a chain over the 4 big-endian bytes of each window
+#         digest, in window order
+# The TB emits the same chain as additive D/R trace lines; comparing
+# roots makes the stream check O(1) per program and O(windows) with
+# bisection on divergence, instead of flit-by-flit multisets.
+_FNV_OFF, _FNV_PRIME = 0x811C9DC5, 0x01000193
+
+
+def _fnv1a(h, b):
+    return ((h ^ b) * _FNV_PRIME) & 0xFFFFFFFF
+
+
+def flit_digest(op, src, dst, a0, a1, a2, dat):
+    h = _FNV_OFF
+    for b in (op & 7, src & 15, dst & 15,
+              (a0 >> 8) & 255, a0 & 255,
+              (a1 >> 8) & 255, a1 & 255,
+              (a2 >> 8) & 255, a2 & 255,
+              (dat >> 8) & 255, dat & 255):
+        h = _fnv1a(h, b)
+    return h
+
+
+def stream_digests(bywin, nwin):
+    """window digest map + chained root over windows 0..nwin-1."""
+    wd = {}
+    for w, fl in bywin.items():
+        wd[w] = sum(flit_digest(*f) for f in fl) & 0xFFFFFFFF
+    root = _FNV_OFF
+    for w in range(nwin):
+        v = wd.get(w, 0)
+        root = _fnv1a(root, (v >> 24) & 255)
+        root = _fnv1a(root, (v >> 16) & 255)
+        root = _fnv1a(root, (v >> 8) & 255)
+        root = _fnv1a(root, v & 255)
+    return wd, root
+
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from cosim_cell import Engine, POR_DIALS, sclip16, sat_u16, to_signed16
 
@@ -481,6 +523,8 @@ def diff(prog, trace_path):
     depends on ring micro-timing; every egress VALUE is diffed exactly)"""
     egress_rtl = []
     events = []            # (cyc, kind, cell, ...)
+    rtl_d = {}              # D <win> <digest> lines (digest patch)
+    rtl_root = None         # R <root> line
     with open(trace_path) as f:
         for line in f:
             t = line.split()
@@ -498,6 +542,10 @@ def diff(prog, trace_path):
                 # T c win cyc
                 events.append((int(t[3]), 1, "T", int(t[1]), -1, -1,
                                -1, -1, -1, -1, int(t[2])))
+            elif t[0] == "D":
+                rtl_d[int(t[1])] = int(t[2])
+            elif t[0] == "R":
+                rtl_root = int(t[1])
     events.sort(key=lambda e: (e[0], e[1]))   # P before T on same cycle
 
     m = FabricModel()
@@ -558,7 +606,29 @@ def diff(prog, trace_path):
             mismatches.append("window %d: model %s vs rtl %s" % (w, a, b))
             if len(mismatches) > 10:
                 break
-    return mismatches, len(egress_rtl)
+    # digest comparison (G4): O(1) root check + first-divergent-window
+    # bisection when D/R lines are present (TB built with digest patch)
+    root = None
+    if rtl_d:
+        nwin = max(rtl_d) + 1
+        # TB self-consistency: D lines vs digests recomputed from E lines
+        wd_rtl_e, _ = stream_digests(rw, nwin)
+        bad = [w for w in rtl_d if rtl_d[w] != wd_rtl_e.get(w, 0)]
+        if bad:
+            mismatches.append("digest: TB D-lines disagree with its own "
+                              "E-lines at windows %s" % bad[:4])
+        wd_model, root = stream_digests(mw, nwin)
+        if rtl_root is not None and rtl_root != root:
+            mismatches.append("digest root: model %d vs rtl %d"
+                              % (root, rtl_root))
+        div = [w for w in range(nwin) if wd_model.get(w, 0) != rtl_d[w]]
+        if div:
+            mismatches.append("digest first divergence at window %d "
+                              "(bisection over %d windows)"
+                              % (div[0], nwin))
+        if not mismatches and rtl_root is None:
+            mismatches.append("digest: D lines present but R line missing")
+    return mismatches, len(egress_rtl), root
 
 
 def run_program(prog, label):
@@ -569,12 +639,14 @@ def run_program(prog, label):
         print("cosim_fabric[%s]: TB ERROR\n%s" % (label, out[-2000:]))
         return False, 0
     trace = os.path.join(OUT, "cosim_fabric_trace.txt")
-    mism, neg = diff(prog, trace)
+    mism, neg, root = diff(prog, trace)
     if mism:
         print("cosim_fabric[%s]: FINDING (%s)" % (label, mism[0]))
         for x in mism[:10]:
             print("  " + x)
         return False, neg
+    print("cosim_fabric[%s]: OK%s" % (
+        label, " (egress root digest %d)" % root if root is not None else ""))
     return True, neg
 
 
