@@ -1,0 +1,41 @@
+{
+  "format": "qm",
+  "version": 1,
+  "module": "01-counter",
+  "ops": [
+    {
+      "op": "cell",
+      "name": "counter",
+      "line": 5,
+      "fields": [
+        {
+          "name": "count",
+          "type": "int<PW>",
+          "init": 0
+        }
+      ]
+    },
+    {
+      "op": "view",
+      "name": "value",
+      "line": 9,
+      "params": [
+        "counter.count"
+      ],
+      "body": "counter . count"
+    },
+    {
+      "op": "tick",
+      "line": 13,
+      "effects": [
+        {
+          "dest": "counter.count",
+          "cell": "counter",
+          "field": "count",
+          "expr": "counter . count + 1",
+          "line": 14
+        }
+      ]
+    }
+  ]
+}

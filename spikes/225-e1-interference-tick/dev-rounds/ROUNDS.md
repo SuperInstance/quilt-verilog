@@ -142,3 +142,11 @@ Ordered queue: RESEARCH-AGENDA §4 O1–O7, then §Q open questions, then wheel 
 - **Verdict (4b replication):** BOOK-BOUNDARY, SHARPENED — with the equal-blade control round 4 lacked (every static arm gets the same live 480-tick blade), compensated-static sequential DOMINATES adaptive on both axes (988 vs 978‰; 75.0k vs 79.6k debt); gate1 edge-pass 978 ≥ 978, gate2 FAIL. Attempt 1's +154‰ adaptive %w win was the blade beating handicapped statics, not the dial. Both lanes: debt gate FAIL, entry lag 83–90 ticks vs 1600 dwell, E4.B 2–4-tick prediction falsified. Consolidated E4 architecture: blade+comp, frozen sequential dial, T2 sort upstream; κ-dial = slow backstop at best. No QTORCH pre-load. Canaries: kimi F19 cells verbatim-exact (blade 5/5, seq-comp 1000‰, int-comp 984‰), double-run determinism confirmed. Details: ROUND-4b-O4-regime-motion-replication.md.
 - **Commit:** (this commit)
 - **Headline:** equal-blade control kills the dial: compensation is the whole win (988 vs 978‰, statics dominate).
+
+## Round 27 — step-edge Δ-sweep at drift=12 (round 26's named rung) — DISPATCHED 2026-09-04 08:31 AKDT
+- **Item:** Is the drift-12 +1 parity step (the only drift-sensitive object in the r26 ladder) Δ-carried? K=1, comp arm, calm, drift=12 × pd{3,4,5} × Δ{8,12,16,24,32,48}, N 2..18; drift=6/pd=4 control. Pre-reg M1 (step is Δ-carried at high drift) / M2 (Δ-flat → wall law closes as pure (drift,pd)) / M3.
+- **Lane:** dev_r27_stepedge_delta (zai/glm-5.3, run mode). Deliverable: dev-rounds/ROUND-27-stepedge-delta.md. Seeds 1/7/42/1999/20260902, integer-only, canaries C1–C4 incl. r26 drift-12 ladder anchor replay. Commit+push g3-kinduction mandated; told to leave wheel lanes' uncommitted files untouched.
+- **In-flight check:** wheel SPIN-51 metrology lane in flight (wheel cron); this is the 2nd of 2 allowed lanes.
+- **Verdict:** pending (backfill on lane completion).
+
+*(Ledger note 2026-09-04 10:04 AKDT: round 27 lanes 1–2 lost/failed (no results); re-dispatched 10:04 as dev_r27_stepedge_exec against frozen pre-reg 030bb90, worktree-isolated. No other dev lanes in flight.)*
