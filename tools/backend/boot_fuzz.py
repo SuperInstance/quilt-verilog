@@ -41,6 +41,7 @@ OUT = os.path.join(_ROOT, "tb", "run")
 # loader is last-wins like the Python dict, alignment policing)
 HW_BLIND = ("quf.sha256 mismatch", "non-standard kind",
             "tick_period", "exceeds 5-bit hw epoch",
+            "dial 13 (FTRACE)",
             "duplicate section name", "align")
 
 
@@ -53,7 +54,8 @@ def rand_doc(rng, cc):
     doc = {
         "header": {"cell_count": cc, "edge.k": k,
                    "align": rng.choice([8, 16, 32])},
-        "dials": [[rng.randrange(0x10000) for _ in range(quf.NDIALS)]
+        "dials": [[0 if j == 13 else rng.randrange(0x10000)
+                   for j in range(quf.NDIALS)]
                   for _ in range(cc)],
         "edges": [{"src": rng.randrange(cc), "dst": rng.randrange(cc),
                    "mode": rng.randrange(2), "slot": rng.randrange(4),

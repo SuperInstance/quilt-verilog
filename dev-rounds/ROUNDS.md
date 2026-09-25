@@ -22,3 +22,63 @@ Rule: skip items visibly in flight (check timestamps here + wheel/WHEEL-LOG.md).
 - **Verdict:** REFUTED-as-booked / PARTIAL-CONFIRM — raw win is fan-out-gated (N=3: +0.1pp, N=5: +1.6pp, clears ≥2pp gate only at N=8: +11.9pp stress); under lag compensation the win EXPLODES (+24.1pp N=5, +56.2pp N=8), so "lag symptom" is false — the compensator synchronizes twins and *needs* the sort. T2 promoted to RTL with N≥6 boundary (round 3, de5ad6b).
 - **Commit:** 9491c25 (round 2) · de5ad6b (round 3 boundary sharpening)
 - **Headline:** mag C=1 vs admit-all, stress raw: +11.9pp at N=8 (57.8→69.7 %w, maxE 99.2→48.0); compensated: +56.2pp at N=8 (42.7→98.9).
+
+---
+
+## Round 3 — O3 (quanta floor) + O2b boundary — DONE (backfilled 2026-09-03 11:5x; see spike dev-rounds/ROUND-3-O3-quanta-floor.md)
+- **Verdict:** PARTIAL-REFUTE / KNEE RELOCATED — ±5 fails 99% gate at K=2 stress (97.5%); adopt ±7 (4-bit) as ESP32/.qm default (≥99.2% everywhere). Z₃ debt inversion persists 8/8. O2b: contention wall located at N=6.
+- **Commits:** 999348e (O3) · de5ad6b (O2b)
+- **Headline:** ±7 is the floor (min retention 99.2% across all 8 K×regime cells)
+
+## Round 4 — O4 (closed-loop regime motion) — DONE (2026-09-03 ~12:3x; backfilled 12:33 from commit b692aea)
+- **Verdict:** BOUNDARY BOOKED — %w gate PASSED (adaptive 932‰ vs best-static 778‰, +154‰) but debt gate FAILED (57,136 > 32,770); NOT promoted to E4. κ-detector conflict entry 90 ticks vs 1600-tick dwell; L̂±1 knife-edge scar (bursty L̂=9→994‰, L̂=10→336‰). F19 doctrine confirmed in-run; E4 demo arm should pre-load blade+compensator+sequential with κ-dial as slow backstop.
+- **Commit:** b692aea
+- **Headline:** 932‰ beats every static arm on %w but fails debt gate — boundary booked with 90-tick detector lag + L̂ knife-edge.
+
+
+## Round 5 — O5 (phase-decay coupling, multi-seed) — DONE (2026-09-03 12:5x; backfilled from commit ffecc06; see spike dev-rounds/ROUND-5-O5-phase-decay.md)
+- **Verdict:** PROMOTED — +2.0pp stress mean, 5/5 seeds positive (F24 confirm); matched-duty admission gate destroys (−27.8pp) — decay-modulation vs admission-gating contrast is real.
+- **Commit:** ffecc06
+- **Headline:** +2.0pp stress, 5/5 seeds; gate at matched duty −27.8pp
+
+## Round 6 — O6 (cofire homeostat) — DONE (2026-09-03; commits 3cee756 + 987d6e4; see spike dev-rounds/ROUND-6-O6-cofire-homeostat.md)
+- **Verdict:** DEMOTE — v1.1 fails G1 (778‰ honest < 800‰) and G2 (no discriminative demotion); whistle G3 passes 3.4×. Cofire → v2 charter booked (predictability-not-agreement predicate, G1'/G2' + G4 gates); demo runs selection-only.
+- **Commits:** 3cee756 (verdict) · 987d6e4 (v2 charter)
+- **Headline:** 778‰ honest < 800‰ gate → cofire demoted to v2, demo selection-only
+
+## Round 7 — O7 (bundle wall × compensation) — DISPATCHED 2026-09-03 13:39 AKDT
+- **Item:** O7 — is the N=4 bundle-capacity wall (F7: true-residency 91%→10% by N≥4) lag-driven? Per-twin lag blades (F19/F20) + compensation, N∈{2..8} × {raw,comp} × {calm,stress}, 5 seeds, 4800 ticks. Decision: N=4 comp trueRes ≥50% ⇒ "stale-sensing capacity, not twin count"; unmoved ⇒ geometric two-law split.
+- **Lane:** dev_o7_bundle_wall (zai/glm-5.3, run mode). Deliverable: dev-rounds/ROUND-7-O7-bundle-wall.md. Commit + push g3-kinduction mandated.
+- **Verdict:** DONE — WALL MOVED — N=4 interference trueRes 12.2% → 86.3% with per-twin lag compensation (F19/F20 blade, 11/11 exact lag discovery): capacity law restated as "stale-sensing capacity, not twin count." New co-fire wall at N~7 (comp trueRes 61.3% at N=7 → 42.6% at N=8). Sequential arm hits 100.0% comp at every N. Lag blade verified 11/11 exact across lags 3–70; anchors replay 8/8 vs glm-1 sheet B; canaries 3/3 PASS (double-run byte-identity, anchor replay, self-canary CAUGHT).
+- **Commit:** 0a637a1
+- **Headline:** N=4 trueRes 12.2→86.3% (comp); co-fire wall relocates to N~7
+
+## Round 8 — Q1 (class-grain boundary, linear-superposition substrates) — DISPATCHED 2026-09-03 14:2x AKDT
+- **Item:** Q1 — map the class-grain boundary: embedding-census needs class grain (F5), Hadamard linear-superposition holds at identity grain (glm-2 #2, 13ppm). Axes: (1) nonlinear vs linear readout, (2) learned-vs-fixed coin dynamics, (3) 1-D vs 2-D dimensionality. Decider property identified or boundary honestly unmapped.
+- **Lane:** dev_q1_class_grain_boundary (zai/glm-5.3, run mode). Deliverable: dev-rounds/ROUND-8-Q1-class-grain.md. Commit + push g3-kinduction mandated.
+- **Verdict:** MAPPED — identity grain survives learned coin dynamics and 2-D substrates (linear superposition robust); nonlinear readout breaks only at the quantization floor and no grain rescues it. Decider is cut-vs-floor scale, not grain.
+- **Commit:** ca836b8
+- **Headline:** boundary decider = cut-vs-floor scale, not class grain
+
+---
+
+## Round 9 — Q2 (minimal cofire homeostat) — DISPATCHED 2026-09-03 14:55 AKDT
+- **Item:** Q2 — is there a MINIMAL correction-channel homeostat with a provable no-collapse bound, or does every local no-error-signal rule learn silence? Test cofire v2 charter predicate (predictability-not-agreement, G1'/G2'/G4) + ≤3 minimal variants (refractory window, floor/decay, lagged reference) on the O6 harness.
+- **Lane:** dev_q2_cofire_minimal (zai/glm-5.3, run mode). Deliverable: dev-rounds/ROUND-9-Q2-cofire-minimal.md. Commit + push g3-kinduction mandated.
+- **Verdict:** BOOKED — every local no-error-signal rule on the correction channel learns silence. v2 charter predicate + refractory + slow-floor variants ALL FAIL G1'/G2'/G4 (honest best 795‰ vs 800‰ gate; predictability band reached on 0‰ of honest ticks; liar pinned 911‰ only by pinning the honest twin at 4.3). Charter falsifier fired verbatim. Trust-learning family demotes to monitor-only permanently; whistle stays (2.2–4.0×); §3.2 runs selection-only.
+
+---
+
+## Round 10 — Q3 (T6 observability theorem) — DISPATCHED 2026-09-03 15:24 AKDT
+- **Item:** Q3 — state "observable behavior ≡ snap-log behavior" [NOVEL-ENHANCEMENTS T6] as checkable formal obligations on q_snaplog + q_cell_core and close them with sby (the program's first T6 formalization; sharpened by F12/F10/F9).
+- **Lane:** dev_q3_t6_observability (zai/glm-5.3, run mode). Deliverable: dev-rounds/ROUND-10-Q3-t6-observability.md. Commit + push g3-kinduction mandated.
+- **Verdict:** CLOSED (bounded) — obligations OBS-1 completeness, OBS-2 soundness/accounting, OBS-3a/3b F12 boolean verdict equivalence machine-checked: d4 PASS (8 s, 7/7 covers incl. saturation + overflow), d8 bracket PASS (5 min), q_cell_core integration leg T6-C1..C4 PASS at shipped DEPTH=16 (BMC 80, 10 min, 5/7 covers). Mutation canary CAUGHT (dropped 6th fire → OBS-1+OBS-2 fail at step 9). SPIN-19 anchor replay byte-identical. Booked: unbounded PDR referee TIMEOUT at 2700 s (frame 92, no counterexample); DEPTH=16 unit deep runs hit the solver wall (no violation through step 25/32). Self-canary: first harness version had a window-edge reference bug (fire coincident with i_tick mis-booked into the new window) — found by the proof itself, fixed before booking.
+- **Commit:** 23b7216
+- **Headline:** T6 equivalence PROVED bounded: log ≡ wave, boolean verdicts ≡ full observation (F12 promoted to proof object); unbounded attempt booked TIMEOUT.
+
+## Round 11 — Q4 (§3.1 MI-criticality sweep) — DISPATCHED 2026-09-03 16:35 AKDT
+- **Item:** Q4 — charter §3.1 hello-world: sweep LCG noise rate p over 3–4 decades × decay d∈{1,2,3}, N=10k ticks; activity-fraction order parameter + single-site→neighbor MI via integer-binned histograms; transition located by MI maximum; finite-size scaling on 3 lattice sizes; exponent as rational; deliverable noise→channel-capacity lookup table + Z_n vs D_n Barbieri dichotomy check. Falsifier: MI-peak doesn't survive integer quantization → criticality story dies.
+- **Lane:** dev_q4_mi_criticality (zai/glm-5.3, run mode). Deliverable: dev-rounds/ROUND-11-Q4-mi-criticality.md. Commit + push g3-kinduction mandated.
+- **Verdict:** pending (backfill on lane completion).
+
+*(Ledger note 2026-09-03 21:15 AKDT: authoritative round ledger moved to spikes/225-e1-interference-tick/dev-rounds/ROUNDS.md — rounds 11–18b booked there. Round 11 Q4 verdict: PARTIAL, SPLIT amendment (commits 1940365/21ab669). Round 19 (arrival-rate wall sweep) dispatched 21:15.)*

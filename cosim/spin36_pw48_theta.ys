@@ -1,0 +1,9 @@
+# SPIN-36 SYNTH arm pw48_theta (PW=48, GMODE=2) -- identical flow
+# to SPIN-19 synth_gate_*.ice40, PW-parameterized wrapper.
+read_verilog -DSYNTHESIS rtl/q_wall_gate.v
+read_verilog -DSYNTHESIS cosim/spin36_synth_top.v
+chparam -set PW 48 spin36_synth_top
+chparam -set GMODE 2 q_wall_gate
+hierarchy -check -top spin36_synth_top
+synth_ice40 -top spin36_synth_top -json cosim/spin36_pw48_theta.json
+tee -o cosim/stat36_pw48_theta.txt stat -top spin36_synth_top

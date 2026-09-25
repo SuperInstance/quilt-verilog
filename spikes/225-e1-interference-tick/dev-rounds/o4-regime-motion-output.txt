@@ -1,0 +1,56 @@
+== O4: lag-compensation regime motion (calm->conflict->bursty, 4800 ticks) ==
+segments: calm [0,1600) d6/d3/lat5 | conflict [1600,3200) d12/d6/lat10 | bursty [3200,4800) d6/d3/lat10 + 1-in-4 +/-45 ADC glitches
+
+-- CANARY A: kimi F19 anchors (exp3_lag_blade.py verbatim replay) --
+  true lag  3 -> discovered  3  OK
+  true lag  5 -> discovered  5  OK
+  true lag  7 -> discovered  7  OK
+  true lag 10 -> discovered 10  OK
+  true lag 15 -> discovered 15  OK
+  sequential raw                 512 permille  debt  48994  maxErr 61
+  sequential compensated        1000 permille  debt   8428  maxErr 12
+  interference raw               830 permille  debt  34995  maxErr 39
+  interference compensated       984 permille  debt  17700  maxErr 28
+  anchor check: interference comp 984/17700/28, seq comp 1000, int raw 830/34995/39, seq raw 512 -> PASS
+
+-- CANARY B: self-canary (mislabeled arm must be caught) --
+  inverted-dial 'adaptive' @seed 20260902: calm-seq ticks 46 vs calm-int ticks 1554 -> CAUGHT
+
+-- GRID: arms x seeds (real runs) --
+  arm                    pm     debt  maxErr  per-seed pm
+  seq-raw              266‰    87152      61  [267, 268, 271, 262, 264]
+       seg pm (calm/conflict/bursty, mean): 576/191/31  debt-mean 87152
+  int-raw              371‰   105027      54  [370, 366, 369, 380, 374]
+       seg pm (calm/conflict/bursty, mean): 289/821/4  debt-mean 105027
+  seq-comp-fix         636‰    59686      53  [635, 639, 642, 631, 634]
+       seg pm (calm/conflict/bursty, mean): 574/1000/335  debt-mean 59686
+  int-comp-fix         422‰    81193      50  [418, 427, 421, 422, 424]
+       seg pm (calm/conflict/bursty, mean): 281/982/3  debt-mean 81193
+  seq-comp-oracle      778‰    54616      45  [778, 778, 778, 778, 778]
+       seg pm (calm/conflict/bursty, mean): 1000/1000/335  debt-mean 54616
+  int-comp-oracle      545‰    80320      50  [542, 543, 547, 545, 551]
+       seg pm (calm/conflict/bursty, mean): 650/983/3  debt-mean 80320
+  adaptive             932‰    57136      53  [932, 935, 932, 932, 929]
+       seg pm (calm/conflict/bursty, mean): 871/995/929  debt-mean 57136
+
+  adaptive seed 1         pm  932‰ debt  57260 switches  6 det_lag {'conflict': 90, 'calm_back': 0, 'bursty': 6}
+  adaptive seed 7         pm  935‰ debt  56852 switches  6 det_lag {'conflict': 90, 'calm_back': 0, 'bursty': 8}
+  adaptive seed 42        pm  932‰ debt  57268 switches  6 det_lag {'conflict': 90, 'calm_back': 0, 'bursty': 8}
+  adaptive seed 1999      pm  932‰ debt  56997 switches  6 det_lag {'conflict': 90, 'calm_back': 0, 'bursty': 7}
+  adaptive seed 20260902  pm  929‰ debt  57306 switches  6 det_lag {'conflict': 89, 'calm_back': 0, 'bursty': 8}
+  adaptive interference-tick fraction per segment (mean): {'calm': 8, 'conflict': 9, 'bursty': 11}
+  adaptive lag re-estimations (t, segment, laghat) seed 20260902:
+    t= 480 calm      laghat= 5 (true 5)
+    t= 960 calm      laghat= 5 (true 5)
+    t=1440 calm      laghat= 5 (true 5)
+    t=1920 conflict  laghat=10 (true 10)
+    t=2400 conflict  laghat=10 (true 10)
+    t=2880 conflict  laghat=10 (true 10)
+    t=3360 bursty    laghat= 9 (true 10)
+    t=3840 bursty    laghat= 9 (true 10)
+    t=4320 bursty    laghat= 9 (true 10)
+
+-- DECISION RULE --
+  best static arm: seq-comp-oracle (pm 778‰, debt 54616)
+  adaptive pm 932‰ >= best-10? YES | adaptive debt 57136 <= 60% of best static (32769)? NO
+  VERDICT: BOOK BOUNDARY (detector lag vs regime dwell, numbers above)

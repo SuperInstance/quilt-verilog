@@ -1,0 +1,100 @@
+==============================================================================
+ROUND 9 / Q2 — MINIMAL COFIRE HOMEOSTAT, v2 CHARTER PREDICATE (predictability,
+not agreement; commit 987d6e4). Integer sign-product accumulator D=6 SAT=128,
+bands HI=48 LO=12, trust [4,12] init 8, neutral-decay 32 ticks.
+Variants: v2a-charter | v2b-refractory (R=4) | v2c-slowfloor (SLOW=2). Seeds (1, 7, 42, 1999, 20260902), 4800 ticks, integer-only.
+Faults: clean / noisy-T2 +/-14 / lying-T2 +24 ticks [1200,2400).
+==============================================================================
+
+-- CANARY A: F17 anchor replay (kimi exp1 variant A, sheet: 830/308/5) --
+  seed         1  fixed  830  trust-A   93  cancel 7  trust=(0, 1)
+  seed         7  fixed  824  trust-A  562  cancel 4  trust=(2, 0)
+  seed        42  fixed  834  trust-A  217  cancel 7  trust=(0, 11)
+  seed      1999  fixed  836  trust-A   92  cancel 4  trust=(0, 1)
+  seed  20260902  fixed  829  trust-A  578  cancel 7  trust=(3, 0)
+  means 830 / 308 / 5  CANARY A: PASS
+
+-- CANARY A2: lag blade (F19/F20) — calm 5 (true 5), stress 10 (true 10) -> PASS
+
+-- CLEAN, both regimes: static vs v2 variants --
+  stress static          pm/seed [830, 824, 834, 836, 829] mean  830 permille  debt  34995  cancel  70  trust(end) mean 8.0  s_end mean 0  band-frac 0/0 permille
+  stress v2a-charter     pm/seed [766, 758, 753, 774, 757] mean  761 permille  debt  39136  cancel 120  trust(end) mean 5.0  s_end mean -1  band-frac 0/0 permille
+  stress v2b-refractory  pm/seed [795, 800, 792, 809, 780] mean  795 permille  debt  37900  cancel  75  trust(end) mean 6.5  s_end mean -1  band-frac 0/0 permille
+  stress v2c-slowfloor   pm/seed [793, 780, 786, 795, 768] mean  784 permille  debt  37668  cancel 104  trust(end) mean 6.0  s_end mean -1  band-frac 0/0 permille
+  calm   static          pm/seed [416, 410, 401, 426, 455] mean  421 permille  debt  32143  cancel 520  trust(end) mean 8.0  s_end mean 0  band-frac 0/0 permille
+  calm   v2a-charter     pm/seed [110, 109, 117, 107, 107] mean  110 permille  debt 109156  cancel 159  trust(end) mean 4.0  s_end mean -1  band-frac 0/0 permille
+  calm   v2b-refractory  pm/seed [175, 168, 183, 168, 174] mean  173 permille  debt  71228  cancel 248  trust(end) mean 4.5  s_end mean -1  band-frac 0/0 permille
+  calm   v2c-slowfloor   pm/seed [112, 110, 113, 112, 111] mean  111 permille  debt 108739  cancel 159  trust(end) mean 4.0  s_end mean -1  band-frac 0/0 permille
+
+-- NOISY-T2 (+/-14) STRESS --
+  seed         1  static          pm  574  debt  59805  cancels  201  whistle 0.0x  maxE 52
+  seed         7  static          pm  567  debt  60461  cancels  219  whistle 0.0x  maxE 49
+  seed        42  static          pm  566  debt  60266  cancels  174  whistle 0.0x  maxE 45
+  seed      1999  static          pm  563  debt  61426  cancels  196  whistle 0.0x  maxE 49
+  seed  20260902  static          pm  578  debt  59834  cancels  227  whistle 0.0x  maxE 46
+  seed         1  v2a-charter     pm  516  debt  62328  cancels  375  trust(end)=(4,4)  s_end=(-1,-1)  maxE 47
+  seed         7  v2a-charter     pm  509  debt  62805  cancels  389  trust(end)=(4,4)  s_end=(3,-1)  maxE 46
+  seed        42  v2a-charter     pm  515  debt  63028  cancels  356  trust(end)=(4,4)  s_end=(-1,-1)  maxE 49
+  seed      1999  v2a-charter     pm  500  debt  63923  cancels  386  trust(end)=(5,4)  s_end=(-1,1)  maxE 46
+  seed  20260902  v2a-charter     pm  513  debt  61796  cancels  356  trust(end)=(4,4)  s_end=(2,-1)  maxE 44
+  seed         1  v2b-refractory  pm  553  debt  60466  cancels  319  trust(end)=(4,5)  s_end=(-1,-1)  maxE 50
+  seed         7  v2b-refractory  pm  548  debt  61880  cancels  326  trust(end)=(4,5)  s_end=(3,-1)  maxE 46
+  seed        42  v2b-refractory  pm  531  debt  63549  cancels  284  trust(end)=(5,5)  s_end=(-1,-1)  maxE 54
+  seed      1999  v2b-refractory  pm  534  debt  62727  cancels  282  trust(end)=(4,5)  s_end=(-1,-1)  maxE 54
+  seed  20260902  v2b-refractory  pm  542  debt  61230  cancels  279  trust(end)=(6,8)  s_end=(-1,-1)  maxE 50
+  seed         1  v2c-slowfloor   pm  517  debt  62235  cancels  382  trust(end)=(4,4)  s_end=(-1,-1)  maxE 47
+  seed         7  v2c-slowfloor   pm  512  debt  62729  cancels  377  trust(end)=(4,4)  s_end=(3,-1)  maxE 46
+  seed        42  v2c-slowfloor   pm  516  debt  62984  cancels  357  trust(end)=(4,4)  s_end=(-1,-1)  maxE 49
+  seed      1999  v2c-slowfloor   pm  500  debt  63982  cancels  379  trust(end)=(5,4)  s_end=(-1,1)  maxE 46
+  seed  20260902  v2c-slowfloor   pm  516  debt  61986  cancels  353  trust(end)=(4,4)  s_end=(2,-1)  maxE 44
+
+-- LYING-T2 (+24, [1200,2400)) STRESS --
+  seed         1  static          pm  715  debt  53607  cancels  114  whistle 4.2x  maxE 38
+  seed         7  static          pm  715  debt  53171  cancels  107  whistle 3.6x  maxE 39
+  seed        42  static          pm  719  debt  53544  cancels  132  whistle 2.7x  maxE 38
+  seed      1999  static          pm  723  debt  52812  cancels  110  whistle 3.9x  maxE 37
+  seed  20260902  static          pm  714  debt  53651  cancels  122  whistle 4.6x  maxE 39
+  seed         1  v2a-charter     pm  659  debt  56615  cancels  154  whistle 2.2x  t2_late 4.3  floor  909 permille  t1_late 4.3  maxE 43
+  seed         7  v2a-charter     pm  657  debt  56733  cancels  153  whistle 2.2x  t2_late 4.2  floor  917 permille  t1_late 4.3  maxE 46
+  seed        42  v2a-charter     pm  647  debt  57922  cancels  170  whistle 2.0x  t2_late 4.2  floor  936 permille  t1_late 4.2  maxE 39
+  seed      1999  v2a-charter     pm  677  debt  55955  cancels  143  whistle 2.6x  t2_late 4.3  floor  914 permille  t1_late 4.3  maxE 44
+  seed  20260902  v2a-charter     pm  655  debt  57897  cancels  172  whistle 2.4x  t2_late 4.3  floor  880 permille  t1_late 4.3  maxE 43
+  seed         1  v2b-refractory  pm  692  debt  55605  cancels  133  whistle 2.7x  t2_late 7.2  floor  120 permille  t1_late 7.9  maxE 39
+  seed         7  v2b-refractory  pm  697  debt  54878  cancels   91  whistle 7.4x  t2_late 7.7  floor    0 permille  t1_late 7.9  maxE 41
+  seed        42  v2b-refractory  pm  684  debt  56857  cancels  128  whistle 3.5x  t2_late 7.6  floor   12 permille  t1_late 7.9  maxE 38
+  seed      1999  v2b-refractory  pm  703  debt  54691  cancels  113  whistle 3.5x  t2_late 7.3  floor  119 permille  t1_late 7.7  maxE 39
+  seed  20260902  v2b-refractory  pm  683  debt  56278  cancels  154  whistle 3.0x  t2_late 7.5  floor   29 permille  t1_late 7.9  maxE 40
+  seed         1  v2c-slowfloor   pm  689  debt  55168  cancels  138  whistle 4.0x  t2_late 4.3  floor  906 permille  t1_late 4.3  maxE 41
+  seed         7  v2c-slowfloor   pm  666  debt  56574  cancels  146  whistle 2.2x  t2_late 4.3  floor  909 permille  t1_late 4.4  maxE 42
+  seed        42  v2c-slowfloor   pm  672  debt  56521  cancels  147  whistle 2.5x  t2_late 4.4  floor  898 permille  t1_late 4.3  maxE 39
+  seed      1999  v2c-slowfloor   pm  683  debt  55473  cancels  137  whistle 3.2x  t2_late 4.3  floor  915 permille  t1_late 4.4  maxE 46
+  seed  20260902  v2c-slowfloor   pm  669  debt  56659  cancels  159  whistle 2.5x  t2_late 4.4  floor  863 permille  t1_late 4.4  maxE 39
+
+-- CANARY B: self-canary (lie static run mislabeled as v2a) --
+  fingerprint static-as-v2a: pm 715 debt 53607 events 2941 cancels 114 trust=(8, 8) s=(0, 0)
+  fingerprint true v2a    : pm 659 debt 56615 events 3062 cancels 154 trust=(6, 4) s=(-1, -1)
+  CANARY B: CAUGHT
+
+==============================================================================
+DECISION-RULE EVALUATION (charter gates G1'/G2'/G4; G3 whistle cross-check)
+==============================================================================
+v2a-charter:
+  G1' honest no-bleed : pm  761 permille (>=800), end-trust 5 (>=7)      -> FAIL
+  G2' liar to floor   : floor-frac  911 permille (>=900), T1 4.2 (>=7.0) -> FAIL
+  G4  neg-corr kept   : s_end mean -1 (<0), band-frac 0 permille (>=500), trust 5 (>=7) -> FAIL
+  G3  whistle (x-check): 2.2x
+v2b-refractory:
+  G1' honest no-bleed : pm  795 permille (>=800), end-trust 6 (>=7)      -> FAIL
+  G2' liar to floor   : floor-frac   56 permille (>=900), T1 7.8 (>=7.0) -> FAIL
+  G4  neg-corr kept   : s_end mean -1 (<0), band-frac 0 permille (>=500), trust 6 (>=7) -> FAIL
+  G3  whistle (x-check): 4.0x
+v2c-slowfloor:
+  G1' honest no-bleed : pm  784 permille (>=800), end-trust 6 (>=7)      -> FAIL
+  G2' liar to floor   : floor-frac  898 permille (>=900), T1 4.3 (>=7.0) -> FAIL
+  G4  neg-corr kept   : s_end mean -1 (<0), band-frac 0 permille (>=500), trust 6 (>=7) -> FAIL
+  G3  whistle (x-check): 2.8x
+
+VERDICT: ALL VARIANTS FAIL — book Q2: every local no-error-signal rule on the correction channel learns silence (family demotes to monitor-only per the charter falsifier)
+
+CANARIES: A PASS / A2 PASS / B CAUGHT
+CANARY C (double-run byte-identity): PASS  (sha 62694458fc87f90b / 62694458fc87f90b)

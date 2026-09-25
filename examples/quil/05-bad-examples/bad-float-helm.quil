@@ -1,0 +1,2 @@
+// EXPECTED RULE: R4 helm integer-only — a float literal in a tick expression.
+cell a int<16> = 0 { tick { a <= a + 1.5; } }

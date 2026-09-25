@@ -45,7 +45,16 @@ module tb_cell_core;
             ri_valid = 1; ri_op = op; ri_src = src; ri_dst = 4'd1;
             ri_a0 = a0; ri_a1 = a1; ri_a2 = a2; ri_dat = dat;
             guard = 0;
-            while (ri_ready !== 1'b1 && guard < 500) begin
+            // Acceptance at the coming posedge is decided by the REGISTERED
+            // inbuf state, not the ri_ready wire: a same-delta read of
+            // ri_ready after the blocking assignments above sees the stale
+            // pre-assignment value (transit-path ready) and can exit the
+            // wait with the hit flit undelivered -- a TB-side flit loss
+            // root-caused 2026-09-03 (BACKEND-NOTES gapped-stream weak
+            // point). b_v is race-free to read here and needs no extra
+            // cycle, so transfer latency is unchanged. Non-hit (transit)
+            // flits keep the original immediate-transfer behavior.
+            while (ri_dst == dut.i_myid && dut.u_inbuf.b_v !== 1'b0 && guard < 500) begin
                 @(negedge clk); guard = guard + 1;
             end
             if (guard >= 500) begin

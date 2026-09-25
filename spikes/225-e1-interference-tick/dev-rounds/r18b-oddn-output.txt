@@ -1,0 +1,51 @@
+== ROUND 18b odd-n parity cell: m=(15, 17) K_MAX=288 seeds=[1, 7, 42, 1999, 20260902] ==
+A Z m=15 tau_1=90 U=7 rho_hat=7.001049
+A D m=15 tau_1=90 U=7 rho_hat=7.0
+A P m=15 tau_1=90 U=7 rho_hat=7.000001
+A Z m=17 tau_1=102 U=7 rho_hat=7.002006
+A D m=17 tau_1=102 U=7 rho_hat=7.0
+A P m=17 tau_1=102 U=7 rho_hat=7.000008
+ARM A control (rho=7 all odd cells): PASS
+B m=15 seed=        1 Z rho_hat=3.000592 form=3.000000 ok
+B m=15 seed=        1 D rho_hat=2.992590 form=3.000000 MISMATCH
+B m=15 seed=        1 P rho_hat=2.992590 form=3.000000 MISMATCH
+  D/P gap 0.000000 <= D_NULL
+B m=15 seed=        7 Z rho_hat=6.001184 form=6.000000 ok
+B m=15 seed=        7 D rho_hat=8.000007 form=8.000000 ok
+B m=15 seed=        7 P rho_hat=8.000113 form=8.000000 ok
+  D/P gap 0.000106 <= D_NULL
+B m=15 seed=       42 Z rho_hat=12.002368 form=12.000000 ok
+B m=15 seed=       42 D rho_hat=11.840328 form=12.000000 MISMATCH
+B m=15 seed=       42 P rho_hat=11.955964 form=12.000000 MISMATCH
+  D/P gap 0.115636 > D_NULL -- TIE BROKEN
+B m=15 seed=     1999 Z rho_hat=2.011845 form=2.000000 MISMATCH
+B m=15 seed=     1999 D rho_hat=6.000038 form=6.000000 ok
+B m=15 seed=     1999 P rho_hat=6.001184 form=6.000000 ok
+  D/P gap 0.001146 <= D_NULL
+B m=15 seed= 20260902 Z rho_hat=1.005922 form=1.000000 MISMATCH
+B m=15 seed= 20260902 D rho_hat=1.005922 form=1.000000 MISMATCH
+B m=15 seed= 20260902 P rho_hat=1.005922 form=1.000000 MISMATCH
+  D/P gap 0.000000 <= D_NULL
+B m=17 seed=        1 Z rho_hat=3.001056 form=3.000000 ok
+B m=17 seed=        1 D rho_hat=2.995829 form=3.000000 MISMATCH
+B m=17 seed=        1 P rho_hat=2.995829 form=3.000000 MISMATCH
+  D/P gap 0.000000 <= D_NULL
+B m=17 seed=        7 Z rho_hat=6.002111 form=6.000000 ok
+B m=17 seed=        7 D rho_hat=8.000044 form=8.000000 ok
+B m=17 seed=        7 P rho_hat=8.000377 form=8.000000 ok
+  D/P gap 0.000333 <= D_NULL
+B m=17 seed=       42 Z rho_hat=12.004223 form=12.000000 ok
+B m=17 seed=       42 D rho_hat=11.878778 form=12.000000 MISMATCH
+B m=17 seed=       42 P rho_hat=11.968903 form=12.000000 MISMATCH
+  D/P gap 0.090125 > D_NULL -- TIE BROKEN
+B m=17 seed=     1999 Z rho_hat=2.012282 form=2.000000 MISMATCH
+B m=17 seed=     1999 D rho_hat=6.000153 form=6.000000 ok
+B m=17 seed=     1999 P rho_hat=6.002111 form=6.000000 ok
+  D/P gap 0.001958 <= D_NULL
+B m=17 seed= 20260902 Z rho_hat=1.006141 form=1.000000 MISMATCH
+B m=17 seed= 20260902 D rho_hat=1.006141 form=1.000000 MISMATCH
+B m=17 seed= 20260902 P rho_hat=1.006141 form=1.000000 MISMATCH
+  D/P gap 0.000000 <= D_NULL
+G-FORM (closed forms hold on odd n): FAIL
+G-TIE (D/P within 1/256 on odd n): FAIL
+VERDICT: round-18 theorem gains a parity hypothesis ON ITS FACE -- 'closed for even n'; failing odd cells are the next rung.

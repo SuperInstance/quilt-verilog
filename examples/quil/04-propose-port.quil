@@ -1,0 +1,22 @@
+// 04-propose-port.quil — neural propose as a black-box input port feeding a
+// helm cell. Per RFC §1.5: propose *suggests, never gates* — its output may
+// appear inside tick expressions only behind deterministic guards (thresholds,
+// credits). Never in a view, never in an arrival-fence condition, never as a
+// write enable. It lowers to an integer input port, nothing more (§2.4).
+
+propose neural_suggest {
+  external port int<16> suggestion    // the neural side, quarantined
+}
+
+cell helm {
+  int<16> act = 0;
+}
+
+view level(helm.act) -> int<16> {
+  helm.act                            // views stay pure; suggestion never enters here
+}
+
+tick {
+  // Deterministic threshold guard: the helm decides, the network only proposes.
+  helm.act <= helm.act + ((suggestion >= 100) ? suggestion : 0);
+}

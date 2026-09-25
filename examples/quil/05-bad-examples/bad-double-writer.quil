@@ -1,0 +1,3 @@
+// EXPECTED RULE: R1 single-writer — two cells' ticks write cell 'a' in the same tick.
+cell a int<16> = 0 { tick { a <= a + 1; } }
+cell b int<16> = 0 { tick { a <= a + 2; } }

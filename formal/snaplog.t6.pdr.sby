@@ -1,0 +1,23 @@
+# snaplog.t6.pdr.sby -- T6 unbounded referee attempt (round 10): abc
+# pdr over the flattened netlist (the integrity.pdr path -- PDR sees the
+# hidden 720-bit log register and the 64-entry journal shadow). If this
+# terminates PASS, the T6 equivalence is a theorem for all time; a
+# timeout/unknown books "BMC-bounded only" (the S1 caveat class).
+# Note: the journal is a 64-deep bounded shadow + the assume fires < 64
+# pins the reference -- the PDR claim is "no bounded-counterexample",
+# i.e. unbounded in the DUT state, bounded in the reference window.
+[options]
+mode prove
+depth 40
+
+[engines]
+abc pdr
+
+[script]
+read -formal q_snaplog.v
+read -formal f_snaplog_observability.v
+prep -top f_snaplog_observability
+
+[files]
+rtl/q_snaplog.v
+formal/f_snaplog_observability.v

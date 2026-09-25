@@ -1,0 +1,2 @@
+// EXPECTED RULE: R2 view purity — a view performs an effect assignment.
+cell a int<16> = 0 { tick { a <= a + 1; } view v = { a <= 0; return a; } }

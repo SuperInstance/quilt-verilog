@@ -69,7 +69,15 @@ module tb_cosim_fuzz;
             // a1 is the op's payload operand: effect carries it in dat
             ri_dat = (sop == OP_EFF) ? sa1 : 16'd0;
             guard = 0;
-            while (ri_ready !== 1'b1 && guard < 2000) begin
+            // Acceptance at the coming posedge is decided by the REGISTERED
+            // inbuf state, not the ri_ready wire: a same-delta read of
+            // ri_ready after the blocking assignments above sees the stale
+            // pre-assignment value (transit-path ready) and can exit the
+            // wait with the hit flit undelivered -- TB-side flit loss,
+            // root-caused 2026-09-03 (BACKEND-NOTES gapped-stream weak
+            // point). b_v is race-free here; latency unchanged. Non-hit
+            // (transit) flits keep the immediate-transfer behavior.
+            while (ri_dst == dut.i_myid && dut.u_inbuf.b_v !== 1'b0 && guard < 2000) begin
                 @(negedge clk); guard = guard + 1;
             end
             if (ri_ready !== 1'b1) begin

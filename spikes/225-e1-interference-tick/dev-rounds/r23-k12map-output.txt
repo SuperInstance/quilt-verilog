@@ -1,0 +1,31 @@
+== O2h K1/K2 delta map start 00:33:05 ==
+K=(1, 2) pd=3 drift=3 deltas=(8, 16, 24, 32, 48, 64, 96) comp arm
+replay K=8 r=1: wall=2 (want 2)
+replay K=8 r=2: wall=3 (want 3)
+replay K=8 r=6: wall=4 (want 4)
+replay K=1 d=8: wall=6 (want 6)
+canaries: PASS
+K=1 d= 8: wall=6 [  31s]
+K=1 d=16: wall=6 [  35s]
+K=1 d=24: wall=6 [  39s]
+K=1 d=32: wall=6 [  43s]
+K=1 d=48: wall=6 [  47s]
+K=1 d=64: wall=6 [  51s]
+K=1 d=96: wall=7 [  55s]
+K=2 d= 8: wall=4 [  59s]
+K=2 d=16: wall=4 [  63s]
+K=2 d=24: wall=4 [  67s]
+K=2 d=32: wall=4 [  71s]
+K=2 d=48: wall=4 [  74s]
+K=2 d=64: wall=4 [  78s]
+K=2 d=96: wall=5 [  82s]
+
+-- M-K2CROSS --
+K=2 walls: {8: 4, 16: 4, 24: 4, 32: 4, 48: 4, 64: 4, 96: 5} base(d8)=4
+M-K2CROSS: FLAT at all probed delta -- quarter-power boundary moves UP to K>=4
+
+-- K=1 extension (classification) --
+K=1 walls: {8: 6, 16: 6, 24: 6, 32: 6, 48: 6, 64: 6, 96: 7}
+K=1 plateau holds through d=96 (wall 7)
+
+done in 82s

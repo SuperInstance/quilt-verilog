@@ -1,0 +1,7 @@
+remote: warning: See https://gh.io/lfs for more information.        
+remote: warning: File cosim/synth-gate-never-output.txt is 75.28 MB; this is larger than GitHub's recommended maximum file size of 50.00 MB        
+remote: warning: File cosim/synth-gate-theta-output.txt is 75.28 MB; this is larger than GitHub's recommended maximum file size of 50.00 MB        
+remote: warning: GH001: Large files detected. You may want to try Git Large File Storage - https://git-lfs.github.com.        
+To github.com:SuperInstance/quilt-verilog.git
+   d197fb1..4ed2879  g3-kinduction -> g3-kinduction
+done

@@ -1,0 +1,35 @@
+== O2g regime map start 23:00:33 ==
+K=(2, 4, 8) pd=(2, 3, 4, 6) delta=12 (probe K=2 pd=3 d(8, 16))
+replay pd=3 calm r=1: wall=2 (want 2)
+replay pd=3 calm r=2: wall=3 (want 3)
+replay pd=3 calm r=6: wall=4 (want 4)
+canary: PASS
+K=2 pd=2 d=12: wall=4 F2(6)=4 [  25s]
+K=2 pd=3 d=12: wall=4 F2(6)=4 [  28s]
+K=2 pd=4 d=12: wall=4 F2(6)=4 [  32s]
+K=2 pd=6 d=12: wall=4 F2(6)=4 [  35s]
+K=4 pd=2 d=12: wall=4 F2(6)=4 [  40s]
+K=4 pd=3 d=12: wall=4 F2(6)=4 [  45s]
+K=4 pd=4 d=12: wall=4 F2(6)=4 [  50s]
+K=4 pd=6 d=12: wall=4 F2(6)=4 [  55s]
+K=8 pd=2 d=12: wall=3 F2(6)=4 [  62s]
+K=8 pd=3 d=12: wall=3 F2(6)=4 [  69s]
+K=8 pd=4 d=12: wall=3 F2(6)=4 [  76s]
+K=8 pd=6 d=12: wall=3 F2(6)=4 [  83s]
+K=2 pd=3 d=8: wall=4 [  86s]
+K=2 pd=3 d=16: wall=4 [  90s]
+
+-- M-K2: K=2 membership --
+K=2 pd=3 d=12 wall=4 (F2(6)=4, +-1: True); d8=4 d16=4 flat(|<=1|): True
+M-K2: K=2 -> FLAT regime -- pre-declared interference-threshold story FALSIFIED; line sits at K >= 4
+
+-- stratified signature: wall(pd=6) - wall(pd=3) --
+K=2: pd3=4 pd6=4 gap=0 flat-ish/none
+K=4: pd3=4 pd6=4 gap=0 flat-ish/none
+K=8: pd3=3 pd6=3 gap=0 flat-ish/none
+
+-- M-PD4: the 2pd=6 double-duty question --
+K=8 d=12: pd3=3 pd4=3 -> regime EXTENDS at pd=4
+2pd=6 coincidence DEMOTED: boundary pd* in (3,4], 2pd* in (6,8] excludes 6 -- 6 is NOT doing double duty at the comp edge
+
+done in 90s

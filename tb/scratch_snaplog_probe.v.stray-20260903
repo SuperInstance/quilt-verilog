@@ -1,0 +1,43 @@
+// tb/scratch_snaplog_probe.v -- throwaway: does the q_snaplog read port
+// return log[i] correctly? 2 fires, read idx 0 and 1.
+`timescale 1ns/1ps
+module probe;
+    reg clk = 0, rst_n = 0;
+    reg i_tick = 0, i_fire = 0, i_freeze = 0, i_fsign = 0;
+    reg [3:0] i_fsrc = 0;
+    reg [15:0] i_fmag = 0;
+    reg [3:0] i_ridx = 0;
+    wire [44:0] o_rent;
+    wire [4:0] o_count;
+    wire [23:0] o_tick, o_drops;
+    wire o_full;
+
+    q_snaplog #(.PW(16), .AIDW(4), .TICKW(24), .DEPTH(16), .MAG(1)) dut (
+        .clk(clk), .rst_n(rst_n), .i_tick(i_tick), .i_fire(i_fire),
+        .i_fsrc(i_fsrc), .i_fsign(i_fsign), .i_fmag(i_fmag), .i_freeze(i_freeze),
+        .i_ridx(i_ridx), .o_rent(o_rent), .o_count(o_count), .o_tick(o_tick),
+        .o_drops(o_drops), .o_full(o_full)
+    );
+
+    always #5 clk = ~clk;
+    initial begin
+        repeat (3) @(posedge clk);
+        rst_n = 1;
+        @(posedge clk);
+        // fire #1: tick=0, sign=0, src=0, mag=1
+        i_fire = 1; i_fmag = 16'd1;
+        @(posedge clk);
+        // fire #2: tick=0, sign=1, src=4'hF, mag=16'hBE98
+        i_fsign = 1; i_fsrc = 4'hF; i_fmag = 16'hBE98;
+        @(posedge clk);
+        i_fire = 0;
+        @(posedge clk);
+        i_ridx = 0; #1;
+        $display("count=%0d ridx0=%b exp2={tick0,sign1,srcF,magBE98}", o_count, o_rent);
+        i_ridx = 1; #1;
+        $display("ridx1=%b exp1={tick0,sign0,src0,mag1} => 45'b...0001", o_rent);
+        i_ridx = 2; #1;
+        $display("ridx2=%b (invalid, expect 0)", o_rent);
+        $finish;
+    end
+endmodule

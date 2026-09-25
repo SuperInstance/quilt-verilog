@@ -1,0 +1,49 @@
+== O2c pure-pd wall sweep start 20:19:37 ==
+pd=(2, 3, 6) N=(2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13) seeds=(1, 7, 42, 1999, 20260902) regimes=['calm', 'stress']
+  pd=2 N= 2 lats=(0, 12) raw%w=  34.5 sort%w=  34.4 win=  -0.2 [    0s]
+  pd=2 N= 3 lats=(0, 6, 12) raw%w=  34.0 sort%w=  34.0 win=  -0.0 [    1s]
+  pd=2 N= 4 lats=(0, 4, 8, 12) raw%w=  33.2 sort%w=  33.8 win=  +0.6 [    1s]
+  pd=2 N= 5 lats=(0, 3, 6, 9, 12) raw%w=  30.5 sort%w=  33.8 win=  +3.2 [    2s]
+  pd=2 N= 6 lats=(0, 2, 5, 7, 10, 12) raw%w=   1.3 sort%w=  33.7 win= +32.4 [    2s]
+  pd=2 N= 7 lats=(0, 2, 4, 6, 8, 10, 12) raw%w=   0.2 sort%w=  33.6 win= +33.4 [    4s]
+  pd=2 N= 8 lats=(0, 2, 3, 5, 7, 8, 10, 12) raw%w=   0.2 sort%w=  33.7 win= +33.5 [    7s]
+  pd=2 N= 9 lats=(0, 2, 3, 4, 6, 8, 9, 10, 12) raw%w=   0.1 sort%w=  33.7 win= +33.6 [   11s]
+  pd=2 N=10 lats=(0, 1, 3, 4, 5, 7, 8, 9, 11, 12) raw%w=   0.1 sort%w=  33.6 win= +33.5 [   16s]
+  pd=2 N=11 lats=(0, 1, 2, 4, 5, 6, 7, 8, 10, 11, 12) raw%w=   0.1 sort%w=  33.6 win= +33.5 [   21s]
+  pd=2 N=12 lats=(0, 1, 2, 3, 4, 5, 7, 8, 9, 10, 11, 12) raw%w=   0.1 sort%w=  33.7 win= +33.5 [   28s]
+  pd=2 N=13 lats=(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12) raw%w=   0.1 sort%w=  33.6 win= +33.5 [   35s]
+  pd=3 N= 2 lats=(0, 12) raw%w=  37.4 sort%w=  37.4 win=  -0.0 [   36s]
+  pd=3 N= 3 lats=(0, 6, 12) raw%w=  37.2 sort%w=  37.3 win=  +0.1 [   36s]
+  pd=3 N= 4 lats=(0, 4, 8, 12) raw%w=  36.5 sort%w=  37.0 win=  +0.4 [   36s]
+  pd=3 N= 5 lats=(0, 3, 6, 9, 12) raw%w=  36.3 sort%w=  36.9 win=  +0.7 [   37s]
+  pd=3 N= 6 lats=(0, 2, 5, 7, 10, 12) raw%w=  34.7 sort%w=  36.9 win=  +2.2 [   37s]
+  pd=3 N= 7 lats=(0, 2, 4, 6, 8, 10, 12) raw%w=  33.2 sort%w=  37.0 win=  +3.8 [   38s]
+  pd=3 N= 8 lats=(0, 2, 3, 5, 7, 8, 10, 12) raw%w=  29.8 sort%w=  36.9 win=  +7.1 [   39s]
+  pd=3 N= 9 lats=(0, 2, 3, 4, 6, 8, 9, 10, 12) raw%w=   1.7 sort%w=  37.0 win= +35.2 [   40s]
+  pd=3 N=10 lats=(0, 1, 3, 4, 5, 7, 8, 9, 11, 12) raw%w=   0.6 sort%w=  36.7 win= +36.1 [   42s]
+  pd=3 N=11 lats=(0, 1, 2, 4, 5, 6, 7, 8, 10, 11, 12) raw%w=   0.2 sort%w=  36.8 win= +36.5 [   45s]
+  pd=3 N=12 lats=(0, 1, 2, 3, 4, 5, 7, 8, 9, 10, 11, 12) raw%w=   0.1 sort%w=  36.7 win= +36.6 [   49s]
+  pd=3 N=13 lats=(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12) raw%w=   0.1 sort%w=  36.8 win= +36.6 [   54s]
+  pd=6 N= 2 lats=(0, 12) raw%w=  30.4 sort%w=  30.1 win=  -0.3 [   55s]
+  pd=6 N= 3 lats=(0, 6, 12) raw%w=  30.0 sort%w=  30.0 win=  +0.0 [   55s]
+  pd=6 N= 4 lats=(0, 4, 8, 12) raw%w=  29.8 sort%w=  30.0 win=  +0.2 [   56s]
+  pd=6 N= 5 lats=(0, 3, 6, 9, 12) raw%w=  29.2 sort%w=  30.0 win=  +0.8 [   56s]
+  pd=6 N= 6 lats=(0, 2, 5, 7, 10, 12) raw%w=  28.5 sort%w=  29.9 win=  +1.3 [   57s]
+  pd=6 N= 7 lats=(0, 2, 4, 6, 8, 10, 12) raw%w=  27.7 sort%w=  30.0 win=  +2.3 [   57s]
+  pd=6 N= 8 lats=(0, 2, 3, 5, 7, 8, 10, 12) raw%w=  26.5 sort%w=  29.9 win=  +3.4 [   58s]
+  pd=6 N= 9 lats=(0, 2, 3, 4, 6, 8, 9, 10, 12) raw%w=  25.0 sort%w=  29.9 win=  +5.0 [   59s]
+  pd=6 N=10 lats=(0, 1, 3, 4, 5, 7, 8, 9, 11, 12) raw%w=  23.6 sort%w=  29.9 win=  +6.3 [   60s]
+  pd=6 N=11 lats=(0, 1, 2, 4, 5, 6, 7, 8, 10, 11, 12) raw%w=  22.1 sort%w=  29.9 win=  +7.8 [   60s]
+  pd=6 N=12 lats=(0, 1, 2, 3, 4, 5, 7, 8, 9, 10, 11, 12) raw%w=  21.1 sort%w=  29.9 win=  +8.8 [   61s]
+  pd=6 N=13 lats=(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12) raw%w=  20.2 sort%w=  29.8 win=  +9.7 [   62s]
+
+-- walls (first N with mean win >= +2.0pp) --
+  pd=2: wall=5  (echo-law 2pd=4)
+  pd=3: wall=6  (echo-law 2pd=6)
+  pd=6: wall=7  (echo-law 2pd=12)
+
+-- gates --
+control pd=3 wall~6: PASS
+PARTIAL: walls increase but do not bracket 2pd within +-1; table above is the verdict
+
+done in 62s

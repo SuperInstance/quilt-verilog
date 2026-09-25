@@ -1,0 +1,19 @@
+canary: {'sequential raw': 512, 'sequential compensated': 1000, 'interference raw': 830, 'interference compensated': 984}
+CANARY PASS (blade 5/5, seq-comp 1000, int-comp 984)
+A adaptive (comp+detector+dial)    total   978permille  calm/conf/bursty [988, 995, 950]  debt   79619  maxErr   67
+B interference raw                 total   627permille  calm/conf/bursty [972, 821, 89]  debt  100172  maxErr   57
+B interference comp                total   683permille  calm/conf/bursty [980, 980, 88]  debt   93595  maxErr   79
+C sequential d12 raw               total   821permille  calm/conf/bursty [981, 502, 981]  debt   89112  maxErr   61
+C sequential d12 comp              total   988permille  calm/conf/bursty [990, 996, 978]  debt   75001  maxErr   69
+D impulse d6 raw                   total   717permille  calm/conf/bursty [981, 191, 981]  debt  101156  maxErr   61
+D impulse d6 comp                  total   988permille  calm/conf/bursty [990, 996, 978]  debt   79071  maxErr   67
+
+adaptive switch events (tick, from->to) per seed:
+  seed         1: [(243, 0, 1), (254, 1, 0), (483, 0, 1), (494, 1, 0), (724, 0, 1), (735, 1, 0), (1683, 0, 1), (1694, 1, 0), (3207, 0, 1), (3222, 1, 0), (4015, 0, 1), (4026, 1, 0)]
+  seed         7: [(244, 0, 1), (255, 1, 0), (483, 0, 1), (494, 1, 0), (724, 0, 1), (735, 1, 0), (1683, 0, 1), (1694, 1, 0), (3204, 0, 1), (3217, 1, 0), (3673, 0, 1), (3684, 1, 0)]
+  seed        42: [(244, 0, 1), (255, 1, 0), (484, 0, 1), (495, 1, 0), (724, 0, 1), (735, 1, 0), (1684, 0, 1), (1695, 1, 0), (3204, 0, 1), (3217, 1, 0), (3851, 0, 1), (3862, 1, 0)]
+  seed      1999: [(244, 0, 1), (255, 1, 0), (484, 0, 1), (495, 1, 0), (724, 0, 1), (735, 1, 0), (1684, 0, 1), (1695, 1, 0), (3204, 0, 1), (3219, 1, 0), (3601, 0, 1), (3612, 1, 0)]
+  seed  20260902: [(245, 0, 1), (256, 1, 0), (484, 0, 1), (495, 1, 0), (723, 0, 1), (734, 1, 0), (1684, 0, 1), (1695, 1, 0), (3204, 0, 1), (3217, 1, 0), (3628, 0, 1), (3639, 1, 0)]
+
+DECISION: W(adaptive)=978 vs maxW-10=978 -> gate1 PASS; D(adaptive)=79619 vs 0.60*minD=45000 -> gate2 FAIL
+VERDICT: BOOK-BOUNDARY

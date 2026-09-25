@@ -1,0 +1,169 @@
+== O7. BUNDLE WALL x LAG COMPENSATION (N 2..8 x {raw, comp} x {stress, calm}; 5 seeds; 4800 ticks) ==
+
+== lag blade verification (stress spacing 10, calm spacing 5) ==
+  true lag  3 -> discovered  3  OK
+  true lag  5 -> discovered  5  OK
+  true lag  7 -> discovered  7  OK
+  true lag 10 -> discovered 10  OK
+  true lag 15 -> discovered 15  OK
+  true lag 20 -> discovered 20  OK
+  true lag 30 -> discovered 30  OK
+  true lag 40 -> discovered 40  OK
+  true lag 50 -> discovered 50  OK
+  true lag 60 -> discovered 60  OK
+  true lag 70 -> discovered 70  OK
+  blade exact: 11/11
+
+== regime stress (delta=12 drift=6 K=4 pd=3 spacing=10) ==
+ N mode        arm     allW%  trueRes%  events  cancels  maxTrue
+ 2 interferenceraw      83.1      91.0    2041       70       34
+ 2 sequential  raw      51.3      78.4    2552        0       61
+ 2 interferencecomp     98.4      98.4    1099        1       28
+ 2 sequential  comp    100.0     100.0     527        0       12
+ 3 interferenceraw      14.1      34.5    6415      276       41
+ 3 sequential  raw       6.9      53.1    4576        0       77
+ 3 interferencecomp     95.6      95.6    1765        6       38
+ 3 sequential  comp    100.0     100.0     527        0       12
+ 4 interferenceraw       3.7      12.2   10408      321       46
+ 4 sequential  raw       1.9      51.4    4741        0       77
+ 4 interferencecomp     86.3      86.3    3698        4       52
+ 4 sequential  comp    100.0     100.0     527        0       12
+ 5 interferenceraw       1.0       9.7   15025      199       53
+ 5 sequential  raw       0.4      50.9    4787        0       77
+ 5 interferencecomp     74.7      74.7    7075      117       44
+ 5 sequential  comp    100.0     100.0     527        0       12
+ 6 interferenceraw       0.2       9.9   19338      203       58
+ 6 sequential  raw       0.2      50.9    4791        0       77
+ 6 interferencecomp     73.9      73.9    8900      351       74
+ 6 sequential  comp    100.0     100.0     527        0       12
+ 7 interferenceraw       0.2      10.9   23690      121       72
+ 7 sequential  raw       0.2      50.9    4791        0       77
+ 7 interferencecomp     61.3      61.3   13952      326       95
+ 7 sequential  comp    100.0     100.0     527        0       12
+ 8 interferenceraw       0.1      11.4   28316       79      107
+ 8 sequential  raw       0.2      50.9    4791        0       77
+ 8 interferencecomp     42.6      42.6   22940      174      137
+ 8 sequential  comp    100.0     100.0     527        0       12
+
+== regime calm (delta=6 drift=3 K=8 pd=3 spacing=5) ==
+ N mode        arm     allW%  trueRes%  events  cancels  maxTrue
+ 2 interferenceraw      42.2      73.4    3081      520       37
+ 2 sequential  raw      56.6      84.3    2310        0       49
+ 2 interferencecomp     71.8      71.8    3072      471       28
+ 2 sequential  comp    100.0     100.0     875        0        6
+ 3 interferenceraw       8.2      46.5    6343      538       38
+ 3 sequential  raw       6.2      53.6    4577        0       61
+ 3 interferencecomp     74.0      74.0    4296      816       33
+ 3 sequential  comp    100.0     100.0     875        0        6
+ 4 interferenceraw       1.7      13.3   10498      522       39
+ 4 sequential  raw       1.1      51.4    4761        0       61
+ 4 interferencecomp     77.4      77.4    5117     1176       37
+ 4 sequential  comp    100.0     100.0     875        0        6
+ 5 interferenceraw       0.5       6.7   15275      324       38
+ 5 sequential  raw       0.3      51.2    4788        0       61
+ 5 interferencecomp     70.4      70.4    7829     1198       41
+ 5 sequential  comp    100.0     100.0     875        0        6
+ 6 interferenceraw       0.1       4.9   19888      314       40
+ 6 sequential  raw       0.1      51.1    4795        0       61
+ 6 interferencecomp     62.0      62.0   11792     1183       66
+ 6 sequential  comp    100.0     100.0     875        0        6
+ 7 interferenceraw       0.1       5.0   24568      199       45
+ 7 sequential  raw       0.1      51.1    4795        0       61
+ 7 interferencecomp     44.7      44.7   19188      805       89
+ 7 sequential  comp    100.0     100.0     875        0        6
+ 8 interferenceraw       0.0       5.3   29265      158       54
+ 8 sequential  raw       0.1      51.1    4795        0       61
+ 8 interferencecomp     31.6      31.6   26372      628      114
+ 8 sequential  comp    100.0     100.0     875        0        6
+
+== regime stress (delta=12 drift=6 K=4 pd=3 spacing=10) ==
+ N mode        arm     allW%  trueRes%  events  cancels  maxTrue
+ 2 interferenceraw      83.1      91.0    2041       70       34
+ 2 sequential  raw      51.3      78.4    2552        0       61
+ 2 interferencecomp     98.4      98.4    1099        1       28
+ 2 sequential  comp    100.0     100.0     527        0       12
+ 3 interferenceraw      14.1      34.5    6415      276       41
+ 3 sequential  raw       6.9      53.1    4576        0       77
+ 3 interferencecomp     95.6      95.6    1765        6       38
+ 3 sequential  comp    100.0     100.0     527        0       12
+ 4 interferenceraw       3.7      12.2   10408      321       46
+ 4 sequential  raw       1.9      51.4    4741        0       77
+ 4 interferencecomp     86.3      86.3    3698        4       52
+ 4 sequential  comp    100.0     100.0     527        0       12
+ 5 interferenceraw       1.0       9.7   15025      199       53
+ 5 sequential  raw       0.4      50.9    4787        0       77
+ 5 interferencecomp     74.7      74.7    7075      117       44
+ 5 sequential  comp    100.0     100.0     527        0       12
+ 6 interferenceraw       0.2       9.9   19338      203       58
+ 6 sequential  raw       0.2      50.9    4791        0       77
+ 6 interferencecomp     73.9      73.9    8900      351       74
+ 6 sequential  comp    100.0     100.0     527        0       12
+ 7 interferenceraw       0.2      10.9   23690      121       72
+ 7 sequential  raw       0.2      50.9    4791        0       77
+ 7 interferencecomp     61.3      61.3   13952      326       95
+ 7 sequential  comp    100.0     100.0     527        0       12
+ 8 interferenceraw       0.1      11.4   28316       79      107
+ 8 sequential  raw       0.2      50.9    4791        0       77
+ 8 interferencecomp     42.6      42.6   22940      174      137
+ 8 sequential  comp    100.0     100.0     527        0       12
+
+== regime calm (delta=6 drift=3 K=8 pd=3 spacing=5) ==
+ N mode        arm     allW%  trueRes%  events  cancels  maxTrue
+ 2 interferenceraw      42.2      73.4    3081      520       37
+ 2 sequential  raw      56.6      84.3    2310        0       49
+ 2 interferencecomp     71.8      71.8    3072      471       28
+ 2 sequential  comp    100.0     100.0     875        0        6
+ 3 interferenceraw       8.2      46.5    6343      538       38
+ 3 sequential  raw       6.2      53.6    4577        0       61
+ 3 interferencecomp     74.0      74.0    4296      816       33
+ 3 sequential  comp    100.0     100.0     875        0        6
+ 4 interferenceraw       1.7      13.3   10498      522       39
+ 4 sequential  raw       1.1      51.4    4761        0       61
+ 4 interferencecomp     77.4      77.4    5117     1176       37
+ 4 sequential  comp    100.0     100.0     875        0        6
+ 5 interferenceraw       0.5       6.7   15275      324       38
+ 5 sequential  raw       0.3      51.2    4788        0       61
+ 5 interferencecomp     70.4      70.4    7829     1198       41
+ 5 sequential  comp    100.0     100.0     875        0        6
+ 6 interferenceraw       0.1       4.9   19888      314       40
+ 6 sequential  raw       0.1      51.1    4795        0       61
+ 6 interferencecomp     62.0      62.0   11792     1183       66
+ 6 sequential  comp    100.0     100.0     875        0        6
+ 7 interferenceraw       0.1       5.0   24568      199       45
+ 7 sequential  raw       0.1      51.1    4795        0       61
+ 7 interferencecomp     44.7      44.7   19188      805       89
+ 7 sequential  comp    100.0     100.0     875        0        6
+ 8 interferenceraw       0.0       5.3   29265      158       54
+ 8 sequential  raw       0.1      51.1    4795        0       61
+ 8 interferencecomp     31.6      31.6   26372      628      114
+ 8 sequential  comp    100.0     100.0     875        0        6
+
+canary 1 (double-run byte-identity, 56 cells x 5 seeds): PASS
+
+canary 2 (anchor replay vs glm-1 sheet B, stress raw):
+  PASS interferenceraw N=2: got 91.0% vs published 91.0% (tol ±2pp)
+  PASS sequential  raw N=2: got 78.4% vs published 78.4% (tol ±2pp)
+  PASS interferenceraw N=3: got 34.4% vs published 34.5% (tol ±2pp)
+  PASS sequential  raw N=3: got 53.1% vs published 53.1% (tol ±2pp)
+  PASS interferenceraw N=4: got 12.1% vs published 12.2% (tol ±2pp)
+  PASS sequential  raw N=4: got 51.4% vs published 51.4% (tol ±2pp)
+  PASS sequential  raw N=5: got 50.8% vs published 50.9% (tol ±2pp)
+  PASS sequential  raw N=8: got 50.8% vs published 50.9% (tol ±2pp)
+
+canary 3 (self-canary: N=2 raw interf passed off as N=4 — checker must FAIL it):
+  PASS interferenceraw N=2: got 91.0% vs published 91.0% (tol ±2pp)
+  PASS sequential  raw N=2: got 78.4% vs published 78.4% (tol ±2pp)
+  PASS interferenceraw N=3: got 34.4% vs published 34.5% (tol ±2pp)
+  PASS sequential  raw N=3: got 53.1% vs published 53.1% (tol ±2pp)
+  FAIL interferenceraw N=4: got 91.0% vs published 12.2% (tol ±2pp)
+  PASS sequential  raw N=4: got 51.4% vs published 51.4% (tol ±2pp)
+  PASS sequential  raw N=5: got 50.8% vs published 50.9% (tol ±2pp)
+  PASS sequential  raw N=8: got 50.8% vs published 50.9% (tol ±2pp)
+  self-canary CAUGHT (PASS)
+
+== verdict inputs ==
+  N=4 stress interference raw  trueRes 12.1%
+  N=4 stress interference comp trueRes 86.3%   (decision gate: >= 50%)
+
+VERDICT: WALL MOVED (stale-sensing capacity)
+canaries: double-run PASS, anchor PASS, self-canary CAUGHT

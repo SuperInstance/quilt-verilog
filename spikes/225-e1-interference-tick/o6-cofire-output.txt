@@ -1,0 +1,64 @@
+==============================================================================
+O6 COFIRE HOMEOSTAT MICRO-PROBE — branch g3-kinduction — 2026-09-03
+trust in [4,12] init 8, decay->8 every 32 silent ticks; lagged (first-diff,
+480-tick blade) reference credit. Faults: clean / noisy-T2 +/-14 / lying-T2 +24 [1200,2400).
+ticks=4800, seeds=(1, 7, 42, 1999, 20260902), integer-only.
+==============================================================================
+
+-- CANARY A: kimi exp1 variant A verbatim (F17 anchor: 830 -> 308 permille) --
+  seed         1  fixed  830 permille  trust-A   93 permille  cancel 7  trust=(0, 1)
+  seed         7  fixed  824 permille  trust-A  562 permille  cancel 4  trust=(2, 0)
+  seed        42  fixed  834 permille  trust-A  217 permille  cancel 7  trust=(0, 11)
+  seed      1999  fixed  836 permille  trust-A   92 permille  cancel 4  trust=(0, 1)
+  seed  20260902  fixed  829 permille  trust-A  578 permille  cancel 7  trust=(3, 0)
+  means: fixed 830  trust-A 308  cancel 5  (sheet: 830 / 308 / 5)
+  CANARY A: PASS
+
+-- CANARY A2: first-difference lag blade (F19/F20: exact lags) --
+  calm lag 5 (true 5)  stress lag 10 (true 10)  -> PASS
+
+-- ARM 1: clean homeostat vs static (honest twins; both regimes) --
+  stress clean static     pm/seed [830, 824, 834, 836, 829]  mean  830 permille  debt  34995  cancel 70  trust(end) mean 8.0
+  stress clean homeostat  pm/seed [786, 780, 776, 784, 764]  mean  778 permille  debt  38786  cancel 87  trust(end) mean 5.0
+  calm   clean static     pm/seed [416, 410, 401, 426, 455]  mean  421 permille  debt  32143  cancel 520  trust(end) mean 8.0
+  calm   clean homeostat  pm/seed [114, 113, 116, 114, 114]  mean  114 permille  debt 107356  cancel 174  trust(end) mean 4.0
+
+-- ARM 2: noisy-T2 (+/-14) stress: static vs homeostat --
+  seed         1  static     pm  574  debt  59805  events 3277  trust=(8,8)
+  seed         7  static     pm  567  debt  60461  events 3318  trust=(8,8)
+  seed        42  static     pm  566  debt  60266  events 3299  trust=(8,8)
+  seed      1999  static     pm  563  debt  61426  events 3386  trust=(8,8)
+  seed  20260902  static     pm  578  debt  59834  events 3322  trust=(8,8)
+  seed         1  homeostat  pm  527  debt  62081  events 3427  trust=(5,4)
+  seed         7  homeostat  pm  522  debt  62838  events 3481  trust=(4,4)
+  seed        42  homeostat  pm  524  debt  62877  events 3457  trust=(4,4)
+  seed      1999  homeostat  pm  510  debt  64069  events 3557  trust=(5,5)
+  seed  20260902  homeostat  pm  522  debt  61808  events 3436  trust=(4,5)
+
+-- ARM 3: lying-T2 (+24 in [1200,2400)) stress: static vs homeostat --
+  seed         1  static     pm  715  debt  53607  cancels  114  whistle 4.2x  t2_late 8.0  floor-frac    0 permille  t1_late 8.0  maxE 38
+  seed         7  static     pm  715  debt  53171  cancels  107  whistle 3.6x  t2_late 8.0  floor-frac    0 permille  t1_late 8.0  maxE 39
+  seed        42  static     pm  719  debt  53544  cancels  132  whistle 2.7x  t2_late 8.0  floor-frac    0 permille  t1_late 8.0  maxE 38
+  seed      1999  static     pm  723  debt  52812  cancels  110  whistle 3.9x  t2_late 8.0  floor-frac    0 permille  t1_late 8.0  maxE 37
+  seed  20260902  static     pm  714  debt  53651  cancels  122  whistle 4.6x  t2_late 8.0  floor-frac    0 permille  t1_late 8.0  maxE 39
+  seed         1  homeostat  pm  683  debt  54587  cancels  139  whistle 3.7x  t2_late 6.0  floor-frac  584 permille  t1_late 6.2  maxE 45
+  seed         7  homeostat  pm  689  debt  54567  cancels  123  whistle 3.8x  t2_late 6.1  floor-frac  581 permille  t1_late 5.9  maxE 43
+  seed        42  homeostat  pm  668  debt  56265  cancels  130  whistle 3.2x  t2_late 5.8  floor-frac  580 permille  t1_late 6.2  maxE 42
+  seed      1999  homeostat  pm  689  debt  55144  cancels  129  whistle 2.9x  t2_late 6.1  floor-frac  580 permille  t1_late 6.2  maxE 40
+  seed  20260902  homeostat  pm  667  debt  57031  cancels  139  whistle 3.6x  t2_late 6.0  floor-frac  575 permille  t1_late 5.9  maxE 42
+
+-- CANARY B: self-canary (lie-static run mislabeled as lie-homeostat) --
+  fingerprint static-as-homeostat: pm 715 debt 53607 events 2941 cancels 114
+  fingerprint true homeostat : pm 683 debt 54587 events 2950 cancels 139
+  CANARY B: CAUGHT
+
+==============================================================================
+DECISION RULE EVALUATION (pre-registered)
+==============================================================================
+GATE 1 honest steady-state: clean homeostat stress mean 778 permille (gate >=800) -> FAIL
+GATE 2 defector demotion: lie-window T2 trust mean 6.0 (gate <=5.0), floor-frac 580 permille (gate >=900), T1 trust 6.0 (gate >=7.0) -> FAIL
+GATE 3 whistle: homeostat lie/honest cancel ratio mean 3.4x (gate >=2.0x); static baseline 3.8x -> PASS
+SECONDARY noisy-T2: homeostat 521 vs static 569 permille; debt 62734 vs 60358; end-trust pairs [(5, 4), (4, 4), (4, 4), (5, 5), (4, 5)]
+SECONDARY calm (K=8 artifact regime, F13): homeostat 114 vs static 421 permille
+
+VERDICT: cofire v1.1 DEMOTE -> v2 (charter failure mode (c)); demo runs selection-only into the §3.2 demo arm

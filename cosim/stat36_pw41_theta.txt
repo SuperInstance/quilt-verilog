@@ -1,0 +1,24 @@
+
+7. Printing statistics.
+
+=== spin36_synth_top ===
+
+   Number of wires:              17794
+   Number of wire bits:          63757
+   Number of public wires:       17794
+   Number of public wire bits:   63757
+   Number of ports:                  8
+   Number of port bits:            160
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:              23448
+     $scopeinfo                      1
+     SB_CARRY                     9785
+     SB_DFFE                       114
+     SB_DFFER                       43
+     SB_DFFESR                      53
+     SB_DFFESS                       3
+     SB_DFFR                        75
+     SB_LUT4                     13374
+
