@@ -1,7 +1,8 @@
 # quilt-verilog — root Makefile (iteration 2, 2026-08-29)
 # One command per lane. PATH resolution for oss-cad-suite:
-#   1. stock location (below), 2. `oss-cad-suite` on PATH, else a clear error
-#   naming the override variable.
+#   1. stock location (below), 2. `iverilog` on PATH (CI installs the
+#   suite's bin/ directly — there is no `oss-cad-suite` launcher binary),
+#   else a clear error naming the override variable.
 OSSCAD_DEFAULT := /home/eileen/tools/oss-cad-suite/bin
 ifeq ($(shell test -d /home/eileen/tools/oss-cad-suite/bin && echo y),y)
 OSSCAD := $(OSSCAD_DEFAULT)
@@ -12,7 +13,7 @@ OSSCAD := $(OSSCAD_DEFAULT)
 endif
 export PATH := $(OSSCAD):$(PATH)
 
-NO_TOOLCHAIN := $(if $(shell test -d /home/eileen/tools/oss-cad-suite/bin && echo y),,$(if $(shell command -v oss-cad-suite 2>/dev/null),,1))
+NO_TOOLCHAIN := $(if $(shell test -d /home/eileen/tools/oss-cad-suite/bin && echo y),,$(if $(shell command -v iverilog 2>/dev/null),,1))
 ifneq ($(NO_TOOLCHAIN),)
 $(error oss-cad-suite not found: set OSSCAD=/path/to/oss-cad-suite/bin (make OSSCAD=... <target>))
 endif
