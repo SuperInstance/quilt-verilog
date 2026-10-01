@@ -509,7 +509,7 @@ module q_cell_core #(
                   if (lo_valid && lo_ready) begin
                       lo_valid <= 1'b0;
                       ci_ready <= !(s_tick || tick_pend);  // Q2fix: never offer ready with a tick pending (or being set) -- a one-cycle hole here lets an upstream pipe pop a flit the dispatching FSM ignores (silent drop, found by formal cell_core.tick/fabric.conservation)
-                      state    <= ST_IDLE;
+                      state    <= bound ? ST_IDLE : ST_UNB; // EXPERIMENT wedge-fix
                   end
               end
 

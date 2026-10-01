@@ -398,6 +398,7 @@ static void quiesce(uint64_t max_wait = 1000000) {
                (unsigned long long)cyc, occ_all(),
                (unsigned long long)resp_pending);
         errors++;
+        fabric_dump();                      // adjudication: show the jam
         return;
     }
     check_periodic();                        // ledger must be exactly zero
